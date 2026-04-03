@@ -50,6 +50,9 @@ Token values swap inside a `[data-theme="dark"]` CSS block (not a media query) s
 **Component spec files mirror Figma component structure.**
 `spec.md` documents anatomy, variants, states, and token mapping in a format that mirrors how the component is built in Figma (frames = elements, Figma variants = CSS classes or data attributes). This is what makes AI-assisted coding 1-to-1 with Figma — the spec is read before building.
 
+**Any design change or modification applies to both `component.html` and `spec.md` simultaneously.**
+When a token value, color, state, variant, or behaviour is changed in the HTML, the corresponding entry in `spec.md` must be updated in the same response — never one without the other. This keeps the spec the authoritative source of truth and prevents drift between documentation and implementation.
+
 **Font: Inter.**
 Loaded from Google Fonts. Weights used: 400, 500, 600, 700 (regular, medium, semibold, bold).
 
