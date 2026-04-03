@@ -103,6 +103,18 @@ The user has designed buttons, dropdowns, carousels, and other components in thi
 2. Generate `spec.md` from the response
 3. Build `component.html` from the spec — never from memory or invention
 
+**`index.html` is a generated shell — do not hand-edit component content inside it.**
+`index.html` embeds each component via `<iframe src="components/…/….html">`. It is ~250 lines of library chrome only (header, sidebar, theme toggle). All component CSS, HTML, and JS lives exclusively in the component file. Editing a component file is the only step needed — `index.html` reflects the change automatically on browser refresh.
+
+- To add a new component: create `components/<name>/<name>.html`, then add a `<section>` + `<iframe>` block to `index.html` and a nav link to the sidebar. That is the only time `index.html` needs to be touched.
+- Every component HTML must include the iframe embed block at the end of its `<script>` tag (hides the per-page theme toggle when embedded, listens for `setTheme` postMessage, reports height for auto-sizing). Copy from any existing component.
+
+**Local preview requires an HTTP server, not `file://`.**
+Chrome blocks cross-file iframes on `file://`. Run `npx serve /Users/mary.evans/Documents/startpage-design` and open `http://localhost:3000`. GitHub Pages also works and is the canonical shared URL.
+
+**GitHub repository:** `https://github.com/lysa-le/startpage-design`
+Commit and push changes to keep GitHub Pages up to date. The hosted library at `https://lysa-le.github.io/startpage-design/` is what to share with collaborators.
+
 ---
 
 ## 5. Icon Library Decisions
