@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>icn-arrows — Component Demo</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+
+    /* ─────────────────────────────────────────────
+       DARK MODE TOKEN OVERRIDES
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-button-inactive: var(--color-black-600);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+    }
+
+    /* ─────────────────────────────────────────────
+       THEME TOGGLE
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+    .theme-toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    /* ─────────────────────────────────────────────
+       RESET & PAGE
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-background-quaternary);
+      color: var(--color-text-primary);
+      padding: var(--spacing-48);
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .page-subtitle {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .demo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-48);
+      align-items: flex-start;
+    }
+
+    .demo-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+    }
+
+    .demo-group__title {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .demo-row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-24);
+    }
+
+    .demo-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-8);
+    }
+
+    .demo-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+
+    /* ─────────────────────────────────────────────
+       ICN-ARROWS — BASE
+       ───────────────────────────────────────────── */
+    .icn-arrows {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--color-icon-primary);
+    }
+
+    /* ─────────────────────────────────────────────
+       ICN-ARROWS — BARE VARIANTS (16×16)
+       ───────────────────────────────────────────── */
+    .icn-arrows--right-sm,
+    .icn-arrows--right-lg,
+    .icn-arrows--down-sm,
+    .icn-arrows--down-lg,
+    .icn-arrows--v7 {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ─────────────────────────────────────────────
+       ICN-ARROWS — CIRCLE VARIANTS
+       ───────────────────────────────────────────── */
+    .icn-arrows--down-circle {
+      width: 16px;
+      height: 16px;
+      border-radius: var(--radius-full);
+      background: var(--color-button-inactive);
+    }
+
+    .icn-arrows--right-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      background: var(--color-button-inactive);
+    }
+
+    .icn-arrows--v9 {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: var(--color-button-inactive);
+    }
+
+    .icn-arrows--v8 {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      background: var(--color-button-inactive);
+      box-shadow: var(--shadow-dropdown);
+    }
+
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>icn-arrows</h1>
+  <p class="page-subtitle">9 variants — 2 directions × bare / circle / circle+shadow</p>
+
+  <div class="demo-grid">
+
+    <!-- ── Right ── -->
+    <div class="demo-group">
+      <p class="demo-group__title">Right</p>
+      <div class="demo-row">
+
+        <div class="demo-item">
+          <span class="icn-arrows icn-arrows--right-sm" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 4.5L10 8L6 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="demo-label">right-sm</span>
+        </div>
+
+        <div class="demo-item">
+          <span class="icn-arrows icn-arrows--right-lg" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M5 3L11 8L5 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="demo-label">right-lg</span>
+        </div>
+
+        <div class="demo-item">
+          <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M10 8.5L14 12L10 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="demo-label">right-circle</span>
+        </div>
+
+        <div class="demo-item">
+          <span class="icn-arrows icn-arrows--v8" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <path d="M20 17L28 24L20 31" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="demo-label">v8</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Down ── -->
+    <div class="demo-group">
+      <p class="demo-group__title">Down</p>
+      <div class="demo-row">
+
+        <div class="demo-item">
+          <span class="icn-arrows icn-arrows--down-sm" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="demo-label">down-sm</span>
+        </div>
+
+        <div class="demo-item">
+          <span class="icn-arrows icn-arrows--down-lg" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="demo-label">down-lg</span>
+        </div>
+
+        <div class="demo-item">
+          <span class="icn-arrows icn-arrows--down-circle" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="demo-label">down-circle</span>
+        </div>
+
+        <div class="demo-item">
+          <span class="icn-arrows icn-arrows--v9" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M10.5 12.5L16 18L21.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="demo-label">v9</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Variant7 ── -->
+    <div class="demo-group">
+      <p class="demo-group__title">Variant7</p>
+      <div class="demo-row">
+
+        <div class="demo-item">
+          <span class="icn-arrows icn-arrows--v7" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="demo-label">v7</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ─── Theme toggle ───────────────────────────────────────────────────────
+    const html  = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon   = document.getElementById('themeIcon');
+    const label  = document.getElementById('themeLabel');
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      icon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open / Close Icon — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides (class-driven)
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-inverted:  var(--color-black-800);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+
+      --color-button-inactive: var(--color-black-600);
+    }
+
+    /* ─────────────────────────────────────────────
+       Page scaffold
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      padding: var(--spacing-48);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .subtitle {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section { margin-bottom: var(--spacing-48); }
+
+    .section-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-20);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-24);
+      flex-wrap: wrap;
+    }
+
+    .variant-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .variant-label {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-secondary);
+      min-width: 40px;
+      text-align: center;
+    }
+
+    /* ─────────────────────────────────────────────
+       Context demo: accordion-style row
+       ───────────────────────────────────────────── */
+    .demo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-16) var(--spacing-20);
+      border-radius: var(--radius-md);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .demo-row:hover {
+      background-color: var(--color-background-secondary);
+    }
+
+    .demo-row__label {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary);
+    }
+
+    .demo-panel {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.25s ease;
+    }
+
+    .demo-panel.is-open {
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    .demo-panel__inner {
+      padding: var(--spacing-16) var(--spacing-20);
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-top: none;
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+    }
+
+    /* ─────────────────────────────────────────────
+       icn-open-close component
+       ───────────────────────────────────────────── */
+
+    /*
+     * The button is a 16×16px transparent hit-target.
+     * No background — it sits on whatever surface the parent provides.
+     * Color inherits from --color-icon-primary via currentColor.
+     */
+    .icn-open-close {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      overflow: hidden;
+      isolation: isolate;
+      border: none;
+      padding: 0;
+      background-color: transparent;
+      color: var(--color-icon-primary);
+      cursor: pointer;
+      flex-shrink: 0;
+      border-radius: var(--radius-full);
+    }
+
+    /* SVGs: both stacked in place; only one visible at a time */
+    .icn-open-close__svg {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      flex-shrink: 0;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    /* Open state: plus visible, minus hidden */
+    .icn-open-close__svg--plus  { opacity: 1; transform: scale(1);   }
+    .icn-open-close__svg--minus { opacity: 0; transform: scale(0.5); }
+
+    /* Close state: minus visible, plus hidden */
+    .icn-open-close[data-state="close"] .icn-open-close__svg--plus  { opacity: 0; transform: scale(0.5); }
+    .icn-open-close[data-state="close"] .icn-open-close__svg--minus { opacity: 1; transform: scale(1);   }
+
+    /* Focus ring */
+    .icn-open-close:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+
+    /* ─────────────────────────────────────────────
+       Theme toggle
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+    .theme-toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>Open / Close Icon</h1>
+  <p class="subtitle">Click the icon to toggle between expand (plus) and collapse (minus) states.</p>
+
+  <!-- ── States ── -->
+  <div class="section">
+    <div class="section-label">States</div>
+    <div class="row">
+
+      <div class="variant-cell">
+        <button class="icn-open-close" data-state="open" aria-expanded="false" aria-label="Expand">
+          <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="variant-label">open</span>
+      </div>
+
+      <div class="variant-cell">
+        <button class="icn-open-close" data-state="close" aria-expanded="true" aria-label="Collapse">
+          <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="variant-label">close</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Interactive toggle ── -->
+  <div class="section">
+    <div class="section-label">Interactive toggle</div>
+    <div class="row">
+      <button
+        class="icn-open-close"
+        id="iconToggle"
+        data-state="open"
+        aria-expanded="false"
+        aria-label="Expand"
+      >
+        <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+          <line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+          <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Accordion context demo ── -->
+  <div class="section">
+    <div class="section-label">Usage context — Accordion</div>
+
+    <!-- Item 1 -->
+    <div style="margin-bottom: var(--spacing-8);">
+      <div class="demo-row" id="accordionRow1" role="button" tabindex="0" aria-expanded="false" aria-controls="accordionPanel1">
+        <span class="demo-row__label">What is Startpage?</span>
+        <button
+          class="icn-open-close"
+          data-state="open"
+          aria-expanded="false"
+          aria-label="Expand"
+          aria-controls="accordionPanel1"
+          tabindex="-1"
+        >
+          <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="demo-panel" id="accordionPanel1" role="region">
+        <div class="demo-panel__inner">
+          Startpage is the world's most private search engine — it delivers Google results without any of the tracking, ads, or profiling.
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div style="margin-bottom: var(--spacing-8);">
+      <div class="demo-row" id="accordionRow2" role="button" tabindex="0" aria-expanded="false" aria-controls="accordionPanel2">
+        <span class="demo-row__label">How does Anonymous View work?</span>
+        <button
+          class="icn-open-close"
+          data-state="open"
+          aria-expanded="false"
+          aria-label="Expand"
+          aria-controls="accordionPanel2"
+          tabindex="-1"
+        >
+          <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="demo-panel" id="accordionPanel2" role="region">
+        <div class="demo-panel__inner">
+          Anonymous View lets you browse websites through Startpage's servers, so the site you visit never sees your real IP address or any identifying information.
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div>
+      <div class="demo-row" id="accordionRow3" role="button" tabindex="0" aria-expanded="false" aria-controls="accordionPanel3">
+        <span class="demo-row__label">Is Startpage free to use?</span>
+        <button
+          class="icn-open-close"
+          data-state="open"
+          aria-expanded="false"
+          aria-label="Expand"
+          aria-controls="accordionPanel3"
+          tabindex="-1"
+        >
+          <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="demo-panel" id="accordionPanel3" role="region">
+        <div class="demo-panel__inner">
+          Yes, Startpage is completely free. It is supported by showing a small number of clearly-labelled private ads alongside search results.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── Theme ── */
+    const html = document.documentElement;
+    const themeBtn   = document.getElementById('themeToggle');
+    const themeIcon  = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    applyTheme(localStorage.getItem('theme') || 'light');
+
+    themeBtn.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(t) {
+      html.dataset.theme = t;
+      themeIcon.textContent  = t === 'dark' ? '🌙' : '☀️';
+      themeLabel.textContent = t === 'dark' ? 'Dark' : 'Light';
+    }
+
+    /* ── Toggle helper ── */
+    function toggleIcon(btn) {
+      const isOpen = btn.dataset.state === 'open';
+      const nextState = isOpen ? 'close' : 'open';
+      btn.dataset.state  = nextState;
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.setAttribute('aria-label', isOpen ? 'Collapse' : 'Expand');
+    }
+
+    /* ── Press helper ── */
+    function addPressInteraction(btn) {
+      btn.addEventListener('mousedown', () => {
+        btn.style.transform  = 'scale(0.88)';
+        btn.style.transition = 'transform 0.08s ease';
+
+        function onUp() {
+          btn.style.transform  = 'scale(1.05)';
+          btn.style.transition = 'transform 0.12s ease-out';
+          btn.addEventListener('transitionend', () => {
+            btn.style.transform  = '';
+            btn.style.transition = '';
+          }, { once: true });
+          document.removeEventListener('mouseup', onUp);
+        }
+        document.addEventListener('mouseup', onUp);
+      });
+    }
+
+    /* ── Standalone interactive toggle ── */
+    const iconToggle = document.getElementById('iconToggle');
+    addPressInteraction(iconToggle);
+    iconToggle.addEventListener('click', () => toggleIcon(iconToggle));
+
+    /* ── Accordion demo ── */
+    const accordionItems = [
+      { rowId: 'accordionRow1', panelId: 'accordionPanel1' },
+      { rowId: 'accordionRow2', panelId: 'accordionPanel2' },
+      { rowId: 'accordionRow3', panelId: 'accordionPanel3' },
+    ];
+
+    accordionItems.forEach(({ rowId, panelId }) => {
+      const row   = document.getElementById(rowId);
+      const panel = document.getElementById(panelId);
+      const btn   = row.querySelector('.icn-open-close');
+
+      addPressInteraction(btn);
+
+      function toggle() {
+        const isOpen = btn.dataset.state === 'open';
+
+        // Update icon
+        btn.dataset.state = isOpen ? 'close' : 'open';
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        btn.setAttribute('aria-label', isOpen ? 'Collapse' : 'Expand');
+
+        // Update row
+        row.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+        // Animate panel
+        panel.classList.toggle('is-open', isOpen);
+      }
+
+      row.addEventListener('click', toggle);
+      row.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+  </script>
+</body>
+</html>

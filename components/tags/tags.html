@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tags — Component Demo</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+
+    /* ─────────────────────────────────────────────
+       DARK MODE TOKEN OVERRIDES
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-button-inactive:           var(--color-black-600);
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+    }
+
+    /* ─────────────────────────────────────────────
+       THEME TOGGLE
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+
+    /* ─────────────────────────────────────────────
+       RESET & PAGE
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-background-quaternary);
+      color: var(--color-text-primary);
+      padding: var(--spacing-48);
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .page-subtitle {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .demo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-48);
+      align-items: flex-start;
+    }
+
+    .demo-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+    }
+
+    .demo-group__title {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .demo-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-8);
+    }
+
+    .demo-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+
+    /* ─────────────────────────────────────────────
+       TAG — COMPONENT VARIABLES
+       ───────────────────────────────────────────── */
+    .tag {
+      --tag-gap: 6px; /* below spacing scale — see spec note 4 */
+    }
+
+    /* ─────────────────────────────────────────────
+       TAG — BASE (Variant8: filled 36px text-only)
+       ───────────────────────────────────────────── */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--tag-gap);
+      padding: 0 var(--spacing-12);
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: var(--color-button-productfilled);
+      border: none;
+      font-family: var(--font-family);
+      font-size: var(--font-label-xs);
+      line-height: var(--font-label-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      white-space: nowrap;
+    }
+
+    /* ─────────────────────────────────────────────
+       TAG — OUTLINE (Variant9)
+       ───────────────────────────────────────────── */
+    .tag--outline {
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+    }
+
+    /* ─────────────────────────────────────────────
+       TAG — DISMISSIBLE (Variant13: filled + close ×)
+       ───────────────────────────────────────────── */
+    /* No structural override needed — close button handles itself */
+
+    .tag__dismiss {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-icon-primary);
+      flex-shrink: 0;
+      transition: opacity 150ms ease;
+    }
+    .tag__dismiss:hover { opacity: 0.6; }
+
+    /* ─────────────────────────────────────────────
+       TAG — SM (Variant12: 28px icon + text)
+       ───────────────────────────────────────────── */
+    .tag--sm {
+      height: 28px;
+      padding: 0 var(--spacing-8);
+    }
+
+    .tag__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: var(--color-icon-primary);
+    }
+
+    /* ─────────────────────────────────────────────
+       TAG — LABEL (tag yellow: longer text label)
+       ───────────────────────────────────────────── */
+    .tag--label {
+      height: auto;
+      padding: var(--spacing-8) var(--spacing-12);
+      justify-content: flex-start;
+      white-space: normal;
+    }
+
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>tags</h1>
+  <p class="page-subtitle">5 variants — filled · outline · dismissible · sm with icon · label</p>
+
+  <div class="demo-grid">
+
+    <!-- ── Filled (default) ── -->
+    <div class="demo-group">
+      <p class="demo-group__title">Filled</p>
+      <div class="demo-row">
+        <div class="demo-item">
+          <span class="tag">Category</span>
+          <span class="demo-label">tag (default)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Outline ── -->
+    <div class="demo-group">
+      <p class="demo-group__title">Outline</p>
+      <div class="demo-row">
+        <div class="demo-item">
+          <span class="tag tag--outline">Category</span>
+          <span class="demo-label">tag--outline</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Dismissible ── -->
+    <div class="demo-group">
+      <p class="demo-group__title">Dismissible</p>
+      <div class="demo-row">
+        <div class="demo-item">
+          <span class="tag tag--dismissible" id="dismissTag">
+            <span class="tag__text">Category</span>
+            <button class="tag__dismiss" aria-label="Remove">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4.5 4.5L11.5 11.5M11.5 4.5L4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </span>
+          <span class="demo-label">tag--dismissible</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SM with icon ── -->
+    <div class="demo-group">
+      <p class="demo-group__title">SM + Icon</p>
+      <div class="demo-row">
+        <div class="demo-item">
+          <span class="tag tag--sm">
+            <span class="tag__icon" aria-hidden="true">
+              <!-- placeholder: replace with sprite icon when available -->
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M8 5.5V8.5L9.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="tag__text">Category</span>
+          </span>
+          <span class="demo-label">tag--sm</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Label ── -->
+    <div class="demo-group">
+      <p class="demo-group__title">Label</p>
+      <div class="demo-row">
+        <div class="demo-item">
+          <span class="tag tag--label">Rating: 10/10</span>
+          <span class="demo-label">tag--label</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── All together ── -->
+    <div class="demo-group">
+      <p class="demo-group__title">All variants</p>
+      <div class="demo-row">
+        <span class="tag">Category</span>
+        <span class="tag tag--outline">Category</span>
+        <span class="tag tag--dismissible">
+          <span class="tag__text">Category</span>
+          <button class="tag__dismiss" aria-label="Remove">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4.5 4.5L11.5 11.5M11.5 4.5L4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </span>
+        <span class="tag tag--sm">
+          <span class="tag__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 5.5V8.5L9.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="tag__text">Category</span>
+        </span>
+        <span class="tag tag--label">Rating: 10/10</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ─── Theme toggle ────────────────────────────────────────────────────────
+    const html   = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon   = document.getElementById('themeIcon');
+    const label  = document.getElementById('themeLabel');
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      icon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    // ─── Dismiss tags ────────────────────────────────────────────────────────
+    document.querySelectorAll('.tag__dismiss').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.closest('.tag').remove();
+      });
+    });
+  </script>
+
+</body>
+</html>

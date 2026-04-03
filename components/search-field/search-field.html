@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Field — Component Demo</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       RESET & PAGE
+       ───────────────────────────────────────────── */
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides (class-driven)
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+      --color-text-inverted:  var(--color-black-800);
+      --color-text-brandblue: var(--color-brand-blue-200);
+      --color-text-link:      var(--color-brand-blue-200);
+      --color-text-teal:      var(--color-teal-400);
+      --color-text-error:     var(--color-red-400);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+      --color-stroke-error:          var(--color-red-400);
+    }
+
+    /* ─────────────────────────────────────────────
+       Theme toggle (scaffold, not a component)
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+    .theme-toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-background-quaternary);
+      color: var(--color-text-primary);
+      padding: var(--spacing-48);
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .page-subtitle {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    /* ─────────────────────────────────────────────
+       DEMO LAYOUT
+       ───────────────────────────────────────────── */
+    .demo-grid {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-64);
+    }
+
+    .demo-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+    }
+
+    .demo-section__heading {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding-bottom: var(--spacing-12);
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+
+    .demo-states {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-20);
+    }
+
+    .demo-row {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+    }
+
+    .demo-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .demo-frame--mobile {
+      max-width: 382px;
+    }
+
+    .demo-frame--desktop-homepage {
+      max-width: 686px;
+    }
+
+    .demo-frame--desktop-serp {
+      max-width: 628px;
+    }
+
+    /* ─────────────────────────────────────────────
+       SEARCH FIELD — BASE
+       ───────────────────────────────────────────── */
+    .search-field {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-full);
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    /* Active state — real focus */
+    .search-field:focus-within {
+      border-color: var(--color-stroke-primary-button);
+    }
+
+    /* Active state — forced (for static demo) */
+    .search-field.is-focused {
+      border-color: var(--color-stroke-primary-button);
+    }
+
+    /* ─────────────────────────────────────────────
+       SEARCH FIELD — HOMEPAGE VARIANT
+       ───────────────────────────────────────────── */
+    .search-field--homepage {
+      height: 48px; /* mobile height */
+    }
+
+    .search-field--homepage.search-field--desktop {
+      height: 56px;
+    }
+
+    /* Shadow on focus */
+    .search-field--homepage:focus-within,
+    .search-field--homepage.is-focused {
+      box-shadow: var(--shadow-search);
+    }
+
+    /* ─────────────────────────────────────────────
+       SEARCH FIELD — SERP VARIANT
+       ───────────────────────────────────────────── */
+    .search-field--serp {
+      height: 40px;
+    }
+
+    /* SERP mobile: shadow on default (field floats on page, not in a nav bar) */
+    .search-field--serp.search-field--mobile {
+      box-shadow: var(--shadow-search);
+    }
+
+    /* ─────────────────────────────────────────────
+       SEARCH FIELD — INPUT
+       ───────────────────────────────────────────── */
+    .search-field__input {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      padding: 0 0 0 var(--spacing-20);
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      caret-color: var(--color-text-tertiary);
+    }
+
+    .search-field--serp .search-field__input {
+      padding-left: var(--spacing-16);
+    }
+
+    .search-field__input::placeholder {
+      color: var(--color-text-secondary);
+    }
+
+    /* ─────────────────────────────────────────────
+       SEARCH FIELD — ACTIONS (right side)
+       ───────────────────────────────────────────── */
+    .search-field__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      padding-right: var(--spacing-20);
+      flex-shrink: 0;
+    }
+
+    /* Homepage desktop: 24px right padding (per Figma) */
+    .search-field--homepage.search-field--desktop .search-field__actions {
+      padding-right: var(--spacing-24);
+    }
+
+    /* ─────────────────────────────────────────────
+       SEARCH FIELD — CLEAR BUTTON
+       ───────────────────────────────────────────── */
+    .search-field__clear {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-icon-tertiary);
+      flex-shrink: 0;
+      transition: color 100ms ease;
+    }
+
+    .search-field__clear:hover {
+      color: var(--color-icon-primary);
+    }
+
+    /* Show when field has a value */
+    .search-field.has-value .search-field__clear {
+      display: flex;
+    }
+
+    /* SERP: always visible (always pre-filled with a query) */
+    .search-field--serp .search-field__clear {
+      display: flex;
+    }
+
+    /* ─────────────────────────────────────────────
+       SEARCH FIELD — DIVIDER
+       ───────────────────────────────────────────── */
+    .search-field__divider {
+      display: none;
+      width: 1px;
+      height: 16px;
+      background: var(--color-stroke-primary);
+      flex-shrink: 0;
+    }
+
+    /* Show when field has a value */
+    .search-field.has-value .search-field__divider {
+      display: block;
+    }
+
+    /* SERP: always visible */
+    .search-field--serp .search-field__divider {
+      display: block;
+    }
+
+    /* ─────────────────────────────────────────────
+       SEARCH FIELD — SUBMIT BUTTON
+       ───────────────────────────────────────────── */
+    .search-field__submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-icon-secondary);
+      flex-shrink: 0;
+      transition: opacity 100ms ease;
+    }
+
+    .search-field__submit:hover {
+      opacity: 0.75;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>Search Field</h1>
+  <p class="page-subtitle">2 contexts × 2 sizes × 3 states</p>
+
+  <div class="demo-grid">
+
+    <!-- ──────────────────────────────────────────
+         HOMEPAGE — MOBILE  (382 × 48px)
+         ────────────────────────────────────────── -->
+    <div class="demo-section">
+      <h2 class="demo-section__heading">Homepage — Mobile</h2>
+      <div class="demo-states">
+
+        <div class="demo-row">
+          <p class="demo-label">Inactive</p>
+          <div class="demo-frame--mobile">
+            <div class="search-field search-field--homepage">
+              <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-row">
+          <p class="demo-label">Active</p>
+          <div class="demo-frame--mobile">
+            <div class="search-field search-field--homepage is-focused">
+              <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-row">
+          <p class="demo-label">Active with query</p>
+          <div class="demo-frame--mobile">
+            <div class="search-field search-field--homepage is-focused has-value">
+              <input type="text" class="search-field__input" value="search term" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────────
+         HOMEPAGE — DESKTOP  (686 × 56px)
+         ────────────────────────────────────────── -->
+    <div class="demo-section">
+      <h2 class="demo-section__heading">Homepage — Desktop</h2>
+      <div class="demo-states">
+
+        <div class="demo-row">
+          <p class="demo-label">Inactive</p>
+          <div class="demo-frame--desktop-homepage">
+            <div class="search-field search-field--homepage search-field--desktop">
+              <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-row">
+          <p class="demo-label">Active</p>
+          <div class="demo-frame--desktop-homepage">
+            <div class="search-field search-field--homepage search-field--desktop is-focused">
+              <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-row">
+          <p class="demo-label">Active with query</p>
+          <div class="demo-frame--desktop-homepage">
+            <div class="search-field search-field--homepage search-field--desktop is-focused has-value">
+              <input type="text" class="search-field__input" value="search term" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────────
+         SERP — DESKTOP  (628 × 40px)
+         ────────────────────────────────────────── -->
+    <div class="demo-section">
+      <h2 class="demo-section__heading">SERP — Desktop</h2>
+      <div class="demo-states">
+
+        <div class="demo-row">
+          <p class="demo-label">Inactive</p>
+          <div class="demo-frame--desktop-serp">
+            <div class="search-field search-field--serp has-value">
+              <input type="text" class="search-field__input" value="search term" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-row">
+          <p class="demo-label">Active</p>
+          <div class="demo-frame--desktop-serp">
+            <div class="search-field search-field--serp is-focused">
+              <input type="text" class="search-field__input" placeholder="" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-row">
+          <p class="demo-label">Active with query</p>
+          <div class="demo-frame--desktop-serp">
+            <div class="search-field search-field--serp is-focused has-value">
+              <input type="text" class="search-field__input" value="search term" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────────
+         SERP — MOBILE  (382 × 40px)
+         ────────────────────────────────────────── -->
+    <div class="demo-section">
+      <h2 class="demo-section__heading">SERP — Mobile</h2>
+      <div class="demo-states">
+
+        <div class="demo-row">
+          <p class="demo-label">Inactive</p>
+          <div class="demo-frame--mobile">
+            <div class="search-field search-field--serp search-field--mobile has-value">
+              <input type="text" class="search-field__input" value="search term" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-row">
+          <p class="demo-label">Active</p>
+          <div class="demo-frame--mobile">
+            <div class="search-field search-field--serp search-field--mobile is-focused">
+              <input type="text" class="search-field__input" placeholder="" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-row">
+          <p class="demo-label">Active with query</p>
+          <div class="demo-frame--mobile">
+            <div class="search-field search-field--serp search-field--mobile is-focused has-value">
+              <input type="text" class="search-field__input" value="search term" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /demo-grid -->
+
+  <script>
+    // ─── Theme toggle ───────────────────────────────────────────────────────
+    const html = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      icon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    // ─── Has-value management ───────────────────────────────────────────────
+    // Adds/removes .has-value on the .search-field wrapper when input value changes.
+    // This drives clear button + divider visibility on homepage variant.
+
+    document.querySelectorAll('.search-field__input').forEach(function(input) {
+      var field = input.closest('.search-field');
+
+      function syncHasValue() {
+        if (input.value.length > 0) {
+          field.classList.add('has-value');
+        } else {
+          field.classList.remove('has-value');
+        }
+      }
+
+      input.addEventListener('input', syncHasValue);
+
+      // Sync on page load for pre-filled inputs
+      syncHasValue();
+    });
+
+    // ─── Clear button ───────────────────────────────────────────────────────
+    document.querySelectorAll('.search-field__clear').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var field = btn.closest('.search-field');
+        var input = field.querySelector('.search-field__input');
+        input.value = '';
+        field.classList.remove('has-value');
+        input.focus();
+      });
+    });
+  </script>
+
+</body>
+</html>

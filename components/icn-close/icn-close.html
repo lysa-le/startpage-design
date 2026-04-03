@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Close Icon — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides (data-attribute driven)
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-text-primary:          var(--color-whisper-100);
+      --color-text-secondary:        var(--color-midnight-200);
+      --color-text-inverted:         var(--color-black-800);
+      --color-icon-primary:          var(--color-whisper-200);
+      --color-icon-secondary:        var(--color-brand-blue-200);
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+      --color-button-inactive:       var(--color-black-600);
+    }
+
+    /* ─────────────────────────────────────────────
+       Page scaffold
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      padding: var(--spacing-48);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .subtitle {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section {
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-20);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-24);
+      flex-wrap: wrap;
+    }
+
+    .label-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-8);
+    }
+
+    .label-group span {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-secondary);
+      min-width: 72px;
+      text-align: center;
+    }
+
+    /* ─────────────────────────────────────────────
+       Context pill — shows the icon in situ
+       ───────────────────────────────────────────── */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-4) var(--spacing-8) var(--spacing-4) var(--spacing-12);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-secondary);
+      font-size: var(--font-body-sm);
+      color: var(--color-text-primary);
+    }
+
+    /* ─────────────────────────────────────────────
+       icn-close component
+       ───────────────────────────────────────────── */
+    .icn-close {
+      /* Reset button defaults */
+      appearance: none;
+      border: none;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+
+      /* Layout */
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      isolation: isolate;
+      flex-shrink: 0;
+
+      /* Size: 16×16px — matches Figma container */
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+
+      /* Color: default-grey state */
+      color: var(--color-icon-tertiary);
+
+      /* Smooth state transition */
+      transition: color 0.15s ease, transform 0.15s ease;
+
+      border-radius: var(--radius-full);
+    }
+
+    /* ── Secondary state: brand-blue icon ── */
+    .icn-close[data-state="secondary"],
+    .icn-close:hover {
+      color: var(--color-icon-secondary);
+    }
+
+    /* ── Focus ring ── */
+    .icn-close:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    /* ── Icon SVG ── */
+    .icn-close__svg {
+      /* Icon frame: 10×10px, matching Figma's inner group */
+      width: 10px;
+      height: 10px;
+      flex-shrink: 0;
+      display: block;
+    }
+
+
+    /* ─────────────────────────────────────────────
+       Theme toggle
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+    .theme-toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Theme toggle ── -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>Close Icon</h1>
+  <p class="subtitle">
+    Two-state icon button. Default-grey is the resting state; secondary (brand blue) is the active/hover state.
+    Click the default icon to switch it to secondary.
+  </p>
+
+  <!-- ── States side by side ── -->
+  <div class="section">
+    <div class="section-label">States</div>
+    <div class="row">
+      <div class="label-group">
+        <button
+          class="icn-close"
+          data-state="default"
+          aria-label="Close"
+          id="demoDefault"
+        >
+          <svg
+            class="icn-close__svg"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <line x1="1" y1="1" x2="9" y2="9" />
+            <line x1="9" y1="1" x2="1" y2="9" />
+          </svg>
+        </button>
+        <span>default-grey</span>
+      </div>
+
+      <div class="label-group">
+        <button
+          class="icn-close"
+          data-state="secondary"
+          aria-label="Close"
+        >
+          <svg
+            class="icn-close__svg"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <line x1="1" y1="1" x2="9" y2="9" />
+            <line x1="9" y1="1" x2="1" y2="9" />
+          </svg>
+        </button>
+        <span>secondary</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Interactive default: click to switch ── -->
+  <div class="section">
+    <div class="section-label">Interactive — click default to activate secondary</div>
+    <div class="row">
+      <div class="label-group">
+        <button
+          class="icn-close"
+          data-state="default"
+          aria-label="Close"
+          id="interactiveIcon"
+        >
+          <svg
+            class="icn-close__svg"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <line x1="1" y1="1" x2="9" y2="9" />
+            <line x1="9" y1="1" x2="1" y2="9" />
+          </svg>
+        </button>
+        <span id="interactiveLabel">default-grey</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── In-context: inside a tag pill ── -->
+  <div class="section">
+    <div class="section-label">In context — dismiss tag</div>
+    <div class="row">
+      <div class="pill">
+        Privacy
+        <button class="icn-close" data-state="default" aria-label="Remove tag Privacy">
+          <svg
+            class="icn-close__svg"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <line x1="1" y1="1" x2="9" y2="9" />
+            <line x1="9" y1="1" x2="1" y2="9" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="pill">
+        Security
+        <button class="icn-close" data-state="default" aria-label="Remove tag Security">
+          <svg
+            class="icn-close__svg"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <line x1="1" y1="1" x2="9" y2="9" />
+            <line x1="9" y1="1" x2="1" y2="9" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="pill">
+        Open Source
+        <button class="icn-close" data-state="default" aria-label="Remove tag Open Source">
+          <svg
+            class="icn-close__svg"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <line x1="1" y1="1" x2="9" y2="9" />
+            <line x1="9" y1="1" x2="1" y2="9" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── Theme ── */
+    const html      = document.documentElement;
+    const themeBtn  = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLbl  = document.getElementById('themeLabel');
+
+    applyTheme(localStorage.getItem('theme') || 'light');
+
+    themeBtn.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(t) {
+      html.dataset.theme    = t;
+      themeIcon.textContent = t === 'dark' ? '🌙' : '☀️';
+      themeLbl.textContent  = t === 'dark' ? 'Dark' : 'Light';
+    }
+
+    /* ── Press helper ── */
+    function attachPressRipple(btn) {
+      btn.addEventListener('mousedown', () => {
+        btn.style.transform  = 'scale(0.88)';
+        btn.style.transition = 'transform 0.08s ease';
+
+        function onUp() {
+          btn.style.transform  = 'scale(1.0)';
+          btn.style.transition = 'transform 0.12s ease-out';
+          btn.addEventListener('transitionend', () => {
+            btn.style.transform  = '';
+            btn.style.transition = '';
+          }, { once: true });
+          document.removeEventListener('mouseup', onUp);
+        }
+        document.addEventListener('mouseup', onUp);
+      });
+    }
+
+    /* ── Interactive icon: click default → secondary ── */
+    const interactiveIcon  = document.getElementById('interactiveIcon');
+    const interactiveLbl   = document.getElementById('interactiveLabel');
+
+    interactiveIcon.addEventListener('click', () => {
+      const current = interactiveIcon.dataset.state;
+      const next    = current === 'default' ? 'secondary' : 'default';
+      interactiveIcon.dataset.state = next;
+      interactiveLbl.textContent    = next === 'secondary' ? 'secondary' : 'default-grey';
+    });
+
+    /* ── Attach press ripple to all icn-close buttons ── */
+    document.querySelectorAll('.icn-close').forEach(attachPressRipple);
+  </script>
+</body>
+</html>

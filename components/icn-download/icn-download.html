@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download Icon — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-text-primary:          var(--color-whisper-100);
+      --color-text-secondary:        var(--color-midnight-200);
+      --color-text-inverted:         var(--color-black-800);
+      --color-icon-primary:          var(--color-whisper-200);
+      --color-icon-secondary:        var(--color-brand-blue-200);
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+      --color-button-inactive:       var(--color-black-600);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      padding: var(--spacing-48);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .subtitle {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section {
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-20);
+    }
+
+    .row {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--spacing-32);
+      flex-wrap: wrap;
+    }
+
+    .variant-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .variant-label {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-secondary);
+      min-width: 72px;
+      text-align: center;
+    }
+
+    /* ─────────────────────────────────────────────
+       icn-download — base
+       ───────────────────────────────────────────── */
+    .icn-download {
+      appearance: none;
+      border: none;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      color: var(--color-icon-primary);
+      border-radius: var(--radius-full);
+      transition: color 0.15s ease, transform 0.15s ease;
+    }
+
+    .icn-download:hover {
+      color: var(--color-icon-secondary);
+    }
+
+    .icn-download:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 4px;
+    }
+
+    /* ── Bare — 16×16px icon, no background ── */
+    .icn-download--bare {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+    }
+
+    .icn-download--bare svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* ── Circle large — 32×32px circle button ── */
+    .icn-download--circle-lg {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      background: var(--color-button-inactive);
+    }
+
+    .icn-download--circle-lg svg {
+      width: 14px;
+      height: 14px;
+      display: block;
+    }
+
+    /* ── Circle small — 24×24px circle button ── */
+    .icn-download--circle-sm {
+      width: var(--spacing-24);
+      height: var(--spacing-24);
+      background: var(--color-button-inactive);
+    }
+
+    .icn-download--circle-sm svg {
+      width: 12px;
+      height: 12px;
+      display: block;
+    }
+
+    /* ─────────────────────────────────────────────
+       Theme toggle
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover { color: var(--color-text-primary); border-color: var(--color-stroke-primary-button); }
+    .theme-toggle:focus-visible { outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>icn-download</h1>
+  <p class="subtitle">
+    Three variants: bare icon (inline use), circle-lg 32×32px, circle-sm 24×24px.<br>
+    Default: <code>--color-icon-primary</code>; hover: brand blue. Circle background uses <code>--color-button-inactive</code>.
+  </p>
+
+  <!-- ── Variants ── -->
+  <div class="section">
+    <p class="section-label">Variants</p>
+    <div class="row">
+
+      <!-- Bare -->
+      <div class="variant-cell">
+        <button class="icn-download icn-download--bare" aria-label="Download">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4.5 3H2.5C2.22386 3 2 3.22386 2 3.5V13.5C2 13.7761 2.22386 14 2.5 14H13.5C13.7761 14 14 13.7761 14 13.5V3.5C14 3.22386 13.7761 3 13.5 3H11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M5 8L8 11L11 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M8 2L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="variant-label">bare · 16px</span>
+      </div>
+
+      <!-- Circle large -->
+      <div class="variant-cell">
+        <button class="icn-download icn-download--circle-lg" aria-label="Download">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4.5 3H2.5C2.22386 3 2 3.22386 2 3.5V13.5C2 13.7761 2.22386 14 2.5 14H13.5C13.7761 14 14 13.7761 14 13.5V3.5C14 3.22386 13.7761 3 13.5 3H11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M5 8L8 11L11 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M8 2L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="variant-label">circle-lg · 32px</span>
+      </div>
+
+      <!-- Circle small -->
+      <div class="variant-cell">
+        <button class="icn-download icn-download--circle-sm" aria-label="Download">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4.5 3H2.5C2.22386 3 2 3.22386 2 3.5V13.5C2 13.7761 2.22386 14 2.5 14H13.5C13.7761 14 14 13.7761 14 13.5V3.5C14 3.22386 13.7761 3 13.5 3H11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M5 8L8 11L11 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M8 2L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="variant-label">circle-sm · 24px</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const html      = document.documentElement;
+    const themeBtn  = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLbl  = document.getElementById('themeLabel');
+
+    applyTheme(localStorage.getItem('theme') || 'light');
+
+    themeBtn.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(t) {
+      html.dataset.theme    = t;
+      themeIcon.textContent = t === 'dark' ? '🌙' : '☀️';
+      themeLbl.textContent  = t === 'dark' ? 'Dark'  : 'Light';
+    }
+
+    /* Press feedback */
+    document.querySelectorAll('.icn-download').forEach(btn => {
+      btn.addEventListener('mousedown', () => {
+        btn.style.transform  = 'scale(0.88)';
+        btn.style.transition = 'transform 0.08s ease';
+        function onUp() {
+          btn.style.transform  = 'scale(1.0)';
+          btn.style.transition = 'transform 0.12s ease-out';
+          btn.addEventListener('transitionend', () => {
+            btn.style.transform  = '';
+            btn.style.transition = '';
+          }, { once: true });
+          document.removeEventListener('mouseup', onUp);
+        }
+        document.addEventListener('mouseup', onUp);
+      });
+    });
+  </script>
+</body>
+</html>

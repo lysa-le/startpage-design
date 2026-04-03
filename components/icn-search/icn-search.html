@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Icon — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-inverted:  var(--color-black-800);
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      padding: var(--spacing-48);
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .subtitle {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section { margin-bottom: var(--spacing-48); }
+
+    .section-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-20);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-32);
+      flex-wrap: wrap;
+    }
+
+    .variant-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .variant-label {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-secondary);
+      min-width: 48px;
+      text-align: center;
+    }
+
+    /* ─────────────────────────────────────────────
+       icn-search
+       ───────────────────────────────────────────── */
+
+    .icn-search {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      color: var(--color-icon-tertiary);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: color 150ms ease;
+    }
+
+    .icn-search[data-state="active"] {
+      color: var(--color-icon-secondary);
+    }
+
+    .icn-search:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 4px;
+    }
+
+    .icn-search svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ─────────────────────────────────────────────
+       Theme toggle
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      z-index: 100;
+    }
+    .theme-toggle:hover { color: var(--color-text-primary); border-color: var(--color-stroke-primary-button); }
+    .theme-toggle:focus-visible { outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>icn-search</h1>
+  <p class="subtitle">
+    Two states: inactive (muted) and active (brand blue). 16×16px.<br>
+    To scale, control width/height via CSS — same SVG paths render at any size.
+  </p>
+
+  <!-- ── States ── -->
+  <div class="section">
+    <p class="section-label">States</p>
+    <div class="row">
+
+      <div class="variant-cell">
+        <button class="icn-search" data-state="inactive" aria-label="Search">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="6.33" cy="6.33" r="4.33" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9.67 9.67L13.67 13.67" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="variant-label">inactive</span>
+      </div>
+
+      <div class="variant-cell">
+        <button class="icn-search" data-state="active" aria-label="Search">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="6.33" cy="6.33" r="4.33" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9.67 9.67L13.67 13.67" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="variant-label">active</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Interactive ── -->
+  <div class="section">
+    <p class="section-label">Interactive — click to toggle</p>
+    <div class="row">
+      <div class="variant-cell">
+        <button class="icn-search" data-state="inactive" id="toggleBtn" aria-label="Search">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="6.33" cy="6.33" r="4.33" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9.67 9.67L13.67 13.67" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="variant-label" id="toggleLabel">inactive</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const html = document.documentElement;
+    const themeBtn   = document.getElementById('themeToggle');
+    const themeIcon  = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    applyTheme(localStorage.getItem('theme') || 'light');
+    themeBtn.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+    function applyTheme(t) {
+      html.dataset.theme = t;
+      themeIcon.textContent  = t === 'dark' ? '🌙' : '☀️';
+      themeLabel.textContent = t === 'dark' ? 'Dark' : 'Light';
+    }
+
+    const toggleBtn   = document.getElementById('toggleBtn');
+    const toggleLabel = document.getElementById('toggleLabel');
+    toggleBtn.addEventListener('click', () => {
+      const next = toggleBtn.dataset.state === 'inactive' ? 'active' : 'inactive';
+      toggleBtn.dataset.state  = next;
+      toggleLabel.textContent  = next;
+    });
+  </script>
+
+</body>
+</html>

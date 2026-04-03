@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Stress Test — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+    }
+
+    /* ── Dark mode token overrides (class-driven, mirrors button.html) ── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+      --color-text-inverted:  var(--color-black-800);
+      --color-text-brandblue: var(--color-brand-blue-200);
+      --color-text-link:      var(--color-brand-blue-200);
+      --color-text-teal:      var(--color-teal-400);
+      --color-text-error:     var(--color-red-400);
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+      --color-icon-tertiary:  var(--color-midnight-100);
+      --color-button-brandblue:          var(--color-brand-blue-300);
+      --color-button-brandbluehover:     var(--color-brand-blue-400);
+      --color-button-purple:             var(--color-purple-400);
+      --color-button-purplehover:        var(--color-purple-500);
+      --color-button-teal:               var(--color-teal-400);
+      --color-button-tealhover:          var(--color-teal-200);
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-button-inactive:           var(--color-black-600);
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+      --color-stroke-error:          var(--color-red-400);
+    }
+
+    /* ── Section scaffold ── */
+    .scenario {
+      padding: var(--spacing-64) var(--spacing-48);
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
+    }
+    .scenario-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-32);
+    }
+
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+    .theme-toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       BUTTON COMPONENT
+       ═══════════════════════════════════════════════ */
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-8);
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-weight: var(--font-weight-bold);
+      white-space: nowrap;
+      text-decoration: none;
+      transition: background-color 0.15s ease;
+    }
+
+    /* CTA sizes */
+    .btn--sm {
+      padding: var(--spacing-20) var(--spacing-24);
+      border-radius: var(--radius-xl);
+      font-size: var(--font-button-sm);
+      line-height: var(--font-button-sm-lh);
+    }
+    .btn--md {
+      padding: var(--spacing-20) var(--spacing-80);
+      border-radius: var(--radius-xl);
+      font-size: var(--font-button-md);
+      line-height: var(--font-button-md-lh);
+    }
+    .btn--lg {
+      padding: var(--spacing-32) var(--spacing-40);
+      border-radius: var(--radius-2xl);
+      font-size: var(--font-button-lg);
+      line-height: var(--font-button-lg-lh);
+    }
+    .btn--brand-blue.btn--lg,
+    .btn--purple.btn--lg  { padding-inline: var(--spacing-48); }
+    .btn--inactive.btn--lg { padding-inline: var(--spacing-80); border-radius: var(--radius-xl); }
+
+    /* CTA colors */
+    .btn--teal       { background-color: var(--color-button-teal);           color: var(--color-text-primary); }
+    .btn--teal:hover { background-color: var(--color-button-tealhover); }
+    [data-theme="dark"] .btn--teal { color: var(--color-text-inverted); }
+
+    .btn--brand-blue       { background-color: var(--color-button-brandblue);      color: var(--color-text-inverted); }
+    .btn--brand-blue:hover { background-color: var(--color-button-brandbluehover); }
+
+    .btn--purple       { background-color: var(--color-button-purple);      color: var(--color-text-inverted); }
+    .btn--purple:hover { background-color: var(--color-button-purplehover); }
+
+    .btn--inactive,
+    .btn:disabled {
+      background-color: var(--color-button-inactive);
+      color: var(--color-text-secondary);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* Product self-sizing defaults */
+    .btn--product-filled,
+    .btn--product-selected,
+    .btn--product-brand-blue {
+      padding: var(--spacing-12) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+    }
+    .btn--xs {
+      padding: var(--spacing-8) var(--spacing-12);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+    }
+
+    /* Product colors */
+    .btn--product-filled       { background-color: var(--color-button-productfilled);      color: var(--color-text-primary); }
+    .btn--product-filled:hover { background-color: var(--color-button-productfilledhover); }
+
+    .btn--product-selected {
+      background-color: transparent;
+      color: var(--color-text-primary);
+      border: var(--border-stroke-md) solid var(--color-stroke-primary-button);
+    }
+
+    .btn--product-brand-blue       { background-color: var(--color-button-brandblue);      color: var(--color-text-inverted); font-weight: var(--font-weight-bold); }
+    .btn--product-brand-blue:hover { background-color: var(--color-button-brandbluehover); }
+
+    /* Ghost */
+    .btn--ghost {
+      padding: var(--spacing-8) var(--spacing-24);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+    }
+    .btn--ghost:hover { background-color: var(--color-button-productfilledhover); }
+
+    /* Icon slot */
+    .btn__icon { display: block; width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* Focus */
+    .btn:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SCENARIO 1 — Hero
+       ═══════════════════════════════════════════════ */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--spacing-32);
+    }
+    .hero__headline {
+      font-size: var(--font-heading-lg);
+      line-height: var(--font-heading-lg-lh);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+    .hero__subheading {
+      font-size: var(--font-body-xl);
+      line-height: var(--font-body-xl-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+    }
+    .hero__ctas {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+    }
+
+    /* ═══════════════════════════════════════════════
+       SCENARIO 2 — Pagination
+       ═══════════════════════════════════════════════ */
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      flex-wrap: wrap;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SCENARIO 3 — Modal card
+       ═══════════════════════════════════════════════ */
+    .modal-card {
+      background-color: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-2xl);
+      padding: var(--spacing-32);
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+    }
+    .modal-card__title {
+      font-size: var(--font-heading-xxs);
+      line-height: var(--font-heading-xxs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .modal-card__description {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+    }
+    .modal-card__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--spacing-12);
+      padding-top: var(--spacing-8);
+    }
+
+    /* ═══════════════════════════════════════════════
+       SCENARIO 4 — Toggle group
+       ═══════════════════════════════════════════════ */
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <!-- ════════════════════════════════════════════
+       SCENARIO 1 — Landing page hero
+       ════════════════════════════════════════════ -->
+  <section class="scenario">
+    <div class="scenario-label">Scenario 1 — Landing page hero</div>
+    <div class="hero">
+      <h1 class="hero__headline">Find anything, instantly.</h1>
+      <p class="hero__subheading">The smarter way to search — private, fast, and built for you.</p>
+      <div class="hero__ctas">
+        <button class="btn btn--brand-blue btn--lg">Get started</button>
+        <button class="btn btn--ghost">
+          <span>See how it works</span>
+          <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4"
+                  stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════
+       SCENARIO 2 — Pagination strip
+       ════════════════════════════════════════════ -->
+  <section class="scenario">
+    <div class="scenario-label">Scenario 2 — Pagination strip</div>
+    <nav class="pagination" aria-label="Search results pages">
+      <button class="btn btn--ghost">
+        <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 4L6 8l4 4"
+                stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Previous
+      </button>
+      <button class="btn btn--product-filled btn--xs" aria-pressed="false">1</button>
+      <button class="btn btn--product-filled btn--xs" aria-pressed="false">2</button>
+      <button class="btn btn--product-filled btn--xs" aria-pressed="false">3</button>
+      <button class="btn btn--product-selected btn--xs" aria-pressed="true" aria-current="page">4</button>
+      <button class="btn btn--product-filled btn--xs" aria-pressed="false">5</button>
+      <button class="btn btn--product-filled btn--xs" aria-pressed="false">6</button>
+      <button class="btn btn--product-filled btn--xs" aria-pressed="false">7</button>
+      <button class="btn btn--ghost">
+        Next
+        <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 4l4 4-4 4"
+                stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </nav>
+  </section>
+
+  <!-- ════════════════════════════════════════════
+       SCENARIO 3 — Destructive confirmation modal
+       ════════════════════════════════════════════ -->
+  <section class="scenario">
+    <div class="scenario-label">Scenario 3 — Destructive confirmation modal</div>
+    <div class="modal-card"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="modal-title-s3">
+      <h2 class="modal-card__title" id="modal-title-s3">Delete workspace</h2>
+      <p class="modal-card__description">
+        This action is permanent and cannot be undone.
+        All members will immediately lose access.
+      </p>
+      <div class="modal-card__footer">
+        <button class="btn btn--ghost">Cancel</button>
+        <button class="btn btn--inactive btn--sm" disabled>Delete</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════
+       SCENARIO 4 — Button group / toggle
+       ════════════════════════════════════════════ -->
+  <section class="scenario">
+    <div class="scenario-label">Scenario 4 — Button group / toggle</div>
+    <div class="toggle-group"
+         role="radiogroup"
+         aria-label="Filter results by type">
+      <button class="btn btn--product-selected" role="radio" aria-checked="true">All</button>
+      <button class="btn btn--product-filled"   role="radio" aria-checked="false">Images</button>
+      <button class="btn btn--product-filled"   role="radio" aria-checked="false">News</button>
+    </div>
+  </section>
+
+  <script>
+    const html = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon   = document.getElementById('themeIcon');
+    const label  = document.getElementById('themeLabel');
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      icon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+  </script>
+</body>
+</html>

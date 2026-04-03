@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dropdown — Component Demo</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       RESET & PAGE
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-background-quaternary);
+      color: var(--color-text-primary);
+      padding: var(--spacing-48);
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-32);
+    }
+
+    .demo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-48);
+      align-items: flex-start;
+    }
+
+    .demo-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+
+    .demo-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ─────────────────────────────────────────────
+       DROPDOWN — CONTAINER
+       ───────────────────────────────────────────── */
+    .dropdown {
+      position: relative;
+      width: 248px; /* not a token — see spec Notes §2 */
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+    }
+
+    /* Open state: flat bottom corners + drop shadow */
+    .dropdown--open {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      box-shadow: var(--shadow-dropdown);
+    }
+
+    /* ─────────────────────────────────────────────
+       DROPDOWN — TRIGGER
+       ───────────────────────────────────────────── */
+    .dropdown__trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: var(--spacing-12) var(--spacing-16);
+      background: none;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      text-align: left;
+    }
+
+    .dropdown__trigger:hover {
+      background: var(--color-background-secondary);
+    }
+
+    /* When panel is open, only round the top corners on the trigger */
+    .dropdown--open .dropdown__trigger {
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      background: none;
+    }
+
+    .dropdown__trigger:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    /* Small size modifier — trigger only */
+    .dropdown--small .dropdown__trigger {
+      padding: var(--spacing-8) var(--spacing-12);
+    }
+
+    /* ─────────────────────────────────────────────
+       DROPDOWN — CHEVRON ICON
+       ───────────────────────────────────────────── */
+    .dropdown__chevron {
+      flex-shrink: 0;
+      color: var(--color-icon-primary);
+      transition: transform 0.2s ease;
+    }
+
+    .dropdown--open .dropdown__chevron {
+      transform: rotate(180deg);
+    }
+
+    /* ─────────────────────────────────────────────
+       DROPDOWN — PANEL
+       ───────────────────────────────────────────── */
+    .dropdown__panel[hidden] {
+      display: none;
+    }
+
+    .dropdown__panel {
+      position: absolute;
+      top: 100%;
+      left: calc(-1 * var(--border-stroke-sm));
+      right: calc(-1 * var(--border-stroke-sm));
+      z-index: 10;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-top: none;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+
+    /* ─────────────────────────────────────────────
+       DROPDOWN — DIVIDER
+       ───────────────────────────────────────────── */
+    .dropdown__divider {
+      height: var(--border-stroke-sm);
+      background: var(--color-stroke-primary);
+      border: none;
+      margin: 0;
+    }
+
+    /* ─────────────────────────────────────────────
+       DROPDOWN — SEARCH (with-search variant)
+       ───────────────────────────────────────────── */
+    .dropdown__search {
+      padding: var(--spacing-8) var(--spacing-8);
+    }
+
+    .dropdown__search-input {
+      display: block;
+      width: 100%;
+      padding: var(--spacing-8) var(--spacing-12);
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .dropdown__search-input::placeholder {
+      color: var(--color-text-secondary);
+    }
+
+    .dropdown__search-input:focus {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 0;
+    }
+
+    /* ─────────────────────────────────────────────
+       DROPDOWN — LIST & ITEMS
+       ───────────────────────────────────────────── */
+    .dropdown__list {
+      list-style: none;
+      padding: var(--spacing-8) 0;
+    }
+
+    /* Footer-preceded list (no bottom padding — footer row provides it) */
+    .dropdown--has-footer .dropdown__list {
+      padding-bottom: 0;
+    }
+
+    .dropdown__item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-8) var(--spacing-16);
+      gap: var(--spacing-8);
+      cursor: pointer;
+      /* content must sit above the ::before pill */
+    }
+
+    /*
+     * Pill highlight via ::before pseudo-element.
+     * inset: 0 --spacing-8 positions the bg 8px in from each side edge,
+     * spanning the full item height. Content alignment stays at 16px from edge.
+     * See spec §3.3.
+     */
+    .dropdown__item::before {
+      content: '';
+      position: absolute;
+      inset: 0 var(--spacing-8);
+      border-radius: var(--radius-lg);
+      background: transparent;
+    }
+
+    .dropdown__item:hover:not(.dropdown__item--disabled)::before,
+    .dropdown__item--selected::before {
+      background: var(--color-background-secondary);
+    }
+
+    /* All direct children of item sit above the pill */
+    .dropdown__item > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .dropdown__item-label {
+      flex: 1;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Selected item — semibold label */
+    .dropdown__item--selected .dropdown__item-label {
+      font-weight: var(--font-weight-semibold);
+    }
+
+    /* ─────────────────────────────────────────────
+       DROPDOWN — ITEM ICON (with-icons variant)
+       ───────────────────────────────────────────── */
+    .dropdown__item-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      /* Figma uses Ellipse placeholder — real implementations use <img> or avatar component */
+      background: var(--color-button-brandblue);
+      display: block;
+    }
+
+    /* ─────────────────────────────────────────────
+       DROPDOWN — CHECKMARK ICON (text-only selected)
+       ───────────────────────────────────────────── */
+    .dropdown__item-check {
+      flex-shrink: 0;
+      color: var(--color-text-primary);
+    }
+
+    /* ─────────────────────────────────────────────
+       DROPDOWN — FOOTER (text-only variant)
+       ───────────────────────────────────────────── */
+    .dropdown__footer-divider {
+      height: var(--border-stroke-sm);
+      background: var(--color-stroke-primary);
+      border: none;
+      margin: 0;
+    }
+
+    .dropdown__footer {
+      padding: var(--spacing-8) var(--spacing-16);
+    }
+
+    .dropdown__footer-link {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+
+    .dropdown__footer-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Dropdown</h1>
+
+<div class="demo-grid">
+
+  <!-- ─────────────────────────────────────────────
+       1. DEFAULT — CLOSED
+       ───────────────────────────────────────────── -->
+  <div class="demo-section">
+    <span class="demo-label">Default — Closed</span>
+    <div class="dropdown" data-dropdown>
+      <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="list-default">
+        <span class="dropdown__label">Dropdown</span>
+        <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="dropdown__panel" hidden>
+        <hr class="dropdown__divider">
+        <ul class="dropdown__list" id="list-default" role="listbox" aria-label="Options">
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────
+       2. TEXT-ONLY — OPEN WITH SELECTED + FOOTER LINK
+       ───────────────────────────────────────────── -->
+  <div class="demo-section">
+    <span class="demo-label">Text-only — Open, Selected + Footer Link</span>
+    <div class="dropdown dropdown--open dropdown--has-footer" data-dropdown>
+      <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="true" aria-controls="list-text">
+        <span class="dropdown__label">Menu item</span>
+        <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="dropdown__panel">
+        <hr class="dropdown__divider">
+        <ul class="dropdown__list" id="list-text" role="listbox" aria-label="Options">
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" tabindex="0">
+            <span class="dropdown__item-label">Menu item</span>
+            <svg class="dropdown__item-check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8.5L6.5 12L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+        </ul>
+        <hr class="dropdown__footer-divider">
+        <div class="dropdown__footer">
+          <a class="dropdown__footer-link" href="#">Optional link</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────
+       3. WITH ICONS — OPEN WITH SELECTED
+       ───────────────────────────────────────────── -->
+  <div class="demo-section">
+    <span class="demo-label">With Icons — Open, Selected</span>
+    <div class="dropdown dropdown--with-icons dropdown--open" data-dropdown>
+      <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="true" aria-controls="list-icons">
+        <span class="dropdown__label">Menu item</span>
+        <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="dropdown__panel">
+        <hr class="dropdown__divider">
+        <ul class="dropdown__list" id="list-icons" role="listbox" aria-label="Options">
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-icon" aria-hidden="true"></span>
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" tabindex="0">
+            <span class="dropdown__item-icon" aria-hidden="true"></span>
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-icon" aria-hidden="true"></span>
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-icon" aria-hidden="true"></span>
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────
+       4. WITH SEARCH + ICONS — OPEN WITH SELECTED
+       ───────────────────────────────────────────── -->
+  <div class="demo-section">
+    <span class="demo-label">With Search + Icons — Open, Selected</span>
+    <div class="dropdown dropdown--with-icons dropdown--with-search dropdown--open" data-dropdown>
+      <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="true" aria-controls="list-search">
+        <span class="dropdown__label">Menu item</span>
+        <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="dropdown__panel">
+        <hr class="dropdown__divider">
+        <div class="dropdown__search">
+          <input
+            class="dropdown__search-input"
+            type="text"
+            placeholder="Search placeholder"
+            aria-label="Search options"
+            autocomplete="off"
+          >
+        </div>
+        <ul class="dropdown__list" id="list-search" role="listbox" aria-label="Options">
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-icon" aria-hidden="true"></span>
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" tabindex="0">
+            <span class="dropdown__item-icon" aria-hidden="true"></span>
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-icon" aria-hidden="true"></span>
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-icon" aria-hidden="true"></span>
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────
+       5. SMALL — CLOSED
+       ───────────────────────────────────────────── -->
+  <div class="demo-section">
+    <span class="demo-label">Small — Closed</span>
+    <div class="dropdown dropdown--small" data-dropdown>
+      <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="list-small">
+        <span class="dropdown__label">Dropdown</span>
+        <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="dropdown__panel" hidden>
+        <hr class="dropdown__divider">
+        <ul class="dropdown__list" id="list-small" role="listbox" aria-label="Options">
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+          <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1">
+            <span class="dropdown__item-label">Menu item</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /demo-grid -->
+
+<script>
+  (() => {
+    const dropdowns = document.querySelectorAll('[data-dropdown]');
+
+    function openDropdown(dd) {
+      const trigger = dd.querySelector('.dropdown__trigger');
+      const panel = dd.querySelector('.dropdown__panel');
+      const search = dd.querySelector('.dropdown__search-input');
+      dd.classList.add('dropdown--open');
+      trigger.setAttribute('aria-expanded', 'true');
+      panel.removeAttribute('hidden');
+      if (search) {
+        // Focus search on open if present (spec §6)
+        search.focus();
+      }
+    }
+
+    function closeDropdown(dd) {
+      const trigger = dd.querySelector('.dropdown__trigger');
+      const panel = dd.querySelector('.dropdown__panel');
+      dd.classList.remove('dropdown--open');
+      trigger.setAttribute('aria-expanded', 'false');
+      panel.setAttribute('hidden', '');
+    }
+
+    function isOpen(dd) {
+      return dd.classList.contains('dropdown--open');
+    }
+
+    dropdowns.forEach(dd => {
+      const trigger = dd.querySelector('.dropdown__trigger');
+      const panel = dd.querySelector('.dropdown__panel');
+      const items = dd.querySelectorAll('.dropdown__item:not(.dropdown__item--disabled)');
+
+      // Toggle on trigger click
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isOpen(dd)) {
+          closeDropdown(dd);
+          trigger.focus();
+        } else {
+          // Close any other open dropdowns first
+          dropdowns.forEach(other => { if (other !== dd) closeDropdown(other); });
+          openDropdown(dd);
+        }
+      });
+
+      // Select item on click
+      items.forEach(item => {
+        item.addEventListener('click', () => {
+          // Update selected state
+          dd.querySelectorAll('.dropdown__item').forEach(i => {
+            i.classList.remove('dropdown__item--selected');
+            i.setAttribute('aria-selected', 'false');
+          });
+          item.classList.add('dropdown__item--selected');
+          item.setAttribute('aria-selected', 'true');
+
+          // Update trigger label to selected item text
+          const labelText = item.querySelector('.dropdown__item-label').textContent;
+          trigger.querySelector('.dropdown__label').textContent = labelText;
+
+          closeDropdown(dd);
+          trigger.focus();
+        });
+
+        // Keyboard navigation within list
+        item.addEventListener('keydown', (e) => {
+          const allItems = [...dd.querySelectorAll('.dropdown__item:not(.dropdown__item--disabled)')];
+          const idx = allItems.indexOf(item);
+
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            const next = allItems[idx + 1] || allItems[0];
+            next.focus();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            const prev = allItems[idx - 1] || allItems[allItems.length - 1];
+            prev.focus();
+          } else if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            item.click();
+          } else if (e.key === 'Tab') {
+            closeDropdown(dd);
+          }
+        });
+
+        // Allow items to receive focus
+        item.setAttribute('tabindex', '-1');
+      });
+
+      // Move focus into list on ArrowDown from trigger
+      trigger.addEventListener('keydown', (e) => {
+        if ((e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') && !isOpen(dd)) {
+          e.preventDefault();
+          dropdowns.forEach(other => { if (other !== dd) closeDropdown(other); });
+          openDropdown(dd);
+          // Focus first item (or selected item)
+          const selected = dd.querySelector('.dropdown__item--selected:not(.dropdown__item--disabled)');
+          const first = dd.querySelector('.dropdown__item:not(.dropdown__item--disabled)');
+          (selected || first)?.focus();
+        } else if (e.key === 'ArrowDown' && isOpen(dd)) {
+          e.preventDefault();
+          const first = dd.querySelector('.dropdown__item:not(.dropdown__item--disabled)');
+          first?.focus();
+        }
+      });
+
+      // Escape closes
+      panel.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeDropdown(dd);
+          trigger.focus();
+        }
+      });
+    });
+
+    // Click outside closes all
+    document.addEventListener('click', () => {
+      dropdowns.forEach(dd => closeDropdown(dd));
+    });
+
+    // Global Escape closes all
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        dropdowns.forEach(dd => closeDropdown(dd));
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>

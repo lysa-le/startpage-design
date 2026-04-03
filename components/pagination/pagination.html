@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagination — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides (class-driven)
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-inverted:  var(--color-black-800);
+      --color-text-link:      var(--color-brand-blue-200);
+
+      --color-button-brandblue:          var(--color-brand-blue-300);
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+    }
+
+    /* ─────────────────────────────────────────────
+       Page scaffold — not part of the component
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      padding: var(--spacing-48);
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .subtitle {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section {
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-20);
+    }
+
+    /* ─────────────────────────────────────────────
+       Pagination component
+       ───────────────────────────────────────────── */
+
+    /* ── Container ── */
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    /* ── Ripple on press ── */
+    .btn-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      transform: scale(0);
+      animation: ripple 550ms ease-out forwards;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @keyframes ripple {
+      to { transform: scale(5); opacity: 0; }
+    }
+
+    /* ── Page number button ──
+       Width and height are both derived from tokens:
+       --spacing-12 (12px) × 2 + --font-button-xs-lh cap-height (10px) = 34px */
+    .pagination__page {
+      width: calc(var(--spacing-12) * 2 + var(--font-button-xs-lh));
+      height: calc(var(--spacing-12) * 2 + var(--font-button-xs-lh));
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: transparent;
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .pagination__page:hover {
+      background-color: var(--color-button-productfilled);
+      border-color: var(--color-button-productfilled);
+    }
+
+    .pagination__page[aria-current="page"] {
+      background-color: var(--color-button-brandblue);
+      border-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    /* ── Ellipsis ── */
+    .pagination__ellipsis {
+      width: calc(var(--spacing-12) * 2 + var(--font-button-xs-lh));
+      height: calc(var(--spacing-12) * 2 + var(--font-button-xs-lh));
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-link);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+    }
+
+    /* ── Prev / Next nav buttons ── */
+    .pagination__nav {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-12) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      border: none;
+      background-color: var(--color-button-productfilled);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .pagination__nav:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+
+    /* ── Focus state ── */
+    .pagination__page:focus-visible,
+    .pagination__nav:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    /* ── Theme toggle (scaffold, not a component) ── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+    .theme-toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>Pagination</h1>
+  <p class="subtitle">Four Figma variants. The active page uses <code>aria-current="page"</code>.</p>
+
+  <!-- ── Variant 1: Desktop Default — first page active, no Prev ── -->
+  <div class="section">
+    <div class="section-label">Default — page 1 active</div>
+    <nav class="pagination" aria-label="Pagination">
+      <button class="pagination__page" data-btn aria-current="page" aria-label="Page 1">1</button>
+      <button class="pagination__page" data-btn aria-label="Page 2">2</button>
+      <button class="pagination__page" data-btn aria-label="Page 3">3</button>
+      <button class="pagination__page" data-btn aria-label="Page 4">4</button>
+      <button class="pagination__nav" data-btn>Next</button>
+    </nav>
+  </div>
+
+  <!-- ── Variant 2: Middle — Prev shown, page 2 active ── -->
+  <div class="section">
+    <div class="section-label">Mid-range — page 2 active</div>
+    <nav class="pagination" aria-label="Pagination">
+      <button class="pagination__nav" data-btn>Prev</button>
+      <button class="pagination__page" data-btn aria-label="Page 1">1</button>
+      <button class="pagination__page" data-btn aria-current="page" aria-label="Page 2">2</button>
+      <button class="pagination__page" data-btn aria-label="Page 3">3</button>
+      <button class="pagination__page" data-btn aria-label="Page 4">4</button>
+      <button class="pagination__nav" data-btn>Next</button>
+    </nav>
+  </div>
+
+  <!-- ── Variant 3: Far end — ellipsis, page 6 active ── -->
+  <div class="section">
+    <div class="section-label">Far end — page 6 active</div>
+    <nav class="pagination" aria-label="Pagination">
+      <button class="pagination__nav" data-btn>Prev</button>
+      <button class="pagination__page" data-btn aria-label="Page 1">1</button>
+      <span class="pagination__ellipsis" aria-hidden="true">…</span>
+      <button class="pagination__page" data-btn aria-label="Page 5">5</button>
+      <button class="pagination__page" data-btn aria-current="page" aria-label="Page 6">6</button>
+      <button class="pagination__page" data-btn aria-label="Page 7">7</button>
+      <button class="pagination__nav" data-btn>Next</button>
+    </nav>
+  </div>
+
+  <!-- ── Variant 4: Last visible — ellipsis, page 5 active, no further pages ── -->
+  <div class="section">
+    <div class="section-label">Last visible — page 5 active</div>
+    <nav class="pagination" aria-label="Pagination">
+      <button class="pagination__nav" data-btn>Prev</button>
+      <button class="pagination__page" data-btn aria-label="Page 1">1</button>
+      <span class="pagination__ellipsis" aria-hidden="true">…</span>
+      <button class="pagination__page" data-btn aria-current="page" aria-label="Page 5">5</button>
+      <button class="pagination__nav" data-btn>Next</button>
+    </nav>
+  </div>
+
+  <script>
+    const html = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      icon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    /* ── Active page selection ── */
+    document.querySelectorAll('.pagination').forEach(nav => {
+      nav.querySelectorAll('.pagination__page').forEach(btn => {
+        btn.addEventListener('click', () => {
+          nav.querySelectorAll('.pagination__page').forEach(b => b.removeAttribute('aria-current'));
+          btn.setAttribute('aria-current', 'page');
+        });
+      });
+    });
+
+    /* ── Press interaction: ripple + scale ── */
+    document.querySelectorAll('[data-btn]').forEach(btn => {
+      btn.addEventListener('mousedown', e => {
+        if (btn.disabled) return;
+        const rect = btn.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 2.2;
+        const ripple = document.createElement('span');
+        ripple.className = 'btn-ripple';
+        Object.assign(ripple.style, {
+          width:  size + 'px',
+          height: size + 'px',
+          left:   (e.clientX - rect.left - size / 2) + 'px',
+          top:    (e.clientY - rect.top  - size / 2) + 'px',
+        });
+        btn.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+        btn.classList.add('is-clicking');
+        btn.style.transform = 'scale(0.985)';
+        btn.style.transition = 'transform 0.08s ease';
+        function onUp() {
+          btn.classList.remove('is-clicking');
+          btn.style.transform = 'scale(1.001)';
+          btn.style.transition = 'transform 0.12s ease-out';
+          btn.addEventListener('transitionend', () => {
+            btn.style.transform = '';
+            btn.style.transition = '';
+          }, { once: true });
+          document.removeEventListener('mouseup', onUp);
+        }
+        document.addEventListener('mouseup', onUp);
+      });
+    });
+  </script>
+</body>
+</html>

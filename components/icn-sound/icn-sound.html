@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sound Icon — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-text-primary:          var(--color-whisper-100);
+      --color-text-secondary:        var(--color-midnight-200);
+      --color-text-inverted:         var(--color-black-800);
+      --color-icon-primary:          var(--color-whisper-200);
+      --color-icon-secondary:        var(--color-brand-blue-200);
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+      --color-button-inactive:       var(--color-black-600);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      padding: var(--spacing-48);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .subtitle {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section {
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-20);
+    }
+
+    .row {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--spacing-32);
+      flex-wrap: wrap;
+    }
+
+    .variant-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .variant-label {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-secondary);
+      min-width: 56px;
+      text-align: center;
+    }
+
+    /* ─────────────────────────────────────────────
+       icn-sound
+       ───────────────────────────────────────────── */
+    .icn-sound {
+      appearance: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      border-radius: var(--radius-full);
+      background: var(--color-button-inactive);
+
+      color: var(--color-icon-primary);
+      transition: color 0.15s ease, transform 0.15s ease;
+    }
+
+    .icn-sound:hover {
+      color: var(--color-icon-secondary);
+    }
+
+    .icn-sound:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 4px;
+    }
+
+    .icn-sound svg {
+      /* Tight crop viewBox renders icon at ~51% circle width, matching Figma insets */
+      width: 16px;
+      height: 11px;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    /* Hide/show paths based on state */
+    .icn-sound__waves,
+    .icn-sound__mute {
+      transition: opacity 0.15s ease;
+    }
+
+    .icn-sound[data-state="on"]  .icn-sound__mute  { opacity: 0; }
+    .icn-sound[data-state="on"]  .icn-sound__waves { opacity: 1; }
+    .icn-sound[data-state="off"] .icn-sound__mute  { opacity: 1; }
+    .icn-sound[data-state="off"] .icn-sound__waves { opacity: 0; }
+
+    /* ─────────────────────────────────────────────
+       Theme toggle
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover { color: var(--color-text-primary); border-color: var(--color-stroke-primary-button); }
+    .theme-toggle:focus-visible { outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>icn-sound</h1>
+  <p class="subtitle">
+    32×32px circle button. Two states: off (muted) and on.<br>
+    Default: <code>--color-icon-primary</code>; hover: brand blue.
+  </p>
+
+  <!-- ── States ── -->
+  <div class="section">
+    <p class="section-label">States</p>
+    <div class="row">
+
+      <div class="variant-cell">
+        <button class="icn-sound" data-state="off" aria-label="Unmute">
+          <svg viewBox="8.67 10.58 16.37 10.84" fill="none" aria-hidden="true">
+            <!-- Speaker body -->
+            <path d="M15.7917 11.3333L12.2501 13.9999H9.41675V17.9999H12.2501L15.7917 20.6666V11.3333Z"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Mute X -->
+            <g class="icn-sound__mute">
+              <path d="M24.2917 14L20.0417 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M20.0417 14L24.2917 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <!-- Sound waves -->
+            <g class="icn-sound__waves">
+              <path d="M19 14C20.3333 15.0909 20.3333 16.9091 19 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M21 12C23.6667 14.1818 23.6667 17.8182 21 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </button>
+        <span class="variant-label">off</span>
+      </div>
+
+      <div class="variant-cell">
+        <button class="icn-sound" data-state="on" aria-label="Mute">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <!-- Speaker body -->
+            <path d="M2 5.5H4.5L8.5 3V13L4.5 10.5H2V5.5Z"
+                  stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <!-- Mute X (hidden in on state) -->
+            <g class="icn-sound__mute">
+              <path d="M10.5 6L13.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M13.5 6L10.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </g>
+            <!-- Sound waves -->
+            <g class="icn-sound__waves">
+              <path d="M11 7C11.75 7.5 11.75 8.5 11 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <path d="M12.5 5.5C14.25 6.75 14.25 9.25 12.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            </g>
+          </svg>
+        </button>
+        <span class="variant-label">on</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Interactive ── -->
+  <div class="section">
+    <p class="section-label">Interactive — click to toggle</p>
+    <div class="row">
+      <div class="variant-cell">
+        <button class="icn-sound" data-state="off" id="toggleBtn" aria-label="Unmute">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 5.5H4.5L8.5 3V13L4.5 10.5H2V5.5Z"
+                  stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <g class="icn-sound__mute">
+              <path d="M10.5 6L13.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M13.5 6L10.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </g>
+            <g class="icn-sound__waves">
+              <path d="M11 7C11.75 7.5 11.75 8.5 11 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <path d="M12.5 5.5C14.25 6.75 14.25 9.25 12.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            </g>
+          </svg>
+        </button>
+        <span class="variant-label" id="toggleLabel">off</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const html      = document.documentElement;
+    const themeBtn  = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLbl  = document.getElementById('themeLabel');
+
+    applyTheme(localStorage.getItem('theme') || 'light');
+
+    themeBtn.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(t) {
+      html.dataset.theme    = t;
+      themeIcon.textContent = t === 'dark' ? '🌙' : '☀️';
+      themeLbl.textContent  = t === 'dark' ? 'Dark'  : 'Light';
+    }
+
+    /* Toggle */
+    const toggleBtn   = document.getElementById('toggleBtn');
+    const toggleLabel = document.getElementById('toggleLabel');
+
+    toggleBtn.addEventListener('click', () => {
+      const next = toggleBtn.dataset.state === 'off' ? 'on' : 'off';
+      toggleBtn.dataset.state   = next;
+      toggleBtn.ariaLabel       = next === 'on' ? 'Mute' : 'Unmute';
+      toggleLabel.textContent   = next;
+    });
+
+    /* Press feedback */
+    document.querySelectorAll('.icn-sound').forEach(btn => {
+      btn.addEventListener('mousedown', () => {
+        btn.style.transform  = 'scale(0.88)';
+        btn.style.transition = 'transform 0.08s ease';
+        function onUp() {
+          btn.style.transform  = 'scale(1.0)';
+          btn.style.transition = 'transform 0.12s ease-out';
+          btn.addEventListener('transitionend', () => {
+            btn.style.transform  = '';
+            btn.style.transition = '';
+          }, { once: true });
+          document.removeEventListener('mouseup', onUp);
+        }
+        document.addEventListener('mouseup', onUp);
+      });
+    });
+  </script>
+</body>
+</html>

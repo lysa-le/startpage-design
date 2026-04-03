@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides (class-driven)
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+      --color-text-inverted:  var(--color-black-800);
+      --color-text-brandblue: var(--color-brand-blue-200);
+      --color-text-link:      var(--color-brand-blue-200);
+      --color-text-teal:      var(--color-teal-400);
+      --color-text-error:     var(--color-red-400);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-button-brandblue:          var(--color-brand-blue-300);
+      --color-button-brandbluehover:     var(--color-brand-blue-400);
+      --color-button-purple:             var(--color-purple-400);
+      --color-button-purplehover:        var(--color-purple-500);
+      --color-button-teal:               var(--color-teal-400);
+      --color-button-tealhover:          var(--color-teal-200);
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-button-inactive:           var(--color-black-600);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+      --color-stroke-error:          var(--color-red-400);
+    }
+
+    /* ─────────────────────────────────────────────
+       Page scaffold — not part of the component
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      padding: var(--spacing-48);
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .subtitle {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section {
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-20);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+      flex-wrap: wrap;
+      margin-bottom: var(--spacing-16);
+    }
+
+    /* ─────────────────────────────────────────────
+       Button component
+       ───────────────────────────────────────────── */
+
+    /* ── Base ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-8);
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-weight: var(--font-weight-bold);
+      white-space: nowrap;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: color 0.45s ease, border-color 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── Liquid fill wave layer ── */
+    .btn::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -10%;
+      width: 120%;
+      height: 200%;
+      border-radius: 50% 50% 0 0 / 30px 30px 0 0;
+      transform: translateY(105%);
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+      background: var(--btn-wave-color);
+    }
+
+    .btn:hover::before {
+      transform: translateY(0%);
+    }
+
+    /* ── Label and icon sit above wave layer ── */
+    .btn__label {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn__icon {
+      display: block;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Press state: accelerate wave fill + scale ── */
+    .btn.is-clicking::before {
+      transform: translateY(0%) !important;
+      transition: transform 0.1s ease !important;
+    }
+
+    /* ── Ripple on press ── */
+    .btn-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      transform: scale(0);
+      animation: ripple 550ms ease-out forwards;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @keyframes ripple {
+      to { transform: scale(5); opacity: 0; }
+    }
+
+    /* ── CTA Sizes ── */
+    .btn--sm {
+      padding: var(--spacing-20) var(--spacing-24);
+      border-radius: var(--radius-xl);
+      font-size: var(--font-button-sm);
+      line-height: var(--font-button-sm-lh);
+    }
+
+    .btn--md {
+      padding: var(--spacing-20) var(--spacing-80);
+      border-radius: var(--radius-xl);
+      font-size: var(--font-button-md);
+      line-height: var(--font-button-md-lh);
+    }
+
+    .btn--lg {
+      padding: var(--spacing-32) var(--spacing-40);
+      border-radius: var(--radius-2xl);
+      font-size: var(--font-button-lg);
+      line-height: var(--font-button-lg-lh);
+    }
+
+    /* lg overrides: brand-blue and purple use wider horizontal padding */
+    .btn--brand-blue.btn--lg,
+    .btn--purple.btn--lg {
+      padding-inline: var(--spacing-48);
+    }
+
+    /* lg override: inactive retains md-level padding and smaller radius */
+    .btn--inactive.btn--lg {
+      padding-inline: var(--spacing-80);
+      border-radius: var(--radius-xl);
+    }
+
+    /* ── CTA Color Variants ── */
+    .btn--teal {
+      --btn-wave-color: var(--color-button-tealhover);
+      background-color: var(--color-button-teal);
+      color: var(--color-text-primary);
+    }
+    [data-theme="dark"] .btn--teal {
+      color: var(--color-text-inverted);
+    }
+
+    .btn--brand-blue {
+      --btn-wave-color: var(--color-button-brandbluehover);
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+    }
+
+    .btn--purple {
+      --btn-wave-color: var(--color-button-purplehover);
+      background-color: var(--color-button-purple);
+      color: var(--color-text-inverted);
+    }
+
+    .btn--inactive,
+    .btn:disabled {
+      --btn-wave-color: transparent;
+      background-color: var(--color-button-inactive);
+      color: var(--color-text-secondary);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ── Product Button Sizes ──
+       Product buttons are self-sizing — padding/radius/font live in the
+       color class. The .btn--xs modifier reduces to the xs variant.      */
+    .btn--product-filled,
+    .btn--product-selected,
+    .btn--product-brand-blue {
+      padding: var(--spacing-12) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+    }
+
+    .btn--xs {
+      padding: var(--spacing-8) var(--spacing-12);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+    }
+
+    /* ── Product Color Variants ── */
+    .btn--product-filled {
+      background-color: var(--color-button-productfilled);
+      color: var(--color-text-primary);
+      transition: background-color 0.15s ease;
+    }
+    .btn--product-filled:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+
+    .btn--product-selected {
+      background-color: transparent;
+      color: var(--color-text-primary);
+      border: var(--border-stroke-md) solid var(--color-stroke-primary-button);
+    }
+
+    .btn--product-brand-blue {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+      font-weight: var(--font-weight-bold);
+      transition: background-color 0.15s ease;
+    }
+    .btn--product-brand-blue:hover {
+      background-color: var(--color-button-brandbluehover);
+    }
+
+    /* ── Ghost Variant ──
+       Outlined, background-primary fill. Used for "See more" / expansion.
+       Note: Figma specifies 26px horizontal padding (not a token);
+       --spacing-24 is used as the nearest token match. See spec Notes §2. */
+    .btn--ghost {
+      padding: var(--spacing-8) var(--spacing-24);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      transition: background-color 0.15s ease;
+    }
+    .btn--ghost:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+
+    /* ── No wave layer for product and ghost variants ── */
+    .btn--product-filled::before,
+    .btn--product-selected::before,
+    .btn--product-brand-blue::before,
+    .btn--ghost::before {
+      display: none;
+    }
+
+    /* ── Focus state (all interactive buttons) ──
+       Not defined in Figma — added for accessibility.
+       Uses existing tokens: see spec Notes §6.           */
+    .btn:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    /* ── Theme toggle (scaffold, not a component) ── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+    .theme-toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>Button</h1>
+  <p class="subtitle">Hover any active button for the liquid fill animation. Click for press + ripple.</p>
+
+  <!-- ── CTA: Teal ── -->
+  <div class="section">
+    <div class="section-label">CTA — Teal</div>
+    <div class="row">
+      <button class="btn btn--teal btn--sm" data-btn><span class="btn__label">CTA</span></button>
+      <button class="btn btn--teal btn--md" data-btn><span class="btn__label">CTA</span></button>
+      <button class="btn btn--teal btn--lg" data-btn><span class="btn__label">CTA</span></button>
+    </div>
+  </div>
+
+  <!-- ── CTA: Brand Blue ── -->
+  <div class="section">
+    <div class="section-label">CTA — Brand Blue</div>
+    <div class="row">
+      <button class="btn btn--brand-blue btn--sm" data-btn><span class="btn__label">CTA</span></button>
+      <button class="btn btn--brand-blue btn--md" data-btn><span class="btn__label">CTA</span></button>
+      <button class="btn btn--brand-blue btn--lg" data-btn><span class="btn__label">CTA</span></button>
+    </div>
+  </div>
+
+  <!-- ── CTA: Purple ── -->
+  <div class="section">
+    <div class="section-label">CTA — Purple</div>
+    <div class="row">
+      <button class="btn btn--purple btn--sm" data-btn><span class="btn__label">CTA</span></button>
+      <button class="btn btn--purple btn--md" data-btn><span class="btn__label">CTA</span></button>
+      <button class="btn btn--purple btn--lg" data-btn><span class="btn__label">CTA</span></button>
+    </div>
+  </div>
+
+  <!-- ── CTA: Inactive ── -->
+  <div class="section">
+    <div class="section-label">CTA — Inactive</div>
+    <div class="row">
+      <button class="btn btn--inactive btn--sm" disabled>CTA</button>
+      <button class="btn btn--inactive btn--md" disabled>CTA</button>
+      <button class="btn btn--inactive btn--lg" disabled>CTA</button>
+    </div>
+  </div>
+
+  <!-- ── Product Buttons ── -->
+  <div class="section">
+    <div class="section-label">Product — Filled / Selected / Brand Blue / XS</div>
+    <div class="row">
+      <button class="btn btn--product-filled" data-btn><span class="btn__label">Next</span></button>
+      <button class="btn btn--product-selected" data-btn aria-pressed="true"><span class="btn__label">Next</span></button>
+      <button class="btn btn--product-brand-blue" data-btn><span class="btn__label">Next</span></button>
+      <button class="btn btn--product-filled btn--xs" data-btn><span class="btn__label">Next</span></button>
+    </div>
+  </div>
+
+  <!-- ── Ghost Buttons ── -->
+  <div class="section">
+    <div class="section-label">Ghost — Label only / With icon</div>
+    <div class="row">
+      <button class="btn btn--ghost" data-btn><span class="btn__label">See more</span></button>
+      <button class="btn btn--ghost" data-btn>
+        <span class="btn__label">More news</span>
+        <!-- 16×16 arrow icon — replace SVG with actual asset -->
+        <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const html = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      icon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    /* ── Press interaction: ripple + scale ── */
+    document.querySelectorAll('[data-btn]').forEach(btn => {
+      btn.addEventListener('mousedown', e => {
+        if (btn.disabled) return;
+        const rect = btn.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 2.2;
+        const ripple = document.createElement('span');
+        ripple.className = 'btn-ripple';
+        Object.assign(ripple.style, {
+          width:  size + 'px',
+          height: size + 'px',
+          left:   (e.clientX - rect.left - size / 2) + 'px',
+          top:    (e.clientY - rect.top  - size / 2) + 'px',
+        });
+        btn.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+        btn.classList.add('is-clicking');
+        btn.style.transform = 'scale(0.985)';
+        btn.style.transition = 'transform 0.08s ease';
+        function onUp() {
+          btn.classList.remove('is-clicking');
+          btn.style.transform = 'scale(1.001)';
+          btn.style.transition = 'transform 0.12s ease-out';
+          btn.addEventListener('transitionend', () => {
+            btn.style.transform = '';
+            btn.style.transition = '';
+          }, { once: true });
+          document.removeEventListener('mouseup', onUp);
+        }
+        document.addEventListener('mouseup', onUp);
+      });
+    });
+  </script>
+</body>
+</html>

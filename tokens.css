@@ -1,0 +1,317 @@
+/**
+ * Startpage Design System — Token Layer
+ * Generated from design-system.md
+ *
+ * Rules:
+ *   - Components import this file and reference tokens only — no raw values.
+ *   - Primitives (color, size) are defined once here and never used in components directly.
+ *   - Semantic tokens are what components consume.
+ *   - Dark mode swaps token values at :root — component CSS never branches on theme.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ─────────────────────────────────────────────
+   PRIMITIVES — Typography
+   ───────────────────────────────────────────── */
+:root {
+  --font-family: 'Inter', sans-serif;
+
+  /* Weights */
+  --font-weight-regular:   400;
+  --font-weight-medium:    500;
+  --font-weight-semibold:  600;
+  --font-weight-bold:      700;
+  --font-weight-extrabold: 800;
+  --font-weight-heavy:     900;
+
+  /* Size primitives */
+  --font-size-12:  0.75rem;   /* 12px */
+  --font-size-14:  0.875rem;  /* 14px */
+  --font-size-16:  1rem;      /* 16px */
+  --font-size-18:  1.125rem;  /* 18px */
+  --font-size-20:  1.25rem;   /* 20px */
+  --font-size-24:  1.5rem;    /* 24px */
+  --font-size-48:  3rem;      /* 48px */
+  --font-size-56:  3.5rem;    /* 56px */
+  --font-size-68:  4.25rem;   /* 68px */
+  --font-size-88:  5.5rem;    /* 88px */
+  --font-size-104: 6.5rem;    /* 104px */
+}
+
+/* ─────────────────────────────────────────────
+   SEMANTIC — Typography Scale
+   ───────────────────────────────────────────── */
+:root {
+  /* Body */
+  --font-body-xl:    var(--font-size-20);
+  --font-body-xl-lh: 1.75rem;   /* 28px */
+  --font-body-lg:    var(--font-size-18);
+  --font-body-lg-lh: 1.75rem;   /* 28px */
+  --font-body-md:    var(--font-size-16);
+  --font-body-md-lh: 1.5rem;    /* 24px */
+  --font-body-sm:    var(--font-size-14);
+  --font-body-sm-lh: 1.25rem;   /* 20px */
+  --font-body-xs:    var(--font-size-12);
+  --font-body-xs-lh: 1.125rem;  /* 18px */
+
+  /* Display */
+  --font-display-regular:    var(--font-size-104);
+  --font-display-regular-lh: 7rem;      /* 112px */
+
+  /* Heading */
+  --font-heading-xl:     var(--font-size-88);
+  --font-heading-xl-lh:  6rem;      /* 96px */
+  --font-heading-lg:     var(--font-size-68);
+  --font-heading-lg-lh:  4.75rem;   /* 76px */
+  --font-heading-md:     var(--font-size-56);
+  --font-heading-md-lh:  4rem;      /* 64px */
+  --font-heading-sm:     var(--font-size-48);
+  --font-heading-sm-lh:  3.5rem;    /* 56px */
+  --font-heading-xs:     var(--font-size-24);
+  --font-heading-xs-lh:  2rem;      /* 32px */
+  --font-heading-xxs:    var(--font-size-18);
+  --font-heading-xxs-lh: 1.75rem;   /* 28px */
+
+  /* Label */
+  --font-label-lg:    var(--font-size-24);
+  --font-label-lg-lh: 2rem;     /* 32px */
+  --font-label-sm:    var(--font-size-18);
+  --font-label-sm-lh: 2rem;     /* 32px */
+  --font-label-xs:    var(--font-size-14);
+  --font-label-xs-lh: 1.25rem;  /* 20px */
+
+  /* Button */
+  --font-button-lg:    var(--font-size-24);
+  --font-button-lg-lh: 1.0625rem; /* 17px — Inter 24px cap-height; Figma auto-layout sizes the frame to cap-height (not full line box), so this matches the 81px Figma button height with 32px top/bottom padding */
+  --font-button-md:    var(--font-size-20);
+  --font-button-md-lh: 0.875rem;  /* 14px — Inter 20px cap-height */
+  --font-button-sm:    var(--font-size-16);
+  --font-button-sm-lh: 0.6875rem; /* 11px — Inter 16px cap-height */
+  --font-button-xs:    var(--font-size-14);
+  --font-button-xs-lh: 0.625rem;  /* 10px — Inter 14px cap-height */
+
+  /* Utility */
+  --font-utility-caption:    var(--font-size-12);
+  --font-utility-caption-lh: 1.125rem;  /* 18px */
+}
+
+/* ─────────────────────────────────────────────
+   PRIMITIVES — Spacing
+   ───────────────────────────────────────────── */
+:root {
+  --spacing-4:   0.25rem;  /* 4px */
+  --spacing-8:   0.5rem;   /* 8px */
+  --spacing-12:  0.75rem;  /* 12px */
+  --spacing-16:  1rem;     /* 16px */
+  --spacing-20:  1.25rem;  /* 20px */
+  --spacing-24:  1.5rem;   /* 24px */
+  --spacing-32:  2rem;     /* 32px */
+  --spacing-40:  2.5rem;   /* 40px */
+  --spacing-48:  3rem;     /* 48px */
+  --spacing-64:  4rem;     /* 64px */
+  --spacing-80:  5rem;     /* 80px */
+  --spacing-96:  6rem;     /* 96px */
+  --spacing-104: 6.5rem;   /* 104px */
+}
+
+/* ─────────────────────────────────────────────
+   PRIMITIVES — Border Radius
+   ───────────────────────────────────────────── */
+:root {
+  --radius-none: 0px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  24px;
+  --radius-3xl:  48px;
+  --radius-full: 999px;
+}
+
+/* ─────────────────────────────────────────────
+   PRIMITIVES — Stroke / Border
+   ───────────────────────────────────────────── */
+:root {
+  --border-stroke-sm: 1px;
+  --border-stroke-md: 1.5px;
+  --border-stroke-lg: 2px;
+  --border-stroke-xl: 2.5px;
+}
+
+/* ─────────────────────────────────────────────
+   PRIMITIVES — Shadows
+   ───────────────────────────────────────────── */
+:root {
+  --shadow-card:     1px 2px 4px 0px rgba(0, 0, 0, 0.10);          /* sp-cards-drop in Figma — subtle lift for small elements (toggle thumb, cards) */
+  --shadow-dropdown: 0px 10px 10px 0px rgba(0, 0, 0, 0.10);         /* startpage dropshadow in Figma — panel/overlay depth */
+  --shadow-search:   0px 4px 15px 0px rgba(59, 67, 91, 0.08);       /* search bar dropshadow in Figma — applied to search field on focus (homepage) and SERP mobile default */
+}
+
+/* ─────────────────────────────────────────────
+   PRIMITIVES — Color (never use in components)
+   ───────────────────────────────────────────── */
+:root {
+  /* Black */
+  --color-black-400: #494D56;
+  --color-black-550: #34373D;
+  --color-black-600: #2E3443;
+  --color-black-650: #27292F;
+  --color-black-700: #1E222D;
+  --color-black-800: #1B1D21;
+  --color-black-900: #09090A;
+
+  /* Brand Blue */
+  --color-brand-blue-50:  #F7F7FF;
+  --color-brand-blue-100: #C5CBFF;
+  --color-brand-blue-200: #B3BCFF;
+  --color-brand-blue-300: #6677FB;
+  --color-brand-blue-400: #5668F1;
+  --color-brand-blue-500: #3F5187;
+  --color-brand-blue-600: #2E39B3;
+  --color-brand-blue-700: #384775;
+  --color-brand-blue-800: #2B3860;
+
+  /* Gold */
+  --color-gold-100: #FFF3D3;
+  --color-gold-200: #FFE4AA;
+  --color-gold-500: #FCBB61;
+
+  /* Midnight */
+  --color-midnight-50:  #C3C8DA;
+  --color-midnight-100: #ACB1C2;
+  --color-midnight-200: #9297A7;
+  --color-midnight-300: #7F869E;
+  --color-midnight-400: #5B627A;
+  --color-midnight-500: #3B435B;
+  --color-midnight-900: #202C46;
+
+  /* Purple */
+  --color-purple-100: #F9EAFE;
+  --color-purple-400: #D67DFD;
+  --color-purple-500: #C161EA;
+
+  /* Red */
+  --color-red-100: #FEE8E8;
+  --color-red-400: #F77779;
+  --color-red-500: #E23D3D;
+
+  /* Teal */
+  --color-teal-100: #DCF5EF;
+  --color-teal-200: #5AECDE;
+  --color-teal-400: #00E7D0;
+  --color-teal-500: #00B0A1;
+  --color-teal-550: #009F91;
+
+  /* Whisper (Neutrals) */
+  --color-whisper-0:   #FFFFFF;
+  --color-whisper-50:  #FBFBFD;
+  --color-whisper-100: #F2F3FF;
+  --color-whisper-200: #EBECF7;
+  --color-whisper-300: #E7E9FB;
+  --color-whisper-400: #DEE0F7;
+  --color-whisper-500: #D0D3F2;
+}
+
+/* ─────────────────────────────────────────────
+   SEMANTIC — Light Mode (default)
+   ───────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --color-background-primary:    var(--color-whisper-0);
+  --color-background-secondary:  var(--color-whisper-300);
+  --color-background-tertiary:   var(--color-brand-blue-50);
+  --color-background-quaternary: var(--color-whisper-50);
+
+  /* Text */
+  --color-text-primary:    var(--color-black-700);
+  --color-text-secondary:  var(--color-midnight-300);
+  --color-text-tertiary:   var(--color-midnight-400);
+  --color-text-inverted:   var(--color-whisper-100);
+  --color-text-brandblue:  var(--color-brand-blue-400);
+  --color-text-link:       var(--color-brand-blue-600);
+  --color-text-teal:       var(--color-teal-550);
+  --color-text-error:      var(--color-red-500);
+
+  /* Icons */
+  --color-icon-primary:   var(--color-black-700);
+  --color-icon-secondary: var(--color-brand-blue-400);
+  --color-icon-tertiary:  var(--color-midnight-300);
+
+  /* Toggle */
+  --color-toggle-thumb: var(--color-background-primary);
+
+  /* Buttons */
+  --color-button-brandblue:          var(--color-brand-blue-400);
+  --color-button-brandbluehover:     var(--color-brand-blue-300);
+  --color-button-purple:             var(--color-purple-500);
+  --color-button-purplehover:        var(--color-purple-400);
+  --color-button-teal:               var(--color-teal-200);
+  --color-button-tealhover:          var(--color-teal-400);
+  --color-button-productfilled:      var(--color-whisper-300);
+  --color-button-productfilledhover: var(--color-whisper-400);
+  --color-button-inactive:           var(--color-whisper-100);
+
+  /* Strokes */
+  --color-stroke-primary:        var(--color-whisper-500);
+  --color-stroke-secondary:      var(--color-whisper-200);
+  --color-stroke-primary-button: var(--color-brand-blue-400);
+  --color-stroke-error:          var(--color-red-500);
+
+  /* Accents */
+  --color-accent-gold:      var(--color-gold-500);
+  --color-accent-gold-alt:  var(--color-gold-200);
+  --color-accent-teal:      var(--color-teal-400);
+  --color-accent-teal-alt:  var(--color-teal-100);
+}
+
+/* ─────────────────────────────────────────────
+   SEMANTIC — Dark Mode overrides
+   ───────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Backgrounds */
+    --color-background-primary:    var(--color-black-900);
+    --color-background-secondary:  var(--color-black-550);
+    --color-background-tertiary:   var(--color-black-800);
+    --color-background-quaternary: var(--color-black-650);
+
+    /* Text */
+    --color-text-primary:   var(--color-whisper-100);
+    --color-text-secondary: var(--color-midnight-200);
+    --color-text-tertiary:  var(--color-midnight-100);
+    --color-text-inverted:  var(--color-black-800);
+    --color-text-brandblue: var(--color-brand-blue-200);
+    --color-text-link:      var(--color-brand-blue-200);
+    --color-text-teal:      var(--color-teal-400);
+    --color-text-error:     var(--color-red-400);
+
+    /* Icons */
+    --color-icon-primary:   var(--color-whisper-200);
+    --color-icon-secondary: var(--color-brand-blue-200);
+    --color-icon-tertiary:  var(--color-midnight-100);
+
+    /* Buttons */
+    --color-button-brandblue:          var(--color-brand-blue-300);
+    --color-button-brandbluehover:     var(--color-brand-blue-400);
+    --color-button-purple:             var(--color-purple-400);
+    --color-button-purplehover:        var(--color-purple-500);
+    --color-button-teal:               var(--color-teal-400);
+    --color-button-tealhover:          var(--color-teal-200);
+    --color-button-productfilled:      var(--color-black-550);
+    --color-button-productfilledhover: var(--color-black-400);
+    --color-button-inactive:           var(--color-black-600);
+
+    /* Strokes */
+    --color-stroke-primary:        var(--color-black-400);
+    --color-stroke-secondary:      var(--color-black-550);
+    --color-stroke-primary-button: var(--color-brand-blue-200);
+    --color-stroke-error:          var(--color-red-400);
+
+    /* Accents */
+    --color-accent-gold:     var(--color-gold-200);
+    --color-accent-gold-alt: var(--color-gold-500);
+    --color-accent-teal:     var(--color-teal-200);
+    --color-accent-teal-alt: var(--color-teal-500);
+  }
+}

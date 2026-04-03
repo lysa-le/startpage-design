@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copy / Check Icon — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides (class-driven)
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-inverted:  var(--color-black-800);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+    }
+
+    /* ─────────────────────────────────────────────
+       Page scaffold
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      padding: var(--spacing-48);
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .subtitle {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section { margin-bottom: var(--spacing-48); }
+
+    .section-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-20);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-24);
+      flex-wrap: wrap;
+    }
+
+    /* ─────────────────────────────────────────────
+       icn-copy component
+       ───────────────────────────────────────────── */
+
+    .icn-copy {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      isolation: isolate;
+      border: none;
+      padding: 0;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      color: var(--color-icon-primary);
+      background-color: var(--color-background-secondary);
+      transition: background-color 0.2s ease, color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    /* ── Sizes ── */
+    .icn-copy--lg {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+    }
+
+    .icn-copy--sm {
+      width: var(--spacing-24);
+      height: var(--spacing-24);
+    }
+
+    /* Bare: no circle, icon only */
+    .icn-copy--bare {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      background-color: transparent;
+    }
+
+    /* ── Check state ── */
+    .icn-copy[data-state="check"]:not(.icn-copy--bare) {
+      background-color: var(--color-icon-secondary);
+      color: var(--color-text-inverted);
+    }
+
+    /* ── Icon SVG sizing ──
+       Derived from Figma's 31.25% inset on each side:
+       32px × (1 - 2×0.3125) = 12px large
+       24px × (1 - 2×0.3125) = 9px small
+       16px × (1 - 2×0.125)  = 12px bare     */
+    .icn-copy--lg .icn-copy__svg  { width: 12px; height: 12px; }
+    .icn-copy--sm .icn-copy__svg  { width: 9px;  height: 9px;  }
+    .icn-copy--bare .icn-copy__svg { width: 12px; height: 12px; }
+
+    /* ── Icon transitions ── */
+    .icn-copy__svg {
+      position: absolute;
+      flex-shrink: 0;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .icn-copy__svg--copy  { opacity: 1; transform: scale(1);   }
+    .icn-copy__svg--check { opacity: 0; transform: scale(0.5); }
+
+    .icn-copy[data-state="check"] .icn-copy__svg--copy  { opacity: 0; transform: scale(0.5); }
+    .icn-copy[data-state="check"] .icn-copy__svg--check { opacity: 1; transform: scale(1);   }
+
+    /* ── Focus ── */
+    .icn-copy:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    /* ── Ripple on press ── */
+    .icn-copy-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      transform: scale(0);
+      animation: ripple 550ms ease-out forwards;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @keyframes ripple {
+      to { transform: scale(5); opacity: 0; }
+    }
+
+    /* ── Theme toggle (scaffold) ── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover { color: var(--color-text-primary); border-color: var(--color-stroke-primary-button); }
+    .theme-toggle:focus-visible { outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>Copy / Check Icon</h1>
+  <p class="subtitle">Click any icon to trigger the confirmation state. It reverts after 1.5s.</p>
+
+  <!-- ── Copy variants (idle) ── -->
+  <div class="section">
+    <div class="section-label">Copy — Large / Small / Bare</div>
+    <div class="row">
+      <button class="icn-copy icn-copy--lg" data-state="copy" aria-label="Copy">
+        <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
+          <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
+        </svg>
+        <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M1 4L4.5 7.5L11 1"/>
+        </svg>
+      </button>
+
+      <button class="icn-copy icn-copy--sm" data-state="copy" aria-label="Copy">
+        <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7.15 1.83235V1.5C7.15 1.08579 6.81421 0.75 6.4 0.75H1.5C1.08579 0.75 0.75 1.08579 0.75 1.5V6.4C0.75 6.81421 1.08579 7.15 1.5 7.15H1.87941"/>
+          <path d="M3.34998 8.99985V4.09985C3.34998 3.68564 3.68576 3.34985 4.09998 3.34985H8.99998C9.41419 3.34985 9.74998 3.68564 9.74998 4.09985V8.99985C9.74998 9.41407 9.41419 9.74985 8.99998 9.74985H4.09998C3.68576 9.74985 3.34998 9.41407 3.34998 8.99985Z"/>
+        </svg>
+        <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M1 4L4.5 7.5L11 1"/>
+        </svg>
+      </button>
+
+      <button class="icn-copy icn-copy--bare" data-state="copy" aria-label="Copy">
+        <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
+          <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
+        </svg>
+        <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M1 4L4.5 7.5L11 1"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Check state (pinned for reference) ── -->
+  <div class="section">
+    <div class="section-label">Check state — Large / Small</div>
+    <div class="row">
+      <button class="icn-copy icn-copy--lg" data-state="check" aria-label="Copied">
+        <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
+          <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
+        </svg>
+        <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M1 4L4.5 7.5L11 1"/>
+        </svg>
+      </button>
+
+      <button class="icn-copy icn-copy--sm" data-state="check" aria-label="Copied">
+        <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7.15 1.83235V1.5C7.15 1.08579 6.81421 0.75 6.4 0.75H1.5C1.08579 0.75 0.75 1.08579 0.75 1.5V6.4C0.75 6.81421 1.08579 7.15 1.5 7.15H1.87941"/>
+          <path d="M3.34998 8.99985V4.09985C3.34998 3.68564 3.68576 3.34985 4.09998 3.34985H8.99998C9.41419 3.34985 9.74998 3.68564 9.74998 4.09985V8.99985C9.74998 9.41407 9.41419 9.74985 8.99998 9.74985H4.09998C3.68576 9.74985 3.34998 9.41407 3.34998 8.99985Z"/>
+        </svg>
+        <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M1 4L4.5 7.5L11 1"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /* ── Theme ── */
+    const html = document.documentElement;
+    const themeBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    themeBtn.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      themeIcon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    /* ── Copy interaction ── */
+    const REVERT_DELAY = 1500;
+
+    document.querySelectorAll('.icn-copy').forEach(btn => {
+      let timer = null;
+
+      btn.addEventListener('click', () => {
+        if (btn.dataset.state === 'check') return; // already showing — ignore
+        btn.dataset.state = 'check';
+        btn.setAttribute('aria-label', 'Copied');
+
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          btn.dataset.state = 'copy';
+          btn.setAttribute('aria-label', 'Copy');
+        }, REVERT_DELAY);
+      });
+
+      /* ── Press interaction: ripple + scale ── */
+      btn.addEventListener('mousedown', e => {
+        const rect = btn.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 2.2;
+        const ripple = document.createElement('span');
+        ripple.className = 'icn-copy-ripple';
+        Object.assign(ripple.style, {
+          width:  size + 'px',
+          height: size + 'px',
+          left:   (e.clientX - rect.left - size / 2) + 'px',
+          top:    (e.clientY - rect.top  - size / 2) + 'px',
+        });
+        btn.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+        btn.style.transform = 'scale(0.985)';
+        btn.style.transition = 'transform 0.08s ease';
+        function onUp() {
+          btn.style.transform = 'scale(1.001)';
+          btn.style.transition = 'transform 0.12s ease-out';
+          btn.addEventListener('transitionend', () => {
+            btn.style.transform = '';
+            btn.style.transition = '';
+          }, { once: true });
+          document.removeEventListener('mouseup', onUp);
+        }
+        document.addEventListener('mouseup', onUp);
+      });
+    });
+  </script>
+</body>
+</html>

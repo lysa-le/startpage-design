@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toggle — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides (class-driven)
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+
+      --color-icon-secondary: var(--color-brand-blue-200);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+    }
+
+    /* ─────────────────────────────────────────────
+       Page scaffold — not part of the component
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      padding: var(--spacing-48);
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .subtitle {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section {
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-20);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-24);
+      flex-wrap: wrap;
+    }
+
+    .row--labeled {
+      gap: var(--spacing-16);
+    }
+
+    /* ─────────────────────────────────────────────
+       Toggle component
+       ───────────────────────────────────────────── */
+
+    .toggle {
+      /* Component-level geometry.
+         --toggle-thumb-gap (3px) is outside the spacing scale — see spec Notes §1.
+         All other values are derived from tokens. */
+      --toggle-width:      var(--spacing-40);
+      --toggle-height:     var(--spacing-24);
+      --toggle-thumb-gap:  3px;
+      --toggle-thumb-size: calc(var(--toggle-height) - var(--toggle-thumb-gap) * 2);
+      --toggle-travel:     calc(var(--toggle-width) - var(--toggle-height));
+
+      display: inline-flex;
+      align-items: center;
+      width: var(--toggle-width);
+      height: var(--toggle-height);
+      border-radius: var(--radius-full);
+      border: none;
+      padding: 0;
+      background-color: var(--color-stroke-primary);
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .toggle[aria-checked="true"] {
+      background-color: var(--color-icon-secondary);
+    }
+
+    .toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    /* ── Thumb ── */
+    .toggle__thumb {
+      width: var(--toggle-thumb-size);
+      height: var(--toggle-thumb-size);
+      border-radius: var(--radius-full);
+      background-color: var(--color-toggle-thumb);
+      box-shadow: var(--shadow-card);
+      margin-left: var(--toggle-thumb-gap);
+      flex-shrink: 0;
+      transform: translateX(0);
+      transition: transform 0.2s ease;
+    }
+
+    .toggle[aria-checked="true"] .toggle__thumb {
+      transform: translateX(var(--toggle-travel));
+    }
+
+    /* ── Labeled toggle layout ── */
+    .toggle-row {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      cursor: pointer;
+    }
+
+    .toggle-row__label {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+      user-select: none;
+    }
+
+    /* ── Theme toggle (scaffold, not a component) ── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+    .theme-toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>Toggle</h1>
+  <p class="subtitle">Click any toggle to switch state.</p>
+
+  <!-- ── States ── -->
+  <div class="section">
+    <div class="section-label">On / Off</div>
+    <div class="row">
+      <button class="toggle" role="switch" aria-checked="true" aria-label="Toggle on"><span class="toggle__thumb"></span></button>
+      <button class="toggle" role="switch" aria-checked="false" aria-label="Toggle off"><span class="toggle__thumb"></span></button>
+    </div>
+  </div>
+
+  <!-- ── With label ── -->
+  <div class="section">
+    <div class="section-label">With label</div>
+    <div class="row row--labeled" style="flex-direction: column; align-items: flex-start;">
+      <div class="toggle-row" role="group">
+        <button class="toggle" role="switch" aria-checked="true" id="toggle-notifications" aria-label="Notifications"><span class="toggle__thumb"></span></button>
+        <label class="toggle-row__label" for="toggle-notifications" onclick="document.getElementById('toggle-notifications').click()">Notifications</label>
+      </div>
+      <div class="toggle-row" role="group">
+        <button class="toggle" role="switch" aria-checked="false" id="toggle-darkmode" aria-label="Dark mode"><span class="toggle__thumb"></span></button>
+        <label class="toggle-row__label" for="toggle-darkmode" onclick="document.getElementById('toggle-darkmode').click()">Dark mode</label>
+      </div>
+      <div class="toggle-row" role="group">
+        <button class="toggle" role="switch" aria-checked="false" id="toggle-updates" aria-label="Auto-update"><span class="toggle__thumb"></span></button>
+        <label class="toggle-row__label" for="toggle-updates" onclick="document.getElementById('toggle-updates').click()">Auto-update</label>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── Theme ── */
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    themeToggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      icon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    /* ── Toggle interaction ── */
+    document.querySelectorAll('.toggle[role="switch"]').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const isOn = toggle.getAttribute('aria-checked') === 'true';
+        toggle.setAttribute('aria-checked', isOn ? 'false' : 'true');
+      });
+    });
+  </script>
+</body>
+</html>
