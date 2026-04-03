@@ -62,8 +62,8 @@ Three distinct families live under the `.btn` base class. They differ in weight,
 | CSS class | Background | Text | Hover background |
 |---|---|---|---|
 | `.btn--teal` | `--color-button-teal` | `--color-text-primary` | `--color-button-tealhover` |
-| `.btn--brand-blue` | `--color-button-brandblue` | `--color-text-inverted` | `--color-button-brandbluehover` |
-| `.btn--purple` | `--color-button-purple` | `--color-text-inverted` | `--color-button-purplehover` |
+| `.btn--brand-blue` | `--color-button-brandblue` | `--color-whisper-200` | `--color-button-brandbluehover` |
+| `.btn--purple` | `--color-button-purple` | `--color-whisper-200` | `--color-button-purplehover` |
 | `.btn--inactive` | `--color-button-inactive` | `--color-text-secondary` | _(none — non-interactive)_ |
 
 ### 3.2 Product Color Variants
