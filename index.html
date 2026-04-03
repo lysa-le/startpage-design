@@ -76,7 +76,7 @@
     }
 
     /* ─────────────────────────────────────────────
-       Header
+       Library header
        ───────────────────────────────────────────── */
     .lib-header {
       grid-area: header;
@@ -110,7 +110,7 @@
     }
 
     /* ─────────────────────────────────────────────
-       Sidebar
+       Sidebar nav
        ───────────────────────────────────────────── */
     .lib-sidebar {
       grid-area: sidebar;
@@ -137,9 +137,7 @@
       letter-spacing: 0.08em;
     }
 
-    .lib-nav__list {
-      list-style: none;
-    }
+    .lib-nav__list { list-style: none; }
 
     .lib-nav__item a {
       display: block;
@@ -151,7 +149,8 @@
       transition: color 0.12s ease, background 0.12s ease;
     }
 
-    .lib-nav__item a:hover {
+    .lib-nav__item a:hover,
+    .lib-nav__item a.is-active {
       color: var(--color-text-primary);
       background: var(--color-background-secondary);
     }
@@ -171,7 +170,11 @@
     }
 
     .lib-section__header {
-      margin-bottom: var(--spacing-32);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      margin-bottom: var(--spacing-24);
       padding-bottom: var(--spacing-16);
       border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
     }
@@ -188,41 +191,26 @@
       color: var(--color-text-secondary);
     }
 
-    .lib-group {
-      margin-bottom: var(--spacing-48);
-    }
-
-    .lib-group__label {
+    .lib-section__open {
+      flex-shrink: 0;
       font-size: var(--font-body-xs);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: var(--spacing-20);
-    }
-
-    .lib-row {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-16);
-      flex-wrap: wrap;
-    }
-
-    .lib-row + .lib-row {
-      margin-top: var(--spacing-16);
-    }
-
-    .lib-cell {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--spacing-8);
-    }
-
-    .lib-label {
-      font-size: var(--font-body-xs);
-      color: var(--color-text-tertiary);
+      color: var(--color-text-link);
+      text-decoration: none;
+      margin-top: var(--spacing-4);
       white-space: nowrap;
+    }
+
+    .lib-section__open:hover { text-decoration: underline; }
+
+    /* ─────────────────────────────────────────────
+       Embedded component frame
+       ───────────────────────────────────────────── */
+    .component-frame {
+      display: block;
+      width: 100%;
+      border: none;
+      overflow: hidden;
+      background: transparent;
     }
 
     /* ─────────────────────────────────────────────
@@ -243,1318 +231,22 @@
       cursor: pointer;
       transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
     }
+
     .theme-toggle:hover {
       color: var(--color-text-primary);
       border-color: var(--color-stroke-primary-button);
     }
+
     .theme-toggle:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: 3px;
     }
 
-    /* ─────────────────────────────────────────────
-       Shared demo helpers
-       ───────────────────────────────────────────── */
-    .demo-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--spacing-48);
-      align-items: flex-start;
-    }
-
-    .demo-group {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-16);
-    }
-
-    .demo-group__title {
-      font-size: var(--font-body-xs);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    /* Generic demo-row: horizontal flex, used by most icon demos */
-    .demo-row {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-24);
-      flex-wrap: wrap;
-    }
-
-    /* Column-layout demo-row override for form-field section */
-    #form-field .demo-col {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-8);
-    }
-
-    .demo-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--spacing-8);
-    }
-
-    .demo-label {
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      color: var(--color-text-tertiary);
-      white-space: nowrap;
-    }
-
-    .variant-cell {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--spacing-8);
-    }
-
-    .variant-label {
-      font-size: var(--font-body-xs);
-      color: var(--color-text-secondary);
-      text-align: center;
-    }
-
-    /* ═══════════════════════════════════════════════
-       BUTTON component
-       ═══════════════════════════════════════════════ */
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-8);
-      border: none;
-      cursor: pointer;
-      font-family: var(--font-family);
-      font-weight: var(--font-weight-bold);
-      white-space: nowrap;
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      isolation: isolate;
-      transition: color 0.45s ease, border-color 0.55s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .btn::before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: -10%;
-      width: 120%;
-      height: 200%;
-      border-radius: 50% 50% 0 0 / 30px 30px 0 0;
-      transform: translateY(105%);
-      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 0;
-      background: var(--btn-wave-color);
-    }
-
-    .btn:hover::before { transform: translateY(0%); }
-
-    .btn__label { position: relative; z-index: 1; }
-
-    .btn__icon {
-      display: block;
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-      position: relative;
-      z-index: 1;
-    }
-
-    .btn.is-clicking::before {
-      transform: translateY(0%) !important;
-      transition: transform 0.1s ease !important;
-    }
-
-    .btn-ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.22);
-      transform: scale(0);
-      animation: ripple 550ms ease-out forwards;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    @keyframes ripple {
-      to { transform: scale(5); opacity: 0; }
-    }
-
-    .btn--sm {
-      padding: var(--spacing-20) var(--spacing-24);
-      border-radius: var(--radius-xl);
-      font-size: var(--font-button-sm);
-      line-height: var(--font-button-sm-lh);
-    }
-
-    .btn--md {
-      padding: var(--spacing-20) var(--spacing-80);
-      border-radius: var(--radius-xl);
-      font-size: var(--font-button-md);
-      line-height: var(--font-button-md-lh);
-    }
-
-    .btn--lg {
-      padding: var(--spacing-32) var(--spacing-40);
-      border-radius: var(--radius-2xl);
-      font-size: var(--font-button-lg);
-      line-height: var(--font-button-lg-lh);
-    }
-
-    .btn--brand-blue.btn--lg,
-    .btn--purple.btn--lg { padding-inline: var(--spacing-48); }
-
-    .btn--inactive.btn--lg {
-      padding-inline: var(--spacing-80);
-      border-radius: var(--radius-xl);
-    }
-
-    .btn--teal {
-      --btn-wave-color: var(--color-button-tealhover);
-      background-color: var(--color-button-teal);
-      color: var(--color-text-primary);
-    }
-    [data-theme="dark"] .btn--teal { color: var(--color-text-inverted); }
-
-    .btn--brand-blue {
-      --btn-wave-color: var(--color-button-brandbluehover);
-      background-color: var(--color-button-brandblue);
-      color: var(--color-whisper-200);
-    }
-
-    .btn--purple {
-      --btn-wave-color: var(--color-button-purplehover);
-      background-color: var(--color-button-purple);
-      color: var(--color-whisper-200);
-    }
-
-    .btn--inactive,
-    .btn:disabled {
-      --btn-wave-color: transparent;
-      background-color: var(--color-button-inactive);
-      color: var(--color-text-secondary);
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    .btn--product-filled,
-    .btn--product-selected,
-    .btn--product-brand-blue {
-      padding: var(--spacing-12) var(--spacing-16);
-      border-radius: var(--radius-lg);
-      font-size: var(--font-button-xs);
-      line-height: var(--font-button-xs-lh);
-      font-weight: var(--font-weight-regular);
-    }
-
-    .btn--xs {
-      padding: var(--spacing-8) var(--spacing-12);
-      border-radius: var(--radius-lg);
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      font-weight: var(--font-weight-regular);
-    }
-
-    .btn--product-filled {
-      background-color: var(--color-button-productfilled);
-      color: var(--color-text-primary);
-      transition: background-color 0.15s ease;
-    }
-    .btn--product-filled:hover { background-color: var(--color-button-productfilledhover); }
-
-    .btn--product-selected {
-      background-color: transparent;
-      color: var(--color-text-primary);
-      border: var(--border-stroke-md) solid var(--color-stroke-primary-button);
-    }
-
-    .btn--product-brand-blue {
-      background-color: var(--color-button-brandblue);
-      color: var(--color-text-inverted);
-      font-weight: var(--font-weight-bold);
-      transition: background-color 0.15s ease;
-    }
-    .btn--product-brand-blue:hover { background-color: var(--color-button-brandbluehover); }
-
-    .btn--ghost {
-      padding: var(--spacing-8) var(--spacing-24);
-      border-radius: var(--radius-lg);
-      font-size: var(--font-button-xs);
-      line-height: var(--font-button-xs-lh);
-      font-weight: var(--font-weight-regular);
-      background-color: var(--color-background-primary);
-      color: var(--color-text-primary);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      transition: background-color 0.15s ease;
-    }
-    .btn--ghost:hover { background-color: var(--color-button-productfilledhover); }
-
-    .btn--product-filled::before,
-    .btn--product-selected::before,
-    .btn--product-brand-blue::before,
-    .btn--ghost::before { display: none; }
-
-    .btn:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 3px;
-    }
-
-    /* ═══════════════════════════════════════════════
-       DROPDOWN component
-       ═══════════════════════════════════════════════ */
-
-    .dropdown {
-      position: relative;
-      width: 248px;
-      background: var(--color-background-primary);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      border-radius: var(--radius-lg);
-      font-family: var(--font-family);
-    }
-
-    .dropdown--open {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      box-shadow: var(--shadow-dropdown);
-    }
-
-    .dropdown__trigger {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: var(--spacing-12) var(--spacing-16);
-      background: none;
-      border: none;
-      border-radius: var(--radius-lg);
-      cursor: pointer;
-      font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-primary);
-      text-align: left;
-    }
-
-    .dropdown__trigger:hover { background: var(--color-background-secondary); }
-
-    .dropdown--open .dropdown__trigger {
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-      background: none;
-    }
-
-    .dropdown__trigger:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 3px;
-    }
-
-    .dropdown--small .dropdown__trigger { padding: var(--spacing-8) var(--spacing-12); }
-
-    .dropdown__chevron {
-      flex-shrink: 0;
-      color: var(--color-icon-primary);
-      transition: transform 0.2s ease;
-    }
-
-    .dropdown--open .dropdown__chevron { transform: rotate(180deg); }
-
-    .dropdown__panel[hidden] { display: none; }
-
-    .dropdown__panel {
-      position: absolute;
-      top: 100%;
-      left: calc(-1 * var(--border-stroke-sm));
-      right: calc(-1 * var(--border-stroke-sm));
-      z-index: 10;
-      background: var(--color-background-primary);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      border-top: none;
-      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-    }
-
-    .dropdown__divider {
-      height: var(--border-stroke-sm);
-      background: var(--color-stroke-primary);
-      border: none;
-      margin: 0;
-    }
-
-    .dropdown__search { padding: var(--spacing-8); }
-
-    .dropdown__search-input {
-      display: block;
-      width: 100%;
-      padding: var(--spacing-8) var(--spacing-12);
-      background: var(--color-background-primary);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      border-radius: var(--radius-lg);
-      font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-primary);
-    }
-
-    .dropdown__search-input::placeholder { color: var(--color-text-secondary); }
-
-    .dropdown__search-input:focus {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 0;
-    }
-
-    .dropdown__list {
-      list-style: none;
-      padding: var(--spacing-8) 0;
-    }
-
-    .dropdown--has-footer .dropdown__list { padding-bottom: 0; }
-
-    .dropdown__item {
-      position: relative;
-      display: flex;
-      align-items: center;
-      padding: var(--spacing-8) var(--spacing-16);
-      gap: var(--spacing-8);
-      cursor: pointer;
-    }
-
-    .dropdown__item::before {
-      content: '';
-      position: absolute;
-      inset: 0 var(--spacing-8);
-      border-radius: var(--radius-lg);
-      background: transparent;
-    }
-
-    .dropdown__item:hover:not(.dropdown__item--disabled)::before,
-    .dropdown__item--selected::before { background: var(--color-background-secondary); }
-
-    .dropdown__item > * { position: relative; z-index: 1; }
-
-    .dropdown__item-label {
-      flex: 1;
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .dropdown__item--selected .dropdown__item-label { font-weight: var(--font-weight-semibold); }
-
-    .dropdown__item-icon {
-      flex-shrink: 0;
-      width: 24px;
-      height: 24px;
-      border-radius: var(--radius-full);
-      background: var(--color-button-brandblue);
-      display: block;
-    }
-
-    .dropdown__item-check {
-      flex-shrink: 0;
-      color: var(--color-text-primary);
-    }
-
-    .dropdown__footer-divider {
-      height: var(--border-stroke-sm);
-      background: var(--color-stroke-primary);
-      border: none;
-      margin: 0;
-    }
-
-    .dropdown__footer { padding: var(--spacing-8) var(--spacing-16); }
-
-    .dropdown__footer-link {
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-link);
-      text-decoration: none;
-    }
-    .dropdown__footer-link:hover { text-decoration: underline; }
-
-    /* ═══════════════════════════════════════════════
-       PAGINATION component
-       ═══════════════════════════════════════════════ */
-
-    .pagination {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-12);
-    }
-
-    .pagination__page {
-      width: calc(var(--spacing-12) * 2 + var(--font-button-xs-lh));
-      height: calc(var(--spacing-12) * 2 + var(--font-button-xs-lh));
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-      isolation: isolate;
-      border-radius: var(--radius-full);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      background-color: transparent;
-      color: var(--color-text-primary);
-      font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      font-weight: var(--font-weight-regular);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background-color 0.15s ease, border-color 0.15s ease;
-    }
-
-    .pagination__page:hover {
-      background-color: var(--color-button-productfilled);
-      border-color: var(--color-button-productfilled);
-    }
-
-    .pagination__page[aria-current="page"] {
-      background-color: var(--color-button-brandblue);
-      border-color: var(--color-button-brandblue);
-      color: var(--color-text-inverted);
-      font-weight: var(--font-weight-semibold);
-    }
-
-    .pagination__ellipsis {
-      width: calc(var(--spacing-12) * 2 + var(--font-button-xs-lh));
-      height: calc(var(--spacing-12) * 2 + var(--font-button-xs-lh));
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-link);
-      font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      font-weight: var(--font-weight-regular);
-    }
-
-    .pagination__nav {
-      position: relative;
-      overflow: hidden;
-      isolation: isolate;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--spacing-12) var(--spacing-16);
-      border-radius: var(--radius-lg);
-      border: none;
-      background-color: var(--color-button-productfilled);
-      color: var(--color-text-primary);
-      font-family: var(--font-family);
-      font-size: var(--font-button-xs);
-      line-height: var(--font-button-xs-lh);
-      font-weight: var(--font-weight-regular);
-      cursor: pointer;
-      transition: background-color 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .pagination__nav:hover { background-color: var(--color-button-productfilledhover); }
-
-    .pagination__page:focus-visible,
-    .pagination__nav:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 3px;
-    }
-
-    /* ═══════════════════════════════════════════════
-       TOGGLE component
-       ═══════════════════════════════════════════════ */
-
-    .toggle {
-      --toggle-width:      var(--spacing-40);
-      --toggle-height:     var(--spacing-24);
-      --toggle-thumb-gap:  3px;
-      --toggle-thumb-size: calc(var(--toggle-height) - var(--toggle-thumb-gap) * 2);
-      --toggle-travel:     calc(var(--toggle-width) - var(--toggle-height));
-
-      display: inline-flex;
-      align-items: center;
-      width: var(--toggle-width);
-      height: var(--toggle-height);
-      border-radius: var(--radius-full);
-      border: none;
-      padding: 0;
-      background-color: var(--color-stroke-primary);
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-      flex-shrink: 0;
-    }
-
-    .toggle[aria-checked="true"] { background-color: var(--color-icon-secondary); }
-
-    .toggle:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 3px;
-    }
-
-    .toggle__thumb {
-      width: var(--toggle-thumb-size);
-      height: var(--toggle-thumb-size);
-      border-radius: var(--radius-full);
-      background-color: var(--color-toggle-thumb);
-      box-shadow: var(--shadow-card);
-      margin-left: var(--toggle-thumb-gap);
-      flex-shrink: 0;
-      transform: translateX(0);
-      transition: transform 0.2s ease;
-    }
-
-    .toggle[aria-checked="true"] .toggle__thumb { transform: translateX(var(--toggle-travel)); }
-
-    .toggle-row {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--spacing-12);
-      cursor: pointer;
-    }
-
-    .toggle-row__label {
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      color: var(--color-text-primary);
-      user-select: none;
-    }
-
-    /* ═══════════════════════════════════════════════
-       TAGS component
-       ═══════════════════════════════════════════════ */
-
-    .tag {
-      --tag-gap: 6px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--tag-gap);
-      padding: 0 var(--spacing-12);
-      height: 36px;
-      border-radius: var(--radius-full);
-      background: var(--color-button-productfilled);
-      border: none;
-      font-family: var(--font-family);
-      font-size: var(--font-label-xs);
-      line-height: var(--font-label-xs-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-primary);
-      white-space: nowrap;
-    }
-
-    .tag--outline {
-      background: var(--color-background-primary);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-    }
-
-    .tag__dismiss {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 16px;
-      height: 16px;
-      padding: 0;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--color-icon-primary);
-      flex-shrink: 0;
-      transition: opacity 150ms ease;
-    }
-    .tag__dismiss:hover { opacity: 0.6; }
-
-    .tag--sm {
-      height: 28px;
-      padding: 0 var(--spacing-8);
-    }
-
-    .tag__icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-      color: var(--color-icon-primary);
-    }
-
-    .tag--label {
-      height: auto;
-      padding: var(--spacing-8) var(--spacing-12);
-      justify-content: flex-start;
-      white-space: normal;
-    }
-
-    /* ═══════════════════════════════════════════════
-       FORM FIELD component
-       ═══════════════════════════════════════════════ */
-
-    .form-field {
-      display: flex;
-      flex-direction: column;
-      width: 300px;
-      background: var(--color-background-primary);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-8) var(--spacing-12);
-      transition: border-color 150ms ease;
-    }
-
-    .form-field:focus-within { border-color: var(--color-stroke-primary-button); }
-
-    .form-field__input {
-      width: 100%;
-      background: none;
-      border: none;
-      outline: none;
-      font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-primary);
-      resize: none;
-    }
-
-    .form-field__input::placeholder { color: var(--color-text-secondary); }
-
-    .form-field--multiline { min-height: 64px; }
-
-    .form-field--multiline .form-field__input {
-      flex: 1;
-      resize: vertical;
-      min-height: 0;
-    }
-
-    .form-field--error { border-color: var(--color-stroke-error); }
-    .form-field--error:focus-within { border-color: var(--color-stroke-error); }
-
-    .form-field__error {
-      display: block;
-      margin-top: calc(-1 * var(--spacing-4));
-      padding-left: var(--spacing-12);
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      color: var(--color-text-error);
-    }
-
-    /* ═══════════════════════════════════════════════
-       RADIO BUTTON component
-       ═══════════════════════════════════════════════ */
-
-    .radio-button {
-      appearance: none;
-      -webkit-appearance: none;
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      border-radius: var(--radius-full);
-      border: var(--border-stroke-md) solid var(--color-stroke-primary);
-      background: transparent;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: border-color 150ms ease;
-    }
-
-    .radio-button::after {
-      content: '';
-      display: block;
-      width: 12px;
-      height: 12px;
-      border-radius: var(--radius-full);
-      background: var(--color-button-brandblue);
-      opacity: 0;
-      transform: scale(0.5);
-      transition: opacity 150ms ease, transform 150ms ease;
-    }
-
-    .radio-button:checked { border-color: var(--color-stroke-primary-button); }
-
-    .radio-button:checked::after { opacity: 1; transform: scale(1); }
-
-    .radio-button:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 3px;
-    }
-
-    .radio-label {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--spacing-8);
-      cursor: pointer;
-    }
-
-    .radio-label__text {
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-primary);
-      user-select: none;
-    }
-
-    .radio-group {
-      border: none;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-12);
-    }
-
-    .radio-group__legend {
-      font-size: var(--font-body-xs);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: var(--spacing-4);
-    }
-
-    /* ═══════════════════════════════════════════════
-       SEARCH FIELD component
-       ═══════════════════════════════════════════════ */
-
-    .search-field {
-      position: relative;
-      display: flex;
-      align-items: center;
-      width: 100%;
-      background: var(--color-background-primary);
-      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
-      border-radius: var(--radius-full);
-      transition: border-color 150ms ease, box-shadow 150ms ease;
-    }
-
-    .search-field:focus-within,
-    .search-field.is-focused { border-color: var(--color-stroke-primary-button); }
-
-    .search-field--homepage { height: 48px; }
-    .search-field--homepage.search-field--desktop { height: 56px; }
-
-    .search-field--homepage:focus-within,
-    .search-field--homepage.is-focused { box-shadow: var(--shadow-search); }
-
-    .search-field--serp { height: 40px; }
-    .search-field--serp.search-field--mobile { box-shadow: var(--shadow-search); }
-
-    .search-field__input {
-      flex: 1;
-      min-width: 0;
-      height: 100%;
-      padding: 0 0 0 var(--spacing-20);
-      background: transparent;
-      border: none;
-      outline: none;
-      font-family: var(--font-family);
-      font-size: var(--font-body-md);
-      line-height: var(--font-body-md-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-primary);
-      caret-color: var(--color-text-tertiary);
-    }
-
-    .search-field--serp .search-field__input { padding-left: var(--spacing-16); }
-    .search-field__input::placeholder { color: var(--color-text-secondary); }
-
-    .search-field__actions {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-12);
-      padding-right: var(--spacing-20);
-      flex-shrink: 0;
-    }
-
-    .search-field--homepage.search-field--desktop .search-field__actions {
-      padding-right: var(--spacing-24);
-    }
-
-    .search-field__clear {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      width: 16px;
-      height: 16px;
-      padding: 0;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--color-icon-tertiary);
-      flex-shrink: 0;
-      transition: color 100ms ease;
-    }
-
-    .search-field__clear:hover { color: var(--color-icon-primary); }
-    .search-field.has-value .search-field__clear { display: flex; }
-    .search-field--serp .search-field__clear { display: flex; }
-
-    .search-field__divider {
-      display: none;
-      width: 1px;
-      height: 16px;
-      background: var(--color-stroke-primary);
-      flex-shrink: 0;
-    }
-
-    .search-field.has-value .search-field__divider { display: block; }
-    .search-field--serp .search-field__divider { display: block; }
-
-    .search-field__submit {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 16px;
-      height: 16px;
-      padding: 0;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--color-icon-secondary);
-      flex-shrink: 0;
-      transition: opacity 100ms ease;
-    }
-    .search-field__submit:hover { opacity: 0.75; }
-
-    /* search-field demo frame constraints */
-    .demo-frame--mobile { max-width: 382px; }
-    .demo-frame--desktop-homepage { max-width: 686px; }
-    .demo-frame--desktop-serp { max-width: 628px; }
-
-    .demo-states {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-20);
-    }
-
-    .demo-row--col {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-8);
-    }
-
-    .demo-label-sm {
-      font-size: var(--font-body-xs);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .search-demo-section {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-24);
-      margin-bottom: var(--spacing-40);
-    }
-
-    .search-demo-section__heading {
-      font-size: var(--font-body-sm);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding-bottom: var(--spacing-12);
-      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
-    }
-
-    /* ═══════════════════════════════════════════════
-       ICN-ARROWS component
-       ═══════════════════════════════════════════════ */
-
-    .icn-arrows {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      color: var(--color-icon-primary);
-    }
-
-    .icn-arrows--right-sm,
-    .icn-arrows--right-lg,
-    .icn-arrows--down-sm,
-    .icn-arrows--down-lg,
-    .icn-arrows--v7 {
-      width: 16px;
-      height: 16px;
-    }
-
-    .icn-arrows--down-circle {
-      width: 16px;
-      height: 16px;
-      border-radius: var(--radius-full);
-      background: var(--color-button-inactive);
-    }
-
-    .icn-arrows--right-circle {
-      width: 24px;
-      height: 24px;
-      border-radius: var(--radius-full);
-      background: var(--color-button-inactive);
-    }
-
-    .icn-arrows--v9 {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-full);
-      background: var(--color-button-inactive);
-    }
-
-    .icn-arrows--v8 {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-full);
-      background: var(--color-button-inactive);
-      box-shadow: var(--shadow-dropdown);
-    }
-
-    /* ═══════════════════════════════════════════════
-       ICN-COPY component
-       ═══════════════════════════════════════════════ */
-
-    .icn-copy {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      isolation: isolate;
-      border: none;
-      padding: 0;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      color: var(--color-icon-primary);
-      background-color: var(--color-background-secondary);
-      transition: background-color 0.2s ease, color 0.2s ease;
-      flex-shrink: 0;
-    }
-
-    .icn-copy--lg { width: var(--spacing-32); height: var(--spacing-32); }
-    .icn-copy--sm { width: var(--spacing-24); height: var(--spacing-24); }
-
-    .icn-copy--bare {
-      width: var(--spacing-16);
-      height: var(--spacing-16);
-      background-color: transparent;
-    }
-
-    .icn-copy[data-state="check"]:not(.icn-copy--bare) {
-      background-color: var(--color-icon-secondary);
-      color: var(--color-text-inverted);
-    }
-
-    .icn-copy--lg .icn-copy__svg  { width: 12px; height: 12px; }
-    .icn-copy--sm .icn-copy__svg  { width: 9px;  height: 9px;  }
-    .icn-copy--bare .icn-copy__svg { width: 12px; height: 12px; }
-
-    .icn-copy__svg {
-      position: absolute;
-      flex-shrink: 0;
-      transition: opacity 0.15s ease, transform 0.15s ease;
-    }
-
-    .icn-copy__svg--copy  { opacity: 1; transform: scale(1);   }
-    .icn-copy__svg--check { opacity: 0; transform: scale(0.5); }
-
-    .icn-copy[data-state="check"] .icn-copy__svg--copy  { opacity: 0; transform: scale(0.5); }
-    .icn-copy[data-state="check"] .icn-copy__svg--check { opacity: 1; transform: scale(1);   }
-
-    .icn-copy:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 3px;
-    }
-
-    .icn-copy-ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.22);
-      transform: scale(0);
-      animation: ripple 550ms ease-out forwards;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    /* ═══════════════════════════════════════════════
-       ICN-CHECK component
-       ═══════════════════════════════════════════════ */
-
-    .icn-check {
-      appearance: none;
-      border: none;
-      padding: 0;
-      background: transparent;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      color: var(--color-icon-secondary);
-      border-radius: var(--radius-full);
-      transition: color 0.15s ease, transform 0.15s ease;
-    }
-
-    .icn-check:hover { color: var(--color-icon-primary); }
-
-    .icn-check:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 4px;
-    }
-
-    .icn-check svg { display: block; width: 100%; height: 100%; overflow: visible; }
-
-    .icn-check--lg { width: var(--spacing-16); height: var(--spacing-16); }
-    .icn-check--sm { width: var(--spacing-12); height: var(--spacing-12); }
-
-    /* ═══════════════════════════════════════════════
-       ICN-CLOSE component
-       ═══════════════════════════════════════════════ */
-
-    .icn-close {
-      appearance: none;
-      border: none;
-      padding: 0;
-      background: transparent;
-      cursor: pointer;
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      isolation: isolate;
-      flex-shrink: 0;
-      width: var(--spacing-16);
-      height: var(--spacing-16);
-      color: var(--color-icon-tertiary);
-      transition: color 0.15s ease, transform 0.15s ease;
-      border-radius: var(--radius-full);
-    }
-
-    .icn-close[data-state="secondary"],
-    .icn-close:hover { color: var(--color-icon-secondary); }
-
-    .icn-close:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 3px;
-    }
-
-    .icn-close__svg { width: 10px; height: 10px; flex-shrink: 0; display: block; }
-
-    /* Context pill (icn-close demo) */
-    .icn-close-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--spacing-8);
-      padding: var(--spacing-4) var(--spacing-8) var(--spacing-4) var(--spacing-12);
-      border-radius: var(--radius-full);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      background-color: var(--color-background-secondary);
-      font-size: var(--font-body-sm);
-      color: var(--color-text-primary);
-    }
-
-    /* ═══════════════════════════════════════════════
-       ICN-OPEN-CLOSE component
-       ═══════════════════════════════════════════════ */
-
-    .icn-open-close {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: var(--spacing-16);
-      height: var(--spacing-16);
-      overflow: hidden;
-      isolation: isolate;
-      border: none;
-      padding: 0;
-      background-color: transparent;
-      color: var(--color-icon-primary);
-      cursor: pointer;
-      flex-shrink: 0;
-      border-radius: var(--radius-full);
-    }
-
-    .icn-open-close__svg {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      flex-shrink: 0;
-      transition: opacity 0.15s ease, transform 0.15s ease;
-    }
-
-    .icn-open-close__svg--plus  { opacity: 1; transform: scale(1);   }
-    .icn-open-close__svg--minus { opacity: 0; transform: scale(0.5); }
-
-    .icn-open-close[data-state="close"] .icn-open-close__svg--plus  { opacity: 0; transform: scale(0.5); }
-    .icn-open-close[data-state="close"] .icn-open-close__svg--minus { opacity: 1; transform: scale(1);   }
-
-    .icn-open-close:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 3px;
-      border-radius: var(--radius-sm);
-    }
-
-    /* Accordion context (scoped to the section) */
-    #icn-open-close .accordion-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--spacing-16) var(--spacing-20);
-      border-radius: var(--radius-md);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      background-color: var(--color-background-primary);
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.15s ease, border-color 0.15s ease;
-    }
-
-    #icn-open-close .accordion-row:hover { background-color: var(--color-background-secondary); }
-
-    #icn-open-close .accordion-row__label {
-      font-size: var(--font-body-sm);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-primary);
-    }
-
-    #icn-open-close .accordion-panel {
-      overflow: hidden;
-      max-height: 0;
-      opacity: 0;
-      transition: max-height 0.3s ease, opacity 0.25s ease;
-    }
-
-    #icn-open-close .accordion-panel.is-open { max-height: 200px; opacity: 1; }
-
-    #icn-open-close .accordion-panel__inner {
-      padding: var(--spacing-16) var(--spacing-20);
-      font-size: var(--font-body-sm);
-      color: var(--color-text-secondary);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      border-top: none;
-      border-radius: 0 0 var(--radius-md) var(--radius-md);
-    }
-
-    /* ═══════════════════════════════════════════════
-       ICN-SEARCH component
-       ═══════════════════════════════════════════════ */
-
-    .icn-search {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: var(--spacing-16);
-      height: var(--spacing-16);
-      color: var(--color-icon-tertiary);
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      border-radius: var(--radius-sm);
-      transition: color 150ms ease;
-    }
-
-    .icn-search[data-state="active"] { color: var(--color-icon-secondary); }
-
-    .icn-search:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 4px;
-    }
-
-    .icn-search svg { display: block; width: 100%; height: 100%; }
-
-    /* ═══════════════════════════════════════════════
-       ICN-SOUND component
-       ═══════════════════════════════════════════════ */
-
-    .icn-sound {
-      appearance: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      width: var(--spacing-32);
-      height: var(--spacing-32);
-      border-radius: var(--radius-full);
-      background: var(--color-button-inactive);
-      color: var(--color-icon-primary);
-      transition: color 0.15s ease, transform 0.15s ease;
-    }
-
-    .icn-sound:hover { color: var(--color-icon-secondary); }
-
-    .icn-sound:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 4px;
-    }
-
-    .icn-sound svg { width: 16px; height: 11px; display: block; flex-shrink: 0; }
-
-    .icn-sound__waves,
-    .icn-sound__mute { transition: opacity 0.15s ease; }
-
-    .icn-sound[data-state="on"]  .icn-sound__mute  { opacity: 0; }
-    .icn-sound[data-state="on"]  .icn-sound__waves { opacity: 1; }
-    .icn-sound[data-state="off"] .icn-sound__mute  { opacity: 1; }
-    .icn-sound[data-state="off"] .icn-sound__waves { opacity: 0; }
-
-    /* ═══════════════════════════════════════════════
-       ICN-DOWNLOAD component
-       ═══════════════════════════════════════════════ */
-
-    .icn-download {
-      appearance: none;
-      border: none;
-      padding: 0;
-      background: transparent;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      color: var(--color-icon-primary);
-      border-radius: var(--radius-full);
-      transition: color 0.15s ease, transform 0.15s ease;
-    }
-
-    .icn-download:hover { color: var(--color-icon-secondary); }
-
-    .icn-download:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 4px;
-    }
-
-    .icn-download--bare { width: var(--spacing-16); height: var(--spacing-16); }
-    .icn-download--bare svg { width: 100%; height: 100%; display: block; }
-
-    .icn-download--circle-lg {
-      width: var(--spacing-32);
-      height: var(--spacing-32);
-      background: var(--color-button-inactive);
-    }
-    .icn-download--circle-lg svg { width: 14px; height: 14px; display: block; }
-
-    .icn-download--circle-sm {
-      width: var(--spacing-24);
-      height: var(--spacing-24);
-      background: var(--color-button-inactive);
-    }
-    .icn-download--circle-sm svg { width: 12px; height: 12px; display: block; }
-
   </style>
 </head>
 <body>
 
-  <!-- ─────────────────────────────────────────────
-       Header
-       ───────────────────────────────────────────── -->
+  <!-- ─── Library header ─── -->
   <header class="lib-header">
     <div class="lib-header__left">
       <span class="lib-header__title">Startpage Design System</span>
@@ -1566,9 +258,7 @@
     </button>
   </header>
 
-  <!-- ─────────────────────────────────────────────
-       Sidebar nav
-       ───────────────────────────────────────────── -->
+  <!-- ─── Sidebar nav ─── -->
   <nav class="lib-sidebar" aria-label="Components">
     <div class="lib-nav__group">
       <p class="lib-nav__group-label">Components</p>
@@ -1581,6 +271,13 @@
         <li class="lib-nav__item"><a href="#form-field">Form Field</a></li>
         <li class="lib-nav__item"><a href="#radio-button">Radio Button</a></li>
         <li class="lib-nav__item"><a href="#search-field">Search Field</a></li>
+      </ul>
+    </div>
+    <div class="lib-nav__group">
+      <p class="lib-nav__group-label">Page Components</p>
+      <ul class="lib-nav__list">
+        <li class="lib-nav__item"><a href="#header">Header</a></li>
+        <li class="lib-nav__item"><a href="#footer">Footer</a></li>
       </ul>
     </div>
     <div class="lib-nav__group">
@@ -1598,1416 +295,260 @@
     </div>
   </nav>
 
-  <!-- ─────────────────────────────────────────────
-       Main content
-       ───────────────────────────────────────────── -->
+  <!-- ─── Main content ─── -->
   <main class="lib-main">
 
-    <!-- ═══════════════════════════════════════════
-         BUTTON
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="button">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Button</h2>
-        <p class="lib-section__desc">Hover CTA buttons for liquid fill. Click for press + ripple.</p>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">CTA — Teal</p>
-        <div class="lib-row">
-          <button class="btn btn--teal btn--sm" data-btn><span class="btn__label">CTA</span></button>
-          <button class="btn btn--teal btn--md" data-btn><span class="btn__label">CTA</span></button>
-          <button class="btn btn--teal btn--lg" data-btn><span class="btn__label">CTA</span></button>
+        <div>
+          <h2 class="lib-section__title">Button</h2>
+          <p class="lib-section__desc">Hover CTA buttons for liquid fill. Click for press + ripple.</p>
         </div>
+        <a href="components/button/button.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">CTA — Brand Blue</p>
-        <div class="lib-row">
-          <button class="btn btn--brand-blue btn--sm" data-btn><span class="btn__label">CTA</span></button>
-          <button class="btn btn--brand-blue btn--md" data-btn><span class="btn__label">CTA</span></button>
-          <button class="btn btn--brand-blue btn--lg" data-btn><span class="btn__label">CTA</span></button>
-        </div>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">CTA — Purple</p>
-        <div class="lib-row">
-          <button class="btn btn--purple btn--sm" data-btn><span class="btn__label">CTA</span></button>
-          <button class="btn btn--purple btn--md" data-btn><span class="btn__label">CTA</span></button>
-          <button class="btn btn--purple btn--lg" data-btn><span class="btn__label">CTA</span></button>
-        </div>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">CTA — Inactive</p>
-        <div class="lib-row">
-          <button class="btn btn--inactive btn--sm" disabled>CTA</button>
-          <button class="btn btn--inactive btn--md" disabled>CTA</button>
-          <button class="btn btn--inactive btn--lg" disabled>CTA</button>
-        </div>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">Product — Filled / Selected / Brand Blue / XS</p>
-        <div class="lib-row">
-          <button class="btn btn--product-filled" data-btn><span class="btn__label">Next</span></button>
-          <button class="btn btn--product-selected" data-btn aria-pressed="true"><span class="btn__label">Next</span></button>
-          <button class="btn btn--product-brand-blue" data-btn><span class="btn__label">Next</span></button>
-          <button class="btn btn--product-filled btn--xs" data-btn><span class="btn__label">Next</span></button>
-        </div>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">Ghost — Label / With icon</p>
-        <div class="lib-row">
-          <button class="btn btn--ghost" data-btn><span class="btn__label">See more</span></button>
-          <button class="btn btn--ghost" data-btn>
-            <span class="btn__label">More news</span>
-            <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
-      </div>
+      <iframe src="components/button/button.html" class="component-frame" title="Button" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         DROPDOWN
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="dropdown">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Dropdown</h2>
-        <p class="lib-section__desc">Click the trigger to open. Keyboard navigable. Closes on outside click or Escape.</p>
+        <div>
+          <h2 class="lib-section__title">Dropdown</h2>
+          <p class="lib-section__desc">Search, icon, and label variants. Click to open and close.</p>
+        </div>
+        <a href="components/dropdown/dropdown.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="demo-grid">
-
-        <div class="demo-group">
-          <p class="demo-group__title">Default — Closed</p>
-          <div class="dropdown" data-dropdown>
-            <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="list-default">
-              <span class="dropdown__label">Dropdown</span>
-              <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="dropdown__panel" hidden>
-              <hr class="dropdown__divider">
-              <ul class="dropdown__list" id="list-default" role="listbox" aria-label="Options">
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Text-only — Open + Footer</p>
-          <div class="dropdown dropdown--open dropdown--has-footer" data-dropdown>
-            <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="true" aria-controls="list-text">
-              <span class="dropdown__label">Menu item</span>
-              <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="dropdown__panel">
-              <hr class="dropdown__divider">
-              <ul class="dropdown__list" id="list-text" role="listbox" aria-label="Options">
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" tabindex="0">
-                  <span class="dropdown__item-label">Menu item</span>
-                  <svg class="dropdown__item-check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3 8.5L6.5 12L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-              </ul>
-              <hr class="dropdown__footer-divider">
-              <div class="dropdown__footer"><a class="dropdown__footer-link" href="#">Optional link</a></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">With Icons — Open</p>
-          <div class="dropdown dropdown--with-icons dropdown--open" data-dropdown>
-            <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="true" aria-controls="list-icons">
-              <span class="dropdown__label">Menu item</span>
-              <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="dropdown__panel">
-              <hr class="dropdown__divider">
-              <ul class="dropdown__list" id="list-icons" role="listbox" aria-label="Options">
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-icon" aria-hidden="true"></span><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" tabindex="0"><span class="dropdown__item-icon" aria-hidden="true"></span><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-icon" aria-hidden="true"></span><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-icon" aria-hidden="true"></span><span class="dropdown__item-label">Menu item</span></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Search + Icons — Open</p>
-          <div class="dropdown dropdown--with-icons dropdown--with-search dropdown--open" data-dropdown>
-            <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="true" aria-controls="list-search">
-              <span class="dropdown__label">Menu item</span>
-              <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="dropdown__panel">
-              <hr class="dropdown__divider">
-              <div class="dropdown__search">
-                <input class="dropdown__search-input" type="text" placeholder="Search placeholder" aria-label="Search options" autocomplete="off">
-              </div>
-              <ul class="dropdown__list" id="list-search" role="listbox" aria-label="Options">
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-icon" aria-hidden="true"></span><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" tabindex="0"><span class="dropdown__item-icon" aria-hidden="true"></span><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-icon" aria-hidden="true"></span><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-icon" aria-hidden="true"></span><span class="dropdown__item-label">Menu item</span></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Small — Closed</p>
-          <div class="dropdown dropdown--small" data-dropdown>
-            <button class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="list-small">
-              <span class="dropdown__label">Dropdown</span>
-              <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="dropdown__panel" hidden>
-              <hr class="dropdown__divider">
-              <ul class="dropdown__list" id="list-small" role="listbox" aria-label="Options">
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-                <li class="dropdown__item" role="option" aria-selected="false" tabindex="-1"><span class="dropdown__item-label">Menu item</span></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <iframe src="components/dropdown/dropdown.html" class="component-frame" title="Dropdown" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         PAGINATION
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="pagination">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Pagination</h2>
-        <p class="lib-section__desc">Click a page number to set it as active. Four Figma variants.</p>
+        <div>
+          <h2 class="lib-section__title">Pagination</h2>
+          <p class="lib-section__desc">All 4 Figma variants. Click page numbers to set active state.</p>
+        </div>
+        <a href="components/pagination/pagination.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">Default — page 1 active</p>
-        <nav class="pagination" aria-label="Pagination">
-          <button class="pagination__page" data-btn aria-current="page" aria-label="Page 1">1</button>
-          <button class="pagination__page" data-btn aria-label="Page 2">2</button>
-          <button class="pagination__page" data-btn aria-label="Page 3">3</button>
-          <button class="pagination__page" data-btn aria-label="Page 4">4</button>
-          <button class="pagination__nav" data-btn>Next</button>
-        </nav>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">Mid-range — page 2 active</p>
-        <nav class="pagination" aria-label="Pagination">
-          <button class="pagination__nav" data-btn>Prev</button>
-          <button class="pagination__page" data-btn aria-label="Page 1">1</button>
-          <button class="pagination__page" data-btn aria-current="page" aria-label="Page 2">2</button>
-          <button class="pagination__page" data-btn aria-label="Page 3">3</button>
-          <button class="pagination__page" data-btn aria-label="Page 4">4</button>
-          <button class="pagination__nav" data-btn>Next</button>
-        </nav>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">Far end — page 6 active</p>
-        <nav class="pagination" aria-label="Pagination">
-          <button class="pagination__nav" data-btn>Prev</button>
-          <button class="pagination__page" data-btn aria-label="Page 1">1</button>
-          <span class="pagination__ellipsis" aria-hidden="true">…</span>
-          <button class="pagination__page" data-btn aria-label="Page 5">5</button>
-          <button class="pagination__page" data-btn aria-current="page" aria-label="Page 6">6</button>
-          <button class="pagination__page" data-btn aria-label="Page 7">7</button>
-          <button class="pagination__nav" data-btn>Next</button>
-        </nav>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">Last visible — page 5 active</p>
-        <nav class="pagination" aria-label="Pagination">
-          <button class="pagination__nav" data-btn>Prev</button>
-          <button class="pagination__page" data-btn aria-label="Page 1">1</button>
-          <span class="pagination__ellipsis" aria-hidden="true">…</span>
-          <button class="pagination__page" data-btn aria-current="page" aria-label="Page 5">5</button>
-          <button class="pagination__nav" data-btn>Next</button>
-        </nav>
-      </div>
+      <iframe src="components/pagination/pagination.html" class="component-frame" title="Pagination" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         TOGGLE
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="toggle">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Toggle</h2>
-        <p class="lib-section__desc">Click any toggle to switch state. Uses <code>role="switch"</code> and <code>aria-checked</code>.</p>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">On / Off</p>
-        <div class="lib-row">
-          <button class="toggle" role="switch" aria-checked="true" aria-label="Toggle on"><span class="toggle__thumb"></span></button>
-          <button class="toggle" role="switch" aria-checked="false" aria-label="Toggle off"><span class="toggle__thumb"></span></button>
+        <div>
+          <h2 class="lib-section__title">Toggle</h2>
+          <p class="lib-section__desc">On/off states with labeled variant. role=switch + aria-checked.</p>
         </div>
+        <a href="components/toggle/toggle.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">Labeled</p>
-        <div style="display:flex;flex-direction:column;gap:var(--spacing-12)">
-          <div class="toggle-row" role="group">
-            <button class="toggle" role="switch" aria-checked="true" id="toggle-notifications" aria-label="Notifications"><span class="toggle__thumb"></span></button>
-            <label class="toggle-row__label" for="toggle-notifications" onclick="document.getElementById('toggle-notifications').click()">Notifications</label>
-          </div>
-          <div class="toggle-row" role="group">
-            <button class="toggle" role="switch" aria-checked="false" id="toggle-darkmode" aria-label="Dark mode"><span class="toggle__thumb"></span></button>
-            <label class="toggle-row__label" for="toggle-darkmode" onclick="document.getElementById('toggle-darkmode').click()">Dark mode</label>
-          </div>
-          <div class="toggle-row" role="group">
-            <button class="toggle" role="switch" aria-checked="false" id="toggle-updates" aria-label="Auto-update"><span class="toggle__thumb"></span></button>
-            <label class="toggle-row__label" for="toggle-updates" onclick="document.getElementById('toggle-updates').click()">Auto-update</label>
-          </div>
-        </div>
-      </div>
+      <iframe src="components/toggle/toggle.html" class="component-frame" title="Toggle" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         TAGS
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="tags">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Tags</h2>
-        <p class="lib-section__desc">5 variants — filled · outline · dismissible · sm with icon · label.</p>
+        <div>
+          <h2 class="lib-section__title">Tags</h2>
+          <p class="lib-section__desc">Default, outline, dismissible, small, and label variants.</p>
+        </div>
+        <a href="components/tags/tags.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="demo-grid">
-
-        <div class="demo-group">
-          <p class="demo-group__title">Filled</p>
-          <span class="tag">Category</span>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Outline</p>
-          <span class="tag tag--outline">Category</span>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Dismissible</p>
-          <span class="tag" id="dismissTag">
-            <span class="tag__text">Category</span>
-            <button class="tag__dismiss" aria-label="Remove">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M4.5 4.5L11.5 11.5M11.5 4.5L4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-            </button>
-          </span>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">SM + Icon</p>
-          <span class="tag tag--sm">
-            <span class="tag__icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M8 5.5V8.5L9.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-            <span class="tag__text">Category</span>
-          </span>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Label</p>
-          <span class="tag tag--label">Rating: 10/10</span>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">All together</p>
-          <div class="lib-row" style="gap:var(--spacing-12)">
-            <span class="tag">Category</span>
-            <span class="tag tag--outline">Category</span>
-            <span class="tag">
-              <span class="tag__text">Category</span>
-              <button class="tag__dismiss" aria-label="Remove">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M4.5 4.5L11.5 11.5M11.5 4.5L4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </button>
-            </span>
-            <span class="tag tag--sm">
-              <span class="tag__icon" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M8 5.5V8.5L9.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-              <span class="tag__text">Category</span>
-            </span>
-            <span class="tag tag--label">Rating: 10/10</span>
-          </div>
-        </div>
-
-      </div>
+      <iframe src="components/tags/tags.html" class="component-frame" title="Tags" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         FORM FIELD
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="form-field">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Form Field</h2>
-        <p class="lib-section__desc">4 variants — default · focus · error · multi-line. Border animates on <code>:focus-within</code>.</p>
+        <div>
+          <h2 class="lib-section__title">Form Field</h2>
+          <p class="lib-section__desc">Default, focus, error, and multiline states.</p>
+        </div>
+        <a href="components/form-field/form-field.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="demo-grid">
-
-        <div class="demo-group">
-          <p class="demo-group__title">Default</p>
-          <div class="demo-col">
-            <div class="form-field">
-              <input class="form-field__input" type="text" placeholder="text entry">
-            </div>
-            <span class="demo-label">default</span>
-          </div>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Focus</p>
-          <div class="demo-col">
-            <div class="form-field" style="border-color:var(--color-stroke-primary-button)">
-              <input class="form-field__input" type="text" placeholder="text entry">
-            </div>
-            <span class="demo-label">click to focus</span>
-          </div>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Error</p>
-          <div class="demo-col">
-            <div class="form-field form-field--error">
-              <input class="form-field__input" type="text" value="xyz">
-            </div>
-            <span class="form-field__error">Error message</span>
-          </div>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Multi-line</p>
-          <div class="demo-col">
-            <div class="form-field form-field--multiline">
-              <textarea class="form-field__input" placeholder="text entry"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Multi-line Error</p>
-          <div class="demo-col">
-            <div class="form-field form-field--multiline form-field--error">
-              <textarea class="form-field__input">text entry</textarea>
-            </div>
-            <span class="form-field__error">Error message</span>
-          </div>
-        </div>
-
-      </div>
+      <iframe src="components/form-field/form-field.html" class="component-frame" title="Form Field" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         RADIO BUTTON
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="radio-button">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Radio Button</h2>
-        <p class="lib-section__desc">Custom <code>appearance: none</code> radio with animated dot. Group example uses <code>&lt;fieldset&gt;</code>.</p>
-      </div>
-
-      <div class="demo-grid">
-
-        <div class="demo-group">
-          <p class="demo-group__title">States</p>
-          <div class="demo-row">
-            <div class="demo-item">
-              <input type="radio" class="radio-button" name="states-demo" aria-label="Default">
-              <span class="demo-label">default</span>
-            </div>
-            <div class="demo-item">
-              <input type="radio" class="radio-button" name="states-demo" checked aria-label="Active">
-              <span class="demo-label">active</span>
-            </div>
-          </div>
+        <div>
+          <h2 class="lib-section__title">Radio Button</h2>
+          <p class="lib-section__desc">Custom-styled group with fieldset and aria semantics.</p>
         </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">With Label</p>
-          <div class="demo-row">
-            <label class="radio-label">
-              <input type="radio" class="radio-button" name="label-demo">
-              <span class="radio-label__text">Option</span>
-            </label>
-            <label class="radio-label">
-              <input type="radio" class="radio-button" name="label-demo" checked>
-              <span class="radio-label__text">Option</span>
-            </label>
-          </div>
-        </div>
-
-        <fieldset class="radio-group">
-          <legend class="radio-group__legend">Group example</legend>
-          <label class="radio-label">
-            <input type="radio" class="radio-button" name="group-demo" value="web" checked>
-            <span class="radio-label__text">Web results</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" class="radio-button" name="group-demo" value="images">
-            <span class="radio-label__text">Images</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" class="radio-button" name="group-demo" value="videos">
-            <span class="radio-label__text">Videos</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" class="radio-button" name="group-demo" value="news">
-            <span class="radio-label__text">News</span>
-          </label>
-        </fieldset>
-
+        <a href="components/radio-button/radio-button.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
+      <iframe src="components/radio-button/radio-button.html" class="component-frame" title="Radio Button" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         SEARCH FIELD
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="search-field">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Search Field</h2>
-        <p class="lib-section__desc">2 contexts × 2 sizes × 3 states. Type to trigger clear button.</p>
-      </div>
-
-      <div class="search-demo-section">
-        <h3 class="search-demo-section__heading">Homepage — Mobile</h3>
-        <div class="demo-states">
-          <div class="demo-row--col"><p class="demo-label-sm">Inactive</p>
-            <div class="demo-frame--mobile">
-              <div class="search-field search-field--homepage">
-                <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search">
-                <div class="search-field__actions">
-                  <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                  <div class="search-field__divider" aria-hidden="true"></div>
-                  <button class="search-field__submit" aria-label="Submit search">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/><line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="demo-row--col"><p class="demo-label-sm">Active with query</p>
-            <div class="demo-frame--mobile">
-              <div class="search-field search-field--homepage is-focused has-value">
-                <input type="text" class="search-field__input" value="search term" aria-label="Search">
-                <div class="search-field__actions">
-                  <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                  <div class="search-field__divider" aria-hidden="true"></div>
-                  <button class="search-field__submit" aria-label="Submit search">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/><line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div>
+          <h2 class="lib-section__title">Search Field</h2>
+          <p class="lib-section__desc">Homepage and SERP variants across desktop and mobile sizes.</p>
         </div>
+        <a href="components/search-field/search-field.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="search-demo-section">
-        <h3 class="search-demo-section__heading">Homepage — Desktop</h3>
-        <div class="demo-states">
-          <div class="demo-row--col"><p class="demo-label-sm">Inactive</p>
-            <div class="demo-frame--desktop-homepage">
-              <div class="search-field search-field--homepage search-field--desktop">
-                <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search">
-                <div class="search-field__actions">
-                  <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                  <div class="search-field__divider" aria-hidden="true"></div>
-                  <button class="search-field__submit" aria-label="Submit search">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/><line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="demo-row--col"><p class="demo-label-sm">Active with query</p>
-            <div class="demo-frame--desktop-homepage">
-              <div class="search-field search-field--homepage search-field--desktop is-focused has-value">
-                <input type="text" class="search-field__input" value="search term" aria-label="Search">
-                <div class="search-field__actions">
-                  <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                  <div class="search-field__divider" aria-hidden="true"></div>
-                  <button class="search-field__submit" aria-label="Submit search">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/><line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="search-demo-section">
-        <h3 class="search-demo-section__heading">SERP — Desktop</h3>
-        <div class="demo-states">
-          <div class="demo-row--col"><p class="demo-label-sm">Inactive (with query)</p>
-            <div class="demo-frame--desktop-serp">
-              <div class="search-field search-field--serp has-value">
-                <input type="text" class="search-field__input" value="search term" aria-label="Search">
-                <div class="search-field__actions">
-                  <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                  <div class="search-field__divider" aria-hidden="true"></div>
-                  <button class="search-field__submit" aria-label="Submit search">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/><line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="search-demo-section">
-        <h3 class="search-demo-section__heading">SERP — Mobile</h3>
-        <div class="demo-states">
-          <div class="demo-row--col"><p class="demo-label-sm">Default (shadow + query)</p>
-            <div class="demo-frame--mobile">
-              <div class="search-field search-field--serp search-field--mobile has-value">
-                <input type="text" class="search-field__input" value="search term" aria-label="Search">
-                <div class="search-field__actions">
-                  <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                  <div class="search-field__divider" aria-hidden="true"></div>
-                  <button class="search-field__submit" aria-label="Submit search">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/><line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <iframe src="components/search-field/search-field.html" class="component-frame" title="Search Field" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         ICN-ARROWS
-         ═══════════════════════════════════════════ -->
+    <section class="lib-section" id="header">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Header</h2>
+          <p class="lib-section__desc">Desktop 1440px (2-row) and mobile 414px variants.</p>
+        </div>
+        <a href="components/header/header.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/header/header.html" class="component-frame" title="Header" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="footer">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Footer</h2>
+          <p class="lib-section__desc">Desktop 1440px and mobile 402px. Always dark background.</p>
+        </div>
+        <a href="components/footer/footer.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/footer/footer.html" class="component-frame" title="Footer" scrolling="no" loading="lazy"></iframe>
+    </section>
+
     <section class="lib-section" id="icn-arrows">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Arrows</h2>
-        <p class="lib-section__desc">9 variants — 2 directions × bare / circle / circle+shadow.</p>
-      </div>
-
-      <div class="demo-grid">
-
-        <div class="demo-group">
-          <p class="demo-group__title">Right</p>
-          <div class="demo-row">
-            <div class="demo-item">
-              <span class="icn-arrows icn-arrows--right-sm" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4.5L10 8L6 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="demo-label">right-sm</span>
-            </div>
-            <div class="demo-item">
-              <span class="icn-arrows icn-arrows--right-lg" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 3L11 8L5 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="demo-label">right-lg</span>
-            </div>
-            <div class="demo-item">
-              <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M10 8.5L14 12L10 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="demo-label">right-circle</span>
-            </div>
-            <div class="demo-item">
-              <span class="icn-arrows icn-arrows--v8" aria-hidden="true">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M20 17L28 24L20 31" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="demo-label">v8 (48px+shadow)</span>
-            </div>
-          </div>
+        <div>
+          <h2 class="lib-section__title">Arrows</h2>
+          <p class="lib-section__desc">9 variants — right, down, circle, and v-series.</p>
         </div>
-
-        <div class="demo-group">
-          <p class="demo-group__title">Down</p>
-          <div class="demo-row">
-            <div class="demo-item">
-              <span class="icn-arrows icn-arrows--down-sm" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="demo-label">down-sm</span>
-            </div>
-            <div class="demo-item">
-              <span class="icn-arrows icn-arrows--down-lg" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 5.5L8 10.5L13 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="demo-label">down-lg</span>
-            </div>
-            <div class="demo-item">
-              <span class="icn-arrows icn-arrows--down-circle" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="demo-label">down-circle</span>
-            </div>
-            <div class="demo-item">
-              <span class="icn-arrows icn-arrows--v7" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="demo-label">v7</span>
-            </div>
-            <div class="demo-item">
-              <span class="icn-arrows icn-arrows--v9" aria-hidden="true">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M10.5 12.5L16 18L21.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="demo-label">v9 (32px)</span>
-            </div>
-          </div>
-        </div>
-
+        <a href="components/icn-arrows/icn-arrows.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
+      <iframe src="components/icn-arrows/icn-arrows.html" class="component-frame" title="Arrows" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         ICN-COPY
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="icn-copy">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Copy / Check</h2>
-        <p class="lib-section__desc">Click to trigger confirmation state. Reverts after 1.5 s.</p>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">Copy — Large / Small / Bare</p>
-        <div class="lib-row" style="gap:var(--spacing-24)">
-          <div class="lib-cell">
-            <button class="icn-copy icn-copy--lg" data-state="copy" aria-label="Copy">
-              <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
-                <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
-              </svg>
-              <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4L4.5 7.5L11 1"/></svg>
-            </button>
-            <span class="lib-label">large</span>
-          </div>
-          <div class="lib-cell">
-            <button class="icn-copy icn-copy--sm" data-state="copy" aria-label="Copy">
-              <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M7.15 1.83235V1.5C7.15 1.08579 6.81421 0.75 6.4 0.75H1.5C1.08579 0.75 0.75 1.08579 0.75 1.5V6.4C0.75 6.81421 1.08579 7.15 1.5 7.15H1.87941"/>
-                <path d="M3.34998 8.99985V4.09985C3.34998 3.68564 3.68576 3.34985 4.09998 3.34985H8.99998C9.41419 3.34985 9.74998 3.68564 9.74998 4.09985V8.99985C9.74998 9.41407 9.41419 9.74985 8.99998 9.74985H4.09998C3.68576 9.74985 3.34998 9.41407 3.34998 8.99985Z"/>
-              </svg>
-              <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4L4.5 7.5L11 1"/></svg>
-            </button>
-            <span class="lib-label">small</span>
-          </div>
-          <div class="lib-cell">
-            <button class="icn-copy icn-copy--bare" data-state="copy" aria-label="Copy">
-              <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
-                <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
-              </svg>
-              <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4L4.5 7.5L11 1"/></svg>
-            </button>
-            <span class="lib-label">bare</span>
-          </div>
+        <div>
+          <h2 class="lib-section__title">Copy / Check</h2>
+          <p class="lib-section__desc">Two-state icon. Click to copy — auto-reverts after 1.5s.</p>
         </div>
+        <a href="components/icn-copy/icn-copy.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">Check state — pinned for reference</p>
-        <div class="lib-row" style="gap:var(--spacing-24)">
-          <div class="lib-cell">
-            <button class="icn-copy icn-copy--lg" data-state="check" aria-label="Copied">
-              <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
-                <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
-              </svg>
-              <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4L4.5 7.5L11 1"/></svg>
-            </button>
-            <span class="lib-label">large</span>
-          </div>
-          <div class="lib-cell">
-            <button class="icn-copy icn-copy--sm" data-state="check" aria-label="Copied">
-              <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M7.15 1.83235V1.5C7.15 1.08579 6.81421 0.75 6.4 0.75H1.5C1.08579 0.75 0.75 1.08579 0.75 1.5V6.4C0.75 6.81421 1.08579 7.15 1.5 7.15H1.87941"/>
-                <path d="M3.34998 8.99985V4.09985C3.34998 3.68564 3.68576 3.34985 4.09998 3.34985H8.99998C9.41419 3.34985 9.74998 3.68564 9.74998 4.09985V8.99985C9.74998 9.41407 9.41419 9.74985 8.99998 9.74985H4.09998C3.68576 9.74985 3.34998 9.41407 3.34998 8.99985Z"/>
-              </svg>
-              <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4L4.5 7.5L11 1"/></svg>
-            </button>
-            <span class="lib-label">small</span>
-          </div>
-        </div>
-      </div>
+      <iframe src="components/icn-copy/icn-copy.html" class="component-frame" title="Copy / Check" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         ICN-CHECK
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="icn-check">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Check</h2>
-        <p class="lib-section__desc">Static checkmark. Brand blue by default; primary on hover. Two sizes.</p>
-      </div>
-
-      <div class="lib-row" style="gap:var(--spacing-32);align-items:flex-end">
-        <div class="lib-cell">
-          <button class="icn-check icn-check--lg" aria-label="Confirmed">
-            <svg viewBox="0 0 13.5 10.8306" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-              <path d="M0.750002 5.81251L4.95 9.75001L12.75 0.750012"/>
-            </svg>
-          </button>
-          <span class="lib-label">large 16px</span>
+        <div>
+          <h2 class="lib-section__title">Check</h2>
+          <p class="lib-section__desc">Standalone checkmark. Large and small sizes.</p>
         </div>
-        <div class="lib-cell">
-          <button class="icn-check icn-check--sm" aria-label="Confirmed">
-            <svg viewBox="0 0 10.5 8.58056" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-              <path d="M0.750002 4.54689L3.9 7.50001L9.75 0.750012"/>
-            </svg>
-          </button>
-          <span class="lib-label">small 12px</span>
-        </div>
+        <a href="components/icn-check/icn-check.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
+      <iframe src="components/icn-check/icn-check.html" class="component-frame" title="Check" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         ICN-CLOSE
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="icn-close">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Close</h2>
-        <p class="lib-section__desc">Two states: default-grey (resting) and secondary (brand blue on hover/active). Click the default to toggle.</p>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">States</p>
-        <div class="lib-row" style="gap:var(--spacing-32)">
-          <div class="lib-cell">
-            <button class="icn-close" data-state="default" aria-label="Close" id="interactiveIcon">
-              <svg class="icn-close__svg" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                <line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/>
-              </svg>
-            </button>
-            <span class="lib-label" id="interactiveLabel">default-grey</span>
-          </div>
-          <div class="lib-cell">
-            <button class="icn-close" data-state="secondary" aria-label="Close">
-              <svg class="icn-close__svg" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                <line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/>
-              </svg>
-            </button>
-            <span class="lib-label">secondary</span>
-          </div>
+        <div>
+          <h2 class="lib-section__title">Close</h2>
+          <p class="lib-section__desc">Default-grey and secondary states.</p>
         </div>
+        <a href="components/icn-close/icn-close.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">In context — dismiss tag</p>
-        <div class="lib-row" style="gap:var(--spacing-12)">
-          <div class="icn-close-pill">
-            Privacy
-            <button class="icn-close" data-state="default" aria-label="Remove tag Privacy">
-              <svg class="icn-close__svg" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg>
-            </button>
-          </div>
-          <div class="icn-close-pill">
-            Security
-            <button class="icn-close" data-state="default" aria-label="Remove tag Security">
-              <svg class="icn-close__svg" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg>
-            </button>
-          </div>
-          <div class="icn-close-pill">
-            Open Source
-            <button class="icn-close" data-state="default" aria-label="Remove tag Open Source">
-              <svg class="icn-close__svg" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
+      <iframe src="components/icn-close/icn-close.html" class="component-frame" title="Close" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         ICN-OPEN-CLOSE
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="icn-open-close">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Open / Close</h2>
-        <p class="lib-section__desc">Plus ↔ minus toggle. Drives accordion expand/collapse.</p>
-      </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">States</p>
-        <div class="lib-row" style="gap:var(--spacing-32)">
-          <div class="lib-cell">
-            <button class="icn-open-close" data-state="open" aria-expanded="false" aria-label="Expand">
-              <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            </button>
-            <span class="lib-label">open (plus)</span>
-          </div>
-          <div class="lib-cell">
-            <button class="icn-open-close" data-state="close" aria-expanded="true" aria-label="Collapse">
-              <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            </button>
-            <span class="lib-label">close (minus)</span>
-          </div>
-          <button class="icn-open-close" id="iconToggle" data-state="open" aria-expanded="false" aria-label="Expand">
-            <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-          <span class="lib-label" style="align-self:center">↑ interactive</span>
+        <div>
+          <h2 class="lib-section__title">Open / Close</h2>
+          <p class="lib-section__desc">Plus/minus toggle. aria-expanded.</p>
         </div>
+        <a href="components/icn-open-close/icn-open-close.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="lib-group">
-        <p class="lib-group__label">Accordion context</p>
-        <div style="max-width:480px;display:flex;flex-direction:column;gap:var(--spacing-8)">
-
-          <div>
-            <div class="accordion-row" id="accordionRow1" role="button" tabindex="0" aria-expanded="false" aria-controls="accordionPanel1">
-              <span class="accordion-row__label">What is Startpage?</span>
-              <button class="icn-open-close" data-state="open" aria-expanded="false" aria-label="Expand" aria-controls="accordionPanel1" tabindex="-1">
-                <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              </button>
-            </div>
-            <div class="accordion-panel" id="accordionPanel1" role="region">
-              <div class="accordion-panel__inner">Startpage is the world's most private search engine — delivering Google results without tracking, ads, or profiling.</div>
-            </div>
-          </div>
-
-          <div>
-            <div class="accordion-row" id="accordionRow2" role="button" tabindex="0" aria-expanded="false" aria-controls="accordionPanel2">
-              <span class="accordion-row__label">How does Anonymous View work?</span>
-              <button class="icn-open-close" data-state="open" aria-expanded="false" aria-label="Expand" aria-controls="accordionPanel2" tabindex="-1">
-                <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              </button>
-            </div>
-            <div class="accordion-panel" id="accordionPanel2" role="region">
-              <div class="accordion-panel__inner">Anonymous View lets you browse websites through Startpage's servers, so sites never see your real IP address.</div>
-            </div>
-          </div>
-
-          <div>
-            <div class="accordion-row" id="accordionRow3" role="button" tabindex="0" aria-expanded="false" aria-controls="accordionPanel3">
-              <span class="accordion-row__label">Is Startpage free to use?</span>
-              <button class="icn-open-close" data-state="open" aria-expanded="false" aria-label="Expand" aria-controls="accordionPanel3" tabindex="-1">
-                <svg class="icn-open-close__svg icn-open-close__svg--plus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="4" y1="0" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                <svg class="icn-open-close__svg icn-open-close__svg--minus" viewBox="0 0 8 8" fill="none" aria-hidden="true"><line x1="0" y1="4" x2="8" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              </button>
-            </div>
-            <div class="accordion-panel" id="accordionPanel3" role="region">
-              <div class="accordion-panel__inner">Yes, Startpage is completely free, supported by a small number of clearly-labelled private ads alongside results.</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
+      <iframe src="components/icn-open-close/icn-open-close.html" class="component-frame" title="Open / Close" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         ICN-SEARCH
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="icn-search">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Search Icon</h2>
-        <p class="lib-section__desc">Two states: inactive (muted) and active (brand blue). Click the interactive one to toggle.</p>
+        <div>
+          <h2 class="lib-section__title">Search Icon</h2>
+          <p class="lib-section__desc">Inactive and active states.</p>
+        </div>
+        <a href="components/icn-search/icn-search.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="lib-row" style="gap:var(--spacing-32);align-items:flex-end">
-        <div class="lib-cell">
-          <button class="icn-search" data-state="inactive" aria-label="Search">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.33" cy="6.33" r="4.33" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.67 9.67L13.67 13.67" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-          <span class="lib-label">inactive</span>
-        </div>
-        <div class="lib-cell">
-          <button class="icn-search" data-state="active" aria-label="Search">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.33" cy="6.33" r="4.33" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.67 9.67L13.67 13.67" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-          <span class="lib-label">active</span>
-        </div>
-        <div class="lib-cell">
-          <button class="icn-search" data-state="inactive" id="icnSearchToggle" aria-label="Search">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.33" cy="6.33" r="4.33" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.67 9.67L13.67 13.67" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-          <span class="lib-label" id="icnSearchLabel">click to toggle</span>
-        </div>
-      </div>
+      <iframe src="components/icn-search/icn-search.html" class="component-frame" title="Search Icon" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         ICN-SOUND
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="icn-sound">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Sound</h2>
-        <p class="lib-section__desc">32×32 circle button. Off (muted) and On states. Click the interactive one to toggle.</p>
+        <div>
+          <h2 class="lib-section__title">Sound</h2>
+          <p class="lib-section__desc">Inactive and active states.</p>
+        </div>
+        <a href="components/icn-sound/icn-sound.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="lib-row" style="gap:var(--spacing-32);align-items:flex-end">
-        <div class="lib-cell">
-          <button class="icn-sound" data-state="off" aria-label="Unmute">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M2 5.5H4.5L8.5 3V13L4.5 10.5H2V5.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-              <g class="icn-sound__mute"><path d="M10.5 6L13.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.5 6L10.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g>
-              <g class="icn-sound__waves"><path d="M11 7C11.75 7.5 11.75 8.5 11 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M12.5 5.5C14.25 6.75 14.25 9.25 12.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></g>
-            </svg>
-          </button>
-          <span class="lib-label">off</span>
-        </div>
-        <div class="lib-cell">
-          <button class="icn-sound" data-state="on" aria-label="Mute">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M2 5.5H4.5L8.5 3V13L4.5 10.5H2V5.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-              <g class="icn-sound__mute"><path d="M10.5 6L13.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.5 6L10.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g>
-              <g class="icn-sound__waves"><path d="M11 7C11.75 7.5 11.75 8.5 11 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M12.5 5.5C14.25 6.75 14.25 9.25 12.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></g>
-            </svg>
-          </button>
-          <span class="lib-label">on</span>
-        </div>
-        <div class="lib-cell">
-          <button class="icn-sound" data-state="off" id="icnSoundToggle" aria-label="Unmute">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M2 5.5H4.5L8.5 3V13L4.5 10.5H2V5.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-              <g class="icn-sound__mute"><path d="M10.5 6L13.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.5 6L10.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g>
-              <g class="icn-sound__waves"><path d="M11 7C11.75 7.5 11.75 8.5 11 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M12.5 5.5C14.25 6.75 14.25 9.25 12.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></g>
-            </svg>
-          </button>
-          <span class="lib-label" id="icnSoundLabel">click to toggle</span>
-        </div>
-      </div>
+      <iframe src="components/icn-sound/icn-sound.html" class="component-frame" title="Sound" scrolling="no" loading="lazy"></iframe>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         ICN-DOWNLOAD
-         ═══════════════════════════════════════════ -->
     <section class="lib-section" id="icn-download">
       <div class="lib-section__header">
-        <h2 class="lib-section__title">Download</h2>
-        <p class="lib-section__desc">Three variants: bare 16px · circle-lg 32px · circle-sm 24px. Hover turns brand blue.</p>
+        <div>
+          <h2 class="lib-section__title">Download</h2>
+          <p class="lib-section__desc">Press feedback.</p>
+        </div>
+        <a href="components/icn-download/icn-download.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
       </div>
-
-      <div class="lib-row" style="gap:var(--spacing-32);align-items:flex-end">
-        <div class="lib-cell">
-          <button class="icn-download icn-download--bare" aria-label="Download">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M4.5 3H2.5C2.22386 3 2 3.22386 2 3.5V13.5C2 13.7761 2.22386 14 2.5 14H13.5C13.7761 14 14 13.7761 14 13.5V3.5C14 3.22386 13.7761 3 13.5 3H11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M5 8L8 11L11 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M8 2L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <span class="lib-label">bare · 16px</span>
-        </div>
-        <div class="lib-cell">
-          <button class="icn-download icn-download--circle-lg" aria-label="Download">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M4.5 3H2.5C2.22386 3 2 3.22386 2 3.5V13.5C2 13.7761 2.22386 14 2.5 14H13.5C13.7761 14 14 13.7761 14 13.5V3.5C14 3.22386 13.7761 3 13.5 3H11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M5 8L8 11L11 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M8 2L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <span class="lib-label">circle-lg · 32px</span>
-        </div>
-        <div class="lib-cell">
-          <button class="icn-download icn-download--circle-sm" aria-label="Download">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M4.5 3H2.5C2.22386 3 2 3.22386 2 3.5V13.5C2 13.7761 2.22386 14 2.5 14H13.5C13.7761 14 14 13.7761 14 13.5V3.5C14 3.22386 13.7761 3 13.5 3H11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M5 8L8 11L11 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M8 2L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <span class="lib-label">circle-sm · 24px</span>
-        </div>
-      </div>
+      <iframe src="components/icn-download/icn-download.html" class="component-frame" title="Download" scrolling="no" loading="lazy"></iframe>
     </section>
 
-  </main><!-- /lib-main -->
+  </main>
 
   <script>
-    /* ─────────────────────────────────────────────
-       Theme toggle
-       ───────────────────────────────────────────── */
+
+    /* ── Theme toggle ── */
     const html = document.documentElement;
-    const themeBtn   = document.getElementById('themeToggle');
-    const themeIcon  = document.getElementById('themeIcon');
+    const toggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
     const themeLabel = document.getElementById('themeLabel');
 
-    applyTheme(localStorage.getItem('theme') || 'light');
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
 
-    themeBtn.addEventListener('click', () => {
+    toggle.addEventListener('click', () => {
       const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
       applyTheme(next);
       localStorage.setItem('theme', next);
     });
 
-    function applyTheme(t) {
-      html.dataset.theme    = t;
-      themeIcon.textContent = t === 'dark' ? '🌙' : '☀️';
-      themeLabel.textContent = t === 'dark' ? 'Dark' : 'Light';
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      themeIcon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+      broadcastTheme(theme);
     }
 
-    /* ─────────────────────────────────────────────
-       Shared press ripple helper — used by button, pagination, icn-copy
-       ───────────────────────────────────────────── */
-    function attachPressRipple(btn, rippleClass) {
-      btn.addEventListener('mousedown', e => {
-        if (btn.disabled) return;
-        const rect = btn.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height) * 2.2;
-        const ripple = document.createElement('span');
-        ripple.className = rippleClass || 'btn-ripple';
-        Object.assign(ripple.style, {
-          width:  size + 'px',
-          height: size + 'px',
-          left:   (e.clientX - rect.left - size / 2) + 'px',
-          top:    (e.clientY - rect.top  - size / 2) + 'px',
-        });
-        btn.appendChild(ripple);
-        ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
-        btn.classList.add('is-clicking');
-        btn.style.transform  = 'scale(0.985)';
-        btn.style.transition = 'transform 0.08s ease';
-        function onUp() {
-          btn.classList.remove('is-clicking');
-          btn.style.transform  = 'scale(1.001)';
-          btn.style.transition = 'transform 0.12s ease-out';
-          btn.addEventListener('transitionend', () => {
-            btn.style.transform  = '';
-            btn.style.transition = '';
-          }, { once: true });
-          document.removeEventListener('mouseup', onUp);
-        }
-        document.addEventListener('mouseup', onUp);
+    /* ── Broadcast theme change to all embedded iframes ── */
+    function broadcastTheme(theme) {
+      document.querySelectorAll('iframe.component-frame').forEach(frame => {
+        frame.contentWindow?.postMessage({ type: 'setTheme', theme }, '*');
       });
     }
 
-    /* Shared small-press helper (no ripple, just scale) */
-    function attachSmallPress(btn) {
-      btn.addEventListener('mousedown', () => {
-        btn.style.transform  = 'scale(0.88)';
-        btn.style.transition = 'transform 0.08s ease';
-        function onUp() {
-          btn.style.transform  = 'scale(1.0)';
-          btn.style.transition = 'transform 0.12s ease-out';
-          btn.addEventListener('transitionend', () => {
-            btn.style.transform  = '';
-            btn.style.transition = '';
-          }, { once: true });
-          document.removeEventListener('mouseup', onUp);
-        }
-        document.addEventListener('mouseup', onUp);
-      });
-    }
-
-    /* ─────────────────────────────────────────────
-       Button — press + ripple
-       ───────────────────────────────────────────── */
-    document.querySelectorAll('[data-btn]').forEach(btn => attachPressRipple(btn, 'btn-ripple'));
-
-    /* ─────────────────────────────────────────────
-       Dropdown
-       ───────────────────────────────────────────── */
-    (() => {
-      const dropdowns = document.querySelectorAll('[data-dropdown]');
-
-      function openDropdown(dd) {
-        const trigger = dd.querySelector('.dropdown__trigger');
-        const panel   = dd.querySelector('.dropdown__panel');
-        const search  = dd.querySelector('.dropdown__search-input');
-        dd.classList.add('dropdown--open');
-        trigger.setAttribute('aria-expanded', 'true');
-        panel.removeAttribute('hidden');
-        if (search) search.focus();
-      }
-
-      function closeDropdown(dd) {
-        const trigger = dd.querySelector('.dropdown__trigger');
-        const panel   = dd.querySelector('.dropdown__panel');
-        dd.classList.remove('dropdown--open');
-        trigger.setAttribute('aria-expanded', 'false');
-        panel.setAttribute('hidden', '');
-      }
-
-      function isOpen(dd) { return dd.classList.contains('dropdown--open'); }
-
-      dropdowns.forEach(dd => {
-        const trigger = dd.querySelector('.dropdown__trigger');
-        const panel   = dd.querySelector('.dropdown__panel');
-        const items   = dd.querySelectorAll('.dropdown__item:not(.dropdown__item--disabled)');
-
-        trigger.addEventListener('click', e => {
-          e.stopPropagation();
-          if (isOpen(dd)) {
-            closeDropdown(dd);
-            trigger.focus();
-          } else {
-            dropdowns.forEach(other => { if (other !== dd) closeDropdown(other); });
-            openDropdown(dd);
-          }
-        });
-
-        items.forEach(item => {
-          item.addEventListener('click', () => {
-            dd.querySelectorAll('.dropdown__item').forEach(i => {
-              i.classList.remove('dropdown__item--selected');
-              i.setAttribute('aria-selected', 'false');
-            });
-            item.classList.add('dropdown__item--selected');
-            item.setAttribute('aria-selected', 'true');
-            trigger.querySelector('.dropdown__label').textContent = item.querySelector('.dropdown__item-label').textContent;
-            closeDropdown(dd);
-            trigger.focus();
-          });
-
-          item.addEventListener('keydown', e => {
-            const all = [...dd.querySelectorAll('.dropdown__item:not(.dropdown__item--disabled)')];
-            const idx = all.indexOf(item);
-            if (e.key === 'ArrowDown') { e.preventDefault(); (all[idx + 1] || all[0]).focus(); }
-            else if (e.key === 'ArrowUp') { e.preventDefault(); (all[idx - 1] || all[all.length - 1]).focus(); }
-            else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); item.click(); }
-            else if (e.key === 'Tab') closeDropdown(dd);
-          });
-
-          item.setAttribute('tabindex', '-1');
-        });
-
-        trigger.addEventListener('keydown', e => {
-          if ((e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') && !isOpen(dd)) {
-            e.preventDefault();
-            dropdowns.forEach(other => { if (other !== dd) closeDropdown(other); });
-            openDropdown(dd);
-            const sel = dd.querySelector('.dropdown__item--selected:not(.dropdown__item--disabled)');
-            const first = dd.querySelector('.dropdown__item:not(.dropdown__item--disabled)');
-            (sel || first)?.focus();
-          }
-        });
-
-        panel.addEventListener('keydown', e => {
-          if (e.key === 'Escape') { closeDropdown(dd); trigger.focus(); }
-        });
-      });
-
-      document.addEventListener('click', () => dropdowns.forEach(dd => closeDropdown(dd)));
-      document.addEventListener('keydown', e => { if (e.key === 'Escape') dropdowns.forEach(dd => closeDropdown(dd)); });
-    })();
-
-    /* ─────────────────────────────────────────────
-       Pagination — active page selection
-       ───────────────────────────────────────────── */
-    document.querySelectorAll('.pagination').forEach(nav => {
-      nav.querySelectorAll('.pagination__page').forEach(btn => {
-        btn.addEventListener('click', () => {
-          nav.querySelectorAll('.pagination__page').forEach(b => b.removeAttribute('aria-current'));
-          btn.setAttribute('aria-current', 'page');
-        });
+    /* ── Send theme and set initial height when each iframe loads ── */
+    document.querySelectorAll('iframe.component-frame').forEach(frame => {
+      frame.addEventListener('load', () => {
+        frame.contentWindow?.postMessage({ type: 'setTheme', theme: html.dataset.theme }, '*');
+        try {
+          const h = frame.contentDocument?.documentElement?.scrollHeight;
+          if (h) frame.style.height = h + 'px';
+        } catch (_) {}
       });
     });
 
-    /* ─────────────────────────────────────────────
-       Toggle
-       ───────────────────────────────────────────── */
-    document.querySelectorAll('.toggle[role="switch"]').forEach(toggle => {
-      toggle.addEventListener('click', () => {
-        const isOn = toggle.getAttribute('aria-checked') === 'true';
-        toggle.setAttribute('aria-checked', isOn ? 'false' : 'true');
+    /* ── Auto-resize iframes when their content height changes ── */
+    window.addEventListener('message', ({ data, source }) => {
+      if (data?.type !== 'resize') return;
+      document.querySelectorAll('iframe.component-frame').forEach(frame => {
+        if (frame.contentWindow === source) frame.style.height = data.height + 'px';
       });
     });
 
-    /* ─────────────────────────────────────────────
-       Tags — dismiss
-       ───────────────────────────────────────────── */
-    document.querySelectorAll('.tag__dismiss').forEach(btn => {
-      btn.addEventListener('click', () => btn.closest('.tag').remove());
-    });
-
-    /* ─────────────────────────────────────────────
-       Search field — has-value + clear
-       ───────────────────────────────────────────── */
-    document.querySelectorAll('.search-field__input').forEach(input => {
-      const field = input.closest('.search-field');
-      function sync() { field.classList.toggle('has-value', input.value.length > 0); }
-      input.addEventListener('input', sync);
-      sync();
-    });
-
-    document.querySelectorAll('.search-field__clear').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const field = btn.closest('.search-field');
-        const input = field.querySelector('.search-field__input');
-        input.value = '';
-        field.classList.remove('has-value');
-        input.focus();
-      });
-    });
-
-    /* ─────────────────────────────────────────────
-       icn-copy — click + ripple + 1.5s revert
-       ───────────────────────────────────────────── */
-    const REVERT_DELAY = 1500;
-
-    document.querySelectorAll('.icn-copy').forEach(btn => {
-      let timer = null;
-
-      btn.addEventListener('click', () => {
-        if (btn.dataset.state === 'check') return;
-        btn.dataset.state = 'check';
-        btn.setAttribute('aria-label', 'Copied');
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-          btn.dataset.state = 'copy';
-          btn.setAttribute('aria-label', 'Copy');
-        }, REVERT_DELAY);
-      });
-
-      attachPressRipple(btn, 'icn-copy-ripple');
-    });
-
-    /* ─────────────────────────────────────────────
-       icn-check — press feedback
-       ───────────────────────────────────────────── */
-    document.querySelectorAll('.icn-check').forEach(attachSmallPress);
-
-    /* ─────────────────────────────────────────────
-       icn-close — interactive toggle
-       ───────────────────────────────────────────── */
-    const interactiveIcon = document.getElementById('interactiveIcon');
-    const interactiveLbl  = document.getElementById('interactiveLabel');
-
-    if (interactiveIcon) {
-      interactiveIcon.addEventListener('click', () => {
-        const next = interactiveIcon.dataset.state === 'default' ? 'secondary' : 'default';
-        interactiveIcon.dataset.state = next;
-        interactiveLbl.textContent    = next === 'secondary' ? 'secondary' : 'default-grey';
-      });
-    }
-
-    document.querySelectorAll('.icn-close').forEach(attachSmallPress);
-
-    /* ─────────────────────────────────────────────
-       icn-open-close — standalone toggle + accordion
-       ───────────────────────────────────────────── */
-    function toggleOpenClose(btn) {
-      const isOpen = btn.dataset.state === 'open';
-      btn.dataset.state = isOpen ? 'close' : 'open';
-      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      btn.setAttribute('aria-label', isOpen ? 'Collapse' : 'Expand');
-    }
-
-    const iconToggle = document.getElementById('iconToggle');
-    if (iconToggle) {
-      attachSmallPress(iconToggle);
-      iconToggle.addEventListener('click', () => toggleOpenClose(iconToggle));
-    }
-
-    [
-      { rowId: 'accordionRow1', panelId: 'accordionPanel1' },
-      { rowId: 'accordionRow2', panelId: 'accordionPanel2' },
-      { rowId: 'accordionRow3', panelId: 'accordionPanel3' },
-    ].forEach(({ rowId, panelId }) => {
-      const row   = document.getElementById(rowId);
-      const panel = document.getElementById(panelId);
-      if (!row || !panel) return;
-      const btn = row.querySelector('.icn-open-close');
-
-      attachSmallPress(btn);
-
-      function toggle() {
-        const isOpen = btn.dataset.state === 'open';
-        btn.dataset.state = isOpen ? 'close' : 'open';
-        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        btn.setAttribute('aria-label', isOpen ? 'Collapse' : 'Expand');
-        row.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        panel.classList.toggle('is-open', isOpen);
-      }
-
-      row.addEventListener('click', toggle);
-      row.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-      });
-    });
-
-    /* ─────────────────────────────────────────────
-       icn-search — interactive toggle
-       ───────────────────────────────────────────── */
-    const icnSearchToggle = document.getElementById('icnSearchToggle');
-    const icnSearchLabel  = document.getElementById('icnSearchLabel');
-
-    if (icnSearchToggle) {
-      icnSearchToggle.addEventListener('click', () => {
-        const next = icnSearchToggle.dataset.state === 'inactive' ? 'active' : 'inactive';
-        icnSearchToggle.dataset.state = next;
-        icnSearchLabel.textContent    = next;
-      });
-    }
-
-    /* ─────────────────────────────────────────────
-       icn-sound — interactive toggle + press feedback
-       ───────────────────────────────────────────── */
-    const icnSoundToggle = document.getElementById('icnSoundToggle');
-    const icnSoundLabel  = document.getElementById('icnSoundLabel');
-
-    if (icnSoundToggle) {
-      icnSoundToggle.addEventListener('click', () => {
-        const next = icnSoundToggle.dataset.state === 'off' ? 'on' : 'off';
-        icnSoundToggle.dataset.state = next;
-        icnSoundToggle.ariaLabel     = next === 'on' ? 'Mute' : 'Unmute';
-        icnSoundLabel.textContent    = next;
-      });
-    }
-
-    document.querySelectorAll('.icn-sound').forEach(attachSmallPress);
-
-    /* ─────────────────────────────────────────────
-       icn-download — press feedback
-       ───────────────────────────────────────────── */
-    document.querySelectorAll('.icn-download').forEach(attachSmallPress);
-
-    /* ─────────────────────────────────────────────
-       Sidebar nav — highlight active section
-       ───────────────────────────────────────────── */
+    /* ── Sidebar active-link highlight ── */
     (() => {
       const navLinks = document.querySelectorAll('.lib-nav__item a');
       const sections = document.querySelectorAll('.lib-section');
@@ -3020,10 +561,11 @@
             if (active) active.classList.add('is-active');
           }
         });
-      }, { rootMargin: '-30% 0px -60% 0px' });
+      }, { rootMargin: '-20% 0px -70% 0px' });
 
       sections.forEach(s => observer.observe(s));
     })();
+
   </script>
 </body>
 </html>

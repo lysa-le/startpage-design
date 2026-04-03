@@ -290,6 +290,18 @@
 
     // ─── Auto-focus the active demo on load ─────────────────────────────────
     document.getElementById('activeInput').focus();
+
+    /* ── Iframe embed: theme sync + auto-sizing ── */
+    (function () {
+      if (window === window.parent) return;
+      document.querySelector('.theme-toggle')?.remove();
+      window.addEventListener('message', ({ data }) => {
+        if (data?.type === 'setTheme') document.documentElement.dataset.theme = data.theme;
+      });
+      const report = () => window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight }, '*');
+      new ResizeObserver(report).observe(document.documentElement);
+      report();
+    }());
   </script>
 
 
