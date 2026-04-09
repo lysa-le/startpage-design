@@ -249,7 +249,10 @@
       background: transparent;
     }
 
-    .dropdown__item:hover:not(.dropdown__item--disabled)::before,
+    .dropdown__item:hover:not(.dropdown__item--disabled)::before {
+      background: var(--color-background-tertiary);
+    }
+
     .dropdown__item--selected::before {
       background: var(--color-background-secondary);
     }

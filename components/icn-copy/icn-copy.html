@@ -20,6 +20,9 @@
       --color-icon-primary:   var(--color-whisper-200);
       --color-icon-secondary: var(--color-brand-blue-200);
 
+      --color-button-brandbluehover:     var(--color-brand-blue-400);
+      --color-button-productfilledhover: var(--color-black-400);
+
       --color-stroke-primary:        var(--color-black-400);
       --color-stroke-primary-button: var(--color-brand-blue-200);
     }
@@ -105,10 +108,18 @@
       background-color: transparent;
     }
 
+    /* ── Hover ── */
+    .icn-copy:hover {
+      color: var(--color-icon-secondary);
+    }
+
     /* ── Check state ── */
     .icn-copy[data-state="check"]:not(.icn-copy--bare) {
       background-color: var(--color-icon-secondary);
       color: var(--color-text-inverted);
+    }
+    .icn-copy[data-state="check"]:not(.icn-copy--bare):hover {
+      background-color: var(--color-button-brandbluehover);
     }
 
     /* ── Icon SVG sizing ──
@@ -117,7 +128,7 @@
        24px × (1 - 2×0.3125) = 9px small
        16px × (1 - 2×0.125)  = 12px bare     */
     .icn-copy--lg .icn-copy__svg  { width: 12px; height: 12px; }
-    .icn-copy--sm .icn-copy__svg  { width: 9px;  height: 9px;  }
+    .icn-copy--sm .icn-copy__svg  { width: 12px; height: 12px; }
     .icn-copy--bare .icn-copy__svg { width: 12px; height: 12px; }
 
     /* ── Icon transitions ── */
@@ -203,9 +214,9 @@
       </button>
 
       <button class="icn-copy icn-copy--sm" data-state="copy" aria-label="Copy">
-        <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M7.15 1.83235V1.5C7.15 1.08579 6.81421 0.75 6.4 0.75H1.5C1.08579 0.75 0.75 1.08579 0.75 1.5V6.4C0.75 6.81421 1.08579 7.15 1.5 7.15H1.87941"/>
-          <path d="M3.34998 8.99985V4.09985C3.34998 3.68564 3.68576 3.34985 4.09998 3.34985H8.99998C9.41419 3.34985 9.74998 3.68564 9.74998 4.09985V8.99985C9.74998 9.41407 9.41419 9.74985 8.99998 9.74985H4.09998C3.68576 9.74985 3.34998 9.41407 3.34998 8.99985Z"/>
+        <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
+          <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
         </svg>
         <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M1 4L4.5 7.5L11 1"/>
@@ -239,9 +250,9 @@
       </button>
 
       <button class="icn-copy icn-copy--sm" data-state="check" aria-label="Copied">
-        <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M7.15 1.83235V1.5C7.15 1.08579 6.81421 0.75 6.4 0.75H1.5C1.08579 0.75 0.75 1.08579 0.75 1.5V6.4C0.75 6.81421 1.08579 7.15 1.5 7.15H1.87941"/>
-          <path d="M3.34998 8.99985V4.09985C3.34998 3.68564 3.68576 3.34985 4.09998 3.34985H8.99998C9.41419 3.34985 9.74998 3.68564 9.74998 4.09985V8.99985C9.74998 9.41407 9.41419 9.74985 8.99998 9.74985H4.09998C3.68576 9.74985 3.34998 9.41407 3.34998 8.99985Z"/>
+        <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
+          <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
         </svg>
         <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M1 4L4.5 7.5L11 1"/>

@@ -14,6 +14,14 @@
       --color-stroke-primary:     var(--color-black-600);
     }
 
+    [data-theme="dark"] .footer__social-icon [fill="white"] {
+      fill: var(--color-black-900);
+    }
+
+    [data-theme="dark"] .footer__social-icon [stroke="white"] {
+      stroke: var(--color-black-900);
+    }
+
     /* ── Demo scaffold ──────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; }
 
@@ -83,9 +91,10 @@
       text-decoration: none;
       font-family: var(--font-family);
       font-weight: var(--font-weight-regular);
+      transition: color 150ms ease;
     }
 
-    .footer__link:hover { opacity: 0.7; }
+    .footer__link:hover { color: var(--color-brand-blue-200); }
 
     /* Social row */
     .footer__social {
@@ -96,6 +105,16 @@
     .footer__social-icon {
       display: block;
       flex: none;
+      cursor: pointer;
+    }
+
+    .social-bg {
+      fill: var(--color-brand-blue-400);
+      transition: fill 150ms ease;
+    }
+
+    .footer__social-icon:hover .social-bg {
+      fill: var(--color-brand-blue-300);
     }
 
     /* ── Desktop variant ─────────────────────────────────── */
@@ -232,8 +251,8 @@
           <svg class="footer__social-icon" width="32" height="32" viewBox="0 0 32 32"
                fill="none" xmlns="http://www.w3.org/2000/svg" role="listitem" aria-label="Twitter">
             <title>Twitter</title>
-            <circle cx="16" cy="16" r="16" style="fill: var(--color-brand-blue-400)"/>
-            <g transform="translate(4,4)">
+            <circle cx="16" cy="16" r="16" class="social-bg"/>
+            <g transform="translate(16,16) scale(0.7) translate(-12,-12)">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="white"/>
             </g>
           </svg>
@@ -242,44 +261,48 @@
           <svg class="footer__social-icon" width="32" height="32" viewBox="0 0 32 32"
                fill="none" xmlns="http://www.w3.org/2000/svg" role="listitem" aria-label="Reddit">
             <title>Reddit</title>
-            <circle cx="16" cy="16" r="16" style="fill: var(--color-brand-blue-400)"/>
-            <!-- Snoo head -->
-            <circle cx="16" cy="19" r="7" fill="white"/>
-            <!-- Eyes -->
-            <circle cx="13" cy="18" r="1.5" style="fill: var(--color-brand-blue-400)"/>
-            <circle cx="19" cy="18" r="1.5" style="fill: var(--color-brand-blue-400)"/>
-            <!-- Smile -->
-            <path d="M13 21 Q16 23.2 19 21" fill="none" stroke-linecap="round" stroke-width="1.4"
-                  style="stroke: var(--color-brand-blue-400)"/>
-            <!-- Antenna ball + stem -->
-            <circle cx="16" cy="9.5" r="2" fill="white"/>
-            <line x1="16" y1="11.5" x2="16" y2="13.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-            <!-- Ear bumps -->
-            <circle cx="9.5" cy="19" r="2.5" fill="white"/>
-            <circle cx="22.5" cy="19" r="2.5" fill="white"/>
+            <circle cx="16" cy="16" r="16" class="social-bg"/>
+            <g transform="translate(16,16) scale(0.85) translate(-16,-16)">
+              <!-- Snoo head -->
+              <circle cx="16" cy="19" r="7" fill="white"/>
+              <!-- Eyes -->
+              <circle cx="13" cy="18" r="1.5" style="fill: var(--color-brand-blue-400)"/>
+              <circle cx="19" cy="18" r="1.5" style="fill: var(--color-brand-blue-400)"/>
+              <!-- Smile -->
+              <path d="M13 21 Q16 23.2 19 21" fill="none" stroke-linecap="round" stroke-width="1.4"
+                    style="stroke: var(--color-brand-blue-400)"/>
+              <!-- Antenna ball + stem -->
+              <circle cx="16" cy="9.5" r="2" fill="white"/>
+              <line x1="16" y1="11.5" x2="16" y2="13.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- Ear bumps -->
+              <circle cx="9.5" cy="19" r="2.5" fill="white"/>
+              <circle cx="22.5" cy="19" r="2.5" fill="white"/>
+            </g>
           </svg>
 
           <!-- Instagram -->
           <svg class="footer__social-icon" width="32" height="32" viewBox="0 0 32 32"
                fill="none" xmlns="http://www.w3.org/2000/svg" role="listitem" aria-label="Instagram">
             <title>Instagram</title>
-            <circle cx="16" cy="16" r="16" style="fill: var(--color-brand-blue-400)"/>
-            <!-- Camera body -->
-            <rect x="8.5" y="8.5" width="15" height="15" rx="4" fill="white"/>
-            <!-- Lens ring -->
-            <circle cx="16" cy="16" r="4.5" style="fill: var(--color-brand-blue-400)"/>
-            <!-- Lens centre -->
-            <circle cx="16" cy="16" r="2.8" fill="white"/>
-            <!-- Flash dot -->
-            <circle cx="20.8" cy="11.2" r="1.2" style="fill: var(--color-brand-blue-400)"/>
+            <circle cx="16" cy="16" r="16" class="social-bg"/>
+            <g transform="translate(16,16) scale(0.85) translate(-16,-16)">
+              <!-- Camera body -->
+              <rect x="8.5" y="8.5" width="15" height="15" rx="4" fill="white"/>
+              <!-- Lens ring -->
+              <circle cx="16" cy="16" r="4.5" style="fill: var(--color-brand-blue-400)"/>
+              <!-- Lens centre -->
+              <circle cx="16" cy="16" r="2.8" fill="white"/>
+              <!-- Flash dot -->
+              <circle cx="20.8" cy="11.2" r="1.2" style="fill: var(--color-brand-blue-400)"/>
+            </g>
           </svg>
 
           <!-- Facebook -->
           <svg class="footer__social-icon" width="32" height="32" viewBox="0 0 32 32"
                fill="none" xmlns="http://www.w3.org/2000/svg" role="listitem" aria-label="Facebook">
             <title>Facebook</title>
-            <circle cx="16" cy="16" r="16" style="fill: var(--color-brand-blue-400)"/>
-            <g transform="translate(4,4)">
+            <circle cx="16" cy="16" r="16" class="social-bg"/>
+            <g transform="translate(16,16) scale(0.85) translate(-12,-12)">
               <path d="M13.397 20.997v-8.196h2.765l.411-3.209h-3.176V7.548c0-.926.258-1.56 1.587-1.56h1.684V3.127A22.336 22.336 0 0014.201 3c-2.444 0-4.122 1.492-4.122 4.231v2.355H7.332v3.209h2.747v8.202h3.318z" fill="white"/>
             </g>
           </svg>
@@ -288,8 +311,8 @@
           <svg class="footer__social-icon" width="32" height="32" viewBox="0 0 32 32"
                fill="none" xmlns="http://www.w3.org/2000/svg" role="listitem" aria-label="Mastodon">
             <title>Mastodon</title>
-            <circle cx="16" cy="16" r="16" style="fill: var(--color-brand-blue-400)"/>
-            <g transform="translate(4,4)">
+            <circle cx="16" cy="16" r="16" class="social-bg"/>
+            <g transform="translate(16,16) scale(0.7) translate(-12,-12)">
               <path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 1.498 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057 0 00.023-.043v-1.809a.052.052 0 00-.02-.041.053.053 0 00-.046-.01 20.282 20.282 0 01-4.709.545c-2.73 0-3.463-1.284-3.674-1.818a5.593 5.593 0 01-.319-1.433.053.053 0 01.066-.054c1.517.363 3.072.546 4.632.546.376 0 .75 0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23 0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112 0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311 0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13 0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z" fill="white"/>
             </g>
           </svg>
@@ -350,42 +373,46 @@
 
             <svg class="footer__social-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="listitem" aria-label="Twitter">
               <title>Twitter</title>
-              <circle cx="16" cy="16" r="16" style="fill: var(--color-brand-blue-400)"/>
-              <g transform="translate(4,4)"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="white"/></g>
+              <circle cx="16" cy="16" r="16" class="social-bg"/>
+              <g transform="translate(16,16) scale(0.7) translate(-12,-12)"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="white"/></g>
             </svg>
 
             <svg class="footer__social-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="listitem" aria-label="Reddit">
               <title>Reddit</title>
-              <circle cx="16" cy="16" r="16" style="fill: var(--color-brand-blue-400)"/>
-              <circle cx="16" cy="19" r="7" fill="white"/>
-              <circle cx="13" cy="18" r="1.5" style="fill: var(--color-brand-blue-400)"/>
-              <circle cx="19" cy="18" r="1.5" style="fill: var(--color-brand-blue-400)"/>
-              <path d="M13 21 Q16 23.2 19 21" fill="none" stroke-linecap="round" stroke-width="1.4" style="stroke: var(--color-brand-blue-400)"/>
-              <circle cx="16" cy="9.5" r="2" fill="white"/>
-              <line x1="16" y1="11.5" x2="16" y2="13.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-              <circle cx="9.5" cy="19" r="2.5" fill="white"/>
-              <circle cx="22.5" cy="19" r="2.5" fill="white"/>
+              <circle cx="16" cy="16" r="16" class="social-bg"/>
+              <g transform="translate(16,16) scale(0.85) translate(-16,-16)">
+                <circle cx="16" cy="19" r="7" fill="white"/>
+                <circle cx="13" cy="18" r="1.5" style="fill: var(--color-brand-blue-400)"/>
+                <circle cx="19" cy="18" r="1.5" style="fill: var(--color-brand-blue-400)"/>
+                <path d="M13 21 Q16 23.2 19 21" fill="none" stroke-linecap="round" stroke-width="1.4" style="stroke: var(--color-brand-blue-400)"/>
+                <circle cx="16" cy="9.5" r="2" fill="white"/>
+                <line x1="16" y1="11.5" x2="16" y2="13.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="9.5" cy="19" r="2.5" fill="white"/>
+                <circle cx="22.5" cy="19" r="2.5" fill="white"/>
+              </g>
             </svg>
 
             <svg class="footer__social-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="listitem" aria-label="Instagram">
               <title>Instagram</title>
-              <circle cx="16" cy="16" r="16" style="fill: var(--color-brand-blue-400)"/>
-              <rect x="8.5" y="8.5" width="15" height="15" rx="4" fill="white"/>
-              <circle cx="16" cy="16" r="4.5" style="fill: var(--color-brand-blue-400)"/>
-              <circle cx="16" cy="16" r="2.8" fill="white"/>
-              <circle cx="20.8" cy="11.2" r="1.2" style="fill: var(--color-brand-blue-400)"/>
+              <circle cx="16" cy="16" r="16" class="social-bg"/>
+              <g transform="translate(16,16) scale(0.85) translate(-16,-16)">
+                <rect x="8.5" y="8.5" width="15" height="15" rx="4" fill="white"/>
+                <circle cx="16" cy="16" r="4.5" style="fill: var(--color-brand-blue-400)"/>
+                <circle cx="16" cy="16" r="2.8" fill="white"/>
+                <circle cx="20.8" cy="11.2" r="1.2" style="fill: var(--color-brand-blue-400)"/>
+              </g>
             </svg>
 
             <svg class="footer__social-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="listitem" aria-label="Facebook">
               <title>Facebook</title>
-              <circle cx="16" cy="16" r="16" style="fill: var(--color-brand-blue-400)"/>
-              <g transform="translate(4,4)"><path d="M13.397 20.997v-8.196h2.765l.411-3.209h-3.176V7.548c0-.926.258-1.56 1.587-1.56h1.684V3.127A22.336 22.336 0 0014.201 3c-2.444 0-4.122 1.492-4.122 4.231v2.355H7.332v3.209h2.747v8.202h3.318z" fill="white"/></g>
+              <circle cx="16" cy="16" r="16" class="social-bg"/>
+              <g transform="translate(16,16) scale(0.85) translate(-12,-12)"><path d="M13.397 20.997v-8.196h2.765l.411-3.209h-3.176V7.548c0-.926.258-1.56 1.587-1.56h1.684V3.127A22.336 22.336 0 0014.201 3c-2.444 0-4.122 1.492-4.122 4.231v2.355H7.332v3.209h2.747v8.202h3.318z" fill="white"/></g>
             </svg>
 
             <svg class="footer__social-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="listitem" aria-label="Mastodon">
               <title>Mastodon</title>
-              <circle cx="16" cy="16" r="16" style="fill: var(--color-brand-blue-400)"/>
-              <g transform="translate(4,4)"><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 1.498 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057 0 00.023-.043v-1.809a.052.052 0 00-.02-.041.053.053 0 00-.046-.01 20.282 20.282 0 01-4.709.545c-2.73 0-3.463-1.284-3.674-1.818a5.593 5.593 0 01-.319-1.433.053.053 0 01.066-.054c1.517.363 3.072.546 4.632.546.376 0 .75 0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23 0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112 0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311 0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13 0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z" fill="white"/></g>
+              <circle cx="16" cy="16" r="16" class="social-bg"/>
+              <g transform="translate(16,16) scale(0.7) translate(-12,-12)"><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 1.498 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057 0 00.023-.043v-1.809a.052.052 0 00-.02-.041.053.053 0 00-.046-.01 20.282 20.282 0 01-4.709.545c-2.73 0-3.463-1.284-3.674-1.818a5.593 5.593 0 01-.319-1.433.053.053 0 01.066-.054c1.517.363 3.072.546 4.632.546.376 0 .75 0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23 0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112 0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311 0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13 0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z" fill="white"/></g>
             </svg>
 
           </div><!-- /.footer__social -->

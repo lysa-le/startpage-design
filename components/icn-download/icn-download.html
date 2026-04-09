@@ -19,6 +19,11 @@
       --color-button-inactive:       var(--color-black-600);
     }
 
+    /* Light strokes on dark backgrounds anti-alias more visibly — bump weight to compensate */
+    [data-theme="dark"] .icn-download--bare svg path {
+      stroke-width: 2;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -120,12 +125,12 @@
     .icn-download--circle-lg {
       width: var(--spacing-32);
       height: var(--spacing-32);
-      background: var(--color-button-inactive);
+      background: var(--color-background-secondary);
     }
 
     .icn-download--circle-lg svg {
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       display: block;
     }
 
@@ -133,12 +138,12 @@
     .icn-download--circle-sm {
       width: var(--spacing-24);
       height: var(--spacing-24);
-      background: var(--color-button-inactive);
+      background: var(--color-background-secondary);
     }
 
     .icn-download--circle-sm svg {
-      width: 12px;
-      height: 12px;
+      width: 16px;
+      height: 16px;
       display: block;
     }
 

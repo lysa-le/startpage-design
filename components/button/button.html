@@ -272,6 +272,8 @@
       background-color: var(--color-button-brandblue);
       color: var(--color-text-inverted);
       font-weight: var(--font-weight-bold);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       transition: background-color 0.15s ease;
     }
     .btn--product-brand-blue:hover {
@@ -408,12 +410,17 @@
   <div class="section">
     <div class="section-label">Ghost — Label only / With icon</div>
     <div class="row">
-      <button class="btn btn--ghost" data-btn><span class="btn__label">See more</span></button>
+      <button class="btn btn--ghost" data-btn>
+        <span class="btn__label">See more</span>
+        <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <line x1="8" y1="4" x2="8" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="4" y1="8" x2="12" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
       <button class="btn btn--ghost" data-btn>
         <span class="btn__label">More news</span>
-        <!-- 16×16 arrow icon — replace SVG with actual asset -->
         <svg class="btn__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6 4.5L10 8L6 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
     </div>
