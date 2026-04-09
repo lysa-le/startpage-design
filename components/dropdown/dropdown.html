@@ -1,11 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dropdown — Component Demo</title>
   <link rel="stylesheet" href="../../tokens.css">
   <style>
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides (class-driven)
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+      --color-text-inverted:  var(--color-black-800);
+      --color-text-brandblue: var(--color-brand-blue-200);
+      --color-text-link:      var(--color-brand-blue-200);
+      --color-text-teal:      var(--color-teal-400);
+      --color-text-error:     var(--color-red-400);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-button-brandblue:      var(--color-brand-blue-300);
+      --color-button-inactive:       var(--color-black-600);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+      --color-stroke-error:          var(--color-red-400);
+    }
+
     /* ─────────────────────────────────────────────
        RESET & PAGE
        ───────────────────────────────────────────── */
@@ -292,9 +323,44 @@
     .dropdown__footer-link:hover {
       text-decoration: underline;
     }
+    /* ─────────────────────────────────────────────
+       Theme toggle (scaffold, not a component)
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+    .theme-toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
   </style>
 </head>
 <body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
 
 <h1>Dropdown</h1>
 
@@ -487,6 +553,27 @@
 </div><!-- /demo-grid -->
 
 <script>
+  /* ── Theme toggle ── */
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon   = document.getElementById('themeIcon');
+  const themeLabel  = document.getElementById('themeLabel');
+
+  const saved = localStorage.getItem('theme') || 'light';
+  applyTheme(saved);
+
+  themeToggle.addEventListener('click', () => {
+    const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem('theme', next);
+  });
+
+  function applyTheme(theme) {
+    html.dataset.theme = theme;
+    themeIcon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+    themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+  }
+
   (() => {
     const dropdowns = document.querySelectorAll('[data-dropdown]');
 
