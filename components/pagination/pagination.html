@@ -15,10 +15,11 @@
 
       --color-text-primary:   var(--color-whisper-100);
       --color-text-secondary: var(--color-midnight-200);
-      --color-text-inverted:  var(--color-black-800);
+      --color-text-inverted:  var(--color-black-900);
       --color-text-link:      var(--color-brand-blue-200);
 
       --color-button-brandblue:          var(--color-brand-blue-300);
+      --color-button-brandbluehover:     var(--color-brand-blue-400);
       --color-button-productfilled:      var(--color-black-550);
       --color-button-productfilledhover: var(--color-black-400);
 
@@ -122,7 +123,14 @@
       background-color: var(--color-button-brandblue);
       border-color: var(--color-button-brandblue);
       color: var(--color-text-inverted);
-      font-weight: var(--font-weight-semibold);
+      font-weight: var(--font-weight-bold);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .pagination__page[aria-current="page"]:hover {
+      background-color: var(--color-button-brandbluehover);
+      border-color: var(--color-button-brandbluehover);
     }
 
     /* ── Ellipsis ── */

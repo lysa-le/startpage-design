@@ -18,7 +18,7 @@
       --color-text-primary:   var(--color-whisper-100);
       --color-text-secondary: var(--color-midnight-200);
       --color-text-tertiary:  var(--color-midnight-100);
-      --color-text-inverted:  var(--color-black-800);
+      --color-text-inverted:  var(--color-black-900);
       --color-text-brandblue: var(--color-brand-blue-200);
       --color-text-link:      var(--color-brand-blue-200);
       --color-text-teal:      var(--color-teal-400);
@@ -30,8 +30,8 @@
 
       --color-button-brandblue:          var(--color-brand-blue-300);
       --color-button-brandbluehover:     var(--color-brand-blue-400);
-      --color-button-purple:             var(--color-purple-400);
-      --color-button-purplehover:        var(--color-purple-500);
+      --color-button-purple:             var(--color-purple-500);
+      --color-button-purplehover:        var(--color-purple-400);
       --color-button-teal:               var(--color-teal-400);
       --color-button-tealhover:          var(--color-teal-200);
       --color-button-productfilled:      var(--color-black-550);
@@ -210,16 +210,21 @@
       color: var(--color-text-inverted);
     }
 
+    [data-theme="dark"] .btn--brand-blue,
+    [data-theme="dark"] .btn--purple {
+      color: var(--color-text-inverted);
+    }
+
     .btn--brand-blue {
       --btn-wave-color: var(--color-button-brandbluehover);
       background-color: var(--color-button-brandblue);
-      color: var(--color-whisper-200);
+      color: var(--color-text-inverted);
     }
 
     .btn--purple {
       --btn-wave-color: var(--color-button-purplehover);
       background-color: var(--color-button-purple);
-      color: var(--color-whisper-200);
+      color: var(--color-text-inverted);
     }
 
     .btn--inactive,
