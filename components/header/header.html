@@ -19,7 +19,7 @@
       --color-text-primary:   var(--color-whisper-100);
       --color-text-secondary: var(--color-midnight-200);
       --color-text-tertiary:  var(--color-midnight-100);
-      --color-text-inverted:  var(--color-black-900);
+      --color-text-inverted:  var(--color-black-800);
       --color-text-brandblue: var(--color-brand-blue-200);
       --color-text-link:      var(--color-brand-blue-200);
 
@@ -322,6 +322,9 @@
     .site-header__tab:hover:not(.site-header__tab--active) {
       color: var(--color-text-brandblue);
     }
+    [data-theme="dark"] .site-header__tab:hover:not(.site-header__tab--active) {
+      color: var(--color-button-brandblue);
+    }
 
     /* Active tab indicator — left + width set by JS */
     .site-header__tab-indicator {
@@ -420,6 +423,7 @@
     }
 
     .site-header__pp-btn:hover { color: var(--color-text-brandblue); }
+    [data-theme="dark"] .site-header__pp-btn:hover { color: var(--color-button-brandblue); }
 
     /* Bottom nav row: inherits the parent's 6 columns via subgrid */
     .site-header--desktop .site-header__nav {
@@ -464,7 +468,11 @@
       padding-right: var(--spacing-20);
     }
 
-    .site-header__filter-btn:hover { opacity: 0.7; }
+    .site-header__filter-btn {
+      transition: color 150ms ease;
+    }
+    .site-header__filter-btn:hover { color: var(--color-icon-secondary); }
+    [data-theme="dark"] .site-header__filter-btn:hover { color: var(--color-button-brandblue); }
 
     /* ─────────────────────────────────────────────
        SITE HEADER — MOBILE (search + tabs only)

@@ -11,7 +11,7 @@
       --color-background-secondary:  var(--color-black-550);
       --color-text-primary:          var(--color-whisper-100);
       --color-text-secondary:        var(--color-midnight-200);
-      --color-text-inverted:         var(--color-black-900);
+      --color-text-inverted:         var(--color-black-800);
       --color-icon-primary:          var(--color-whisper-200);
       --color-icon-secondary:        var(--color-brand-blue-200);
       --color-stroke-primary:        var(--color-black-400);
@@ -97,11 +97,16 @@
 
       color: var(--color-icon-primary);
       border-radius: var(--radius-full);
-      transition: color 0.15s ease, transform 0.15s ease;
+      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
     }
 
-    .icn-download:hover {
+    .icn-download--bare:hover {
       color: var(--color-icon-secondary);
+    }
+    .icn-download--circle-lg:hover,
+    .icn-download--circle-sm:hover {
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
     }
 
     .icn-download:focus-visible {

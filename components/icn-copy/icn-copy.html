@@ -15,12 +15,12 @@
 
       --color-text-primary:   var(--color-whisper-100);
       --color-text-secondary: var(--color-midnight-200);
-      --color-text-inverted:  var(--color-black-900);
+      --color-text-inverted:  var(--color-black-800);
 
       --color-icon-primary:   var(--color-whisper-200);
       --color-icon-secondary: var(--color-brand-blue-200);
 
-      --color-button-brandbluehover:     var(--color-brand-blue-400);
+      --color-button-brandbluehover:     var(--color-brand-blue-300);
       --color-button-productfilledhover: var(--color-black-400);
 
       --color-stroke-primary:        var(--color-black-400);
@@ -109,7 +109,11 @@
     }
 
     /* ── Hover ── */
-    .icn-copy:hover {
+    .icn-copy:not(.icn-copy--bare):hover {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+    }
+    .icn-copy--bare:hover {
       color: var(--color-icon-secondary);
     }
 

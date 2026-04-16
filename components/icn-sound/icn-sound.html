@@ -11,7 +11,7 @@
       --color-background-secondary:  var(--color-black-550);
       --color-text-primary:          var(--color-whisper-100);
       --color-text-secondary:        var(--color-midnight-200);
-      --color-text-inverted:         var(--color-black-900);
+      --color-text-inverted:         var(--color-black-800);
       --color-icon-primary:          var(--color-whisper-200);
       --color-icon-secondary:        var(--color-brand-blue-200);
       --color-stroke-primary:        var(--color-black-400);
@@ -95,11 +95,12 @@
       background: var(--color-background-secondary);
 
       color: var(--color-icon-primary);
-      transition: color 0.15s ease, transform 0.15s ease;
+      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
     }
 
     .icn-sound:hover {
-      color: var(--color-icon-secondary);
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
     }
 
     .icn-sound:focus-visible {

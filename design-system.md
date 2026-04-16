@@ -167,8 +167,8 @@
 | Token | Hex |
 |---|---|
 | `color-brand-blue-50` | `#F7F7FF` |
-| `color-brand-blue-100` | `#C5CBFF` |
-| `color-brand-blue-200` | `#B3BCFF` |
+| `color-brand-blue-100` | `#B3BCFF` |
+| `color-brand-blue-200` | `#8290FF` |
 | `color-brand-blue-300` | `#6677FB` |
 | `color-brand-blue-400` | `#5668F1` |
 | `color-brand-blue-500` | `#3F5187` |
@@ -283,6 +283,7 @@
 | `color-button-productfilled` | `color-whisper-300` — `#E7E9FB` |
 | `color-button-productfilledhover` | `color-whisper-400` — `#DEE0F7` |
 | `color-button-inactive` | `color-whisper-100` — `#F2F3FF` |
+| `color-button-social` | `color-brand-blue-400` — `#5668F1` |
 
 ### Strokes
 
@@ -342,8 +343,8 @@
 
 | Token | References |
 |---|---|
-| `color-button-brandblue` | `color-brand-blue-300` — `#6677FB` |
-| `color-button-brandbluehover` | `color-brand-blue-400` — `#5668F1` |
+| `color-button-brandblue` | `color-brand-blue-200` — `#8290FF` |
+| `color-button-brandbluehover` | `color-brand-blue-300` — `#6677FB` |
 | `color-button-purple` | `color-purple-400` — `#D67DFD` |
 | `color-button-purplehover` | `color-purple-500` — `#C161EA` |
 | `color-button-teal` | `color-teal-400` — `#00E7D0` |
@@ -351,6 +352,7 @@
 | `color-button-productfilled` | `color-black-550` — `#34373D` |
 | `color-button-productfilledhover` | `color-black-400` — `#494D56` |
 | `color-button-inactive` | `color-black-600` — `#2E3443` |
+| `color-button-social` | `color-brand-blue-200` — `#8290FF` |
 
 ### Strokes
 
