@@ -190,6 +190,7 @@
 
     /* lg overrides: all colour variants use wider horizontal padding */
     .btn--brand-blue.btn--lg,
+    .btn--outline.btn--lg,
     .btn--purple.btn--lg,
     .btn--teal.btn--lg,
     .btn--inactive.btn--lg {
@@ -233,7 +234,7 @@
       --btn-wave-color: var(--color-button-brandblue);
       background-color: transparent;
       color: var(--color-text-brandblue);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary-button);
+      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-stroke-primary-button);
       transition: color 0.3s ease;
     }
 
