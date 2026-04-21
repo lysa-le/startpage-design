@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Result — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+      --color-text-inverted:  var(--color-black-800);
+      --color-text-brandblue: var(--color-brand-blue-200);
+      --color-text-link:      var(--color-brand-blue-200);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-button-brandblue:          var(--color-brand-blue-200);
+      --color-button-brandbluehover:     var(--color-brand-blue-300);
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-button-inactive:           var(--color-black-600);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+    }
+
+    /* ─────────────────────────────────────────────
+       Page scaffold
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      padding: var(--spacing-48);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    h1 {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .subtitle {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section {
+      margin-bottom: var(--spacing-48);
+    }
+
+    .section-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--spacing-20);
+    }
+
+    /* Stack of results with dividers, mimicking a real SERP */
+    .results-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+      max-width: 598px;
+    }
+
+    /* ─────────────────────────────────────────────
+       Search Result component — algo-result
+       ───────────────────────────────────────────── */
+
+    .algo-result {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+      width: 100%;
+    }
+
+    /* ── Source row: favicon + site name + URL ── */
+    .algo-result__source {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .algo-result__favicon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-background-secondary);
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .algo-result__favicon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius-full);
+    }
+
+    /* Placeholder shown when no favicon src */
+    .algo-result__favicon--placeholder {
+      background-color: var(--color-background-secondary);
+    }
+
+    .algo-result__source-info {
+      display: flex;
+      flex-direction: column;
+      line-height: var(--font-body-sm-lh);
+    }
+
+    .algo-result__site-name {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .algo-result__url {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+    }
+
+    /* ── Content block: title + description + AV badge ── */
+    .algo-result__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+
+    .algo-result__title {
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+      display: block;
+    }
+
+    .algo-result__title:hover {
+      text-decoration: underline;
+    }
+
+    .algo-result__description {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    /* ── Anonymous View badge ── */
+    .algo-result__av-badge {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-4);
+    }
+
+    .algo-result__av-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: var(--color-icon-secondary);
+    }
+
+    .algo-result__av-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+
+    .algo-result__av-label:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <h1>Search Result</h1>
+  <p class="subtitle">Organic search result item — "algo desktop". 598px wide, fluid height.</p>
+
+  <!-- ── Single result ── -->
+  <div class="section">
+    <div class="section-label">Default</div>
+    <div class="results-list">
+
+      <div class="algo-result">
+        <div class="algo-result__source">
+          <div class="algo-result__favicon algo-result__favicon--placeholder" aria-hidden="true"></div>
+          <div class="algo-result__source-info">
+            <span class="algo-result__site-name">Birdie &amp; Louie</span>
+            <span class="algo-result__url">https://birdieandlouie.com &rsaquo; collections &rsaquo; cat-food</span>
+          </div>
+        </div>
+        <div class="algo-result__content">
+          <a class="algo-result__title" href="#">All Cat Food - Birdie &amp; Louie</a>
+          <p class="algo-result__description">Premium, limited ingredients packed with protein and absolutely no fillers. All Life Stages. A complete formula that grows with you. A favorite they'll enjoy&nbsp;…</p>
+          <div class="algo-result__av-badge">
+            <svg class="algo-result__av-icon" aria-hidden="true">
+              <use href="../../assets/icons/icons.svg#icon-av"/>
+            </svg>
+            <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Multiple results — as seen in a real SERP ── -->
+  <div class="section">
+    <div class="section-label">As a list</div>
+    <div class="results-list">
+
+      <div class="algo-result">
+        <div class="algo-result__source">
+          <div class="algo-result__favicon algo-result__favicon--placeholder" aria-hidden="true"></div>
+          <div class="algo-result__source-info">
+            <span class="algo-result__site-name">Birdie &amp; Louie</span>
+            <span class="algo-result__url">https://birdieandlouie.com &rsaquo; collections &rsaquo; cat-food</span>
+          </div>
+        </div>
+        <div class="algo-result__content">
+          <a class="algo-result__title" href="#">All Cat Food - Birdie &amp; Louie</a>
+          <p class="algo-result__description">Premium, limited ingredients packed with protein and absolutely no fillers. All Life Stages. A complete formula that grows with you. A favorite they'll enjoy&nbsp;…</p>
+          <div class="algo-result__av-badge">
+            <svg class="algo-result__av-icon" aria-hidden="true">
+              <use href="../../assets/icons/icons.svg#icon-av"/>
+            </svg>
+            <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="algo-result">
+        <div class="algo-result__source">
+          <div class="algo-result__favicon algo-result__favicon--placeholder" aria-hidden="true"></div>
+          <div class="algo-result__source-info">
+            <span class="algo-result__site-name">PetMD</span>
+            <span class="algo-result__url">https://petmd.com &rsaquo; cat &rsaquo; nutrition</span>
+          </div>
+        </div>
+        <div class="algo-result__content">
+          <a class="algo-result__title" href="#">The Best Cat Foods for Every Life Stage</a>
+          <p class="algo-result__description">Finding the right food for your cat doesn't have to be complicated. Our veterinarians have rounded up the top-rated options for kittens, adults, and seniors&nbsp;…</p>
+          <div class="algo-result__av-badge">
+            <svg class="algo-result__av-icon" aria-hidden="true">
+              <use href="../../assets/icons/icons.svg#icon-av"/>
+            </svg>
+            <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="algo-result">
+        <div class="algo-result__source">
+          <div class="algo-result__favicon algo-result__favicon--placeholder" aria-hidden="true"></div>
+          <div class="algo-result__source-info">
+            <span class="algo-result__site-name">Chewy</span>
+            <span class="algo-result__url">https://chewy.com &rsaquo; cat &rsaquo; dry-food</span>
+          </div>
+        </div>
+        <div class="algo-result__content">
+          <a class="algo-result__title" href="#">Dry Cat Food — Free Shipping on Orders $49+</a>
+          <p class="algo-result__description">Shop hundreds of dry cat food formulas from trusted brands. Filter by age, ingredient, and dietary need. Autoship &amp; save up to 35% on every order&nbsp;…</p>
+          <div class="algo-result__av-badge">
+            <svg class="algo-result__av-icon" aria-hidden="true">
+              <use href="../../assets/icons/icons.svg#icon-av"/>
+            </svg>
+            <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const html = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      icon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    /* ── Iframe embed: theme sync + auto-sizing ── */
+    (function () {
+      if (window === window.parent) return;
+      document.querySelector('.theme-toggle')?.remove();
+      window.addEventListener('message', ({ data }) => {
+        if (data?.type === 'setTheme') document.documentElement.dataset.theme = data.theme;
+      });
+      const report = () => window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight }, '*');
+      new ResizeObserver(report).observe(document.documentElement);
+      report();
+    }());
+  </script>
+</body>
+</html>

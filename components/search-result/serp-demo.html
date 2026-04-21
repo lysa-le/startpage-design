@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SERP Demo — Startpage Design System</title>
+  <link rel="stylesheet" href="../../tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+      --color-text-inverted:  var(--color-black-800);
+      --color-text-brandblue: var(--color-brand-blue-200);
+      --color-text-link:      var(--color-brand-blue-200);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-button-brandblue:          var(--color-brand-blue-200);
+      --color-button-brandbluehover:     var(--color-brand-blue-300);
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-button-inactive:           var(--color-black-600);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+
+      --color-accent-gold:     var(--color-gold-200);
+      --color-accent-gold-alt: var(--color-gold-500);
+    }
+
+    /* ─────────────────────────────────────────────
+       Page scaffold
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      transition: background-color 0.2s ease, color 0.2s ease;
+      min-height: 100vh;
+    }
+
+    /* ── Search header ── */
+    .serp-header {
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      padding: var(--spacing-20) var(--spacing-48);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-32);
+      position: sticky;
+      top: 0;
+      background-color: var(--color-background-primary);
+      z-index: 10;
+    }
+
+    .serp-logo {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-link);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .serp-search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      width: 598px;
+      height: 48px;
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-full);
+      padding: 0 var(--spacing-20);
+      background-color: var(--color-background-primary);
+      flex-shrink: 0;
+      transition: border-color 0.15s ease;
+    }
+
+    .serp-search-bar:focus-within {
+      border-color: var(--color-stroke-primary-button);
+    }
+
+    .serp-search-bar__input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      min-width: 0;
+    }
+
+    /* Remove browser search input chrome */
+    .serp-search-bar__input::-webkit-search-cancel-button,
+    .serp-search-bar__input::-webkit-search-decoration { -webkit-appearance: none; }
+
+    .serp-search-bar__input::placeholder {
+      color: var(--color-text-tertiary);
+      opacity: 0.6;
+    }
+
+    .serp-search-bar__clear {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-text-tertiary);
+      padding: var(--spacing-4);
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+      transition: color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .serp-search-bar__clear:hover {
+      color: var(--color-text-primary);
+      background-color: var(--color-background-secondary);
+    }
+
+    .serp-search-bar__clear.visible { display: flex; }
+
+    .serp-search-bar__icon {
+      width: 20px;
+      height: 20px;
+      color: var(--color-icon-secondary);
+      flex-shrink: 0;
+    }
+
+    /* ── Results body ── */
+    .serp-body {
+      padding: var(--spacing-32) var(--spacing-48);
+      max-width: 694px;
+    }
+
+    .serp-meta {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--spacing-24);
+      min-height: 18px;
+    }
+
+    /* ── Results list ── */
+    .results-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-32);
+      max-width: 598px;
+    }
+
+    /* ── Result entry animation ── */
+    .algo-result, .ad-result {
+      animation: fadeIn 0.15s ease both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Empty state ── */
+    .serp-empty {
+      max-width: 598px;
+      padding: var(--spacing-48) 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+
+    .serp-empty__title {
+      font-size: var(--font-body-lg);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .serp-empty__sub {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+    }
+
+    /* ── Match highlight ── */
+    mark {
+      background: none;
+      color: inherit;
+      font-weight: var(--font-weight-semibold);
+    }
+
+    /* ─────────────────────────────────────────────
+       Organic result — algo-result
+       ───────────────────────────────────────────── */
+    .algo-result {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+      width: 100%;
+    }
+
+    .algo-result__source {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .algo-result__favicon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-background-secondary);
+      flex-shrink: 0;
+    }
+
+    .algo-result__source-info {
+      display: flex;
+      flex-direction: column;
+      line-height: var(--font-body-sm-lh);
+    }
+
+    .algo-result__site-name {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .algo-result__url {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+    }
+
+    .algo-result__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+
+    .algo-result__title {
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+      display: block;
+    }
+
+    .algo-result__title:hover { text-decoration: underline; }
+
+    .algo-result__description {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .algo-result__av-badge {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-4);
+    }
+
+    .algo-result__av-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: var(--color-icon-secondary);
+    }
+
+    .algo-result__av-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+
+    .algo-result__av-label:hover { text-decoration: underline; }
+
+    /* ─────────────────────────────────────────────
+       Ad result — ad-result
+       ───────────────────────────────────────────── */
+    .ad-result {
+      --ad-gap: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--ad-gap);
+      width: 100%;
+    }
+
+    .ad-result__sponsored {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+    }
+
+    .ad-result__source {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .ad-result__favicon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-background-secondary);
+      flex-shrink: 0;
+    }
+
+    .ad-result__source-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+    }
+
+    .ad-result__source-info {
+      display: flex;
+      flex-direction: column;
+      line-height: var(--font-body-sm-lh);
+    }
+
+    .ad-result__site-name {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .ad-result__url {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+    }
+
+    .ad-result__dots-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      padding: var(--spacing-4);
+      cursor: pointer;
+      color: var(--color-text-tertiary);
+      border-radius: var(--radius-sm);
+      transition: color 0.15s ease, background-color 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .ad-result__dots-btn:hover {
+      color: var(--color-text-secondary);
+      background-color: var(--color-background-secondary);
+    }
+
+    .ad-result__body {
+      display: flex;
+      align-items: flex-start;
+      gap: 19px;
+    }
+
+    .ad-result__text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ad-result__title {
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+      display: block;
+    }
+
+    .ad-result__title:hover { text-decoration: underline; }
+
+    .ad-result__description {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .ad-result__image {
+      width: 100px;
+      height: 100px;
+      border-radius: var(--radius-lg);
+      background-color: var(--color-background-secondary);
+      flex-shrink: 0;
+    }
+
+    .ad-result__rating {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .ad-result__stars { display: flex; align-items: center; }
+
+    .star { width: 16px; height: 16px; flex-shrink: 0; }
+    .star--filled { color: var(--color-accent-gold); }
+    .star--empty  { color: var(--color-stroke-primary); }
+
+    .ad-result__rating-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+
+    .ad-result__sitelinks {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      flex-wrap: wrap;
+    }
+
+    .ad-result__sitelink {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+
+    .ad-result__sitelink:hover { text-decoration: underline; }
+
+    .ad-result__sitelink-sep {
+      color: var(--color-text-tertiary);
+      line-height: var(--font-body-sm-lh);
+      user-select: none;
+    }
+
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 100;
+    }
+
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <!-- Inline SVG sprite (file:// safe) -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-star-filled" viewBox="0 0 24 24">
+      <path d="M12 2l2.9 6.26 6.9.94-5 4.86 1.18 6.86L12 17.77l-6 3.15L7.18 14 2.2 9.2l6.9-.94L12 2z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-star-empty" viewBox="0 0 24 24">
+      <path d="M12 2l2.9 6.26 6.9.94-5 4.86 1.18 6.86L12 17.77l-6 3.15L7.18 14 2.2 9.2l6.9-.94L12 2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-dots-vertical" viewBox="0 0 4 16">
+      <circle cx="2" cy="2"  r="1.5" fill="currentColor"/>
+      <circle cx="2" cy="8"  r="1.5" fill="currentColor"/>
+      <circle cx="2" cy="14" r="1.5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-search-serp" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+      <line x1="16.5" y1="16.5" x2="22" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-close-sm" viewBox="0 0 16 16">
+      <line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="13" y1="3" x2="3"  y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+  </svg>
+
+  <!-- ── Search header ── -->
+  <header class="serp-header">
+    <div class="serp-search-bar">
+      <input
+        class="serp-search-bar__input"
+        type="search"
+        id="searchInput"
+        value="best cat food"
+        placeholder="Search…"
+        aria-label="Search query"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="serp-search-bar__clear" id="clearBtn" aria-label="Clear search">
+        <svg width="16" height="16" aria-hidden="true"><use href="#icon-close-sm"/></svg>
+      </button>
+      <svg class="serp-search-bar__icon" aria-hidden="true">
+        <use href="#icon-search-serp"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ── Results body ── -->
+  <main class="serp-body">
+    <p class="serp-meta" id="serpMeta" aria-live="polite"></p>
+    <div class="results-list" id="resultsList" aria-label="Search results"></div>
+  </main>
+
+  <script>
+    /* ─────────────────────────────────────────────
+       Result data pool
+       Each result is matched against title + description
+       + siteName so results surface for relevant queries.
+
+       To add a result: push a new object to this array.
+       Fields: type ("ad"|"organic"), siteName, url, title,
+       description. Ads also accept: hasImage, stars (1–5),
+       ratingLabel, sitelinks[].
+       ───────────────────────────────────────────── */
+    const allResults = [
+
+      /* ── Ads ── */
+      {
+        type: 'ad',
+        siteName: 'Chewy',
+        url: 'http://www.chewy.com/cat-food',
+        title: 'Shop Premium Cat Food — 35% Off + Free Shipping',
+        description: 'Where Cat Lovers Shop. Explore 3,000+ top brands including dry, wet, grain-free, kitten, and senior formulas. Free 365-Day Returns. Autoship & save up to 35%.',
+        hasImage: true,
+        stars: 4,
+        ratingLabel: 'rating for chewy.com',
+        sitelinks: ['Dry Cat Food', 'Wet Cat Food', 'Kitten Food', 'Autoship & Save'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Royal Canin',
+        url: 'http://www.royalcanin.com/us/cats',
+        title: 'Royal Canin Breed & Health Condition Formulas for Cats',
+        description: "Precisely formulated nutrition based on your cat's breed, age, and lifestyle. From Persian to Maine Coon, indoor to outdoor, Royal Canin has the exact formula your cat needs.",
+        hasImage: false,
+        stars: 5,
+        ratingLabel: 'rating for royalcanin.com',
+        sitelinks: ['By Breed', 'By Health Need', 'Kitten Formula', 'Senior Cat'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Petco',
+        url: 'http://www.petco.com/shop/cat/cat-food',
+        title: 'Cat Food at Petco — Dry, Wet, Raw & Grain Free',
+        description: 'Shop Petco for a huge selection of dry, wet, raw, and grain-free cat food. Top brands include Purina, Blue Buffalo, Hill\'s, and more. Same-day delivery available.',
+        hasImage: true,
+        stars: 4,
+        ratingLabel: 'rating for petco.com',
+        sitelinks: ['Grain Free', 'Wet & Canned', 'Raw Cat Food', 'Natural & Organic'],
+      },
+      {
+        type: 'ad',
+        siteName: "Hill's Pet Nutrition",
+        url: "http://www.hillspet.com/cat-food",
+        title: "Hill's Science Diet — #1 Vet Recommended Cat Food",
+        description: "Science Diet is made with natural ingredients and precise nutrition. Formulas for kittens, adults, seniors, weight management, urinary care, and more. Loved by vets, loved by cats.",
+        hasImage: false,
+        stars: 5,
+        ratingLabel: 'rating for hillspet.com',
+        sitelinks: ['Adult Cat', 'Kitten', 'Senior 7+', 'Weight Management'],
+      },
+
+      /* ── Organic ── */
+      {
+        type: 'organic',
+        siteName: 'Purina Pro Plan',
+        url: 'https://purina.com \u203a pro-plan \u203a cats',
+        title: 'Purina Pro Plan Cat Food — Advanced Nutrition for Cats',
+        description: 'Pro Plan delivers scientifically-formulated nutrition developed with nutritionists and veterinarians. High-protein dry and wet formulas for strength, a sharp mind, and a healthy gut.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Blue Buffalo',
+        url: 'https://bluebuffalo.com \u203a cat-food',
+        title: 'BLUE Cat Food — Natural Ingredients, Real Meat First',
+        description: 'Blue Buffalo cat food starts with real chicken, fish, or turkey as the #1 ingredient. Grain-free options available. No artificial flavors or preservatives. LifeSource Bits included.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Wellness Pet Food',
+        url: 'https://wellnesspetfood.com \u203a cat',
+        title: 'Wellness Complete Health Cat Food — Grain-Free Options',
+        description: 'Wellness cat food is crafted with wholesome, natural ingredients and no artificial additives. Find grain-free, limited ingredient, and high-protein wet and dry formulas.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Merrick Pet Care',
+        url: 'https://merrickpetcare.com \u203a cat',
+        title: 'Merrick Cat Food — Real Deboned Meat, No Artificial Fillers',
+        description: 'Merrick grain-free cat recipes feature real deboned meat or poultry as the #1 ingredient. Crafted in the USA with globally sourced ingredients. No corn, wheat, soy, or artificial colors.',
+      },
+      {
+        type: 'organic',
+        siteName: 'PetMD',
+        url: 'https://petmd.com \u203a cat \u203a nutrition',
+        title: 'The 12 Best Cat Foods of 2026 — Vet Reviewed',
+        description: 'Our veterinary team evaluated over 50 cat food brands for ingredient quality, nutritional balance, and palatability. Top picks span dry, wet, grain-free, and raw diets for all life stages.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Iams',
+        url: 'https://iams.com \u203a cat \u203a cat-food',
+        title: 'Iams Cat Food — Proactive Health for Every Life Stage',
+        description: 'Iams cat food is made with high-quality protein and tailored nutrition for kittens, adult cats, and seniors. Real chicken or turkey is always the first ingredient.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Fancy Feast',
+        url: 'https://fancyfeast.com \u203a cat-food',
+        title: 'Fancy Feast Gourmet Cat Food — Wet & Dry Varieties',
+        description: 'Discover a world of flavors with Fancy Feast gourmet wet cat food. Classic pâtés, broths, savory centers, and creamy toppings. The indulgence your cat deserves every day.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Instinct Pet Food',
+        url: 'https://instinctpetfood.com \u203a cat',
+        title: 'Instinct Raw Cat Food — Freeze-Dried & Frozen Raw Diets',
+        description: 'Instinct raw cat food is minimally processed and packed with real animal protein. Freeze-dried, frozen, and raw-coated kibble options. Grain-free with no artificial ingredients.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Tiki Cat',
+        url: 'https://tikipets.com \u203a tiki-cat',
+        title: 'Tiki Cat — High-Moisture Wet Cat Food, Grain Free',
+        description: 'Tiki Cat wet food is made with whole cuts of fish and poultry in rich broths. High moisture, high protein, and grain free. Great for cats who need more hydration in their diet.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Orijen Pet Foods',
+        url: 'https://orijenpetfoods.com \u203a cat',
+        title: 'Orijen Cat Food — Biologically Appropriate, High Protein',
+        description: 'Orijen cat food is made with 85% quality animal ingredients including free-run poultry, wild-caught fish, and cage-free eggs. Grain-free, freeze-dried coated, and raw recipes.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Natural Balance',
+        url: 'https://naturalbalanceinc.com \u203a cat',
+        title: 'Natural Balance Limited Ingredient Cat Food',
+        description: 'Natural Balance L.I.D. recipes contain a single animal protein and a limited number of carbohydrate sources — ideal for cats with food sensitivities or allergies.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Taste of the Wild',
+        url: 'https://tasteofthewildpetfood.com \u203a cat',
+        title: 'Taste of the Wild Cat Food — Grain Free with Real Roasted Meat',
+        description: 'Inspired by the diet of wild cats, Taste of the Wild features roasted meats like quail, venison, and salmon. Grain-free, highly digestible, with added vitamins and minerals from fruits and vegetables.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Nulo Pet Food',
+        url: 'https://nulo.com \u203a cat',
+        title: 'Nulo Cat Food — High Protein, Low Carb, Grain Free',
+        description: 'Nulo freestyle cat food features 80–85% animal-based protein and fewer than 10% carbohydrates. Grain-free dry, wet, and freeze-dried raw recipes to support lean muscle and healthy weight.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Spruce Pets',
+        url: 'https://thesprucepets.com \u203a best-kitten-food',
+        title: 'The 9 Best Kitten Foods for 2026 — Vet Approved',
+        description: 'Kittens have different nutritional needs than adult cats — they need more protein, calcium, and DHA for healthy brain development. These are the best kitten food picks from our veterinary team.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Rover',
+        url: 'https://rover.com \u203a thewoof \u203a best-wet-cat-food',
+        title: 'The 10 Best Wet Cat Foods — High Moisture, Vet Tested',
+        description: 'Wet cat food provides essential moisture that many cats miss from drinking water alone. Our picks cover all budgets and life stages, from everyday classics to premium high-protein broths.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Ziwi Peak',
+        url: 'https://ziwipets.com \u203a cat',
+        title: 'Ziwi Peak Air-Dried Cat Food — 96% Meat, Fish & Organs',
+        description: 'Ziwi Peak air-dried and wet cat food is made with 96% meat, organs, and bone. No grains, no fillers, no artificial preservatives. A raw-equivalent diet with the convenience of dry food.',
+      },
+      {
+        type: 'organic',
+        siteName: 'VCA Animal Hospitals',
+        url: 'https://vcahospitals.com \u203a know-your-pet \u203a cat-food-basics',
+        title: 'Cat Food Basics — What to Look for on the Label | VCA',
+        description: 'Choosing the right cat food starts with understanding ingredient lists, AAFCO statements, and life stage labeling. Learn what "complete and balanced" means, and how to spot quality protein sources.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Senior Cat Wellness',
+        url: 'https://seniorcatwellness.com \u203a best-senior-cat-food',
+        title: 'Best Senior Cat Food 2026 — Formulas for Cats 7+',
+        description: 'Older cats need fewer calories, more protein to prevent muscle loss, and nutrients that support joint health and kidney function. Our picks are all vet-approved for cats aged 7 and above.',
+      },
+    ];
+
+    /* ─────────────────────────────────────────────
+       Search & filter logic
+       ───────────────────────────────────────────── */
+
+    function normalize(str) {
+      return str.toLowerCase().replace(/[^\w\s]/g, ' ');
+    }
+
+    function matches(result, query) {
+      if (!query.trim()) return true;
+      const haystack = normalize(
+        [result.siteName, result.title, result.description,
+         ...(result.sitelinks || [])].join(' ')
+      );
+      return query.trim().toLowerCase().split(/\s+/)
+        .every(word => haystack.includes(word));
+    }
+
+    /* Wrap matched words in <mark> for highlighting */
+    function highlight(text, query) {
+      if (!query.trim()) return text;
+      const words = query.trim().split(/\s+/).filter(Boolean);
+      const pattern = new RegExp(`(${words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi');
+      return text.replace(pattern, '<mark>$1</mark>');
+    }
+
+    /* ─────────────────────────────────────────────
+       Render helpers
+       ───────────────────────────────────────────── */
+
+    function renderStars(count) {
+      let html = '';
+      for (let i = 0; i < 5; i++) {
+        html += i < count
+          ? `<svg class="star star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>`
+          : `<svg class="star star--empty"  aria-hidden="true"><use href="#icon-star-empty"/></svg>`;
+      }
+      return html;
+    }
+
+    function renderSitelinks(links, query) {
+      return links.map((link, i) => {
+        const sep = i < links.length - 1
+          ? `<span class="ad-result__sitelink-sep" aria-hidden="true">·</span>`
+          : '';
+        return `<a class="ad-result__sitelink" href="#">${highlight(link, query)}</a>${sep}`;
+      }).join('');
+    }
+
+    function renderAd(data, query) {
+      const imageHtml = data.hasImage
+        ? `<div class="ad-result__image" aria-hidden="true"></div>`
+        : '';
+
+      const ratingHtml = data.stars != null ? `
+        <div class="ad-result__rating" aria-label="${data.stars} out of 5 stars — ${data.ratingLabel}">
+          <div class="ad-result__stars" aria-hidden="true">${renderStars(data.stars)}</div>
+          <span class="ad-result__rating-label">${data.ratingLabel}</span>
+        </div>` : '';
+
+      const sitelinksHtml = data.sitelinks?.length
+        ? `<div class="ad-result__sitelinks">${renderSitelinks(data.sitelinks, query)}</div>`
+        : '';
+
+      return `
+        <div class="ad-result">
+          <span class="ad-result__sponsored">Sponsored</span>
+          <div class="ad-result__source">
+            <div class="ad-result__favicon" aria-hidden="true"></div>
+            <div class="ad-result__source-meta">
+              <div class="ad-result__source-info">
+                <span class="ad-result__site-name">${highlight(data.siteName, query)}</span>
+                <span class="ad-result__url">${data.url}</span>
+              </div>
+              <button class="ad-result__dots-btn" aria-label="About this ad">
+                <svg width="4" height="16" aria-hidden="true"><use href="#icon-dots-vertical"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="ad-result__body">
+            <div class="ad-result__text">
+              <a class="ad-result__title" href="#">${data.title}</a>
+              <p class="ad-result__description">${highlight(data.description, query)}</p>
+            </div>
+            ${imageHtml}
+          </div>
+          ${ratingHtml}
+          ${sitelinksHtml}
+        </div>`;
+    }
+
+    function renderOrganic(data, query) {
+      return `
+        <div class="algo-result">
+          <div class="algo-result__source">
+            <div class="algo-result__favicon" aria-hidden="true"></div>
+            <div class="algo-result__source-info">
+              <span class="algo-result__site-name">${highlight(data.siteName, query)}</span>
+              <span class="algo-result__url">${data.url}</span>
+            </div>
+          </div>
+          <div class="algo-result__content">
+            <a class="algo-result__title" href="#">${data.title}</a>
+            <p class="algo-result__description">${highlight(data.description, query)}</p>
+            <div class="algo-result__av-badge">
+              <svg class="algo-result__av-icon" aria-hidden="true">
+                <use href="../../assets/icons/icons.svg#icon-av"/>
+              </svg>
+              <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    /* ─────────────────────────────────────────────
+       Render the page
+       ───────────────────────────────────────────── */
+    function render(query) {
+      const list   = document.getElementById('resultsList');
+      const meta   = document.getElementById('serpMeta');
+      const clearBtn = document.getElementById('clearBtn');
+      const filtered = allResults.filter(r => matches(r, query));
+
+      clearBtn.classList.toggle('visible', query.length > 0);
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="serp-empty">
+            <p class="serp-empty__title">No results for "<strong>${query}</strong>"</p>
+            <p class="serp-empty__sub">Try different keywords, or check the spelling.</p>
+          </div>`;
+        meta.textContent = 'No results found';
+        return;
+      }
+
+      const adCount      = filtered.filter(r => r.type === 'ad').length;
+      const organicCount = filtered.filter(r => r.type === 'organic').length;
+      const approx       = (filtered.length * 412).toLocaleString();
+      meta.textContent   = `About ${approx} results — ${adCount} sponsored, ${organicCount} organic`;
+
+      list.innerHTML = filtered
+        .map(r => r.type === 'ad' ? renderAd(r, query) : renderOrganic(r, query))
+        .join('');
+    }
+
+    /* ─────────────────────────────────────────────
+       Input wiring
+       ───────────────────────────────────────────── */
+    const input    = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearBtn');
+    let debounce;
+
+    input.addEventListener('input', () => {
+      clearTimeout(debounce);
+      debounce = setTimeout(() => render(input.value), 180);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      input.focus();
+      render('');
+    });
+
+    /* Initial render */
+    render(input.value);
+
+    /* ─────────────────────────────────────────────
+       Theme toggle
+       ───────────────────────────────────────────── */
+    const html   = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon   = document.getElementById('themeIcon');
+    const label  = document.getElementById('themeLabel');
+
+    applyTheme(localStorage.getItem('theme') || 'light');
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      icon.textContent   = theme === 'dark' ? '🌙' : '☀️';
+      label.textContent  = theme === 'dark' ? 'Dark'  : 'Light';
+    }
+
+    /* ── Iframe embed: theme sync + auto-sizing ── */
+    (function () {
+      if (window === window.parent) return;
+      document.querySelector('.theme-toggle')?.remove();
+      window.addEventListener('message', ({ data }) => {
+        if (data?.type === 'setTheme') document.documentElement.dataset.theme = data.theme;
+      });
+      const report = () => window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight }, '*');
+      new ResizeObserver(report).observe(document.documentElement);
+      report();
+    }());
+  </script>
+</body>
+</html>

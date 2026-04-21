@@ -94,6 +94,8 @@ The user has designed buttons, dropdowns, carousels, and other components in thi
 - `components/footer/` — desktop 1440px + mobile 402px; wave SVG with `preserveAspectRatio="none"`; logo text `fill="currentColor"`; all social icons inline SVG (file:// safe); always dark background
 - `assets/icons/icons.svg` — full sprite; 10 icons: filter, search, close, hamburger, settings, open-close, download, info, image, av
 - `assets/icons/icons.html` — preview page; inline sprite (file:// safe); icons shown in swatch grid by category
+- `components/search-result/` — organic result ("algo desktop"); single + list demos; AV badge with `#icon-av` sprite; dark mode; `spec.md` documents anatomy + token mapping
+- `components/search-result/search-result-ad.html` — sponsored ad result ("Desktop ads google"); two variants: with image / no image; star ratings (4 filled + 1 empty, `--color-accent-gold`); sitelinks; three-dot "About this ad" menu; `spec.md` covers both organic and ad anatomy
 
 **Not yet started:**
 - `components/carousel/`
