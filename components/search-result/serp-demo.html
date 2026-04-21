@@ -535,18 +535,187 @@
 
   <script>
     /* ─────────────────────────────────────────────
-       Result data pool
-       Each result is matched against title + description
-       + siteName so results surface for relevant queries.
-
-       To add a result: push a new object to this array.
-       Fields: type ("ad"|"organic"), siteName, url, title,
-       description. Ads also accept: hasImage, stars (1–5),
-       ratingLabel, sitelinks[].
+       Helpers
        ───────────────────────────────────────────── */
-    const allResults = [
 
-      /* ── Ads ── */
+    function titleCase(str) {
+      return str.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+    }
+
+    function slug(str) {
+      return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    /* Deterministic pick — same query always returns the same item */
+    function hash(str) {
+      let h = 0;
+      for (const c of str) h = (Math.imul(31, h) + c.charCodeAt(0)) | 0;
+      return Math.abs(h);
+    }
+    function pick(arr, seed) { return arr[hash(seed) % arr.length]; }
+
+    /* Pick a subreddit that feels relevant to the query */
+    function subreddit(q) {
+      const map = {
+        cat:'cats', cats:'cats', kitten:'cats', feline:'cats',
+        dog:'dogs', dogs:'dogs', puppy:'dogs', canine:'dogs',
+        food:'food', recipe:'recipes', cooking:'cooking', baking:'Baking',
+        phone:'tech', laptop:'laptops', computer:'hardware', pc:'hardware',
+        game:'gaming', gaming:'gaming', console:'gaming',
+        run:'running', running:'running', fitness:'fitness', workout:'fitness',
+        coffee:'coffee', tea:'tea', wine:'wine',
+        shoe:'malefashionadvice', shoes:'malefashionadvice', sneaker:'Sneakers',
+        car:'cars', truck:'cars', automotive:'cars', ev:'electricvehicles',
+        travel:'travel', hotel:'travel', flight:'travel',
+        book:'books', reading:'books',
+        camera:'photography', photo:'photography',
+        bike:'bicycling', cycling:'bicycling',
+        plant:'houseplants', garden:'gardening',
+      };
+      for (const word of q.toLowerCase().split(/\s+/)) {
+        if (map[word]) return map[word];
+      }
+      return 'AskReddit';
+    }
+
+    /* ─────────────────────────────────────────────
+       Result generator
+       Produces 10 results (2 ads + 8 organic) tuned
+       to the query. Same query always returns the same
+       results — different queries return different ones.
+       ───────────────────────────────────────────── */
+
+    function generateResults(rawQuery) {
+      const q      = rawQuery.trim();
+      const qTitle = titleCase(q);
+      const qSlug  = slug(q);
+
+      /* First two words form the brand name used in ad #2 */
+      const brandWords = q.split(/\s+/).slice(0, 2);
+      const brand      = brandWords.map(w => titleCase(w)).join('');
+      const brandLower = brand.toLowerCase();
+
+      const reviewSite = pick(['Wirecutter','The Verge','CNET','Tom\'s Guide','Good Housekeeping','Spruce','PCMag'], q);
+      const lifeSite   = pick(['Forbes','Lifehacker','Popular Science','Business Insider','Time'], q + 'life');
+      const hours      = pick([60, 80, 100, 120, 150, 200], q);
+      const count      = pick([7, 8, 9, 10, 11, 12], q + 'count');
+      const approx     = pick([182000, 241000, 387000, 524000, 671000, 892000], q).toLocaleString();
+      const sub        = subreddit(q);
+
+      return { approx, results: [
+
+        /* ── Ad 1: Amazon ── */
+        {
+          type: 'ad',
+          siteName: 'Amazon',
+          url: `http://www.amazon.com/s?k=${encodeURIComponent(q)}`,
+          title: `Shop ${qTitle} — Free Delivery on Orders $35+`,
+          description: `Find the best ${q} from thousands of top-rated brands. Verified customer reviews, easy returns, and fast delivery. Save more with Amazon Prime and Subscribe & Save.`,
+          hasImage: true,
+          stars: 4,
+          ratingLabel: 'rating for amazon.com',
+          sitelinks: ['Today\'s Deals', 'Top Rated', 'Free Returns', 'Subscribe & Save'],
+        },
+
+        /* ── Organic 1: expert review roundup ── */
+        {
+          type: 'organic',
+          siteName: reviewSite,
+          url: `https://${slug(reviewSite)}.com \u203a reviews \u203a best-${qSlug}`,
+          title: `The Best ${qTitle} of 2026`,
+          description: `After more than ${hours} hours of research and hands-on testing, our experts identified the top picks for ${q}. We evaluated quality, value, and durability to find the best option for every need and budget.`,
+        },
+
+        /* ── Organic 2: Reddit ── */
+        {
+          type: 'organic',
+          siteName: 'Reddit',
+          url: `https://reddit.com \u203a r \u203a ${sub} \u203a best_${slug(q)}`,
+          title: `Best ${qTitle}? What does Reddit recommend? : r/${sub}`,
+          description: `r/${sub} — 2.4k comments. "Looking for the best ${q} — what have you tried that's actually worth it?" Real user reviews, expert picks, and community consensus from people who've tested dozens of options.`,
+        },
+
+        /* ── Organic 3: Wikipedia ── */
+        {
+          type: 'organic',
+          siteName: 'Wikipedia',
+          url: `https://en.wikipedia.org \u203a wiki \u203a ${qTitle.replace(/\s+/g, '_')}`,
+          title: `${qTitle} — Wikipedia`,
+          description: `${qTitle} refers to a category of products and services used for... The market has grown significantly in recent years, with innovations from both established brands and emerging startups. See also: related topics, further reading, and external links.`,
+        },
+
+        /* ── Ad 2: specialist brand ── */
+        {
+          type: 'ad',
+          siteName: `${brand} Direct`,
+          url: `http://www.${brandLower}direct.com`,
+          title: `${qTitle} — Official Store | Expert Picks & Free Shipping`,
+          description: `Shop our curated selection of ${q} from trusted brands. Price-match guarantee, expert guidance, and free returns on every order. Subscribe and save up to 25%.`,
+          hasImage: false,
+          stars: 5,
+          ratingLabel: `rating for ${brandLower}direct.com`,
+          sitelinks: ['Shop All', 'Top Rated', 'New Arrivals', 'Subscribe & Save'],
+        },
+
+        /* ── Organic 4: buying guide ── */
+        {
+          type: 'organic',
+          siteName: 'BestReviews',
+          url: `https://bestreviews.com \u203a ${qSlug}`,
+          title: `Best ${qTitle} — Buying Guide & Reviews 2026`,
+          description: `We buy every product we review — no free samples, no bias. Our team spent 200+ hours evaluating the best ${q} on the market. Includes top picks, what to look for, and what to avoid.`,
+        },
+
+        /* ── Organic 5: YouTube video ── */
+        {
+          type: 'organic',
+          siteName: 'YouTube',
+          url: `https://youtube.com \u203a watch \u203a best-${qSlug}-reviewed`,
+          title: `Best ${qTitle} 2026 — Top ${count} Picks Compared`,
+          description: `In-depth video comparison of the best ${q} options available right now. We cover pros, cons, pricing, and our overall top pick for every type of buyer — from budget to premium.`,
+        },
+
+        /* ── Organic 6: brand site ── */
+        {
+          type: 'organic',
+          siteName: `${qTitle.split(' ')[0]}`,
+          url: `https://${brandLower}.com \u203a ${qSlug}`,
+          title: `${qTitle} — Official Site`,
+          description: `Browse the complete lineup of ${q}. Detailed specs, side-by-side comparisons, and expert recommendations. Free shipping on all orders over $50 with a 90-day satisfaction guarantee.`,
+        },
+
+        /* ── Organic 7: lifestyle / editorial ── */
+        {
+          type: 'organic',
+          siteName: lifeSite,
+          url: `https://${slug(lifeSite)}.com \u203a ${qSlug}-worth-buying`,
+          title: `The ${count} Best ${qTitle} Worth Buying in 2026`,
+          description: `${lifeSite} editors tested and ranked the best ${q} options based on quality, price, and real-world performance. Our top picks cover every lifestyle and budget — updated for 2026.`,
+        },
+
+        /* ── Organic 8: Consumer Reports ── */
+        {
+          type: 'organic',
+          siteName: 'Consumer Reports',
+          url: `https://consumerreports.org \u203a ${qSlug} \u203a buying-guide`,
+          title: `${qTitle} Buying Guide — Consumer Reports`,
+          description: `Consumer Reports' unbiased ${q} ratings are based on survey data from our members and independent laboratory testing. Find the most reliable options and avoid common pitfalls.`,
+        },
+
+        /* ── Organic 9: Quora ── */
+        {
+          type: 'organic',
+          siteName: 'Quora',
+          url: `https://quora.com \u203a What-is-the-best-${qSlug}`,
+          title: `What is the best ${q}? — Quora`,
+          description: `Experts and enthusiasts weigh in on the best ${q} with personal experience, detailed breakdowns, and brand comparisons. Top answers include professional recommendations and community favourites.`,
+        },
+
+      ]};
+    }
+
+    /* ── Legacy data (unused — generator above replaced this) ── */
+    const _unused = [
       {
         type: 'ad',
         siteName: 'Chewy',
@@ -722,24 +891,8 @@
     ];
 
     /* ─────────────────────────────────────────────
-       Search & filter logic
+       Highlight — bolds matched words in descriptions
        ───────────────────────────────────────────── */
-
-    function normalize(str) {
-      return str.toLowerCase().replace(/[^\w\s]/g, ' ');
-    }
-
-    function matches(result, query) {
-      if (!query.trim()) return true;
-      const haystack = normalize(
-        [result.siteName, result.title, result.description,
-         ...(result.sitelinks || [])].join(' ')
-      );
-      return query.trim().toLowerCase().split(/\s+/)
-        .every(word => haystack.includes(word));
-    }
-
-    /* Wrap matched words in <mark> for highlighting */
     function highlight(text, query) {
       if (!query.trim()) return text;
       const words = query.trim().split(/\s+/).filter(Boolean);
@@ -839,29 +992,28 @@
        Render the page
        ───────────────────────────────────────────── */
     function render(query) {
-      const list   = document.getElementById('resultsList');
-      const meta   = document.getElementById('serpMeta');
+      const list     = document.getElementById('resultsList');
+      const meta     = document.getElementById('serpMeta');
       const clearBtn = document.getElementById('clearBtn');
-      const filtered = allResults.filter(r => matches(r, query));
 
       clearBtn.classList.toggle('visible', query.length > 0);
 
-      if (filtered.length === 0) {
+      if (!query.trim()) {
         list.innerHTML = `
           <div class="serp-empty">
-            <p class="serp-empty__title">No results for "<strong>${query}</strong>"</p>
-            <p class="serp-empty__sub">Try different keywords, or check the spelling.</p>
+            <p class="serp-empty__title">Type a query to see results</p>
+            <p class="serp-empty__sub">Try "running shoes", "coffee makers", or "cat food".</p>
           </div>`;
-        meta.textContent = 'No results found';
+        meta.textContent = '';
         return;
       }
 
-      const adCount      = filtered.filter(r => r.type === 'ad').length;
-      const organicCount = filtered.filter(r => r.type === 'organic').length;
-      const approx       = (filtered.length * 412).toLocaleString();
+      const { approx, results } = generateResults(query);
+      const adCount      = results.filter(r => r.type === 'ad').length;
+      const organicCount = results.filter(r => r.type === 'organic').length;
       meta.textContent   = `About ${approx} results — ${adCount} sponsored, ${organicCount} organic`;
 
-      list.innerHTML = filtered
+      list.innerHTML = results
         .map(r => r.type === 'ad' ? renderAd(r, query) : renderOrganic(r, query))
         .join('');
     }
