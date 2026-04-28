@@ -149,8 +149,7 @@
     .icn-arrows--right-sm,
     .icn-arrows--right-lg,
     .icn-arrows--down-sm,
-    .icn-arrows--down-lg,
-    .icn-arrows--v7 {
+    .icn-arrows--down-lg {
       width: 16px;
       height: 16px;
     }
@@ -172,14 +171,14 @@
       background: var(--color-background-secondary);
     }
 
-    .icn-arrows--v9 {
+    .icn-arrows--down-circle-lg {
       width: 32px;
       height: 32px;
       border-radius: var(--radius-full);
       background: var(--color-background-secondary);
     }
 
-    .icn-arrows--v8 {
+    .icn-arrows--right-circle-lg {
       width: 48px;
       height: 48px;
       border-radius: var(--radius-full);
@@ -190,23 +189,23 @@
     /* ── Circle hover states ── */
     .icn-arrows--down-circle,
     .icn-arrows--right-circle,
-    .icn-arrows--v9,
-    .icn-arrows--v8 {
+    .icn-arrows--down-circle-lg,
+    .icn-arrows--right-circle-lg {
       cursor: pointer;
       transition: background-color 0.15s ease, color 0.15s ease;
     }
 
     .icn-arrows--down-circle:hover,
     .icn-arrows--right-circle:hover,
-    .icn-arrows--v9:hover,
-    .icn-arrows--v8:hover {
+    .icn-arrows--down-circle-lg:hover,
+    .icn-arrows--right-circle-lg:hover {
       background: var(--color-button-brandblue);
       color: var(--color-text-inverted);
     }
     [data-theme="dark"] .icn-arrows--down-circle:hover,
     [data-theme="dark"] .icn-arrows--right-circle:hover,
-    [data-theme="dark"] .icn-arrows--v9:hover,
-    [data-theme="dark"] .icn-arrows--v8:hover {
+    [data-theme="dark"] .icn-arrows--down-circle-lg:hover,
+    [data-theme="dark"] .icn-arrows--right-circle-lg:hover {
       background: var(--color-button-brandblue);
     }
 
@@ -220,7 +219,7 @@
   </button>
 
   <h1>icn-arrows</h1>
-  <p class="page-subtitle">9 variants — 2 directions × bare / circle / circle+shadow</p>
+  <p class="page-subtitle">8 variants — 2 directions × bare / circle / circle-lg</p>
 
   <div class="demo-grid">
 
@@ -257,12 +256,12 @@
         </div>
 
         <div class="demo-item">
-          <span class="icn-arrows icn-arrows--v8" aria-hidden="true">
+          <span class="icn-arrows icn-arrows--right-circle-lg" aria-hidden="true">
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
               <path d="M20 17L28 24L20 31" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </span>
-          <span class="demo-label">v8</span>
+          <span class="demo-label">right-circle-lg</span>
         </div>
 
       </div>
@@ -301,29 +300,12 @@
         </div>
 
         <div class="demo-item">
-          <span class="icn-arrows icn-arrows--v9" aria-hidden="true">
+          <span class="icn-arrows icn-arrows--down-circle-lg" aria-hidden="true">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <path d="M10.5 12.5L16 18L21.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </span>
-          <span class="demo-label">v9</span>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ── Variant7 ── -->
-    <div class="demo-group">
-      <p class="demo-group__title">Variant7</p>
-      <div class="demo-row">
-
-        <div class="demo-item">
-          <span class="icn-arrows icn-arrows--v7" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-          <span class="demo-label">v7</span>
+          <span class="demo-label">down-circle-lg</span>
         </div>
 
       </div>

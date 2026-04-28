@@ -32,7 +32,7 @@
 | Title | `.algo-result__title` | `font-body-lg` (18px/28px lh), `color-text-link` |
 | Description | `.algo-result__description` | `font-body-sm` (14px/20px lh), `color-text-primary` |
 | AV badge | `.algo-result__av-badge` | Flex row, gap 4px, items-center |
-| AV icon | `.algo-result__av-icon` | 20×20px, `#icon-av` from sprite |
+| AV icon | `.algo-result__av-icon` | 16×16px, `#icon-av` from sprite |
 | AV label | `.algo-result__av-label` | `font-body-xs` (12px/18px lh), `color-text-link` |
 
 ---

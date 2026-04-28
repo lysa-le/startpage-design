@@ -174,12 +174,12 @@
     .algo-result__av-badge {
       display: flex;
       align-items: center;
-      gap: var(--spacing-4);
+      gap: 6px;
     }
 
     .algo-result__av-icon {
-      width: 20px;
-      height: 20px;
+      width: 16px;
+      height: 16px;
       flex-shrink: 0;
       color: var(--color-icon-secondary);
     }
@@ -224,6 +224,13 @@
 </head>
 <body>
 
+  <!-- Inline SVG sprite (file:// safe) -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-av" viewBox="0 0 16 8" fill="none">
+      <path d="M8.01674 0C-3.04828 0 -0.922528 8 4.05523 8C5.05273 8 5.99198 7.56896 6.59073 6.83625L7.23399 6.04896C7.62549 5.57 8.40824 5.57 8.79974 6.04896L9.44299 6.83625C10.0415 7.56896 10.9807 8 11.9782 8C16.7248 8 19.244 0 8.01674 0ZM4.59998 5.09083C3.57348 5.09083 2.90598 4.55625 2.59798 4.23562C2.46723 4.09958 2.46723 3.90042 2.59798 3.76417C2.90598 3.44333 3.57323 2.90896 4.59998 2.90896C5.62673 2.90896 6.29398 3.44354 6.60198 3.76417C6.73273 3.90021 6.73273 4.09937 6.60198 4.23562C6.29398 4.55646 5.62648 5.09083 4.59998 5.09083ZM11.4 5.09083C10.3735 5.09083 9.70599 4.55625 9.39799 4.23562C9.26724 4.09958 9.26724 3.90042 9.39799 3.76417C9.70599 3.44333 10.3732 2.90896 11.4 2.90896C12.4267 2.90896 13.094 3.44354 13.402 3.76417C13.5327 3.90021 13.5327 4.09937 13.402 4.23562C13.094 4.55646 12.4265 5.09083 11.4 5.09083Z" fill="currentColor"/>
+    </symbol>
+  </svg>
+
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
     <span id="themeIcon">☀️</span>
     <span id="themeLabel">Light</span>
@@ -250,7 +257,7 @@
           <p class="algo-result__description">Premium, limited ingredients packed with protein and absolutely no fillers. All Life Stages. A complete formula that grows with you. A favorite they'll enjoy&nbsp;…</p>
           <div class="algo-result__av-badge">
             <svg class="algo-result__av-icon" aria-hidden="true">
-              <use href="../../assets/icons/icons.svg#icon-av"/>
+              <use href="#icon-av"/>
             </svg>
             <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
           </div>
@@ -278,7 +285,7 @@
           <p class="algo-result__description">Premium, limited ingredients packed with protein and absolutely no fillers. All Life Stages. A complete formula that grows with you. A favorite they'll enjoy&nbsp;…</p>
           <div class="algo-result__av-badge">
             <svg class="algo-result__av-icon" aria-hidden="true">
-              <use href="../../assets/icons/icons.svg#icon-av"/>
+              <use href="#icon-av"/>
             </svg>
             <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
           </div>
@@ -298,7 +305,7 @@
           <p class="algo-result__description">Finding the right food for your cat doesn't have to be complicated. Our veterinarians have rounded up the top-rated options for kittens, adults, and seniors&nbsp;…</p>
           <div class="algo-result__av-badge">
             <svg class="algo-result__av-icon" aria-hidden="true">
-              <use href="../../assets/icons/icons.svg#icon-av"/>
+              <use href="#icon-av"/>
             </svg>
             <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
           </div>
@@ -318,7 +325,7 @@
           <p class="algo-result__description">Shop hundreds of dry cat food formulas from trusted brands. Filter by age, ingredient, and dietary need. Autoship &amp; save up to 35% on every order&nbsp;…</p>
           <div class="algo-result__av-badge">
             <svg class="algo-result__av-icon" aria-hidden="true">
-              <use href="../../assets/icons/icons.svg#icon-av"/>
+              <use href="#icon-av"/>
             </svg>
             <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
           </div>

@@ -114,21 +114,64 @@
       z-index: 2;
     }
     @keyframes btn-ripple { to { transform: scale(5); opacity: 0; } }
+    @keyframes check-pop-loop {
+      0%        { transform: scale(0);   opacity: 0; }
+      8%        { transform: scale(1.2); opacity: 1; }
+      14%, 88%  { transform: scale(1);   opacity: 1; }
+      94%, 100% { transform: scale(0);   opacity: 0; }
+    }
+    @keyframes check-draw-loop {
+      0%, 4%    { stroke-dashoffset: 32; }
+      18%, 88%  { stroke-dashoffset: 0;  }
+      94%, 100% { stroke-dashoffset: 32; }
+    }
+    @keyframes shield-wiggle-loop {
+      0%, 18%  { transform: rotate(0deg);  }
+      24%      { transform: rotate(-4deg); }
+      30%      { transform: rotate(3deg);  }
+      36%      { transform: rotate(-2deg); }
+      41%      { transform: rotate(1deg);  }
+      46%, 100%{ transform: rotate(0deg);  }
+    }
+    .banner-shield svg {
+      transform-origin: 50% 100%;
+      animation: shield-wiggle-loop 7s ease-in-out infinite;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    .banner-check {
+      transform-box: fill-box;
+      transform-origin: 50% 50%;
+      animation: check-pop-loop 7s ease-in-out infinite;
+      will-change: transform, opacity;
+      backface-visibility: hidden;
+    }
+    .banner-check path {
+      stroke-dasharray: 32;
+      stroke-dashoffset: 32;
+      animation: check-draw-loop 7s ease-in-out infinite;
+    }
     .btn--banner {
       padding: var(--spacing-8) var(--spacing-16);
       border-radius: var(--radius-lg);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-xs-lh);
     }
-    .btn--outline {
-      --btn-wave-color: var(--color-button-brandblue);
-      background-color: transparent;
-      color: var(--color-text-brandblue);
-      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-stroke-primary-button);
-      transition: color 0.3s ease;
+    .btn--product-brand-blue {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+      font-weight: var(--font-weight-bold);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.15s ease;
     }
-    .btn--outline:hover { color: var(--color-whisper-50); }
-    [data-theme="dark"] .btn--outline:hover { color: var(--color-black-900); }
+    .btn--product-brand-blue::before { display: none; }
+    .btn--product-brand-blue:hover { background-color: var(--color-button-brandbluehover); }
+    [data-theme="dark"] .btn--product-brand-blue {
+      background-color: var(--color-brand-blue-200);
+      color: var(--color-black-900);
+    }
+    [data-theme="dark"] .btn--product-brand-blue:hover { background-color: var(--color-button-brandbluehover); }
     .btn:focus-visible { outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button); outline-offset: 3px; }
 
     /* ─────────────────────────────────────────────
@@ -288,31 +331,24 @@
        Banner
        ───────────────────────────────────────────── */
     .banner {
-      position: relative;
-      display: flex; align-items: center; gap: 14px;
-      background: var(--color-background-quaternary);
-      border: var(--border-stroke-md) solid var(--color-stroke-primary);
+      display: flex; align-items: center; gap: 20px;
+      background: var(--color-background-tertiary);
       border-radius: var(--radius-lg);
-      padding: 14px 48px 14px 16px;
+      padding: 14px 16px 14px 24px;
       max-width: 598px;
     }
-    .banner-shield { flex-shrink: 0; width: 60px; height: 70px; }
-    .banner-shield iframe {
-      width: 60px; height: 70px; border: none;
-      display: block; overflow: hidden; background: transparent;
-    }
+    .banner-shield { flex-shrink: 0; width: 28px; height: 35px; }
     .banner-text {
       flex: 1; min-width: 0;
-      display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
     }
     .banner-headline {
-      font-size: var(--font-heading-xxs);
-      line-height: var(--font-heading-xxs-lh);
-      font-weight: var(--font-weight-semibold);
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
     }
     .btn-dismiss {
-      position: absolute; top: 10px; right: 10px;
+      flex-shrink: 0;
       width: 28px; height: 28px; border-radius: var(--radius-full);
       border: none; background: transparent;
       color: var(--color-text-secondary); font-size: 16px;
@@ -402,6 +438,7 @@
     /* Banner spacers (replace margin-bottom in DOM flow) */
     .banner-spacer-top    { margin-bottom: var(--spacing-32); }
     .banner-spacer-bottom { margin-top: var(--spacing-32); }
+    #banner-b { padding-right: 24px; }
 
     /* "Web results" caption label */
     .results-section-label {
@@ -619,13 +656,8 @@
       .algo-result__site-name { display: none; }
 
       /* Banner: reduce right padding since dismiss is closer on narrow screens */
-      .banner { padding-right: 40px; }
+      .banner { padding: 12px 14px; }
 
-      /* Banner headline: drop to body-lg on mobile */
-      .banner-headline {
-        font-size: var(--font-body-lg);
-        line-height: var(--font-body-lg-lh);
-      }
 
       /* Modal: hide desktop two-column layout, show mobile cards */
       .modal { display: none; }
@@ -814,14 +846,19 @@
     <!-- Banner A: dismissible, above algo results -->
     <div class="banner banner-spacer-top" id="banner-a">
       <div class="banner-shield">
-        <iframe src="shield-animation.html" scrolling="no" allowtransparency="true"></iframe>
+        <svg width="28" height="35" viewBox="0 0 36 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.3657 44.8027C18.1263 44.8672 17.8737 44.8672 17.6343 44.8027C12.5859 43.4441 8.40467 40.4852 5.09063 35.9261C1.69688 31.2574 0 26.073 0 20.373V7.6875C0 7.06223 0.387859 6.50255 0.973315 6.28301L17.4733 0.0955057C17.8129 -0.031836 18.1871 -0.0318359 18.5267 0.0955058L35.0267 6.28301C35.6121 6.50255 36 7.06223 36 7.6875V20.373C36 26.073 34.3031 31.2574 30.9094 35.9261C27.5953 40.4852 23.4141 43.4441 18.3657 44.8027Z" fill="#00E7D0"/>
+          <g class="banner-check">
+            <path d="M10 23 L16 30 L26 17" stroke="#09090A" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </g>
+        </svg>
       </div>
       <div class="banner-text">
-        <p class="banner-headline">Private search. Free thanks to private ads.</p>
-        <button class="btn btn--outline btn--banner" data-btn onclick="openModal()">
-          <span class="btn__label">Allow Startpage ads</span>
-        </button>
+        <p class="banner-headline">Private search.<br>Free thanks to private ads.</p>
       </div>
+      <button class="btn btn--product-brand-blue btn--banner" data-btn onclick="openModal()">
+        <span class="btn__label">Allow Startpage ads</span>
+      </button>
       <button class="btn-dismiss" aria-label="Dismiss banner" onclick="dismissBannerA()">✕</button>
     </div>
 
@@ -830,14 +867,19 @@
     <!-- Banner B: persistent, below algo results -->
     <div class="banner banner-spacer-bottom" id="banner-b">
       <div class="banner-shield">
-        <iframe src="shield-animation.html" scrolling="no" allowtransparency="true"></iframe>
+        <svg width="28" height="35" viewBox="0 0 36 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.3657 44.8027C18.1263 44.8672 17.8737 44.8672 17.6343 44.8027C12.5859 43.4441 8.40467 40.4852 5.09063 35.9261C1.69688 31.2574 0 26.073 0 20.373V7.6875C0 7.06223 0.387859 6.50255 0.973315 6.28301L17.4733 0.0955057C17.8129 -0.031836 18.1871 -0.0318359 18.5267 0.0955058L35.0267 6.28301C35.6121 6.50255 36 7.06223 36 7.6875V20.373C36 26.073 34.3031 31.2574 30.9094 35.9261C27.5953 40.4852 23.4141 43.4441 18.3657 44.8027Z" fill="#00E7D0"/>
+          <g class="banner-check">
+            <path d="M10 23 L16 30 L26 17" stroke="#09090A" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </g>
+        </svg>
       </div>
       <div class="banner-text">
-        <p class="banner-headline">Ads keep your private search results free.</p>
-        <button class="btn btn--outline btn--banner" data-btn onclick="openModal()">
-          <span class="btn__label">Allow Startpage ads</span>
-        </button>
+        <p class="banner-headline">Ads keep your private search<br>results free.</p>
       </div>
+      <button class="btn btn--product-brand-blue btn--banner" data-btn onclick="openModal()">
+        <span class="btn__label">Allow Startpage ads</span>
+      </button>
     </div>
   </main>
 
