@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shield Animation</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: transparent;
+      width: 60px;
+      height: 70px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/framer-motion@11/dist/framer-motion.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    const { motion } = window.Motion;
+
+    // Shield outer (darker outline)
+    const D_SHIELD_O = "M121.809 64C127.685 65.5238 133.142 67.4286 138.179 69.7143L153.29 75.4286C154.969 76.9524 155.809 85.7143 155.809 101.714C155.809 114.667 144.476 128.762 121.809 144C99.1422 128.762 87.8088 114.667 87.8088 101.714C87.8088 85.7143 88.6483 76.9524 90.3274 75.4286L105.438 69.7143C110.476 67.4286 115.932 65.5238 121.809 64Z";
+    // Shield inner (fill surface)
+    const D_SHIELD_I = "M121.809 71.0587C126.654 72.3136 131.154 73.8822 135.307 75.7646L147.767 80.4705C149.152 81.7254 149.844 88.9411 149.844 102.118C149.844 112.784 140.499 124.392 121.809 136.941C103.119 124.392 93.7737 112.784 93.7737 102.118C93.7737 88.9411 94.4659 81.7254 95.8504 80.4705L108.31 75.7646C112.464 73.8822 116.963 72.3136 121.809 71.0587Z";
+    // Minus → checkmark morph (same 3-anchor structure for clean interpolation)
+    const D_MINUS = "M107 102 L117 102 L137 102";
+    const D_CHECK = "M107 100 L117 110 L137 90";
+
+    // Shield visual centre (sparkle anchor)
+    const SX = 121.809, SY = 102;
+
+    function ShieldAnimation() {
+      const [isWhitelisted, setIsWhitelisted] = useState(false);
+
+      useEffect(() => {
+        const id = setInterval(() => setIsWhitelisted(p => !p), 1800);
+        return () => clearInterval(id);
+      }, []);
+
+      return (
+        // viewBox crops to just the shield bounds (86 62 72 84) → 60×70 px output
+        <svg
+          width="60" height="70"
+          viewBox="86 62 72 84"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <motion.g
+            style={{ transformBox: "fill-box", transformOrigin: "50% 50%" }}
+            animate={{ scale: isWhitelisted ? [1, 1.1, 1] : 1 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+            <path
+              d={D_SHIELD_O}
+              fill="#24C5B6" stroke="#1E222D"
+              strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+            />
+            <path
+              d={D_SHIELD_I}
+              fill="#24C5B6" stroke="#1E222D"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            />
+            <motion.path
+              strokeWidth="5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              initial={{ d: D_MINUS, stroke: "#E23D3D" }}
+              animate={{
+                d:      isWhitelisted ? D_CHECK : D_MINUS,
+                stroke: isWhitelisted ? "#FFFFFF" : "#E23D3D",
+              }}
+              transition={{
+                d:      { type: "spring", stiffness: 200, damping: 16 },
+                stroke: { duration: 0.2 },
+              }}
+            />
+          </motion.g>
+
+          {isWhitelisted && [0, 1, 2, 3].map(i => (
+            <motion.circle
+              key={i}
+              cx={SX + (i % 2 === 0 ? 26 : -26)}
+              cy={SY + (i < 2 ? -22 : 22)}
+              r="5"
+              fill="#8290FF"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 1, 0], opacity: [0, 1, 0] }}
+              transition={{ duration: 0.8, delay: 0.4 + i * 0.1, ease: "easeOut" }}
+            />
+          ))}
+        </svg>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<ShieldAnimation />);
+  </script>
+</body>
+</html>

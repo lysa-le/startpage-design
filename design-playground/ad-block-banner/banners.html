@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anti-Ad-Block Banners — SERP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides (class-driven)
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+      --color-text-primary:          var(--color-whisper-100);
+      --color-text-secondary:        var(--color-midnight-200);
+      --color-text-tertiary:         var(--color-midnight-100);
+      --color-text-inverted:         var(--color-black-800);
+      --color-text-brandblue:        var(--color-brand-blue-200);
+      --color-text-link:             var(--color-brand-blue-200);
+      --color-icon-primary:          var(--color-whisper-200);
+      --color-icon-secondary:        var(--color-brand-blue-200);
+      --color-icon-tertiary:         var(--color-midnight-100);
+      --color-button-brandblue:          var(--color-brand-blue-200);
+      --color-button-brandbluehover:     var(--color-brand-blue-300);
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-button-inactive:           var(--color-black-600);
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+      --color-accent-gold:           var(--color-gold-200);
+      --color-accent-gold-alt:       var(--color-gold-500);
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+    }
+
+    /* ─────────────────────────────────────────────
+       Theme toggle
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      z-index: 200;
+    }
+    .theme-toggle:hover { color: var(--color-text-primary); border-color: var(--color-stroke-primary-button); }
+
+    /* ─────────────────────────────────────────────
+       Button component — from startpage-design
+       ───────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-8);
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-weight: var(--font-weight-bold);
+      white-space: nowrap;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: color 0.45s ease, border-color 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: -10%;
+      width: 120%; height: 200%;
+      border-radius: 50% 50% 0 0 / 30px 30px 0 0;
+      transform: translateY(105%);
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+      background: var(--btn-wave-color);
+    }
+    .btn:hover::before { transform: translateY(0%); }
+    .btn__label { position: relative; z-index: 1; }
+    .btn.is-clicking::before { transform: translateY(0%) !important; transition: transform 0.1s ease !important; }
+    .btn-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      transform: scale(0);
+      animation: btn-ripple 550ms ease-out forwards;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes btn-ripple { to { transform: scale(5); opacity: 0; } }
+    .btn--banner {
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-xs-lh);
+    }
+    .btn--outline {
+      --btn-wave-color: var(--color-button-brandblue);
+      background-color: transparent;
+      color: var(--color-text-brandblue);
+      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-stroke-primary-button);
+      transition: color 0.3s ease;
+    }
+    .btn--outline:hover { color: var(--color-whisper-50); }
+    [data-theme="dark"] .btn--outline:hover { color: var(--color-black-900); }
+    .btn:focus-visible { outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button); outline-offset: 3px; }
+
+    /* ─────────────────────────────────────────────
+       Search field — from header component
+       ───────────────────────────────────────────── */
+    .search-field {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-full);
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+    .search-field:focus-within { border-color: var(--color-stroke-primary-button); }
+    .search-field--serp { height: 40px; box-shadow: var(--shadow-search); }
+    .search-field__input {
+      flex: 1; min-width: 0; height: 100%;
+      padding: 0 0 0 var(--spacing-16);
+      background: transparent; border: none; outline: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      caret-color: var(--color-text-tertiary);
+    }
+    .search-field__input::placeholder { color: var(--color-text-secondary); opacity: 0.6; }
+    .search-field__actions {
+      display: flex; align-items: center;
+      gap: var(--spacing-12); padding-right: var(--spacing-20); flex-shrink: 0;
+    }
+    .search-field__clear {
+      display: none; align-items: center; justify-content: center;
+      width: 16px; height: 16px; padding: 0;
+      background: none; border: none; cursor: pointer;
+      color: var(--color-icon-tertiary); flex-shrink: 0;
+      transition: color 100ms ease;
+    }
+    .search-field__clear:hover { color: var(--color-icon-primary); }
+    .search-field--serp .search-field__clear { display: flex; }
+    .search-field__divider {
+      display: none; width: 1px; height: 16px;
+      background: var(--color-stroke-primary); flex-shrink: 0;
+    }
+    .search-field--serp .search-field__divider { display: block; }
+    .search-field__submit {
+      display: flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; padding: 0;
+      background: none; border: none; cursor: pointer;
+      color: var(--color-icon-secondary); flex-shrink: 0;
+      transition: opacity 100ms ease;
+    }
+    .search-field__submit:hover { opacity: 0.75; }
+
+    /* ─────────────────────────────────────────────
+       Site header — desktop — from header component
+       ───────────────────────────────────────────── */
+    .site-header {
+      position: sticky; top: 0; z-index: 10;
+      width: 100%;
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+    }
+    .site-header--desktop {
+      display: grid;
+      grid-template-columns:
+        var(--spacing-24) 104px var(--spacing-24) 1fr var(--spacing-24) auto var(--spacing-40);
+      grid-template-rows: 67px 36px;
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .site-header--desktop .site-header__top {
+      grid-column: 1 / -1; grid-row: 1;
+      display: grid; grid-template-columns: subgrid; align-items: center;
+    }
+    .site-header--desktop .site-header__top .site-header__logo { grid-column: 2; }
+    .site-header--desktop .site-header__right                   { grid-column: 6; }
+    .site-header--desktop .site-header__search-wrap {
+      grid-column: 4; max-width: 628px; min-width: 0;
+    }
+    .site-header__logo {
+      display: inline-flex; align-items: center;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .site-header__logo-svg {
+      display: block; width: 104px; height: auto;
+      color: var(--color-text-primary);
+    }
+    .site-header__right { display: flex; align-items: center; gap: var(--spacing-40); }
+    .icn-arrows { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--color-icon-primary); }
+    .icn-arrows--down-circle { width: 16px; height: 16px; border-radius: var(--radius-full); background: var(--color-button-inactive); }
+    .site-header__pp-btn {
+      display: inline-flex; align-items: center; gap: var(--spacing-8);
+      background: none; border: none; cursor: pointer; padding: 0;
+      font-family: var(--font-family); font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular); color: var(--color-text-primary);
+      white-space: nowrap; transition: color 150ms ease;
+    }
+    .site-header__pp-btn:hover { color: var(--color-text-brandblue); }
+    .site-header__hamburger-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; padding: 0;
+      background: none; border: none; cursor: pointer; color: var(--color-icon-primary); flex-shrink: 0;
+    }
+    .site-header--desktop .site-header__nav {
+      grid-column: 1 / -1; grid-row: 2;
+      display: grid; grid-template-columns: subgrid; align-items: stretch;
+    }
+    .site-header--desktop .site-header__nav .site-header__tabs-row {
+      grid-column: 4; display: flex; align-items: stretch; max-width: 628px;
+    }
+    .site-header__tabs { display: flex; align-items: center; }
+    .site-header--desktop .site-header__tabs { height: 100%; gap: var(--spacing-24); padding-left: var(--spacing-16); flex: 1; }
+    .site-header__tab {
+      background: none; border: none; cursor: pointer; padding: 0;
+      font-family: var(--font-family); font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular); color: var(--color-text-tertiary); white-space: nowrap;
+    }
+    .site-header__tab::after {
+      content: attr(data-text); display: block; font-weight: var(--font-weight-semibold);
+      height: 0; overflow: hidden; visibility: hidden; pointer-events: none;
+    }
+    .site-header__tab--active { font-weight: var(--font-weight-medium); color: var(--color-text-brandblue); }
+    .site-header__tab:hover:not(.site-header__tab--active) { color: var(--color-text-brandblue); }
+    .site-header__tab-indicator {
+      position: absolute; bottom: 0; height: 3px;
+      background: var(--color-text-brandblue); border-radius: var(--radius-full);
+      pointer-events: none; transition: left 200ms ease, width 200ms ease;
+    }
+    .site-header__filter-btn {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0; background: none; border: none; cursor: pointer;
+      color: var(--color-icon-primary); flex-shrink: 0; transition: color 150ms ease;
+    }
+    .site-header--desktop .site-header__nav .site-header__filter-btn { padding-right: var(--spacing-20); }
+    .site-header__filter-btn:hover { color: var(--color-icon-secondary); }
+
+    /* ─────────────────────────────────────────────
+       SERP body
+       ───────────────────────────────────────────── */
+    .serp-body {
+      /* left edge matches search field: inset(24) + logo(104) + gap(24) = 152px */
+      padding: var(--spacing-32) var(--spacing-48) var(--spacing-32) calc(var(--spacing-24) + 104px + var(--spacing-24));
+    }
+    .serp-meta {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--spacing-24);
+      min-height: 18px;
+    }
+    .results-list {
+      display: flex; flex-direction: column;
+      gap: var(--spacing-32); max-width: 598px;
+    }
+
+    /* ─────────────────────────────────────────────
+       Banner
+       ───────────────────────────────────────────── */
+    .banner {
+      position: relative;
+      display: flex; align-items: center; gap: 14px;
+      background: var(--color-background-quaternary);
+      border: var(--border-stroke-md) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      padding: 14px 48px 14px 16px;
+      max-width: 598px;
+    }
+    .banner-shield { flex-shrink: 0; width: 60px; height: 70px; }
+    .banner-shield iframe {
+      width: 60px; height: 70px; border: none;
+      display: block; overflow: hidden; background: transparent;
+    }
+    .banner-text {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+    }
+    .banner-headline {
+      font-size: var(--font-heading-xxs);
+      line-height: var(--font-heading-xxs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .btn-dismiss {
+      position: absolute; top: 10px; right: 10px;
+      width: 28px; height: 28px; border-radius: var(--radius-full);
+      border: none; background: transparent;
+      color: var(--color-text-secondary); font-size: 16px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-dismiss:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+
+    /* ─────────────────────────────────────────────
+       Organic result — algo-result
+       ───────────────────────────────────────────── */
+    .algo-result { display: flex; flex-direction: column; gap: var(--spacing-4); width: 100%; animation: fadeIn 0.15s ease both; }
+    .algo-result__source { display: flex; align-items: center; gap: var(--spacing-12); }
+    .algo-result__favicon {
+      width: 28px; height: 28px; border-radius: var(--radius-full);
+      background-color: var(--color-background-secondary); flex-shrink: 0;
+    }
+    .algo-result__source-info { display: flex; flex-direction: column; line-height: var(--font-body-sm-lh); }
+    .algo-result__site-name { font-size: var(--font-body-sm); font-weight: var(--font-weight-regular); color: var(--color-text-primary); }
+    .algo-result__url      { font-size: var(--font-body-sm); font-weight: var(--font-weight-regular); color: var(--color-text-tertiary); }
+    .algo-result__content  { display: flex; flex-direction: column; gap: var(--spacing-4); }
+    .algo-result__title {
+      font-size: var(--font-body-lg); line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-regular); color: var(--color-text-link);
+      text-decoration: none; display: block;
+    }
+    .algo-result__title:hover { text-decoration: underline; }
+    .algo-result__description {
+      font-size: var(--font-body-sm); line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular); color: var(--color-text-primary);
+    }
+
+    /* ─────────────────────────────────────────────
+       Ad result — ad-result
+       ───────────────────────────────────────────── */
+    .ad-result { display: flex; flex-direction: column; gap: 10px; width: 100%; animation: fadeIn 0.15s ease both; }
+    .ad-result__sponsored { font-size: var(--font-body-sm); color: var(--color-text-secondary); }
+    .ad-result__source { display: flex; align-items: center; gap: var(--spacing-12); }
+    .ad-result__favicon { width: 28px; height: 28px; border-radius: var(--radius-full); background-color: var(--color-background-secondary); flex-shrink: 0; }
+    .ad-result__source-meta { display: flex; align-items: center; gap: var(--spacing-16); }
+    .ad-result__source-info { display: flex; flex-direction: column; line-height: var(--font-body-sm-lh); }
+    .ad-result__site-name { font-size: var(--font-body-sm); font-weight: var(--font-weight-regular); color: var(--color-text-primary); }
+    .ad-result__url       { font-size: var(--font-body-sm); font-weight: var(--font-weight-regular); color: var(--color-text-tertiary); }
+    .ad-result__dots-btn {
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: none; padding: var(--spacing-4); cursor: pointer;
+      color: var(--color-text-tertiary); border-radius: var(--radius-sm);
+      transition: color 0.15s, background-color 0.15s; flex-shrink: 0;
+    }
+    .ad-result__dots-btn:hover { color: var(--color-text-secondary); background-color: var(--color-background-secondary); }
+    .ad-result__body { display: flex; align-items: flex-start; gap: 19px; }
+    .ad-result__text { display: flex; flex-direction: column; gap: var(--spacing-4); flex: 1; min-width: 0; }
+    .ad-result__title {
+      font-size: var(--font-body-lg); line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-regular); color: var(--color-text-link);
+      text-decoration: none; display: block;
+    }
+    .ad-result__title:hover { text-decoration: underline; }
+    .ad-result__description { font-size: var(--font-body-sm); line-height: var(--font-body-sm-lh); color: var(--color-text-primary); }
+    .ad-result__image { width: 100px; height: 100px; border-radius: var(--radius-lg); background-color: var(--color-background-secondary); flex-shrink: 0; }
+    .ad-result__rating { display: flex; align-items: center; gap: var(--spacing-12); }
+    .ad-result__stars { display: flex; align-items: center; }
+    .star { width: 16px; height: 16px; flex-shrink: 0; }
+    .star--filled { color: var(--color-accent-gold); }
+    .star--empty  { color: var(--color-stroke-primary); }
+    .ad-result__rating-label { font-size: var(--font-body-xs); color: var(--color-text-tertiary); white-space: nowrap; }
+    .ad-result__sitelinks { display: flex; align-items: center; gap: var(--spacing-8); flex-wrap: wrap; }
+    .ad-result__sitelink { font-size: var(--font-body-sm); color: var(--color-text-link); text-decoration: none; }
+    .ad-result__sitelink:hover { text-decoration: underline; }
+    .ad-result__sitelink-sep { color: var(--color-text-tertiary); user-select: none; }
+    mark { background: none; color: inherit; font-weight: var(--font-weight-semibold); }
+
+    /* Anonymous View link below each organic result */
+    .algo-result__av-link {
+      display: inline-flex; align-items: center; gap: var(--spacing-4);
+      font-size: var(--font-body-xs); line-height: var(--font-body-xs-lh);
+      color: var(--color-text-link); text-decoration: none;
+    }
+    .algo-result__av-link:hover { text-decoration: underline; }
+    .algo-result__av-icon {
+      display: inline-flex; flex-shrink: 0;
+      color: var(--color-icon-secondary);
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Banner spacers (replace margin-bottom in DOM flow) */
+    .banner-spacer-top    { margin-bottom: var(--spacing-32); }
+    .banner-spacer-bottom { margin-top: var(--spacing-32); }
+
+    /* "Web results" caption label */
+    .results-section-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+    }
+
+    /* ─────────────────────────────────────────────
+       Modal — Overlay
+       ───────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(20, 22, 40, 0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    }
+    .modal-overlay.is-open { opacity: 1; pointer-events: auto; }
+
+    /* ─────────────────────────────────────────────
+       Modal — Desktop two-column layout
+       ───────────────────────────────────────────── */
+    .modal {
+      background: var(--color-background-primary);
+      border-radius: var(--radius-xl);
+      width: 700px; max-width: calc(100vw - 48px);
+      max-height: 85vh;
+      box-shadow: var(--shadow-dropdown);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transform: translateY(10px); transition: transform 0.2s ease;
+    }
+    .modal-overlay.is-open .modal { transform: translateY(0); }
+    .modal__header {
+      display: flex; align-items: flex-start;
+      padding: 20px 24px;
+      flex-shrink: 0;
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .modal__header-text { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .modal__title {
+      font-size: var(--font-heading-xxs); line-height: var(--font-heading-xxs-lh);
+      font-weight: var(--font-weight-semibold); color: var(--color-text-primary);
+    }
+    .modal__subtitle {
+      font-size: var(--font-body-sm); line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular); color: var(--color-text-secondary);
+    }
+    .modal__close {
+      width: 32px; height: 32px; border-radius: var(--radius-full);
+      border: none; background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background 0.12s, color 0.12s;
+    }
+    .modal__close:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+    .modal__body { display: flex; flex: 1; min-height: 0; }
+    .modal__left {
+      width: 284px; flex-shrink: 0;
+      overflow-y: auto; padding: 12px 8px;
+      scrollbar-width: thin;
+    }
+    .modal__divider {
+      width: 1px; flex-shrink: 0;
+      background: var(--color-stroke-secondary);
+    }
+    .modal__right {
+      flex: 1; min-width: 0;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+
+    /* Adblocker list items */
+    .adblocker-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+    .adblocker-item {
+      width: 100%; display: flex; align-items: center; gap: 12px;
+      padding: 8px 12px; border-radius: var(--radius-lg);
+      border: none; background: transparent;
+      cursor: pointer; text-align: left; font-family: var(--font-family);
+      transition: background 0.12s;
+    }
+    .adblocker-item:hover { background: var(--color-background-secondary); }
+    .adblocker-item.is-selected { background: var(--color-background-tertiary); }
+    .adblocker-item__logo {
+      width: 24px; height: 24px; border-radius: var(--radius-sm);
+      object-fit: contain; flex-shrink: 0;
+    }
+    .adblocker-item__logo-fallback {
+      width: 24px; height: 24px; border-radius: var(--radius-sm); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff; user-select: none;
+    }
+    .adblocker-item__name {
+      flex: 1; font-size: var(--font-body-sm); font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary); text-align: left;
+    }
+    .adblocker-item__chevron { color: var(--color-icon-tertiary); flex-shrink: 0; }
+
+    /* Right panel: selected adblocker header */
+    .modal__adblocker-header {
+      display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+    }
+    .modal__adblocker-logo {
+      width: 24px; height: 24px; border-radius: var(--radius-sm);
+      object-fit: contain; flex-shrink: 0;
+    }
+    .modal__adblocker-logo-fallback {
+      width: 24px; height: 24px; border-radius: var(--radius-sm); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff; user-select: none;
+    }
+    .modal__adblocker-name {
+      font-size: var(--font-body-md); font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+
+    /* Steps */
+    .steps-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .step-item { display: flex; align-items: flex-start; gap: 12px; }
+    .step-item__number {
+      width: 24px; height: 24px; border-radius: var(--radius-full); flex-shrink: 0;
+      background: var(--color-background-secondary);
+      font-size: var(--font-body-xs); font-weight: var(--font-weight-semibold);
+      color: var(--color-text-brandblue);
+      display: flex; align-items: center; justify-content: center; margin-top: 1px;
+    }
+    .step-item__text {
+      font-size: var(--font-body-sm); line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+    .step-item__text strong { font-weight: var(--font-weight-semibold); }
+
+    /* Done button + why caption */
+    .btn-done {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 52px;
+      background: var(--color-button-brandblue); color: var(--color-text-inverted);
+      border: none; border-radius: var(--radius-xl);
+      font-size: var(--font-body-md); font-weight: var(--font-weight-semibold);
+      font-family: var(--font-family); cursor: pointer; transition: background-color 0.15s ease;
+      flex-shrink: 0;
+    }
+    .btn-done:hover { background-color: var(--color-button-brandbluehover); }
+    .modal__why {
+      font-size: var(--font-body-xs); line-height: var(--font-body-xs-lh);
+      color: var(--color-text-secondary); text-align: center; flex-shrink: 0;
+    }
+    .modal__why-link { color: var(--color-text-link); text-decoration: none; }
+    .modal__why-link:hover { text-decoration: underline; }
+
+    /* ─────────────────────────────────────────────
+       Mobile modal — two-step card overlay
+       Hidden on desktop, shown on ≤768px
+       ───────────────────────────────────────────── */
+    .mobile-modal { display: none; }
+
+    /* ─────────────────────────────────────────────
+       Responsive — Mobile (≤768px)
+       ───────────────────────────────────────────── */
+    @media (max-width: 768px) {
+
+      /* Header: collapse 7-column grid → flex column */
+      .site-header--desktop {
+        display: flex;
+        flex-direction: column;
+      }
+      .site-header--desktop .site-header__top {
+        display: flex;
+        align-items: center;
+        height: auto;
+        padding: var(--spacing-12) var(--spacing-16);
+      }
+      /* Hide logo and right nav (PP + hamburger) */
+      .site-header__logo,
+      .site-header__right { display: none; }
+      /* Search: fill the full header width */
+      .site-header--desktop .site-header__search-wrap {
+        max-width: 100%;
+        width: 100%;
+      }
+      /* Nav row: plain flex so subgrid collapses */
+      .site-header--desktop .site-header__nav {
+        display: flex;
+      }
+      /* Tabs row: full width, horizontally scrollable */
+      .site-header--desktop .site-header__nav .site-header__tabs-row {
+        max-width: 100%;
+        width: 100%;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .site-header--desktop .site-header__nav .site-header__tabs-row::-webkit-scrollbar { display: none; }
+      /* Tabs: tighter gap, same left inset as body */
+      .site-header--desktop .site-header__tabs {
+        gap: var(--spacing-20);
+        padding-left: var(--spacing-16);
+        height: auto;
+      }
+      /* Filter icon not shown on mobile */
+      .site-header__filter-btn { display: none; }
+
+      /* SERP body: full width, 16px sides */
+      .serp-body {
+        padding: var(--spacing-16);
+      }
+      .results-list,
+      .banner { max-width: 100%; }
+      /* Slightly tighter gap between results */
+      .results-list { gap: var(--spacing-24); }
+
+      /* Organic result: show URL only, hide separate site name */
+      .algo-result__site-name { display: none; }
+
+      /* Banner: reduce right padding since dismiss is closer on narrow screens */
+      .banner { padding-right: 40px; }
+
+      /* Banner headline: drop to body-lg on mobile */
+      .banner-headline {
+        font-size: var(--font-body-lg);
+        line-height: var(--font-body-lg-lh);
+      }
+
+      /* Modal: hide desktop two-column layout, show mobile cards */
+      .modal { display: none; }
+      .mobile-modal {
+        display: flex; flex-direction: column;
+        width: calc(100% - 32px); max-width: 420px;
+      }
+      .mobile-card {
+        background: var(--color-background-primary);
+        border-radius: var(--radius-2xl);
+        padding: 20px;
+        box-shadow: var(--shadow-dropdown);
+        width: 100%;
+        max-height: 80vh;
+        overflow-y: auto;
+        display: flex; flex-direction: column; gap: 16px;
+        transform: translateY(10px); transition: transform 0.2s ease;
+      }
+      .modal-overlay.is-open .mobile-card { transform: translateY(0); }
+      .mobile-card__header {
+        display: flex; align-items: flex-start; flex-shrink: 0;
+      }
+      .mobile-card__header-text { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+      .mobile-card__title {
+        flex: 1;
+        font-size: var(--font-heading-xxs); line-height: var(--font-heading-xxs-lh);
+        font-weight: var(--font-weight-semibold); color: var(--color-text-primary);
+      }
+      .mobile-card__subtitle {
+        font-size: var(--font-body-sm); line-height: var(--font-body-sm-lh);
+        font-weight: var(--font-weight-regular); color: var(--color-text-secondary);
+      }
+      .mobile-card__rule {
+        height: 1px; background: var(--color-stroke-secondary);
+        flex-shrink: 0; margin: 0 -20px;
+      }
+      .mobile-card__back,
+      .mobile-card__close {
+        width: 32px; height: 32px; border-radius: var(--radius-full);
+        border: none; background: transparent;
+        color: var(--color-text-secondary);
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; transition: background 0.12s, color 0.12s;
+      }
+      .mobile-card__back:hover,
+      .mobile-card__close:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+      /* Mobile card 2: steps layout */
+      #mobile-card-2 { gap: 20px; }
+      #mobile-card-2 .steps-list { flex: 1; }
+      /* Step numbers match back button size; gap aligns title with step text */
+      #mobile-card-2 .mobile-card__header { gap: 12px; }
+      #mobile-card-2 .step-item__number { width: 32px; height: 32px; margin-top: 0; }
+
+      /* Theme toggle: tuck into top corner so it doesn't crowd header */
+      .theme-toggle {
+        top: var(--spacing-8);
+        right: var(--spacing-8);
+        padding: var(--spacing-4) var(--spacing-8);
+        font-size: var(--font-body-xs);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Icon sprite ── -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="icon-filter" viewBox="0 0 13.5 14" fill="none">
+      <path d="M12.75 2L6.75 2"          stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M4.25 2H0.75"             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M6.75 0.75L6.75 3.25"     stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M12.75 7L5.25 7"          stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M2.75 7H0.75"             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M2.75 5.75L2.75 8.25"     stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M8.25 12H0.75"            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M10.75 12L12.75 12"       stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M10.75 13.25L10.75 10.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-star-filled" viewBox="0 0 24 24">
+      <path d="M12 2l2.9 6.26 6.9.94-5 4.86 1.18 6.86L12 17.77l-6 3.15L7.18 14 2.2 9.2l6.9-.94L12 2z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-star-empty" viewBox="0 0 24 24">
+      <path d="M12 2l2.9 6.26 6.9.94-5 4.86 1.18 6.86L12 17.77l-6 3.15L7.18 14 2.2 9.2l6.9-.94L12 2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-dots-vertical" viewBox="0 0 4 16">
+      <circle cx="2" cy="2"  r="1.5" fill="currentColor"/>
+      <circle cx="2" cy="8"  r="1.5" fill="currentColor"/>
+      <circle cx="2" cy="14" r="1.5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-close-sm" viewBox="0 0 16 16">
+      <line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="13" y1="3" x2="3"  y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-av-mask" viewBox="0 0 20 20" fill="none">
+      <path d="M10.0167 6C-1.04828 6 1.07747 14 6.05523 14C7.05273 14 7.99198 13.569 8.59073 12.8363L9.23399 12.049C9.62549 11.57 10.4082 11.57 10.7997 12.049L11.443 12.8363C12.0415 13.569 12.9807 14 13.9782 14C18.7248 14 21.244 6 10.0167 6ZM6.59998 11.0908C5.57348 11.0908 4.90598 10.5562 4.59798 10.2356C4.46723 10.0996 4.46723 9.90042 4.59798 9.76417C4.90598 9.44333 5.57323 8.90896 6.59998 8.90896C7.62673 8.90896 8.29398 9.44354 8.60198 9.76417C8.73273 9.90021 8.73273 10.0994 8.60198 10.2356C8.29398 10.5565 7.62648 11.0908 6.59998 11.0908ZM13.4 11.0908C12.3735 11.0908 11.706 10.5562 11.398 10.2356C11.2672 10.0996 11.2672 9.90042 11.398 9.76417C11.706 9.44333 12.3732 8.90896 13.4 8.90896C14.4267 8.90896 15.094 9.44354 15.402 9.76417C15.5327 9.90021 15.5327 10.0994 15.402 10.2356C15.094 10.5565 14.4265 11.0908 13.4 11.0908Z" fill="currentColor"/>
+    </symbol>
+  </svg>
+
+  <!-- ── Theme toggle ── -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <!-- ── Site header — desktop ── -->
+  <header class="site-header site-header--desktop" id="header-desktop">
+    <div class="site-header__top">
+
+      <a href="#" class="site-header__logo" aria-label="Startpage home">
+        <svg class="site-header__logo-svg" viewBox="0 0 104 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g clip-path="url(#lc)">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.468313 20.5874C0.720478 20.23 1.13475 19.9976 1.69311 19.9083C17.4354 17.3527 33.3938 17.3349 49.1361 19.8368C49.5684 19.9083 49.8386 20.0334 49.9827 20.1763C50.1088 20.3014 50.1628 20.4623 50.1268 20.6946C50.0908 20.8912 50.0007 21.0163 49.8566 21.0878C49.6765 21.1771 49.3883 21.2129 48.956 21.1593C33.3578 19.2828 17.6515 19.8904 2.26949 22.9821C2.1254 23 1.9813 23.0178 1.85522 23.0178H1.72914C1.35089 23 1.08071 22.8749 0.918607 22.7676C0.558372 22.5353 0.324219 22.16 0.23416 21.7311C0.180125 21.3022 0.252172 20.8912 0.468313 20.5874Z" fill="url(#lg)"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.4375 8.43512C10.9692 8.0777 10.3748 7.75602 9.6363 7.47009C8.91583 7.18415 8.05126 6.95183 7.06062 6.73737C6.21406 6.54079 5.54763 6.36208 5.06131 6.1655C4.57499 5.98679 4.23277 5.77234 4.01663 5.54002C3.80048 5.30769 3.71043 5.02176 3.71043 4.68221C3.71043 4.05672 3.9806 3.5742 4.52096 3.21678C5.06131 2.85936 5.78178 2.68065 6.68237 2.68065C7.4929 2.68065 8.2674 2.80575 9.04191 3.07382C9.81642 3.34188 10.5549 3.75291 11.2754 4.28904L12.3921 1.80497C11.9778 1.42968 11.4555 1.09013 10.8611 0.839938C10.2487 0.571873 9.58226 0.375291 8.86179 0.214452C8.14132 0.0714841 7.40284 0 6.64635 0C5.38552 0 4.2868 0.214452 3.33218 0.643357C2.39557 1.07226 1.65708 1.662 1.11673 2.39472C0.594388 3.1453 0.324212 3.96737 0.324212 4.89666C0.324212 5.54002 0.432283 6.11189 0.630412 6.61228C0.846553 7.11267 1.17077 7.54157 1.62106 7.89899C2.07135 8.27428 2.66574 8.59596 3.38621 8.86402C4.10668 9.14996 4.98926 9.38228 6.01593 9.59674C6.82646 9.77545 7.4929 9.95416 7.97922 10.1329C8.46553 10.3116 8.82577 10.5082 9.04191 10.7584C9.25805 10.9907 9.38413 11.2766 9.38413 11.6162C9.38413 12.188 9.11396 12.6348 8.5736 12.9565C8.03325 13.2782 7.25875 13.439 6.25009 13.439C5.31347 13.439 4.4309 13.3139 3.58434 13.0458C2.73779 12.7778 1.92726 12.3667 1.13474 11.8306L0 14.3147C0.486318 14.69 1.06269 15.0295 1.72913 15.2976C2.39557 15.5657 3.11604 15.7801 3.87253 15.9231C4.62903 16.066 5.42154 16.1375 6.21406 16.1375C7.60097 16.1375 8.77173 15.9409 9.76238 15.5478C10.735 15.1546 11.4915 14.6006 12.0139 13.8858C12.5362 13.1709 12.7884 12.3131 12.7884 11.3302C12.7884 10.7047 12.6803 10.1686 12.4461 9.68609C12.248 9.22145 11.9058 8.79254 11.4375 8.43512ZM17.7235 1.02452V4.71799H20.6054V7.21993H17.7235V11.5983C17.7235 12.0272 17.8136 12.3847 17.9757 12.6527C18.1378 12.9208 18.354 13.1174 18.6241 13.2246C18.8943 13.3318 19.1825 13.3854 19.4887 13.3854C19.6688 13.3854 19.8489 13.3676 20.011 13.3497C20.1912 13.3139 20.3893 13.2782 20.6054 13.2425V15.798C20.2992 15.9231 19.975 16.0125 19.6688 16.0482C19.3446 16.1018 19.0204 16.1197 18.6602 16.1197C17.2733 16.1197 16.2106 15.7265 15.4721 14.9402C14.7336 14.1539 14.3734 13.0459 14.3734 11.6519V2.10882L17.7235 1.02452ZM29.2511 5.111C29.7554 5.43268 30.1337 5.82584 30.4039 6.30836H30.4219V4.73571H33.736V15.9587H30.4219V14.2967C30.1517 14.7792 29.7734 15.1903 29.2691 15.4941C28.5666 15.923 27.7561 16.1374 26.8555 16.1374C25.8649 16.1374 25.0003 15.8872 24.2438 15.4226C23.4873 14.9401 22.8929 14.2788 22.4787 13.4032C22.0644 12.5275 21.8483 11.5088 21.8483 10.3472C21.8483 9.16772 22.0464 8.14908 22.4787 7.25552C22.9109 6.36197 23.4873 5.68287 24.2438 5.18249C25.0003 4.69997 25.8649 4.44977 26.8375 4.44977C27.7561 4.44977 28.5486 4.66423 29.2511 5.111ZM27.8102 13.564C28.6387 13.564 29.2691 13.2781 29.7194 12.7241C30.1697 12.1701 30.4039 11.3659 30.4039 10.3293C30.4039 9.25708 30.1697 8.45288 29.7194 7.88101C29.2691 7.30914 28.6207 7.0232 27.8102 7.0232C26.9996 7.0232 26.3512 7.30914 25.8829 7.89888C25.4146 8.48863 25.1804 9.29282 25.1804 10.3472C25.1804 11.3837 25.4146 12.1879 25.8649 12.7419C26.3152 13.2959 26.9636 13.564 27.8102 13.564ZM48.5597 1.02452V4.71799H51.4416V7.21993H48.5597V11.5983C48.5597 12.0272 48.6498 12.3847 48.8119 12.6527C48.974 12.9208 49.1901 13.1174 49.4603 13.2246C49.7305 13.3318 50.0187 13.3854 50.3249 13.3854C50.505 13.3854 50.6851 13.3676 50.8472 13.3497C51.0273 13.3139 51.2255 13.2782 51.4416 13.2425V15.798C51.1354 15.9231 50.8112 16.0125 50.505 16.0482C50.1808 16.1018 49.8566 16.1197 49.4963 16.1197C48.1094 16.1197 47.0467 15.7265 46.3083 14.9402C45.5698 14.1539 45.2095 13.0459 45.2095 11.6519V2.10882L48.5597 1.02452ZM60.0693 4.44977C61.0419 4.44977 61.9065 4.6821 62.663 5.18249C63.4195 5.68287 63.9958 6.36197 64.4281 7.23765C64.8604 8.1312 65.0766 9.16772 65.0766 10.3293C65.0766 11.491 64.8604 12.5096 64.4281 13.3853C63.9958 14.261 63.4195 14.9401 62.663 15.4047C61.9065 15.8872 61.0419 16.1196 60.0693 16.1196C59.1507 16.1196 58.3402 15.9051 57.6557 15.4762C57.1694 15.1724 56.8091 14.7792 56.539 14.2967V20.909H53.1708V4.73571H56.1607L56.3769 6.64791C56.629 6.02242 57.0433 5.50416 57.6557 5.111C58.3402 4.66423 59.1507 4.44977 60.0693 4.44977ZM59.1147 13.564C59.9432 13.564 60.5736 13.2959 61.0239 12.7419C61.4742 12.1879 61.6903 11.3837 61.7084 10.3115C61.7084 9.27495 61.4742 8.45288 61.0239 7.86314C60.5736 7.29127 59.9252 6.98746 59.1147 6.98746C58.2681 6.98746 57.6197 7.2734 57.1694 7.84527C56.7191 8.41714 56.503 9.23921 56.503 10.2936C56.503 11.348 56.7191 12.1701 57.1694 12.7241C57.6197 13.2781 58.2681 13.564 59.1147 13.564ZM74.7488 6.30836C74.4787 5.82584 74.1004 5.43268 73.5961 5.111C72.8936 4.66423 72.1011 4.44977 71.1825 4.44977C70.2099 4.44977 69.3453 4.69997 68.5888 5.18249C67.8323 5.68287 67.2559 6.36197 66.8236 7.25552C66.3914 8.14908 66.1932 9.16772 66.1932 10.3472C66.1932 11.5088 66.4094 12.5275 66.8236 13.4032C67.2379 14.2788 67.8323 14.9401 68.5888 15.4226C69.3453 15.8872 70.2099 16.1374 71.2005 16.1374C72.1011 16.1374 72.9116 15.923 73.6141 15.4941C74.1184 15.1903 74.4967 14.7792 74.7668 14.2967V15.9587H78.081V4.73571H74.7488V6.30836ZM74.0824 12.7241C73.6321 13.2781 73.0017 13.564 72.1731 13.564C71.3266 13.564 70.6782 13.2959 70.2279 12.7419C69.7776 12.1879 69.5434 11.3837 69.5434 10.3472C69.5434 9.31069 69.7776 8.48863 70.2459 7.89888C70.7142 7.30914 71.3626 7.0232 72.1731 7.0232C72.9837 7.0232 73.6321 7.30914 74.0824 7.88101C74.5327 8.45288 74.7668 9.25708 74.7668 10.3293C74.7488 11.3659 74.5327 12.1701 74.0824 12.7241ZM87.1769 5.12887C87.6813 5.45055 88.0775 5.84371 88.3477 6.32623V4.73571H91.6979V15.4226C91.6979 17.2276 91.1756 18.5858 90.1489 19.515C89.1222 20.4443 87.5912 20.909 85.5919 20.909C83.8087 20.909 82.2417 20.5694 80.9089 19.8725L81.4132 17.3884C82.0976 17.7279 82.7641 17.9781 83.4485 18.139C84.133 18.2998 84.8174 18.3892 85.4838 18.3892C86.4565 18.3892 87.1769 18.1747 87.6453 17.7279C88.1316 17.2812 88.3657 16.6021 88.3657 15.6906V13.7248C88.0235 14.1895 87.4291 14.7792 86.4565 15.2975C85.9161 15.5298 85.3578 15.637 84.7454 15.637C83.7547 15.637 82.8901 15.4047 82.1337 14.9401C81.3772 14.4754 80.7828 13.8321 80.3505 12.9921C79.9182 12.1522 79.7021 11.1693 79.7021 10.0434C79.7021 8.91753 79.9182 7.95249 80.3505 7.11256C80.7828 6.29049 81.3772 5.62926 82.1337 5.16462C82.8901 4.6821 83.7727 4.44977 84.7454 4.44977C85.664 4.44977 86.4745 4.6821 87.1769 5.12887ZM85.718 13.0815C86.5285 13.0815 87.1769 12.8134 87.6453 12.2773C88.1136 11.7412 88.3477 10.9906 88.3657 10.0434C88.3657 9.11411 88.1496 8.36353 87.6813 7.8274C87.213 7.2734 86.5645 7.00533 85.736 7.00533C84.9075 7.00533 84.241 7.2734 83.7727 7.80953C83.2864 8.34566 83.0523 9.07837 83.0523 10.0255C83.0523 10.9727 83.2864 11.7233 83.7727 12.2594C84.259 12.8134 84.9075 13.0815 85.718 13.0815ZM40.6526 5.23607C40.1843 5.59349 39.8421 6.07601 39.6079 6.66576L39.3738 4.71781H36.2037C36.2757 5.25395 36.3298 5.79008 36.3478 6.32621C36.3658 6.86256 36.3838 7.39858 36.3838 7.9346V15.9408H39.752V10.0791C39.752 9.52512 39.8601 9.0426 40.0762 8.63157C40.2924 8.22053 40.5986 7.91673 40.9948 7.6844C41.3911 7.46995 41.8954 7.34485 42.4898 7.34485C42.85 7.34485 43.2103 7.39847 43.5705 7.50569V4.52123C43.3904 4.48549 43.1923 4.46762 42.9581 4.46762C42.0935 4.46762 41.319 4.71781 40.6526 5.23607ZM103.37 7.05902C103.784 7.91683 104 8.9176 104 10.0792L103.964 11.1872H96.5972C96.7052 11.8485 96.9214 12.3667 97.2456 12.742C97.7499 13.296 98.5064 13.5819 99.5331 13.5819C100.127 13.5819 100.722 13.4926 101.298 13.296C101.875 13.0994 102.415 12.8314 102.901 12.4739L103.784 14.7257C103.243 15.1546 102.577 15.4763 101.785 15.7265C101.01 15.9588 100.218 16.0839 99.407 16.0839C98.1462 16.0839 97.0655 15.8337 96.1469 15.369C95.2283 14.8865 94.5258 14.2253 94.0395 13.3496C93.5532 12.4918 93.301 11.4553 93.301 10.2579C93.301 9.09631 93.5532 8.07767 94.0215 7.20199C94.4898 6.30843 95.1382 5.62934 95.9667 5.12895C96.7953 4.64643 97.7499 4.39624 98.8486 4.39624C99.8933 4.39624 100.812 4.62856 101.586 5.0932C102.361 5.55785 102.955 6.20121 103.37 7.05902ZM97.1375 7.57728C96.8853 7.9347 96.7052 8.3636 96.5972 8.9176H101.1C101.028 8.30999 100.866 7.82747 100.578 7.47005C100.2 6.98753 99.6592 6.75521 98.9387 6.75521C98.1642 6.75521 97.5698 7.02328 97.1375 7.57728Z" fill="currentColor"/>
+          </g>
+          <defs>
+            <linearGradient id="lg" x1="5.34587" y1="18.2083" x2="50.0412" y2="23.1356" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#5668F1"/><stop offset="1" stop-color="#5AECDE"/>
+            </linearGradient>
+            <clipPath id="lc"><rect width="104" height="23" fill="white"/></clipPath>
+          </defs>
+        </svg>
+      </a>
+
+      <div class="site-header__search-wrap">
+        <div class="search-field search-field--serp">
+          <input type="text" id="searchInput" class="search-field__input" value="best hiking trails near me" aria-label="Search" autocomplete="off" spellcheck="false" />
+          <div class="search-field__actions">
+            <button class="search-field__clear" id="clearBtn" aria-label="Clear search" tabindex="-1">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <div class="search-field__divider" aria-hidden="true"></div>
+            <button class="search-field__submit" aria-label="Submit search">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="site-header__right">
+        <button class="site-header__pp-btn" aria-haspopup="true" aria-expanded="false">
+          Privacy, Please!
+          <span class="icn-arrows icn-arrows--down-circle" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+        <button class="site-header__hamburger-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <line x1="1" y1="4"  x2="19" y2="4"  stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+            <line x1="1" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+            <line x1="1" y1="16" x2="19" y2="16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="site-header__nav">
+      <div class="site-header__tabs-row">
+        <nav class="site-header__tabs" aria-label="Search category">
+          <button class="site-header__tab site-header__tab--active" data-text="Web">Web</button>
+          <button class="site-header__tab" data-text="Images">Images</button>
+          <button class="site-header__tab" data-text="Videos">Videos</button>
+          <button class="site-header__tab" data-text="News">News</button>
+          <button class="site-header__tab" data-text="Shopping">Shopping</button>
+          <button class="site-header__tab" data-text="Maps">Maps</button>
+        </nav>
+        <button class="site-header__filter-btn" aria-label="Filters">
+          <svg width="16" height="16" aria-hidden="true"><use href="#icon-filter"/></svg>
+        </button>
+      </div>
+    </div>
+    <span class="site-header__tab-indicator" aria-hidden="true"></span>
+  </header>
+
+  <!-- ── SERP body ── -->
+  <main class="serp-body">
+    <p class="serp-meta" id="serpMeta" aria-live="polite"></p>
+
+    <!-- Banner A: dismissible, above algo results -->
+    <div class="banner banner-spacer-top" id="banner-a">
+      <div class="banner-shield">
+        <iframe src="shield-animation.html" scrolling="no" allowtransparency="true"></iframe>
+      </div>
+      <div class="banner-text">
+        <p class="banner-headline">Private search. Free thanks to private ads.</p>
+        <button class="btn btn--outline btn--banner" data-btn onclick="openModal()">
+          <span class="btn__label">Allow Startpage ads</span>
+        </button>
+      </div>
+      <button class="btn-dismiss" aria-label="Dismiss banner" onclick="dismissBannerA()">✕</button>
+    </div>
+
+    <div class="results-list" id="resultsList" aria-label="Search results"></div>
+
+    <!-- Banner B: persistent, below algo results -->
+    <div class="banner banner-spacer-bottom" id="banner-b">
+      <div class="banner-shield">
+        <iframe src="shield-animation.html" scrolling="no" allowtransparency="true"></iframe>
+      </div>
+      <div class="banner-text">
+        <p class="banner-headline">Ads keep your private search results free.</p>
+        <button class="btn btn--outline btn--banner" data-btn onclick="openModal()">
+          <span class="btn__label">Allow Startpage ads</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── Modal ── -->
+  <div class="modal-overlay" id="modal-overlay">
+
+    <!-- Desktop: true two-column side-by-side (hidden on mobile) -->
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal__header">
+        <div class="modal__header-text">
+          <h2 class="modal__title" id="modal-title">Select your ad blocker</h2>
+          <p class="modal__subtitle">Get step-by-step instructions to allow private ads on Startpage.</p>
+        </div>
+        <button class="modal__close" onclick="closeModal()" aria-label="Close dialog">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="#icon-close-sm"/></svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <!-- Left: scrollable adblocker list -->
+        <div class="modal__left">
+          <ul class="adblocker-list" id="adblocker-list" role="list"></ul>
+        </div>
+        <div class="modal__divider" aria-hidden="true"></div>
+        <!-- Right: instructions for selected adblocker -->
+        <div class="modal__right">
+          <div class="modal__adblocker-header" id="modal-instructions-header"></div>
+          <ol class="steps-list" id="steps-list"></ol>
+          <button class="btn-done" onclick="onDone()">Done</button>
+          <p class="modal__why">Why allowlist? Our ads fund private search without tracking you. Every ad you see is anonymous. <a href="#" class="modal__why-link">Learn more</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile: two-step card overlay (shown only on ≤768px) -->
+    <div class="mobile-modal">
+
+      <!-- Screen 1: adblocker selector card -->
+      <div class="mobile-card" id="mobile-card-1">
+        <div class="mobile-card__header">
+          <div class="mobile-card__header-text">
+            <h2 class="mobile-card__title">Select your ad blocker</h2>
+            <p class="mobile-card__subtitle">Get step-by-step instructions to allow private ads on Startpage.</p>
+          </div>
+          <button class="mobile-card__close" onclick="closeModal()" aria-label="Close dialog">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="#icon-close-sm"/></svg>
+          </button>
+        </div>
+        <div class="mobile-card__rule" aria-hidden="true"></div>
+        <ul class="adblocker-list" id="adblocker-list-mobile" role="list"></ul>
+      </div>
+
+      <!-- Screen 2: instructions card -->
+      <div class="mobile-card" id="mobile-card-2" style="display:none">
+        <div class="mobile-card__header">
+          <button class="mobile-card__back" onclick="goBackMobile()" aria-label="Go back">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M10 3L5.5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <h2 class="mobile-card__title" id="mobile-card-title"></h2>
+          <button class="mobile-card__close" onclick="closeModal()" aria-label="Close dialog">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="#icon-close-sm"/></svg>
+          </button>
+        </div>
+        <ol class="steps-list" id="steps-list-mobile"></ol>
+        <button class="btn-done" onclick="onDone()">Done</button>
+        <p class="modal__why">Why allowlist? Our ads fund private search without tracking you. Every ad you see is anonymous. <a href="#" class="modal__why-link">Learn more</a></p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* ── Ads-allowed state (set by Done → reload) ───────────────────────────── */
+    const adsAllowed = sessionStorage.getItem('aab-ads-allowed') === '1';
+    sessionStorage.removeItem('aab-ads-allowed'); /* consume once — URL-bar refresh resets to banner state */
+    if (adsAllowed) {
+      ['banner-a', 'banner-b'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+    }
+
+    /* ── Theme ───────────────────────────────────────────────────────────────── */
+    const html = document.documentElement;
+    applyTheme(localStorage.getItem('theme') || 'light');
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next); localStorage.setItem('theme', next);
+    });
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      document.getElementById('themeIcon').textContent  = theme === 'dark' ? '🌙' : '☀️';
+      document.getElementById('themeLabel').textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    /* ── Header: tab indicator ───────────────────────────────────────────────── */
+    (function initHeader() {
+      const header    = document.getElementById('header-desktop');
+      const tabs      = header.querySelectorAll('.site-header__tab');
+      const indicator = header.querySelector('.site-header__tab-indicator');
+      function positionIndicator() {
+        const active = Array.from(tabs).find(t => t.classList.contains('site-header__tab--active') && t.offsetWidth > 0);
+        if (!active || !indicator) return;
+        const hr = header.getBoundingClientRect(), tr = active.getBoundingClientRect();
+        indicator.style.left  = (tr.left - hr.left) + 'px';
+        indicator.style.width = tr.width + 'px';
+      }
+      tabs.forEach(tab => tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.toggle('site-header__tab--active', t.dataset.text === tab.dataset.text));
+        positionIndicator();
+      }));
+      requestAnimationFrame(positionIndicator);
+      window.addEventListener('resize', positionIndicator);
+    }());
+
+    /* ── SERP results generator (from serp-demo component) ──────────────────── */
+    function titleCase(s) { return s.replace(/\w\S*/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase()); }
+    function slug(s)      { return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+    function hash(s)      { let h=0; for(const c of s) h=(Math.imul(31,h)+c.charCodeAt(0))|0; return Math.abs(h); }
+    function pick(a,seed) { return a[hash(seed)%a.length]; }
+
+    function generateResults(rawQ) {
+      const q=rawQ.trim(), qT=titleCase(q), qS=slug(q);
+      const brand=q.split(/\s+/).slice(0,2).map(w=>titleCase(w)).join('');
+      const bL=brand.toLowerCase();
+      const rev=pick(['Wirecutter','The Verge','CNET','Tom\'s Guide','Good Housekeeping','PCMag'],q);
+      const life=pick(['Forbes','Lifehacker','Popular Science','Business Insider','Time'],q+'life');
+      const hrs=pick([60,80,100,120,150,200],q);
+      const cnt=pick([7,8,9,10,11,12],q+'count');
+      const approx=pick([182000,241000,387000,524000,671000,892000],q).toLocaleString();
+      return { approx, results: [
+        { type:'ad', siteName:'Amazon', url:`http://www.amazon.com/s?k=${encodeURIComponent(q)}`,
+          title:`Shop ${qT} — Free Delivery on Orders $35+`,
+          description:`Find the best ${q} from thousands of top-rated brands. Verified reviews, easy returns, and fast delivery. Save more with Amazon Prime and Subscribe & Save.`,
+          hasImage:true, stars:4, ratingLabel:'rating for amazon.com',
+          sitelinks:['Today\'s Deals','Top Rated','Free Returns','Subscribe & Save'] },
+        { type:'organic', siteName:rev, url:`https://${slug(rev)}.com › reviews › best-${qS}`,
+          title:`The Best ${qT} of 2026`,
+          description:`After more than ${hrs} hours of research and hands-on testing, our experts identified the top picks for ${q}. We evaluated quality, value, and durability to find the best option for every need.` },
+        { type:'organic', siteName:'Reddit', url:`https://reddit.com › r › AskReddit › best_${qS}`,
+          title:`Best ${qT}? What does Reddit recommend?`,
+          description:`2.4k comments. Real user reviews, expert picks, and community consensus from people who've tested dozens of options. "Looking for the best ${q} — what have you tried that's actually worth it?"` },
+        { type:'organic', siteName:'Wikipedia', url:`https://en.wikipedia.org › wiki › ${qT.replace(/\s+/g,'_')}`,
+          title:`${qT} — Wikipedia`,
+          description:`${qT} refers to a category widely used across many contexts. The market has grown significantly in recent years with innovations from established brands and emerging startups.` },
+        { type:'ad', siteName:`${brand} Direct`, url:`http://www.${bL}direct.com`,
+          title:`${qT} — Official Store | Expert Picks & Free Shipping`,
+          description:`Shop our curated selection of ${q} from trusted brands. Price-match guarantee, expert guidance, and free returns on every order. Subscribe and save up to 25%.`,
+          hasImage:false, stars:5, ratingLabel:`rating for ${bL}direct.com`,
+          sitelinks:['Shop All','Top Rated','New Arrivals','Subscribe & Save'] },
+        { type:'organic', siteName:'BestReviews', url:`https://bestreviews.com › ${qS}`,
+          title:`Best ${qT} — Buying Guide & Reviews 2026`,
+          description:`We buy every product we review — no free samples, no bias. Our team spent 200+ hours evaluating the best ${q} on the market. Includes top picks, what to look for, and what to avoid.` },
+        { type:'organic', siteName:'YouTube', url:`https://youtube.com › watch › best-${qS}-reviewed`,
+          title:`Best ${qT} 2026 — Top ${cnt} Picks Compared`,
+          description:`In-depth video comparison of the best ${q} options available right now. We cover pros, cons, pricing, and our top pick for every type of buyer — from budget to premium.` },
+        { type:'organic', siteName:life, url:`https://${slug(life)}.com › ${qS}-worth-buying`,
+          title:`The ${cnt} Best ${qT} Worth Buying in 2026`,
+          description:`${life} editors tested and ranked the best ${q} options based on quality, price, and real-world performance. Our top picks cover every lifestyle and budget — updated for 2026.` },
+        { type:'organic', siteName:'Consumer Reports', url:`https://consumerreports.org › ${qS} › buying-guide`,
+          title:`${qT} Buying Guide — Consumer Reports`,
+          description:`Consumer Reports' unbiased ${q} ratings are based on survey data from our members and independent laboratory testing. Find the most reliable options and avoid common pitfalls.` },
+      ]};
+    }
+
+    function highlight(text, q) {
+      if (!q.trim()) return text;
+      const pat = new RegExp(`(${q.trim().split(/\s+/).map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')})`, 'gi');
+      return text.replace(pat, '<mark>$1</mark>');
+    }
+    function renderStars(n) {
+      let h=''; for(let i=0;i<5;i++) h+=i<n?`<svg class="star star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>`:`<svg class="star star--empty" aria-hidden="true"><use href="#icon-star-empty"/></svg>`;
+      return h;
+    }
+    function renderAd(d, q) {
+      return `<div class="ad-result">
+        <span class="ad-result__sponsored">Sponsored</span>
+        <div class="ad-result__source">
+          <div class="ad-result__favicon" aria-hidden="true"></div>
+          <div class="ad-result__source-meta">
+            <div class="ad-result__source-info">
+              <span class="ad-result__site-name">${highlight(d.siteName,q)}</span>
+              <span class="ad-result__url">${d.url}</span>
+            </div>
+            <button class="ad-result__dots-btn" aria-label="About this ad">
+              <svg width="4" height="16" aria-hidden="true"><use href="#icon-dots-vertical"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="ad-result__body">
+          <div class="ad-result__text">
+            <a class="ad-result__title" href="#">${d.title}</a>
+            <p class="ad-result__description">${highlight(d.description,q)}</p>
+          </div>
+          ${d.hasImage?'<div class="ad-result__image" aria-hidden="true"></div>':''}
+        </div>
+        ${d.stars!=null?`<div class="ad-result__rating"><div class="ad-result__stars" aria-hidden="true">${renderStars(d.stars)}</div><span class="ad-result__rating-label">${d.ratingLabel}</span></div>`:''}
+        ${d.sitelinks?.length?`<div class="ad-result__sitelinks">${d.sitelinks.map((l,i)=>`<a class="ad-result__sitelink" href="#">${highlight(l,q)}</a>${i<d.sitelinks.length-1?'<span class="ad-result__sitelink-sep" aria-hidden="true">·</span>':''}`).join('')}</div>`:''}
+      </div>`;
+    }
+    function renderOrganic(d, q) {
+      return `<div class="algo-result">
+        <div class="algo-result__source">
+          <div class="algo-result__favicon" aria-hidden="true"></div>
+          <div class="algo-result__source-info">
+            <span class="algo-result__site-name">${highlight(d.siteName,q)}</span>
+            <span class="algo-result__url">${d.url}</span>
+          </div>
+        </div>
+        <div class="algo-result__content">
+          <a class="algo-result__title" href="#">${d.title}</a>
+          <p class="algo-result__description">${highlight(d.description,q)}</p>
+        </div>
+        <a class="algo-result__av-link" href="#">
+          <span class="algo-result__av-icon"><svg width="20" height="20" aria-hidden="true"><use href="#icon-av-mask"/></svg></span>
+          Visit in Anonymous View
+        </a>
+      </div>`;
+    }
+
+    function generateSponsoredAds(rawQ) {
+      const q = rawQ.trim(), qT = titleCase(q), qS = slug(q);
+      const brand = q.split(/\s+/).slice(0, 2).map(w => titleCase(w)).join('');
+      const bL = brand.toLowerCase();
+      return [
+        { type:'ad', siteName:'Amazon', url:`http://www.amazon.com/s?k=${encodeURIComponent(q)}`,
+          title:`Shop ${qT} — Free Delivery on Orders $35+`,
+          description:`Find the best ${q} from thousands of top-rated brands. Verified reviews, easy returns, and fast delivery. Save more with Amazon Prime.`,
+          hasImage:true, stars:4, ratingLabel:'rating for amazon.com',
+          sitelinks:['Today\'s Deals','Top Rated','Free Returns','Subscribe & Save'] },
+        { type:'ad', siteName:`${brand} Direct`, url:`http://www.${bL}direct.com`,
+          title:`${qT} — Official Store | Expert Picks & Free Shipping`,
+          description:`Shop our curated selection of ${q} from trusted brands. Price-match guarantee, expert guidance, and free returns on every order.`,
+          hasImage:false, stars:5, ratingLabel:`rating for ${bL}direct.com`,
+          sitelinks:['Shop All','Top Rated','New Arrivals','Subscribe & Save'] },
+        { type:'ad', siteName:'Best Buy', url:`https://www.bestbuy.com/s?q=${encodeURIComponent(q)}`,
+          title:`Best ${qT} Deals — Shop Now at Best Buy`,
+          description:`Shop the top ${q} at Best Buy. Expert advice, in-store pickup, and easy returns. Find the right product at the right price.`,
+          hasImage:false, stars:4, ratingLabel:'rating for bestbuy.com',
+          sitelinks:['New Arrivals','Top Deals','Store Pickup','Geek Squad'] },
+        { type:'ad', siteName:'Walmart', url:`https://www.walmart.com/search?q=${encodeURIComponent(q)}`,
+          title:`${qT} — Low Prices Every Day at Walmart`,
+          description:`Shop ${q} at Walmart. Enjoy everyday low prices on top brands, free pickup, and fast delivery. No membership required.`,
+          hasImage:true, stars:null, ratingLabel:null,
+          sitelinks:['Shop Now','Free Pickup','Same-Day Delivery','Rollback Deals'] },
+        { type:'ad', siteName:'eBay', url:`https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(q)}`,
+          title:`${qT} — Great Deals | Free Shipping Available`,
+          description:`Find amazing deals on ${q} from thousands of trusted sellers. New and used options, buyer protection, and fast shipping.`,
+          hasImage:false, stars:null, ratingLabel:null,
+          sitelinks:['Buy It Now','Best Offer','New Items','Free Shipping'] },
+      ];
+    }
+
+    function render(query) {
+      const list = document.getElementById('resultsList');
+      const meta = document.getElementById('serpMeta');
+      if (!query.trim()) { list.innerHTML=''; meta.textContent=''; return; }
+      const { approx, results } = generateResults(query);
+      meta.textContent = `About ${approx} results`;
+      const organic = results.filter(r => r.type === 'organic');
+      if (adsAllowed) {
+        const ads = generateSponsoredAds(query);
+        list.innerHTML =
+          ads.map(r => renderAd(r, query)).join('') +
+          '<div class="results-section-label">Web results</div>' +
+          organic.map(r => renderOrganic(r, query)).join('');
+      } else {
+        list.innerHTML =
+          '<div class="results-section-label">Web results</div>' +
+          organic.map(r => renderOrganic(r, query)).join('');
+      }
+    }
+
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn    = document.getElementById('clearBtn');
+    let debounce;
+    searchInput.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(() => render(searchInput.value), 180); });
+    clearBtn.addEventListener('click', () => { searchInput.value=''; searchInput.focus(); render(''); });
+    render(searchInput.value);
+
+    /* ── Button: liquid wave + ripple + scale (from startpage-design) ────────── */
+    document.querySelectorAll('[data-btn]').forEach(btn => {
+      btn.addEventListener('mousedown', e => {
+        if (btn.disabled) return;
+        const rect = btn.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 2.2;
+        const ripple = document.createElement('span');
+        ripple.className = 'btn-ripple';
+        Object.assign(ripple.style, { width:size+'px', height:size+'px', left:(e.clientX-rect.left-size/2)+'px', top:(e.clientY-rect.top-size/2)+'px' });
+        btn.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove(), { once:true });
+        btn.classList.add('is-clicking');
+        btn.style.transform = 'scale(0.985)';
+        btn.style.transition = 'transform 0.08s ease';
+        function onUp() {
+          btn.classList.remove('is-clicking');
+          btn.style.transform = 'scale(1.001)';
+          btn.style.transition = 'transform 0.12s ease-out';
+          btn.addEventListener('transitionend', () => { btn.style.transform=''; btn.style.transition=''; }, { once:true });
+          document.removeEventListener('mouseup', onUp);
+        }
+        document.addEventListener('mouseup', onUp);
+      });
+    });
+
+    /* ── Banner A dismiss ────────────────────────────────────────────────────── */
+    function dismissBannerA() {
+      const el = document.getElementById('banner-a');
+      el.style.transition = 'opacity 0.2s ease, max-height 0.3s ease 0.15s, margin-bottom 0.3s ease 0.15s, padding 0.3s ease 0.15s, border-width 0.3s ease 0.15s';
+      el.style.opacity = '0';
+      el.style.maxHeight = el.offsetHeight + 'px';
+      requestAnimationFrame(() => {
+        el.style.maxHeight = '0';
+        el.style.marginBottom = '0';
+        el.style.paddingTop = '0';
+        el.style.paddingBottom = '0';
+        el.style.borderWidth = '0';
+        el.style.overflow = 'hidden';
+      });
+      sessionStorage.setItem('aab-banner-a-dismissed', '1');
+    }
+    if (sessionStorage.getItem('aab-banner-a-dismissed')) {
+      const el = document.getElementById('banner-a');
+      if (el) el.style.display = 'none';
+    }
+
+    /* ── Modal ───────────────────────────────────────────────────────────────── */
+    const ADBLOCKERS = [
+      { id:'ublock-origin', name:'uBlock Origin', abbr:'uB', color:'#E53935',
+        logo:'https://raw.githubusercontent.com/gorhill/uBlock/master/src/img/ublock.svg',
+        steps:[
+          'Click the <strong>uBlock Origin icon</strong> in your browser toolbar.',
+          'Click the large <strong>power button</strong> to disable blocking for this site.',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'ublock-origin-lite', name:'uBlock Origin Lite', abbr:'uBL', color:'#E53935',
+        logo:'https://raw.githubusercontent.com/uBlockOrigin/uBOL-home/main/chromium/img/icon_128.png',
+        steps:[
+          'Click the <strong>uBlock Origin Lite icon</strong> in your browser toolbar.',
+          'Select <strong>"No filtering"</strong> from the filtering mode dropdown.',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'adblock', name:'AdBlock', abbr:'AB', color:'#FF8C00',
+        logo:'https://raw.githubusercontent.com/betafish-inc/adblock-releases/master/icons/adblock-128.png',
+        steps:[
+          'Click the <strong>AdBlock icon</strong> in your browser toolbar.',
+          'Select <strong>"Don\'t run on pages on this domain."</strong>',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'adblock-plus', name:'Adblock Plus', abbr:'A+', color:'#C8100D',
+        logo:'https://raw.githubusercontent.com/adblockplus/adblockpluschrome/master/icons/detailed/abp-64.png',
+        steps:[
+          'Click the <strong>Adblock Plus icon</strong> in your browser toolbar.',
+          'Toggle the slider to <strong>disable</strong> Adblock Plus on this page.',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'total-adblock', name:'Total Adblock', abbr:'TA', color:'#00A8E0',
+        logo:'https://www.figma.com/api/mcp/asset/8207823c-6a42-428e-a4ce-b6e38c9ded35',
+        steps:[
+          'Click the <strong>Total Adblock icon</strong> in your browser toolbar.',
+          'Toggle the switch to <strong>disable</strong> blocking for startpage.com.',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'brave', name:'Brave Browser', abbr:'Br', color:'#FB542B',
+        logo:'https://www.figma.com/api/mcp/asset/0c9a0a20-766b-4437-b700-cc4d6a130a9d',
+        steps:[
+          'Click the <strong>Brave Shields icon</strong> (lion) in the address bar.',
+          'Toggle <strong>"Shields"</strong> to <strong>Off</strong> for startpage.com.',
+        ]},
+      { id:'adguard', name:'AdGuard', abbr:'AG', color:'#68BC71',
+        logo:'https://raw.githubusercontent.com/AdguardTeam/AdguardBrowserExtension/master/Extension/assets/icons/on-128.png',
+        steps:[
+          'Click the <strong>AdGuard icon</strong> in your browser toolbar.',
+          'Toggle <strong>"Protection on this website"</strong> to off.',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'duckduckgo', name:'DuckDuckGo', abbr:'DDG', color:'#DE5833',
+        logo:'https://raw.githubusercontent.com/duckduckgo/duckduckgo-privacy-extension/main/shared/img/icon_128.png',
+        steps:[
+          'Click the <strong>DuckDuckGo Privacy Essentials icon</strong> in your toolbar.',
+          'Click the <strong>shield icon</strong> to disable protection for startpage.com.',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'ghostery', name:'Ghostery', abbr:'Gh', color:'#00AEF0',
+        logo:'https://raw.githubusercontent.com/ghostery/ghostery-extension/main/src/icons/icon.svg',
+        steps:[
+          'Click the <strong>Ghostery icon</strong> in your browser toolbar.',
+          'Toggle the <strong>trust site switch</strong> to whitelist startpage.com.',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'opera', name:'Opera Browser', abbr:'Op', color:'#FF1B2D',
+        logo:'https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera.svg',
+        steps:[
+          'Click the <strong>Shield icon</strong> in the Opera address bar.',
+          'Toggle <strong>"Block ads"</strong> to <strong>Off</strong> for startpage.com.',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'privacy-badger', name:'Privacy Badger', abbr:'PB', color:'#1A7C3C',
+        logo:'https://raw.githubusercontent.com/EFForg/privacybadger/master/src/icons/badger-128.png',
+        steps:[
+          'Click the <strong>Privacy Badger icon</strong> in your browser toolbar.',
+          'Set the startpage.com slider to <strong>"Allow all requests"</strong> (green).',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'malwarebytes', name:'Malwarebytes Browser Guard', abbr:'MB', color:'#00498C',
+        logo:'https://addons.mozilla.org/user-media/addon_icons/920/920304-128.png?modified=b4f71c9f',
+        steps:[
+          'Click the <strong>Malwarebytes Browser Guard icon</strong> in your toolbar.',
+          'Click <strong>"Trust this site"</strong> to allow ads on startpage.com.',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'adlock', name:'AdLock', abbr:'AL', color:'#7B4EEC',
+        logo:'https://www.figma.com/api/mcp/asset/25ae6d24-f518-4035-824b-a9e8524445dd',
+        steps:[
+          'Click the <strong>AdLock icon</strong> in your browser toolbar.',
+          'Toggle <strong>"Disable on this domain"</strong> for startpage.com.',
+          'Click Done to refresh the page.',
+        ]},
+      { id:'other', name:'My blocker isn\'t listed', abbr:'?', color:'#8A8FA8',
+        logo:null,
+        logoSvg:'<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="16" fill="var(--color-background-secondary)"/><text x="16" y="22" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="600" fill="var(--color-text-tertiary)">?</text></svg>',
+        steps:[
+          'Open your ad blocker\'s settings or popup panel.',
+          'Find the option to <strong>whitelist, allowlist, or disable</strong> blocking for startpage.com.',
+          'Click Done to refresh the page.',
+        ]},
+    ];
+
+    function logoHtml(ab, imgCls, fallbackCls, showFallback) {
+      if (ab.logoSvg) {
+        return ab.logoSvg.replace('<svg ', `<svg class="${imgCls}" `);
+      }
+      if (ab.logo) {
+        if (showFallback) {
+          return `<img class="${imgCls}" src="${ab.logo}" alt="" width="32" height="32" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="${fallbackCls}" style="background:${ab.color}" hidden>${ab.abbr}</span>`;
+        }
+        return `<img class="${imgCls}" src="${ab.logo}" alt="" width="32" height="32" loading="lazy">`;
+      }
+      if (showFallback) {
+        return `<span class="${fallbackCls}" style="background:${ab.color}">${ab.abbr}</span>`;
+      }
+      return '';
+    }
+
+    function stepsHtml(ab) {
+      return ab.steps.map((s, i) => `
+        <li class="step-item">
+          <span class="step-item__number">${i + 1}</span>
+          <span class="step-item__text">${s}</span>
+        </li>`).join('');
+    }
+
+    function buildAdblockerLists() {
+      const desktopList = document.getElementById('adblocker-list');
+      if (desktopList) {
+        desktopList.innerHTML = ADBLOCKERS.map((ab, i) => `
+          <li>
+            <button class="adblocker-item${i === 0 ? ' is-selected' : ''}" onclick="selectAdblocker(${i})">
+              ${logoHtml(ab, 'adblocker-item__logo', 'adblocker-item__logo-fallback', false)}
+              <span class="adblocker-item__name">${ab.name}</span>
+            </button>
+          </li>`).join('');
+      }
+      const mobileList = document.getElementById('adblocker-list-mobile');
+      if (mobileList) {
+        mobileList.innerHTML = ADBLOCKERS.map((ab, i) => `
+          <li>
+            <button class="adblocker-item" onclick="selectAdblockerMobile(${i})">
+              ${logoHtml(ab, 'adblocker-item__logo', 'adblocker-item__logo-fallback', false)}
+              <span class="adblocker-item__name">${ab.name}</span>
+              <svg class="adblocker-item__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M6 3l4.5 5L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </li>`).join('');
+      }
+    }
+
+    function renderDesktopInstructions(ab) {
+      const header = document.getElementById('modal-instructions-header');
+      if (header) {
+        header.innerHTML = `<div class="modal__adblocker-header">
+          ${logoHtml(ab, 'modal__adblocker-logo', 'modal__adblocker-logo-fallback', false)}
+          <span class="modal__adblocker-name">${ab.name}</span>
+        </div>`;
+      }
+      const list = document.getElementById('steps-list');
+      if (list) list.innerHTML = stepsHtml(ab);
+    }
+
+    function selectAdblocker(index) {
+      document.querySelectorAll('#adblocker-list .adblocker-item').forEach((btn, i) => {
+        btn.classList.toggle('is-selected', i === index);
+      });
+      renderDesktopInstructions(ADBLOCKERS[index]);
+    }
+
+    function selectAdblockerMobile(index) {
+      const ab = ADBLOCKERS[index];
+      document.getElementById('mobile-card-1').style.display = 'none';
+      const card2 = document.getElementById('mobile-card-2');
+      card2.style.display = 'flex';
+      document.getElementById('mobile-card-title').textContent = ab.name;
+      document.getElementById('steps-list-mobile').innerHTML = stepsHtml(ab);
+    }
+
+    function goBackMobile() {
+      document.getElementById('mobile-card-2').style.display = 'none';
+      document.getElementById('mobile-card-1').style.display = '';
+    }
+
+    function openModal() {
+      buildAdblockerLists();
+      renderDesktopInstructions(ADBLOCKERS[0]);
+      const c1 = document.getElementById('mobile-card-1');
+      const c2 = document.getElementById('mobile-card-2');
+      if (c1) c1.style.display = '';
+      if (c2) c2.style.display = 'none';
+      document.getElementById('modal-overlay').classList.add('is-open');
+    }
+    function closeModal() { document.getElementById('modal-overlay').classList.remove('is-open'); }
+    function onDone() {
+      sessionStorage.setItem('aab-ads-allowed', '1');
+      closeModal();
+      setTimeout(function() { location.reload(); }, 250);
+    }
+    document.getElementById('modal-overlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('modal-overlay')) closeModal();
+    });
+  </script>
+</body>
+</html>
