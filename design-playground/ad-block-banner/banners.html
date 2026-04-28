@@ -912,8 +912,11 @@
 
   <script>
     /* ── Ads-allowed state (set by Done → reload) ───────────────────────────── */
-    const adsAllowed = sessionStorage.getItem('aab-ads-allowed') === '1';
-    sessionStorage.removeItem('aab-ads-allowed'); /* consume once — URL-bar refresh resets to banner state */
+    function ssGet(k) { try { return sessionStorage.getItem(k); } catch(e) { return null; } }
+    function ssSet(k, v) { try { sessionStorage.setItem(k, v); } catch(e) {} }
+    function ssRemove(k) { try { sessionStorage.removeItem(k); } catch(e) {} }
+    const adsAllowed = ssGet('aab-ads-allowed') === '1';
+    ssRemove('aab-ads-allowed'); /* consume once — URL-bar refresh resets to banner state */
     if (adsAllowed) {
       ['banner-a', 'banner-b'].forEach(id => {
         const el = document.getElementById(id);
@@ -923,10 +926,12 @@
 
     /* ── Theme ───────────────────────────────────────────────────────────────── */
     const html = document.documentElement;
-    applyTheme(localStorage.getItem('theme') || 'light');
+    function storageGet(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
+    function storageSet(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+    applyTheme(storageGet('theme') || 'light');
     document.getElementById('themeToggle').addEventListener('click', () => {
       const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
-      applyTheme(next); localStorage.setItem('theme', next);
+      applyTheme(next); storageSet('theme', next);
     });
     function applyTheme(theme) {
       html.dataset.theme = theme;
@@ -1158,9 +1163,9 @@
         el.style.borderWidth = '0';
         el.style.overflow = 'hidden';
       });
-      sessionStorage.setItem('aab-banner-a-dismissed', '1');
+      ssSet('aab-banner-a-dismissed', '1');
     }
-    if (sessionStorage.getItem('aab-banner-a-dismissed')) {
+    if (ssGet('aab-banner-a-dismissed')) {
       const el = document.getElementById('banner-a');
       if (el) el.style.display = 'none';
     }
@@ -1364,7 +1369,7 @@
     }
     function closeModal() { document.getElementById('modal-overlay').classList.remove('is-open'); }
     function onDone() {
-      sessionStorage.setItem('aab-ads-allowed', '1');
+      ssSet('aab-ads-allowed', '1');
       closeModal();
       setTimeout(function() { location.reload(); }, 250);
     }
