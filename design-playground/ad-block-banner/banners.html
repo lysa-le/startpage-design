@@ -107,9 +107,9 @@
     .btn-ripple {
       position: absolute;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.38);
       transform: scale(0);
-      animation: btn-ripple 550ms ease-out forwards;
+      animation: btn-ripple 280ms ease-out forwards;
       pointer-events: none;
       z-index: 2;
     }
@@ -158,20 +158,18 @@
       line-height: var(--font-body-xs-lh);
     }
     .btn--product-brand-blue {
+      --btn-wave-color: var(--color-button-brandbluehover);
       background-color: var(--color-button-brandblue);
       color: var(--color-text-inverted);
       font-weight: var(--font-weight-bold);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      transition: background-color 0.15s ease;
     }
-    .btn--product-brand-blue::before { display: none; }
-    .btn--product-brand-blue:hover { background-color: var(--color-button-brandbluehover); }
     [data-theme="dark"] .btn--product-brand-blue {
+      --btn-wave-color: var(--color-brand-blue-300);
       background-color: var(--color-brand-blue-200);
       color: var(--color-black-900);
     }
-    [data-theme="dark"] .btn--product-brand-blue:hover { background-color: var(--color-button-brandbluehover); }
     .btn:focus-visible { outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button); outline-offset: 3px; }
 
     /* ─────────────────────────────────────────────
@@ -518,7 +516,7 @@
     .adblocker-item {
       width: 100%; display: flex; align-items: center; gap: 12px;
       padding: 8px 12px; border-radius: var(--radius-lg);
-      border: none; background: transparent;
+      border: none; background: transparent; min-height: 44px;
       cursor: pointer; text-align: left; font-family: var(--font-family);
       transition: background 0.12s;
     }
@@ -632,12 +630,14 @@
         overflow-x: auto;
         scrollbar-width: none;
         -ms-overflow-style: none;
+        padding-top: 14px;
+        padding-bottom: 10px;
       }
       .site-header--desktop .site-header__nav .site-header__tabs-row::-webkit-scrollbar { display: none; }
-      /* Tabs: tighter gap, same left inset as body */
+      /* Tabs: align first tab with search query text (16px outer + 16px input padding) */
       .site-header--desktop .site-header__tabs {
         gap: var(--spacing-20);
-        padding-left: var(--spacing-16);
+        padding-left: 32px;
         height: auto;
       }
       /* Filter icon not shown on mobile */
@@ -856,7 +856,7 @@
       <div class="banner-text">
         <p class="banner-headline">Private search.<br>Free thanks to private ads.</p>
       </div>
-      <button class="btn btn--product-brand-blue btn--banner" data-btn onclick="openModal()">
+      <button class="btn btn--product-brand-blue btn--banner" data-btn onclick="openModalDelayed()">
         <span class="btn__label">Allow Startpage ads</span>
       </button>
       <button class="btn-dismiss" aria-label="Dismiss banner" onclick="dismissBannerA()">✕</button>
@@ -875,9 +875,9 @@
         </svg>
       </div>
       <div class="banner-text">
-        <p class="banner-headline">Ads keep your private search<br>results free.</p>
+        <p class="banner-headline">Ads keep your private search results free.</p>
       </div>
-      <button class="btn btn--product-brand-blue btn--banner" data-btn onclick="openModal()">
+      <button class="btn btn--product-brand-blue btn--banner" data-btn onclick="openModalDelayed()">
         <span class="btn__label">Allow Startpage ads</span>
       </button>
     </div>
@@ -1398,6 +1398,7 @@
       document.getElementById('mobile-card-1').style.display = '';
     }
 
+    function openModalDelayed() { setTimeout(openModal, 150); }
     function openModal() {
       buildAdblockerLists();
       renderDesktopInstructions(ADBLOCKERS[0]);
