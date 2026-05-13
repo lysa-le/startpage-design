@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Cursor / Claude local config
+.claude/
+
+# Editor
+.vscode/
+*.suo
+*.user

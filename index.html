@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Startpage — Component Library</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides (class-driven)
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+      --color-text-inverted:  var(--color-black-800);
+      --color-text-brandblue: var(--color-brand-blue-200);
+      --color-text-link:      var(--color-brand-blue-200);
+      --color-text-teal:      var(--color-teal-400);
+      --color-text-error:     var(--color-red-400);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-200);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-toggle-thumb: var(--color-whisper-0); /* always white — see CLAUDE.md §6 */
+
+      --color-button-brandblue:          var(--color-brand-blue-200);
+      --color-button-brandbluehover:     var(--color-brand-blue-300);
+      --color-button-purple:             var(--color-purple-400);
+      --color-button-purplehover:        var(--color-purple-500);
+      --color-button-teal:               var(--color-teal-400);
+      --color-button-tealhover:          var(--color-teal-200);
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-button-inactive:           var(--color-black-600);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-200);
+      --color-stroke-error:          var(--color-red-400);
+
+      --color-accent-gold:     var(--color-gold-200);
+      --color-accent-gold-alt: var(--color-gold-500);
+      --color-accent-teal:     var(--color-teal-200);
+      --color-accent-teal-alt: var(--color-teal-500);
+    }
+
+    /* ─────────────────────────────────────────────
+       Reset & base
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --lib-sidebar-width: 216px;
+      --lib-header-height: 56px;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-background-quaternary);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: var(--lib-header-height) 1fr;
+      grid-template-columns: var(--lib-sidebar-width) 1fr;
+      grid-template-areas:
+        "header header"
+        "sidebar main";
+    }
+
+    /* ─────────────────────────────────────────────
+       Library header
+       ───────────────────────────────────────────── */
+    .lib-header {
+      grid-area: header;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--spacing-32);
+      background: var(--color-background-primary);
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
+    }
+
+    .lib-header__left {
+      display: flex;
+      align-items: baseline;
+      gap: var(--spacing-12);
+    }
+
+    .lib-header__title {
+      font-size: var(--font-body-md);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .lib-header__badge {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-secondary);
+    }
+
+    /* ─────────────────────────────────────────────
+       Sidebar nav
+       ───────────────────────────────────────────── */
+    .lib-sidebar {
+      grid-area: sidebar;
+      position: sticky;
+      top: var(--lib-header-height);
+      height: calc(100vh - var(--lib-header-height));
+      overflow-y: auto;
+      border-right: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background: var(--color-background-primary);
+      padding: var(--spacing-24) 0 var(--spacing-48);
+    }
+
+    .lib-nav__group {
+      margin-bottom: var(--spacing-24);
+    }
+
+    .lib-nav__group-label {
+      padding: 0 var(--spacing-20);
+      margin-bottom: var(--spacing-8);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .lib-nav__list { list-style: none; }
+
+    .lib-nav__item a {
+      display: block;
+      padding: 5px var(--spacing-20);
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color 0.12s ease, background 0.12s ease;
+    }
+
+    .lib-nav__item a:hover,
+    .lib-nav__item a.is-active {
+      color: var(--color-text-primary);
+      background: var(--color-background-secondary);
+    }
+
+    /* ─────────────────────────────────────────────
+       Main content
+       ───────────────────────────────────────────── */
+    .lib-main {
+      grid-area: main;
+      padding: var(--spacing-48) var(--spacing-48) var(--spacing-96);
+      min-width: 0;
+    }
+
+    .lib-section {
+      margin-bottom: var(--spacing-96);
+      scroll-margin-top: calc(var(--lib-header-height) + var(--spacing-32));
+    }
+
+    .lib-section__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      margin-bottom: var(--spacing-24);
+      padding-bottom: var(--spacing-16);
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+
+    .lib-section__title {
+      font-size: var(--font-heading-xs);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-4);
+    }
+
+    .lib-section__desc {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .lib-section__open {
+      flex-shrink: 0;
+      font-size: var(--font-body-xs);
+      color: var(--color-text-link);
+      text-decoration: none;
+      margin-top: var(--spacing-4);
+      white-space: nowrap;
+    }
+
+    .lib-section__open:hover { text-decoration: underline; }
+
+    /* ─────────────────────────────────────────────
+       Embedded component frame
+       ───────────────────────────────────────────── */
+    .component-frame {
+      display: block;
+      width: 100%;
+      border: none;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    /* ─────────────────────────────────────────────
+       Theme toggle (header)
+       ───────────────────────────────────────────── */
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ─── Library header ─── -->
+  <header class="lib-header">
+    <div class="lib-header__left">
+      <span class="lib-header__title">Startpage Design System</span>
+      <span class="lib-header__badge">Component Library</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span id="themeIcon">☀️</span>
+      <span id="themeLabel">Light</span>
+    </button>
+  </header>
+
+  <!-- ─── Sidebar nav ─── -->
+  <nav class="lib-sidebar" aria-label="Components">
+    <div class="lib-nav__group">
+      <p class="lib-nav__group-label">Components</p>
+      <ul class="lib-nav__list">
+        <li class="lib-nav__item"><a href="#button">Button</a></li>
+        <li class="lib-nav__item"><a href="#dropdown">Dropdown</a></li>
+        <li class="lib-nav__item"><a href="#pagination">Pagination</a></li>
+        <li class="lib-nav__item"><a href="#toggle">Toggle</a></li>
+        <li class="lib-nav__item"><a href="#tags">Tags</a></li>
+        <li class="lib-nav__item"><a href="#form-field">Form Field</a></li>
+        <li class="lib-nav__item"><a href="#radio-button">Radio Button</a></li>
+        <li class="lib-nav__item"><a href="#search-field">Search Field</a></li>
+      </ul>
+    </div>
+    <div class="lib-nav__group">
+      <p class="lib-nav__group-label">Page Components</p>
+      <ul class="lib-nav__list">
+        <li class="lib-nav__item"><a href="#header">Header</a></li>
+        <li class="lib-nav__item"><a href="#footer">Footer</a></li>
+        <li class="lib-nav__item"><a href="#search-result">Search Result</a></li>
+        <li class="lib-nav__item"><a href="#search-result-ad">Search Result — Ad</a></li>
+        <li class="lib-nav__item"><a href="#serp-demo">SERP Demo</a></li>
+      </ul>
+    </div>
+    <div class="lib-nav__group">
+      <p class="lib-nav__group-label">Playground</p>
+      <ul class="lib-nav__list">
+        <li class="lib-nav__item"><a href="#ad-block-banners">Ad-Block Banners</a></li>
+      </ul>
+    </div>
+
+    <div class="lib-nav__group">
+      <p class="lib-nav__group-label">Icons</p>
+      <ul class="lib-nav__list">
+        <li class="lib-nav__item"><a href="#icn-arrows">Arrows</a></li>
+        <li class="lib-nav__item"><a href="#icn-copy">Copy / Check</a></li>
+        <li class="lib-nav__item"><a href="#icn-check">Check</a></li>
+        <li class="lib-nav__item"><a href="#icn-close">Close</a></li>
+        <li class="lib-nav__item"><a href="#icn-open-close">Open / Close</a></li>
+        <li class="lib-nav__item"><a href="#icn-search">Search</a></li>
+        <li class="lib-nav__item"><a href="#icn-sound">Sound</a></li>
+        <li class="lib-nav__item"><a href="#icn-download">Download</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ─── Main content ─── -->
+  <main class="lib-main">
+
+    <section class="lib-section" id="button">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Button</h2>
+          <p class="lib-section__desc">Hover CTA buttons for liquid fill. Click for press + ripple.</p>
+        </div>
+        <a href="components/button/button.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/button/button.html" class="component-frame" title="Button" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="dropdown">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Dropdown</h2>
+          <p class="lib-section__desc">Search, icon, and label variants. Click to open and close.</p>
+        </div>
+        <a href="components/dropdown/dropdown.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/dropdown/dropdown.html" class="component-frame" title="Dropdown" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="pagination">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Pagination</h2>
+          <p class="lib-section__desc">All 4 Figma variants. Click page numbers to set active state.</p>
+        </div>
+        <a href="components/pagination/pagination.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/pagination/pagination.html" class="component-frame" title="Pagination" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="toggle">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Toggle</h2>
+          <p class="lib-section__desc">On/off states with labeled variant. role=switch + aria-checked.</p>
+        </div>
+        <a href="components/toggle/toggle.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/toggle/toggle.html" class="component-frame" title="Toggle" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="tags">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Tags</h2>
+          <p class="lib-section__desc">Default, outline, dismissible, small, and label variants.</p>
+        </div>
+        <a href="components/tags/tags.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/tags/tags.html" class="component-frame" title="Tags" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="form-field">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Form Field</h2>
+          <p class="lib-section__desc">Default, focus, error, and multiline states.</p>
+        </div>
+        <a href="components/form-field/form-field.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/form-field/form-field.html" class="component-frame" title="Form Field" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="radio-button">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Radio Button</h2>
+          <p class="lib-section__desc">Custom-styled group with fieldset and aria semantics.</p>
+        </div>
+        <a href="components/radio-button/radio-button.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/radio-button/radio-button.html" class="component-frame" title="Radio Button" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="search-field">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Search Field</h2>
+          <p class="lib-section__desc">Homepage and SERP variants across desktop and mobile sizes.</p>
+        </div>
+        <a href="components/search-field/search-field.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/search-field/search-field.html" class="component-frame" title="Search Field" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="header">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Header</h2>
+          <p class="lib-section__desc">Desktop 1440px (2-row) and mobile 414px variants.</p>
+        </div>
+        <a href="components/header/header.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/header/header.html" class="component-frame" title="Header" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="footer">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Footer</h2>
+          <p class="lib-section__desc">Desktop 1440px and mobile 402px. Always dark background.</p>
+        </div>
+        <a href="components/footer/footer.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/footer/footer.html" class="component-frame" title="Footer" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="icn-arrows">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Arrows</h2>
+          <p class="lib-section__desc">9 variants — right, down, circle, and v-series.</p>
+        </div>
+        <a href="components/icn-arrows/icn-arrows.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/icn-arrows/icn-arrows.html" class="component-frame" title="Arrows" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="icn-copy">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Copy / Check</h2>
+          <p class="lib-section__desc">Two-state icon. Click to copy — auto-reverts after 1.5s.</p>
+        </div>
+        <a href="components/icn-copy/icn-copy.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/icn-copy/icn-copy.html" class="component-frame" title="Copy / Check" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="icn-check">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Check</h2>
+          <p class="lib-section__desc">Standalone checkmark. Large and small sizes.</p>
+        </div>
+        <a href="components/icn-check/icn-check.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/icn-check/icn-check.html" class="component-frame" title="Check" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="icn-close">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Close</h2>
+          <p class="lib-section__desc">Default-grey and secondary states.</p>
+        </div>
+        <a href="components/icn-close/icn-close.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/icn-close/icn-close.html" class="component-frame" title="Close" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="icn-open-close">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Open / Close</h2>
+          <p class="lib-section__desc">Plus/minus toggle. aria-expanded.</p>
+        </div>
+        <a href="components/icn-open-close/icn-open-close.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/icn-open-close/icn-open-close.html" class="component-frame" title="Open / Close" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="icn-search">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Search Icon</h2>
+          <p class="lib-section__desc">Inactive and active states.</p>
+        </div>
+        <a href="components/icn-search/icn-search.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/icn-search/icn-search.html" class="component-frame" title="Search Icon" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="icn-sound">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Sound</h2>
+          <p class="lib-section__desc">Inactive and active states.</p>
+        </div>
+        <a href="components/icn-sound/icn-sound.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/icn-sound/icn-sound.html" class="component-frame" title="Sound" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="icn-download">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Download</h2>
+          <p class="lib-section__desc">Press feedback.</p>
+        </div>
+        <a href="components/icn-download/icn-download.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/icn-download/icn-download.html" class="component-frame" title="Download" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="search-result">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Search Result</h2>
+          <p class="lib-section__desc">Organic search result item — "algo desktop". 598px wide.</p>
+        </div>
+        <a href="components/search-result/search-result.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/search-result/search-result.html" class="component-frame" title="Search Result" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="search-result-ad">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Search Result — Ad</h2>
+          <p class="lib-section__desc">Sponsored result with star ratings, optional image, and sitelinks. Two variants.</p>
+        </div>
+        <a href="components/search-result/search-result-ad.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/search-result/search-result-ad.html" class="component-frame" title="Search Result — Ad" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="serp-demo">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">SERP Demo</h2>
+          <p class="lib-section__desc">Data-driven page: 2 ads + 8 organic results for "best cat food". Edit the JS array to swap content.</p>
+        </div>
+        <a href="components/search-result/serp-demo.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="components/search-result/serp-demo.html" class="component-frame" title="SERP Demo" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+    <section class="lib-section" id="ad-block-banners">
+      <div class="lib-section__header">
+        <div>
+          <h2 class="lib-section__title">Ad-Block Banners</h2>
+          <p class="lib-section__desc">Anti-ad-block banner variants for the SERP.</p>
+        </div>
+        <a href="design-playground/ad-block-banner/banners.html" target="_blank" class="lib-section__open">Open standalone ↗</a>
+      </div>
+      <iframe src="design-playground/ad-block-banner/banners.html" class="component-frame" title="Ad-Block Banners" scrolling="no" loading="lazy"></iframe>
+    </section>
+
+  </main>
+
+  <script>
+
+    /* ── Theme toggle ── */
+    const html = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      themeIcon.textContent  = theme === 'dark' ? '🌙' : '☀️';
+      themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+      broadcastTheme(theme);
+    }
+
+    /* ── Broadcast theme change to all embedded iframes ── */
+    function broadcastTheme(theme) {
+      document.querySelectorAll('iframe.component-frame').forEach(frame => {
+        frame.contentWindow?.postMessage({ type: 'setTheme', theme }, '*');
+      });
+    }
+
+    /* ── Send theme and set initial height when each iframe loads ── */
+    document.querySelectorAll('iframe.component-frame').forEach(frame => {
+      frame.addEventListener('load', () => {
+        frame.contentWindow?.postMessage({ type: 'setTheme', theme: html.dataset.theme }, '*');
+        try {
+          const h = frame.contentDocument?.documentElement?.scrollHeight;
+          if (h) frame.style.height = h + 'px';
+        } catch (_) {}
+      });
+    });
+
+    /* ── Auto-resize iframes when their content height changes ── */
+    window.addEventListener('message', ({ data, source }) => {
+      if (data?.type !== 'resize') return;
+      document.querySelectorAll('iframe.component-frame').forEach(frame => {
+        if (frame.contentWindow === source) frame.style.height = data.height + 'px';
+      });
+    });
+
+    /* ── Sidebar active-link highlight ── */
+    (() => {
+      const navLinks = document.querySelectorAll('.lib-nav__item a');
+      const sections = document.querySelectorAll('.lib-section');
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            navLinks.forEach(a => a.classList.remove('is-active'));
+            const active = document.querySelector(`.lib-nav__item a[href="#${entry.target.id}"]`);
+            if (active) active.classList.add('is-active');
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+
+      sections.forEach(s => observer.observe(s));
+    })();
+
+  </script>
+</body>
+</html>
