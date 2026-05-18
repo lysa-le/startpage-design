@@ -268,16 +268,27 @@
         title: 'Ad-block banner',
         tag: 'SERP',
         description: 'Anti-ad-block banners on the results page, allowlist modal, and mobile flows.',
-        href: 'ad-block-banner/',
+        path: 'ad-block-banner/',
       },
       {
         id: 'news-hub-prototype',
         title: 'News hub',
         tag: 'News',
         description: 'News tab with category sidebar, featured rows, grid layouts, and anonymous view links.',
-        href: 'news-hub-prototype/',
+        path: 'news-hub-prototype/',
       },
     ];
+
+    /** Base path for this hub (works on localhost and GitHub Pages subpaths). */
+    function getPlaygroundBase() {
+      const marker = '/design-playground';
+      const i = location.pathname.indexOf(marker);
+      return i >= 0 ? location.pathname.slice(0, i + marker.length) : '/design-playground';
+    }
+
+    function playgroundProjectHref(projectPath) {
+      return `${getPlaygroundBase()}/${projectPath.replace(/^\//, '')}`;
+    }
 
     function renderProjects() {
       const grid = document.getElementById('playgroundGrid');
@@ -296,7 +307,7 @@
           <h3 class="pg-card__title">${project.title}</h3>
           <p class="pg-card__desc">${project.description}</p>
           <div class="pg-card__actions">
-            <a class="pg-card__link" href="${project.href}">Open prototype →</a>
+            <a class="pg-card__link" href="${playgroundProjectHref(project.path)}">Open prototype →</a>
           </div>
         </li>
       `).join('');
@@ -322,13 +333,10 @@
 
     renderProjects();
 
-    /** Component library lives at repo root; path differs on localhost vs GitHub Pages. */
     (function fixLibraryLink() {
       const link = document.getElementById('libraryLink');
       if (!link) return;
-      const marker = '/design-playground';
-      const i = location.pathname.indexOf(marker);
-      const base = i >= 0 ? location.pathname.slice(0, i) : '';
+      const base = getPlaygroundBase().replace(/\/design-playground$/, '');
       link.href = `${base}/index.html`;
     })();
 
