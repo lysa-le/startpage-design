@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="prototype-build" content="news-default-20260518" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>News Hub Prototype</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1602,8 +1604,39 @@
       activeSearchTab = tabName;
       syncSearchView();
       syncBannerVisibility();
-      render(searchInput.value);
+      const input = document.getElementById('searchInput');
+      render(input ? input.value : '');
     }
+
+    /* ── Search input + default News tab (run before heavy init below) ─────── */
+    (function initSearchAndDefaultTab() {
+      const searchInput = document.getElementById('searchInput');
+      const clearBtn = document.getElementById('clearBtn');
+      const newsHub = document.getElementById('newsHub');
+      let debounce;
+      if (newsHub && searchInput) {
+        newsHub.addEventListener('click', e => {
+          const related = e.target.closest('.news-related__link');
+          if (!related) return;
+          searchInput.value = related.dataset.query;
+          render(searchInput.value);
+        });
+      }
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          clearTimeout(debounce);
+          debounce = setTimeout(() => render(searchInput.value), 180);
+        });
+      }
+      if (clearBtn && searchInput) {
+        clearBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          searchInput.focus();
+          render('');
+        });
+      }
+      applySearchTab('News');
+    }());
 
     /* ── Theme ───────────────────────────────────────────────────────────────── */
     const html = document.documentElement;
@@ -2871,22 +2904,6 @@
           organic.map(r => renderOrganic(r, query)).join('');
       }
     }
-
-    const searchInput = document.getElementById('searchInput');
-    const clearBtn    = document.getElementById('clearBtn');
-    const newsHub     = document.getElementById('newsHub');
-    let debounce;
-    if (newsHub) {
-      newsHub.addEventListener('click', e => {
-        const related = e.target.closest('.news-related__link');
-        if (!related) return;
-        searchInput.value = related.dataset.query;
-        render(searchInput.value);
-      });
-    }
-    searchInput.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(() => render(searchInput.value), 180); });
-    clearBtn.addEventListener('click', () => { searchInput.value=''; searchInput.focus(); render(''); });
-    applySearchTab('News');
 
     /* ── Button: liquid wave + ripple + scale (from startpage-design) ────────── */
     document.querySelectorAll('[data-btn]').forEach(btn => {
