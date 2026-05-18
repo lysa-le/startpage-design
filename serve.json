@@ -1,3 +1,12 @@
 {
-  "cleanUrls": false
+  "cleanUrls": false,
+  "directoryListing": false,
+  "rewrites": [
+    { "source": "/design-playground", "destination": "/design-playground/index.html" },
+    { "source": "/design-playground/", "destination": "/design-playground/index.html" },
+    { "source": "/design-playground/ad-block-banner", "destination": "/design-playground/ad-block-banner/index.html" },
+    { "source": "/design-playground/ad-block-banner/", "destination": "/design-playground/ad-block-banner/index.html" },
+    { "source": "/design-playground/news-hub-prototype", "destination": "/design-playground/news-hub-prototype/index.html" },
+    { "source": "/design-playground/news-hub-prototype/", "destination": "/design-playground/news-hub-prototype/index.html" }
+  ]
 }
