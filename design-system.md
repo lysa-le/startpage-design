@@ -167,7 +167,7 @@
 | Token | Hex |
 |---|---|
 | `color-brand-blue-50` | `#F7F7FF` |
-| `color-brand-blue-100` | `#B3BCFF` |
+| `color-brand-blue-100` | `#A0ABFF` |
 | `color-brand-blue-200` | `#8290FF` |
 | `color-brand-blue-300` | `#6677FB` |
 | `color-brand-blue-400` | `#5668F1` |
@@ -326,8 +326,8 @@
 | `color-text-secondary` | `color-midnight-200` — `#9297A7` |
 | `color-text-tertiary` | `color-midnight-100` — `#ACB1C2` |
 | `color-text-inverted` | `color-black-800` — `#1B1D21` |
-| `color-text-brandblue` | `color-brand-blue-200` — `#B3BCFF` |
-| `color-text-link` | `color-brand-blue-200` — `#B3BCFF` |
+| `color-text-brandblue` | `color-brand-blue-100` — `#A0ABFF` |
+| `color-text-link` | `color-brand-blue-100` — `#A0ABFF` |
 | `color-text-teal` | `color-teal-400` — `#00E7D0` |
 | `color-text-error` | `color-red-400` — `#F77779` |
 
@@ -336,14 +336,14 @@
 | Token | References |
 |---|---|
 | `color-icon-primary` | `color-whisper-200` — `#EBECF7` |
-| `color-icon-secondary` | `color-brand-blue-200` — `#B3BCFF` |
+| `color-icon-secondary` | `color-brand-blue-100` — `#A0ABFF` |
 | `color-icon-tertiary` | `color-midnight-100` — `#ACB1C2` |
 
 ### Buttons
 
 | Token | References |
 |---|---|
-| `color-button-brandblue` | `color-brand-blue-200` — `#8290FF` |
+| `color-button-brandblue` | `color-brand-blue-100` — `#A0ABFF` |
 | `color-button-brandbluehover` | `color-brand-blue-300` — `#6677FB` |
 | `color-button-purple` | `color-purple-400` — `#D67DFD` |
 | `color-button-purplehover` | `color-purple-500` — `#C161EA` |
@@ -352,7 +352,7 @@
 | `color-button-productfilled` | `color-black-550` — `#34373D` |
 | `color-button-productfilledhover` | `color-black-400` — `#494D56` |
 | `color-button-inactive` | `color-black-600` — `#2E3443` |
-| `color-button-social` | `color-brand-blue-200` — `#8290FF` |
+| `color-button-social` | `color-brand-blue-100` — `#A0ABFF` |
 
 ### Strokes
 
@@ -360,7 +360,7 @@
 |---|---|
 | `color-stroke-primary` | `color-black-400` — `#494D56` |
 | `color-stroke-secondary` | `color-black-550` — `#34373D` |
-| `color-stroke-primary-button` | `color-brand-blue-200` — `#B3BCFF` |
+| `color-stroke-primary-button` | `color-brand-blue-100` — `#A0ABFF` |
 | `color-stroke-error` | `color-red-400` — `#F77779` |
 
 ### Accents
