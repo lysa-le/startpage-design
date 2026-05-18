@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design Playground — Startpage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../tokens.css" />
+  <style>
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+      --color-text-primary:          var(--color-whisper-100);
+      --color-text-secondary:        var(--color-midnight-200);
+      --color-text-tertiary:         var(--color-midnight-100);
+      --color-text-brandblue:        var(--color-brand-blue-100);
+      --color-text-link:             var(--color-brand-blue-100);
+      --color-icon-primary:          var(--color-whisper-200);
+      --color-icon-secondary:        var(--color-brand-blue-100);
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-100);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-background-quaternary);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+    }
+
+    .pg-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      padding: var(--spacing-16) var(--spacing-32);
+      background: var(--color-background-primary);
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
+    }
+
+    .pg-header__left {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--spacing-8) var(--spacing-16);
+      min-width: 0;
+    }
+
+    .pg-header__title {
+      font-size: var(--font-body-md);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: -0.01em;
+    }
+
+    .pg-header__badge {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-secondary);
+    }
+
+    .pg-header__nav {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+    }
+
+    .pg-header__link {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .pg-header__link:hover { text-decoration: underline; }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+
+    .pg-main {
+      max-width: calc(var(--spacing-24) * 48);
+      margin: 0 auto;
+      padding: var(--spacing-48) var(--spacing-32) var(--spacing-96);
+    }
+
+    .pg-intro {
+      margin-bottom: var(--spacing-40);
+      max-width: calc(var(--spacing-24) * 28);
+    }
+
+    .pg-intro__title {
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--spacing-12);
+    }
+
+    .pg-intro__text {
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      color: var(--color-text-secondary);
+    }
+
+    .pg-grid {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(calc(var(--spacing-24) * 12), 1fr));
+      gap: var(--spacing-24);
+    }
+
+    .pg-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+      padding: var(--spacing-24);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .pg-card:hover {
+      border-color: var(--color-stroke-primary-button);
+      box-shadow: var(--shadow-search);
+    }
+
+    .pg-card__meta {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+    }
+
+    .pg-card__tag {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-brandblue);
+      padding: var(--spacing-4) var(--spacing-8);
+      border-radius: var(--radius-sm);
+      background: var(--color-background-secondary);
+    }
+
+    .pg-card__title {
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .pg-card__desc {
+      flex: 1;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+    }
+
+    .pg-card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+      padding-top: var(--spacing-8);
+    }
+
+    .pg-card__link {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .pg-card__link:hover { text-decoration: underline; }
+
+    .pg-card__link--secondary {
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+    }
+    .pg-card__link--secondary:hover { color: var(--color-text-link); }
+
+    .pg-empty {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-tertiary);
+    }
+
+    @media (max-width: 640px) {
+      .pg-header { padding-inline: var(--spacing-16); }
+      .pg-main { padding-inline: var(--spacing-16); }
+      .pg-header__nav { gap: var(--spacing-8); }
+    }
+  </style>
+</head>
+<body>
+  <header class="pg-header">
+    <div class="pg-header__left">
+      <h1 class="pg-header__title">Design Playground</h1>
+      <span class="pg-header__badge">Startpage</span>
+    </div>
+    <nav class="pg-header__nav" aria-label="Site">
+      <a class="pg-header__link" href="../index.html">Component library</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span id="themeIcon" aria-hidden="true">☀️</span>
+        <span id="themeLabel">Light</span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="pg-main">
+    <div class="pg-intro">
+      <h2 class="pg-intro__title">Prototypes &amp; experiments</h2>
+      <p class="pg-intro__text">
+        Full-page concepts built on the design system. Pick a project to open its standalone prototype.
+        Add new entries to <code>PLAYGROUND_PROJECTS</code> in this file when you spin up another folder.
+      </p>
+    </div>
+
+    <ul class="pg-grid" id="playgroundGrid" aria-label="Playground projects"></ul>
+  </main>
+
+  <script>
+    const PLAYGROUND_PROJECTS = [
+      {
+        id: 'ad-block-banner',
+        title: 'Ad-block banner',
+        tag: 'SERP',
+        description: 'Anti-ad-block banners on the results page, allowlist modal, and mobile flows.',
+        href: 'ad-block-banner/',
+      },
+      {
+        id: 'news-hub-prototype',
+        title: 'News hub',
+        tag: 'News',
+        description: 'News tab with category sidebar, featured rows, grid layouts, and anonymous view links.',
+        href: 'news-hub-prototype/',
+      },
+    ];
+
+    function renderProjects() {
+      const grid = document.getElementById('playgroundGrid');
+      if (!grid) return;
+
+      if (!PLAYGROUND_PROJECTS.length) {
+        grid.innerHTML = '<li class="pg-empty">No projects yet.</li>';
+        return;
+      }
+
+      grid.innerHTML = PLAYGROUND_PROJECTS.map(project => `
+        <li class="pg-card" id="${project.id}">
+          <div class="pg-card__meta">
+            <span class="pg-card__tag">${project.tag}</span>
+          </div>
+          <h3 class="pg-card__title">${project.title}</h3>
+          <p class="pg-card__desc">${project.description}</p>
+          <div class="pg-card__actions">
+            <a class="pg-card__link" href="${project.href}">Open prototype →</a>
+          </div>
+        </li>
+      `).join('');
+    }
+
+    const html = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
+      themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    applyTheme(localStorage.getItem('theme') || 'light');
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    renderProjects();
+  </script>
+</body>
+</html>
