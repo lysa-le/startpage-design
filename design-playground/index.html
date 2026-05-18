@@ -234,7 +234,7 @@
       <span class="pg-header__badge">Startpage</span>
     </div>
     <nav class="pg-header__nav" aria-label="Site">
-      <a class="pg-header__link" href="../index.html">Component library</a>
+      <a class="pg-header__link" id="libraryLink" href="/index.html">Component library</a>
       <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
         <span id="themeIcon" aria-hidden="true">☀️</span>
         <span id="themeLabel">Light</span>
@@ -321,6 +321,16 @@
     });
 
     renderProjects();
+
+    /** Component library lives at repo root; path differs on localhost vs GitHub Pages. */
+    (function fixLibraryLink() {
+      const link = document.getElementById('libraryLink');
+      if (!link) return;
+      const marker = '/design-playground';
+      const i = location.pathname.indexOf(marker);
+      const base = i >= 0 ? location.pathname.slice(0, i) : '';
+      link.href = `${base}/index.html`;
+    })();
 
     if (location.protocol === 'file:') {
       const warn = document.getElementById('fileWarning');

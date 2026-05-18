@@ -2,6 +2,7 @@
   "cleanUrls": false,
   "directoryListing": false,
   "rewrites": [
+    { "source": "/", "destination": "/index.html" },
     { "source": "/design-playground", "destination": "/design-playground/index.html" },
     { "source": "/design-playground/", "destination": "/design-playground/index.html" },
     { "source": "/design-playground/ad-block-banner", "destination": "/design-playground/ad-block-banner/index.html" },
