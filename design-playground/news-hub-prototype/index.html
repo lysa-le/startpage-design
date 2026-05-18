@@ -1363,10 +1363,10 @@
     <div class="site-header__nav">
       <div class="site-header__tabs-row">
         <nav class="site-header__tabs" aria-label="Search category">
-          <button class="site-header__tab site-header__tab--active" data-text="Web">Web</button>
+          <button class="site-header__tab" data-text="Web">Web</button>
           <button class="site-header__tab" data-text="Images">Images</button>
           <button class="site-header__tab" data-text="Videos">Videos</button>
-          <button class="site-header__tab" data-text="News">News</button>
+          <button class="site-header__tab site-header__tab--active" data-text="News">News</button>
           <button class="site-header__tab" data-text="Shopping">Shopping</button>
           <button class="site-header__tab" data-text="Maps">Maps</button>
         </nav>
@@ -1379,7 +1379,7 @@
   </header>
 
   <!-- ── SERP body ── -->
-  <main class="serp-body" id="serpBody">
+  <main class="serp-body serp-body--news" id="serpBody">
     <div class="serp-view" id="serpView">
     <p class="serp-meta" id="serpMeta" aria-live="polite"></p>
 
@@ -1576,7 +1576,7 @@
       });
     }
 
-    let activeSearchTab = 'Web';
+    let activeSearchTab = 'News';
     let activeNewsCategory = null;
     const bannerAEl = document.getElementById('banner-a');
     const bannerBEl = document.getElementById('banner-b');
@@ -2886,7 +2886,7 @@
     }
     searchInput.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(() => render(searchInput.value), 180); });
     clearBtn.addEventListener('click', () => { searchInput.value=''; searchInput.focus(); render(''); });
-    render(searchInput.value);
+    applySearchTab('News');
 
     /* ── Button: liquid wave + ripple + scale (from startpage-design) ────────── */
     document.querySelectorAll('[data-btn]').forEach(btn => {
