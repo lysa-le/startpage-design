@@ -202,6 +202,24 @@
       color: var(--color-text-tertiary);
     }
 
+    .pg-file-warning {
+      display: none;
+      margin-bottom: var(--spacing-24);
+      padding: var(--spacing-16) var(--spacing-20);
+      border-radius: var(--radius-md);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary-button);
+      background: var(--color-background-primary);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+    }
+    .pg-file-warning.is-visible { display: block; }
+    .pg-file-warning code {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-primary);
+    }
+    .pg-file-warning a { color: var(--color-text-link); }
+
     @media (max-width: 640px) {
       .pg-header { padding-inline: var(--spacing-16); }
       .pg-main { padding-inline: var(--spacing-16); }
@@ -225,6 +243,13 @@
   </header>
 
   <main class="pg-main">
+    <div class="pg-file-warning" id="fileWarning" role="status">
+      <strong>Preview needs a local server.</strong>
+      Opening HTML files directly from the desktop won’t load prototypes correctly.
+      In the project folder run <code>npm start</code>, then open
+      <a id="fileWarningLink" href="http://localhost:3000/design-playground/">http://localhost:3000/design-playground/</a>.
+    </div>
+
     <div class="pg-intro">
       <h2 class="pg-intro__title">Design sandbox</h2>
       <p class="pg-intro__text">
@@ -243,14 +268,14 @@
         title: 'Ad-block banner',
         tag: 'SERP',
         description: 'Anti-ad-block banners on the results page, allowlist modal, and mobile flows.',
-        href: 'ad-block-banner/',
+        href: 'ad-block-banner/index.html',
       },
       {
         id: 'news-hub-prototype',
         title: 'News hub',
         tag: 'News',
         description: 'News tab with category sidebar, featured rows, grid layouts, and anonymous view links.',
-        href: 'news-hub-prototype/',
+        href: 'news-hub-prototype/index.html',
       },
     ];
 
@@ -296,6 +321,11 @@
     });
 
     renderProjects();
+
+    if (location.protocol === 'file:') {
+      const warn = document.getElementById('fileWarning');
+      if (warn) warn.classList.add('is-visible');
+    }
   </script>
 </body>
 </html>
