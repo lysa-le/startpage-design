@@ -1608,36 +1608,6 @@
       render(input ? input.value : '');
     }
 
-    /* ── Search input + default News tab (run before heavy init below) ─────── */
-    (function initSearchAndDefaultTab() {
-      const searchInput = document.getElementById('searchInput');
-      const clearBtn = document.getElementById('clearBtn');
-      const newsHub = document.getElementById('newsHub');
-      let debounce;
-      if (newsHub && searchInput) {
-        newsHub.addEventListener('click', e => {
-          const related = e.target.closest('.news-related__link');
-          if (!related) return;
-          searchInput.value = related.dataset.query;
-          render(searchInput.value);
-        });
-      }
-      if (searchInput) {
-        searchInput.addEventListener('input', () => {
-          clearTimeout(debounce);
-          debounce = setTimeout(() => render(searchInput.value), 180);
-        });
-      }
-      if (clearBtn && searchInput) {
-        clearBtn.addEventListener('click', () => {
-          searchInput.value = '';
-          searchInput.focus();
-          render('');
-        });
-      }
-      applySearchTab('News');
-    }());
-
     /* ── Theme ───────────────────────────────────────────────────────────────── */
     const html = document.documentElement;
     function storageGet(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
@@ -2905,6 +2875,36 @@
       }
     }
 
+    /* ── Search input + default News tab (after render + news data are defined) ─ */
+    (function initSearchAndDefaultTab() {
+      const searchInput = document.getElementById('searchInput');
+      const clearBtn = document.getElementById('clearBtn');
+      const newsHub = document.getElementById('newsHub');
+      let debounce;
+      if (newsHub && searchInput) {
+        newsHub.addEventListener('click', e => {
+          const related = e.target.closest('.news-related__link');
+          if (!related) return;
+          searchInput.value = related.dataset.query;
+          render(searchInput.value);
+        });
+      }
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          clearTimeout(debounce);
+          debounce = setTimeout(() => render(searchInput.value), 180);
+        });
+      }
+      if (clearBtn && searchInput) {
+        clearBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          searchInput.focus();
+          render('');
+        });
+      }
+      applySearchTab('News');
+    }());
+
     /* ── Button: liquid wave + ripple + scale (from startpage-design) ────────── */
     document.querySelectorAll('[data-btn]').forEach(btn => {
       btn.addEventListener('mousedown', e => {
@@ -2950,9 +2950,6 @@
     if (bannerADismissed) {
       if (bannerAEl) bannerAEl.style.display = 'none';
     }
-
-    syncSearchView();
-    syncBannerVisibility();
 
     /* ── Modal ───────────────────────────────────────────────────────────────── */
     const ADBLOCKERS = [
