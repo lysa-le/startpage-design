@@ -90,11 +90,10 @@
 ├──────────────────────────────────────┬──────────────┤
 │ Ad Headline Title — Long & Clickable │  [100×100px] │  ← title + optional image
 │ Description body text up to 2–3      │  placeholder │
-│ lines, supporting the headline...    │              │
-├──────────────────────────────────────┴──────────────┤
-│ ★★★★☆  rating for gooddog.com                      │  ← star rating (optional)
-│ Sitelink 1 · Sitelink 2 · Sitelink 3               │  ← sitelinks (optional)
-└─────────────────────────────────────────────────────┘
+│ lines, supporting the headline...    │  (centered)  │
+│ ★★★★☆  rating for gooddog.com        │              │
+│ Sitelink 1 · Sitelink 2 · Sitelink 3 │              │
+└──────────────────────────────────────┴──────────────┘
 ```
 
 ### Elements
@@ -111,11 +110,11 @@
 | URL | `.ad-result__url` | `font-body-sm`, `color-text-tertiary` |
 | Dots menu | `.ad-result__dots-btn` | Three-dot vertical icon, `color-text-tertiary` |
 | Body row | `.ad-result__body` | Flex row, gap 19px (Figma spec) |
-| Text block | `.ad-result__text` | Flex column, gap 4px, flex: 1 |
+| Text block | `.ad-result__text` | Flex column, gap 4px, flex: 1; holds title, description, rating, sitelinks |
 | Title | `.ad-result__title` | `font-body-lg` (18px/28px lh), `color-text-link` |
 | Description | `.ad-result__description` | `font-body-sm` (14px/20px lh), `color-text-primary` |
-| Image | `.ad-result__image` | 100×100px, `radius-lg`, `color-background-secondary` |
-| Rating row | `.ad-result__rating` | Flex row, gap 12px, items-center |
+| Image | `.ad-result__image` | 100×100px, `radius-lg`, `color-background-secondary`; `align-self: center` in body row |
+| Rating row | `.ad-result__rating` | Flex row, gap 12px, items-center; inside `.ad-result__text` (with-image variant) |
 | Stars | `.ad-result__stars` | Five 16×16px SVG stars |
 | Star filled | `.star--filled` | `color-accent-gold` (gold-500 / gold-200 dark) |
 | Star empty | `.star--empty` | `color-stroke-primary` (outline stroke) |

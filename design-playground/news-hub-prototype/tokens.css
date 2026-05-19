@@ -317,3 +317,40 @@
     --color-accent-teal-alt: var(--color-teal-500);
   }
 }
+
+/* Class-driven dark mode (theme toggle) — mirrors prefers-color-scheme block above */
+[data-theme="dark"] {
+  --color-background-primary:    var(--color-black-900);
+  --color-background-secondary:  var(--color-black-550);
+  --color-background-tertiary:   var(--color-black-800);
+  --color-background-quaternary: var(--color-black-650);
+  --color-text-primary:   var(--color-whisper-100);
+  --color-text-secondary: var(--color-midnight-200);
+  --color-text-tertiary:  var(--color-midnight-100);
+  --color-text-inverted:  var(--color-black-800);
+  --color-text-brandblue: var(--color-brand-blue-100);
+  --color-text-link:      var(--color-brand-blue-100);
+  --color-text-teal:      var(--color-teal-400);
+  --color-text-error:     var(--color-red-400);
+  --color-icon-primary:   var(--color-whisper-200);
+  --color-icon-secondary: var(--color-brand-blue-100);
+  --color-icon-tertiary:  var(--color-midnight-100);
+  --color-button-brandblue:          var(--color-brand-blue-100);
+  --color-button-brandbluehover:     var(--color-brand-blue-300);
+  --color-button-purple:             var(--color-purple-400);
+  --color-button-purplehover:        var(--color-purple-500);
+  --color-button-teal:               var(--color-teal-400);
+  --color-button-tealhover:          var(--color-teal-200);
+  --color-button-productfilled:      var(--color-black-550);
+  --color-button-productfilledhover: var(--color-black-400);
+  --color-button-inactive:           var(--color-black-600);
+  --color-button-social:             var(--color-brand-blue-100);
+  --color-stroke-primary:        var(--color-black-400);
+  --color-stroke-secondary:      var(--color-black-550);
+  --color-stroke-primary-button: var(--color-brand-blue-100);
+  --color-stroke-error:          var(--color-red-400);
+  --color-accent-gold:     var(--color-gold-200);
+  --color-accent-gold-alt: var(--color-gold-500);
+  --color-accent-teal:     var(--color-teal-200);
+  --color-accent-teal-alt: var(--color-teal-500);
+}
