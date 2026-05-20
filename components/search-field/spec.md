@@ -29,9 +29,9 @@ Primary search input. Used in two contexts — **homepage** (before search) and 
 ### By state
 | State | Trigger | Border colour | Shadow |
 |---|---|---|---|
-| Inactive | default | `--color-stroke-secondary` | none (SERP mobile: always has `--shadow-search`) |
-| Active (focused, empty) | `:focus-within` | `--color-stroke-primary-button` | `--shadow-search` (homepage only) |
-| Active with query | `.has-value` + `:focus-within` | `--color-stroke-primary-button` | `--shadow-search` (homepage only) |
+| Inactive | default | `--color-stroke-secondary` | `--shadow-search` (homepage + SERP mobile); SERP desktop: none unless header override |
+| Active (focused, empty) | `:focus-within` | `--color-stroke-primary-button` | `--shadow-search` |
+| Active with query | `.has-value` + `:focus-within` | `--color-stroke-primary-button` | `--shadow-search` |
 
 ---
 
@@ -62,7 +62,7 @@ Width is always fluid — set by the parent context, not the component.
 
 ## Interaction
 
-- **Focus** → `:focus-within` adds blue border; homepage adds `--shadow-search`
+- **Focus** → `:focus-within` adds blue border; shadow remains `--shadow-search` on homepage
 - **Type** → JS adds `.has-value` to `.search-field` when `input.value.length > 0`; clear button + divider become visible
 - **Clear** → click clears input, JS removes `.has-value`, refocuses input
 - **Submit** → search icon button triggers query submission
@@ -88,7 +88,7 @@ Width is always fluid — set by the parent context, not the component.
 | Search icon colour | `--color-icon-secondary` |
 | Clear icon colour | `--color-icon-tertiary` |
 | Divider colour | `--color-stroke-primary` |
-| Focus shadow (homepage) | `--shadow-search` |
+| Drop shadow (homepage, all states) | `--shadow-search` |
 | Transition | `border-color 150ms ease, box-shadow 150ms ease` |
 
 ---
@@ -96,7 +96,7 @@ Width is always fluid — set by the parent context, not the component.
 ## Notes
 
 1. **Width is fluid** — always 100% of the parent container. Figma widths (382/628/686px) are the context-level constraint, not the component.
-2. **`--shadow-search`** (`0px 4px 15px 0px rgba(59, 67, 91, 0.08)`) was added to `tokens.css` for this component. Corresponds to "search bar dropshadow" in Figma.
+2. **`--shadow-search`** (`0px 4px 15px 0px rgba(59, 67, 91, 0.08)`) was added to `tokens.css` for this component. Corresponds to "search bar dropshadow" in Figma. Applied to homepage in all states (matches SERP header search bar).
 3. **SERP inactive = pre-filled.** On SERP you always arrive with a search term, so the field starts with the previous query. Clear + divider are visible by default via CSS override on `.search-field--serp`.
-4. **SERP mobile shadow.** The SERP mobile bar floats on the page (not embedded in a nav bar), so it always carries `--shadow-search` regardless of focus state.
+4. **SERP desktop shadow.** Default SERP desktop has no shadow; the header component adds `--shadow-search` via `.site-header--desktop .search-field--serp`. SERP mobile always carries `--shadow-search` regardless of focus state.
 5. **Icons are inline SVG** using `currentColor` — they inherit colour from the parent's `color` property, which is set to the appropriate token per element.

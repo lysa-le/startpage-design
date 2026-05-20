@@ -145,7 +145,7 @@
 :root {
   --shadow-card:     1px 2px 4px 0px rgba(0, 0, 0, 0.10);          /* sp-cards-drop in Figma — subtle lift for small elements (toggle thumb, cards) */
   --shadow-dropdown: 0px 10px 10px 0px rgba(0, 0, 0, 0.10);         /* startpage dropshadow in Figma — panel/overlay depth */
-  --shadow-search:   0px 4px 15px 0px rgba(59, 67, 91, 0.08);       /* search bar dropshadow in Figma — applied to search field on focus (homepage) and SERP mobile default */
+  --shadow-search:   0px 4px 15px 0px rgba(59, 67, 91, 0.08);       /* search bar dropshadow in Figma — homepage (all states), SERP mobile, SERP desktop in header */
 }
 
 /* ─────────────────────────────────────────────
