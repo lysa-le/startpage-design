@@ -407,6 +407,9 @@
       position: sticky;
       top: var(--spacing-24);
     }
+    .serp-view__rail-inner--images {
+      gap: var(--spacing-40);
+    }
 
     /* Knowledge panel — Taylor Swift (All tab rail) */
     .knowledge-panel {
@@ -552,8 +555,70 @@
       width: 100%;
     }
     .news-hub__rail {
-      width: calc(var(--spacing-24) * 10);
+      --news-hub-rail-width: 300px;
+      width: var(--news-hub-rail-width);
       flex-shrink: 0;
+    }
+    .news-hub__rail-inner {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+      position: sticky;
+      top: var(--spacing-24);
+    }
+    .news-hub__top-ad {
+      width: 100%;
+      max-width: 728px;
+    }
+    .news-hub__top-ad[hidden] {
+      display: none;
+    }
+
+    /* Display ad placeholders (News tab) */
+    .display-ad {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-8);
+      flex-shrink: 0;
+    }
+    .display-ad__label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .display-ad__slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-sm);
+      background: var(--color-background-tertiary);
+      color: var(--color-text-tertiary);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+    }
+    .display-ad--leaderboard {
+      width: 100%;
+      max-width: 728px;
+    }
+    .display-ad--leaderboard .display-ad__slot {
+      width: 100%;
+      max-width: 728px;
+      height: 90px;
+    }
+    .display-ad--rectangle {
+      width: 100%;
+      max-width: 300px;
+    }
+    .display-ad--rectangle .display-ad__slot {
+      width: 300px;
+      max-width: 100%;
+      height: 250px;
     }
     .news-sidebar__list {
       list-style: none;
@@ -1061,8 +1126,7 @@
       display: flex;
       flex-direction: column;
       gap: var(--spacing-12);
-      position: sticky;
-      top: var(--spacing-24);
+      width: 100%;
     }
     .news-related__title {
       margin: 0;
@@ -1389,15 +1453,18 @@
       display: flex;
       align-items: center;
       flex-wrap: nowrap;
-      gap: var(--spacing-4);
+      gap: var(--spacing-8);
       min-width: 0;
       overflow: hidden;
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
       color: var(--color-text-tertiary);
     }
+    .serp-all-news-card__meta .news-article__favicon {
+      flex-shrink: 0;
+    }
     .serp-all-news-card__meta .news-article__publisher {
-      flex: 1 1 auto;
+      flex: 0 1 auto;
       min-width: 0;
       max-width: min(calc(var(--news-publisher-max-chars, 14) * 1ch), 100%);
     }
@@ -1405,9 +1472,14 @@
       flex: 0 0 auto;
       white-space: nowrap;
     }
+    .serp-all-news-card__meta-sep {
+      flex: 0 0 auto;
+      color: var(--color-text-tertiary);
+      line-height: 1;
+    }
     .serp-all-news-card__time::before {
-      content: '·';
-      margin-right: var(--spacing-8);
+      content: none;
+      margin: 0;
     }
     .serp-all-news-card__title {
       font-size: var(--font-body-md);
@@ -1417,7 +1489,7 @@
       text-decoration: none;
       display: -webkit-box;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 2;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -1439,6 +1511,99 @@
       flex: 0 0 auto;
       width: auto;
     }
+
+    /* Images tab — news stack in right rail (desktop) */
+    .serp-all-news--rail {
+      --news-publisher-max-chars: 28;
+      --serp-rail-news-thumb-size: 88px;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+    .serp-all-news--rail .results-section-label {
+      margin-bottom: var(--spacing-16);
+    }
+    .serp-all-news--rail .serp-all-news__list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .serp-all-news--rail .serp-all-news-card {
+      flex: none;
+      width: 100%;
+      display: block;
+    }
+    .serp-all-news-card--rail .serp-all-news-card__body {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--spacing-16);
+      min-width: 0;
+    }
+    .serp-all-news-card--rail .serp-all-news-card__text {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+    }
+    .serp-all-news-card--rail .serp-all-news-card__meta {
+      gap: var(--spacing-8);
+    }
+    .serp-all-news-card--rail .serp-all-news-card__meta {
+      margin: 0;
+      align-items: center;
+    }
+    .serp-all-news-card--rail .serp-all-news-card__meta .news-article__favicon {
+      flex-shrink: 0;
+    }
+    .serp-all-news-card--rail .serp-all-news-card__meta .news-article__publisher {
+      flex: 0 1 auto;
+      max-width: min(calc(var(--news-publisher-max-chars, 28) * 1ch), 100%);
+    }
+    .serp-all-news-card--rail .serp-all-news-card__title {
+      margin: 0;
+    }
+    .serp-all-news-card--rail .serp-all-news-card__thumb {
+      position: relative;
+      flex: 0 0 var(--serp-rail-news-thumb-size);
+      width: var(--serp-rail-news-thumb-size);
+      height: var(--serp-rail-news-thumb-size);
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, var(--color-background-tertiary) 0%, transparent 55%),
+        var(--color-background-secondary);
+    }
+    .serp-all-news-card--rail .serp-all-news-card__thumb-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .serp-all-news--rail .serp-all-news__more {
+      margin-top: var(--spacing-16);
+    }
+
+    /* Images tab — carousel fallback when rail is hidden (≤1280px) */
+    .serp-all-news--mobile-fallback {
+      display: none;
+    }
+    .serp-body--images-tab .serp-all-news--mobile-fallback {
+      display: block;
+    }
+    @media (min-width: 1281px) {
+      .serp-body--images-tab .serp-all-news--mobile-fallback {
+        display: none;
+      }
+    }
+
     .ad-result__sponsored { font-size: var(--font-body-sm); color: var(--color-text-secondary); }
     .ad-result__source { display: flex; align-items: center; gap: var(--spacing-12); }
     .ad-result__favicon { width: 28px; height: 28px; border-radius: var(--radius-full); background-color: var(--color-background-secondary); flex-shrink: 0; }
@@ -2121,9 +2286,10 @@
       </aside>
       <div class="news-hub__main">
         <div class="news-hub__feed">
+          <div class="news-hub__top-ad" id="newsHubTopAd" hidden aria-label="Advertisement"></div>
           <div class="news-hub__content" id="newsHubContent" aria-label="News content"></div>
         </div>
-        <aside class="news-hub__rail" id="newsHubRail" aria-label="Related searches"></aside>
+        <aside class="news-hub__rail" id="newsHubRail" aria-label="Supplemental content"></aside>
       </div>
     </div>
   </main>
@@ -2210,6 +2376,23 @@
       return activeSearchTab === 'News';
     }
 
+    function isAllTab() {
+      return activeSearchTab === 'All';
+    }
+
+    function isImagesTab() {
+      return activeSearchTab === 'Images';
+    }
+
+    /** All + Images share the web SERP (news hub is News only). */
+    function isSerpResultsTab() {
+      return isAllTab() || isImagesTab();
+    }
+
+    function allTabNewsInRail() {
+      return isImagesTab();
+    }
+
     const serpBody = document.getElementById('serpBody');
 
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -2267,7 +2450,9 @@
     });
 
     function syncSearchView() {
-      if (serpBody) serpBody.classList.toggle('serp-body--news', isNewsTab());
+      if (!serpBody) return;
+      serpBody.classList.toggle('serp-body--news', isNewsTab());
+      serpBody.classList.toggle('serp-body--images-tab', isImagesTab());
     }
 
     function positionHeaderTabIndicator() {
@@ -3639,6 +3824,7 @@
 
     const ALL_TAB_MAX_ADS = 3;
     const ALL_TAB_NEWS_COUNT = 6;
+    const ALL_TAB_NEWS_RAIL_COUNT = 4;
     function formatNewsArticleTime(time) {
       return time
         .replace(/\bminutes\b/gi, 'min')
@@ -3649,22 +3835,50 @@
         .replace(/\bday\b/gi, 'd');
     }
 
-    function getAllTabNewsArticles(query) {
+    function getAllTabNewsArticles(query, count = ALL_TAB_NEWS_COUNT) {
       const articles = getNewsArticles(query, null);
       const withThumb = articles.filter(a => a.hasThumb);
-      const pool = withThumb.length >= ALL_TAB_NEWS_COUNT ? withThumb : articles;
-      return pool.slice(0, ALL_TAB_NEWS_COUNT);
+      const pool = withThumb.length >= count ? withThumb : articles;
+      return pool.slice(0, count);
     }
 
-    function renderAllTabNewsCard(article, query) {
-      const imgSrc = newsArticlePicsumUrl(article, 400, 225);
+    function renderAllTabNewsPublisherFavicon(publisher) {
+      const monogram = getPublisherMonogram(publisher);
+      return `<span class="news-article__favicon" aria-hidden="true"><span class="news-article__favicon-label">${monogram}</span></span>`;
+    }
+
+    function renderAllTabNewsCard(article, query, options = {}) {
+      const publisherMax = options.publisherMaxChars ?? SERP_ALL_NEWS_PUBLISHER_MAX_CHARS;
       const timeLabel = formatNewsArticleTime(article.time);
+      const favicon = renderAllTabNewsPublisherFavicon(article.publisher);
+      if (options.layout === 'rail') {
+        const thumbSrc = newsArticlePicsumUrl(article, 176, 176);
+        return `<li class="serp-all-news-card serp-all-news-card--rail">
+          <div class="serp-all-news-card__body">
+            <div class="serp-all-news-card__thumb" aria-hidden="true">
+              <img class="serp-all-news-card__thumb-img" src="${thumbSrc}" width="88" height="88" alt="" loading="lazy" decoding="async" />
+            </div>
+            <div class="serp-all-news-card__text">
+              <div class="serp-all-news-card__meta">
+                ${favicon}
+                ${renderNewsPublisher(article.publisher, query, publisherMax)}
+                <span class="serp-all-news-card__meta-sep" aria-hidden="true">·</span>
+                <span class="serp-all-news-card__time">${timeLabel}</span>
+              </div>
+              <a class="serp-all-news-card__title" href="#">${highlight(article.title, query)}</a>
+            </div>
+          </div>
+        </li>`;
+      }
+      const imgSrc = newsArticlePicsumUrl(article, 400, 225);
       return `<li class="serp-all-news-card">
         <div class="serp-all-news-card__thumb" aria-hidden="true">
           <img class="serp-all-news-card__thumb-img" src="${imgSrc}" width="400" height="225" alt="" loading="lazy" decoding="async" />
         </div>
         <div class="serp-all-news-card__meta">
-          ${renderNewsPublisher(article.publisher, query, SERP_ALL_NEWS_PUBLISHER_MAX_CHARS)}
+          ${favicon}
+          ${renderNewsPublisher(article.publisher, query, publisherMax)}
+          <span class="serp-all-news-card__meta-sep" aria-hidden="true">·</span>
           <span class="serp-all-news-card__time">${timeLabel}</span>
         </div>
         <a class="serp-all-news-card__title" href="#">${highlight(article.title, query)}</a>
@@ -3710,13 +3924,31 @@
       row.scrollBy({ left: direction * step, behavior: 'smooth' });
     }
 
-    function renderAllTabNewsRow(query) {
-      const articles = getAllTabNewsArticles(query);
-      if (!articles.length) return '';
-      const newsLabel = query.trim()
+    function getAllTabNewsSectionLabel(query) {
+      return query.trim()
         ? `News results for ${titleCase(query.trim())}`
         : 'News results';
-      return `<section class="serp-all-news" aria-label="News">
+    }
+
+    function renderAllTabNewsRail(query) {
+      const articles = getAllTabNewsArticles(query, ALL_TAB_NEWS_RAIL_COUNT);
+      if (!articles.length) return '';
+      const newsLabel = getAllTabNewsSectionLabel(query);
+      return `<section class="serp-all-news serp-all-news--rail" aria-label="News">
+        <h2 class="results-section-label">${newsLabel}</h2>
+        <ul class="serp-all-news__list">
+          ${articles.map(article => renderAllTabNewsCard(article, query, { layout: 'rail', publisherMaxChars: NEWS_PUBLISHER_MAX_CHARS })).join('')}
+        </ul>
+        ${renderAllTabNewsMoreButton()}
+      </section>`;
+    }
+
+    function renderAllTabNewsRow(query, options = {}) {
+      const articles = getAllTabNewsArticles(query);
+      if (!articles.length) return '';
+      const extraClass = options.extraClass ? ` ${options.extraClass}` : '';
+      const newsLabel = getAllTabNewsSectionLabel(query);
+      return `<section class="serp-all-news${extraClass}" aria-label="News">
         <h2 class="results-section-label">${newsLabel}</h2>
         <div class="serp-all-news__carousel">
           <div class="serp-all-news__viewport">
@@ -4010,13 +4242,61 @@
       </div>`;
     }
 
+    function renderImagesTabRail(query) {
+      const parts = [];
+      if (isSwiftNewsQuery(query)) parts.push(renderTaylorSwiftKnowledgePanel());
+      const newsRail = renderAllTabNewsRail(query);
+      if (newsRail) parts.push(newsRail);
+      if (isSwiftNewsQuery(query)) parts.push(renderTaylorSwiftRelatedSearches());
+      if (!parts.length) return '';
+      return `<div class="serp-view__rail-inner serp-view__rail-inner--images">${parts.join('')}</div>`;
+    }
+
     function syncSerpViewRail(query) {
       const serpView = document.getElementById('serpView');
       const serpRail = document.getElementById('serpViewRail');
       if (!serpView || !serpRail) return;
-      const show = Boolean(query.trim()) && isSwiftNewsQuery(query);
+      const q = query.trim();
+      const showImagesRail = isImagesTab() && q && (
+        getAllTabNewsArticles(query).length > 0 || isSwiftNewsQuery(query)
+      );
+      const showAllRail = isAllTab() && q && isSwiftNewsQuery(query);
+      const show = showImagesRail || showAllRail;
       serpView.classList.toggle('serp-view--with-rail', show);
-      serpRail.innerHTML = show ? renderAllTabRail() : '';
+      if (!show) {
+        serpRail.innerHTML = '';
+        return;
+      }
+      serpRail.innerHTML = isImagesTab() ? renderImagesTabRail(query) : renderAllTabRail();
+    }
+
+    function renderNewsHubDisplayAd(variant) {
+      const isLeaderboard = variant === 'leaderboard';
+      const modifier = isLeaderboard ? 'display-ad--leaderboard' : 'display-ad--rectangle';
+      const sizeLabel = isLeaderboard ? '728 × 90' : '300 × 250';
+      return `<div class="display-ad ${modifier}" data-display-ad="${variant}">
+        <span class="display-ad__label">Ad</span>
+        <div class="display-ad__slot" aria-hidden="true">${sizeLabel}</div>
+      </div>`;
+    }
+
+    function renderNewsHubRail(query) {
+      return `<div class="news-hub__rail-inner">
+        ${renderRelatedSearches(query)}
+        ${renderNewsHubDisplayAd('rectangle')}
+      </div>`;
+    }
+
+    function syncNewsHubDisplayAds(show) {
+      const topAd = document.getElementById('newsHubTopAd');
+      if (!topAd) return;
+      if (show) {
+        topAd.innerHTML = renderNewsHubDisplayAd('leaderboard');
+        topAd.hidden = false;
+      } else {
+        topAd.innerHTML = '';
+        topAd.hidden = true;
+      }
     }
 
     function renderRelatedSearches(query) {
@@ -4043,15 +4323,25 @@
       if (isNewsTab()) {
         if (serpTopAdEl) { serpTopAdEl.innerHTML = ''; serpTopAdEl.hidden = true; }
         syncSerpViewRail('');
+        syncNewsHubDisplayAds(true);
         if (isSwiftNewsQuery(query) && !options.preserveNewsCategory) clearNewsCategorySelection();
         if (list) { list.innerHTML = ''; meta.textContent = ''; }
         renderNewsFeed(query);
-        if (newsRail) newsRail.innerHTML = renderRelatedSearches(query);
+        if (newsRail) newsRail.innerHTML = renderNewsHubRail(query);
         if (options.scrollToTop) scrollPageToTopAfterRender();
         return;
       }
+      syncNewsHubDisplayAds(false);
       if (newsContent) newsContent.innerHTML = '';
       if (newsRail) newsRail.innerHTML = '';
+      if (!isSerpResultsTab()) {
+        if (list) list.innerHTML = '';
+        if (meta) meta.textContent = '';
+        if (serpTopAdEl) { serpTopAdEl.innerHTML = ''; serpTopAdEl.hidden = true; }
+        syncSerpViewRail('');
+        if (options.scrollToTop) scrollPageToTopAfterRender();
+        return;
+      }
       if (!query.trim()) {
         if (list) list.innerHTML = '';
         if (meta) meta.textContent = '';
@@ -4069,13 +4359,16 @@
         serpTopAdEl.hidden = !allTabAds.length;
       }
       const listAds = allTabAds.slice(1);
+      const newsInMain = allTabNewsInRail()
+        ? renderAllTabNewsRow(query, { extraClass: 'serp-all-news--mobile-fallback' })
+        : renderAllTabNewsRow(query);
       list.innerHTML =
         listAds.map(r => renderAd(r, query)).join('') +
-        renderAllTabNewsRow(query) +
+        newsInMain +
         '<div class="results-section-label">Web results</div>' +
         organic.map(r => renderOrganic(r, query)).join('');
       syncSerpViewRail(query);
-      requestAnimationFrame(syncAllSerpAllNewsCarousels);
+      if (!allTabNewsInRail()) requestAnimationFrame(syncAllSerpAllNewsCarousels);
       if (options.scrollToTop) scrollPageToTopAfterRender();
     }
 
@@ -4161,7 +4454,7 @@
       const qParam = urlParams.get('q');
       const tabParam = urlParams.get('tab');
       if (qParam && searchInput) searchInput.value = qParam;
-      if (tabParam === 'All' || tabParam === 'News') {
+      if (tabParam === 'All' || tabParam === 'News' || tabParam === 'Images') {
         applySearchTab(tabParam);
       } else if (qParam) {
         applySearchTab('All');

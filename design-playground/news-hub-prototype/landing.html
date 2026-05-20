@@ -313,8 +313,46 @@
       color: var(--color-text-inverted);
     }
 
+    .landing-customize {
+      position: fixed;
+      bottom: var(--spacing-24);
+      left: var(--spacing-24);
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-size: calc((var(--font-size-12) + var(--font-size-14)) / 2);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .landing-customize:hover {
+      text-decoration: underline;
+    }
+    .landing-customize__icon {
+      display: block;
+      width: calc((var(--spacing-16) + var(--spacing-20)) / 2);
+      height: calc((var(--spacing-16) + var(--spacing-20)) / 2);
+      flex-shrink: 0;
+    }
+    .landing-customize__label {
+      line-height: 1;
+    }
+    .landing-promos.is-hidden {
+      display: none;
+    }
+
     @media (max-width: 768px) {
       .landing-header { padding: var(--spacing-16); }
+      .landing-customize {
+        bottom: var(--spacing-16);
+        left: var(--spacing-16);
+      }
       .landing-main { padding-top: var(--spacing-24); }
       .landing-logo__svg { width: calc(var(--spacing-24) * 7); }
       .landing-promos__grid {
@@ -377,7 +415,7 @@
       </form>
     </div>
 
-    <section class="landing-promos">
+    <section class="landing-promos" id="landingPromos">
       <div class="landing-promos__grid">
         <article class="landing-promo-card">
           <div class="landing-promo-card__icon" aria-hidden="true"></div>
@@ -392,6 +430,16 @@
       </div>
     </section>
   </main>
+
+  <button type="button" class="landing-customize" id="landingCustomizeBtn" aria-pressed="false">
+    <svg class="landing-customize__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M13.0167 10.0833C12.9279 10.2844 12.9015 10.5075 12.9407 10.7237C12.9799 10.94 13.083 11.1395 13.2367 11.2967L13.2767 11.3367C13.4006 11.4605 13.499 11.6075 13.5661 11.7694C13.6332 11.9313 13.6677 12.1048 13.6677 12.28C13.6677 12.4552 13.6332 12.6287 13.5661 12.7906C13.499 12.9525 13.4006 13.0995 13.2767 13.2233C13.1528 13.3473 13.0058 13.4456 12.8439 13.5127C12.6821 13.5798 12.5086 13.6144 12.3333 13.6144C12.1581 13.6144 11.9846 13.5798 11.8227 13.5127C11.6609 13.4456 11.5138 13.3473 11.39 13.2233L11.35 13.1833C11.1929 13.0296 10.9933 12.9265 10.7771 12.8873C10.5608 12.8481 10.3377 12.8746 10.1367 12.9633C9.93949 13.0478 9.77132 13.1882 9.65287 13.367C9.53442 13.5459 9.47086 13.7555 9.47 13.97V14.0833C9.47 14.437 9.32952 14.7761 9.07948 15.0261C8.82943 15.2762 8.49029 15.4167 8.13667 15.4167C7.78305 15.4167 7.44391 15.2762 7.19386 15.0261C6.94381 14.7761 6.80333 14.437 6.80333 14.0833V14.0233C6.79817 13.8027 6.72675 13.5887 6.59834 13.4091C6.46994 13.2296 6.29049 13.0929 6.08333 13.0167C5.88226 12.9279 5.65921 12.9015 5.44294 12.9407C5.22668 12.9799 5.02712 13.083 4.87 13.2367L4.83 13.2767C4.70617 13.4006 4.55912 13.499 4.39725 13.5661C4.23539 13.6332 4.06189 13.6677 3.88667 13.6677C3.71145 13.6677 3.53794 13.6332 3.37608 13.5661C3.21422 13.499 3.06716 13.4006 2.94333 13.2767C2.81936 13.1528 2.72102 13.0058 2.65392 12.8439C2.58682 12.6821 2.55228 12.5086 2.55228 12.3333C2.55228 12.1581 2.58682 11.9846 2.65392 11.8227C2.72102 11.6609 2.81936 11.5138 2.94333 11.39L2.98333 11.35C3.13702 11.1929 3.24012 10.9933 3.27934 10.7771C3.31855 10.5608 3.29208 10.3377 3.20333 10.1367C3.11882 9.93949 2.9785 9.77132 2.79964 9.65287C2.62078 9.53442 2.41119 9.47086 2.19667 9.47H2.08333C1.72971 9.47 1.39057 9.32952 1.14052 9.07947C0.890476 8.82943 0.75 8.49029 0.75 8.13667C0.75 7.78304 0.890476 7.44391 1.14052 7.19386C1.39057 6.94381 1.72971 6.80333 2.08333 6.80333H2.14333C2.364 6.79817 2.578 6.72675 2.75753 6.59834C2.93706 6.46993 3.07381 6.29049 3.15 6.08333C3.23874 5.88226 3.26522 5.6592 3.226 5.44294C3.18679 5.22668 3.08369 5.02712 2.93 4.87L2.89 4.83C2.76603 4.70617 2.66769 4.55912 2.60059 4.39725C2.53349 4.23539 2.49895 4.06189 2.49895 3.88667C2.49895 3.71145 2.53349 3.53794 2.60059 3.37608C2.66769 3.21422 2.76603 3.06716 2.89 2.94333C3.01383 2.81936 3.16088 2.72102 3.32275 2.65392C3.48461 2.58682 3.65811 2.55228 3.83333 2.55228C4.00855 2.55228 4.18206 2.58682 4.34392 2.65392C4.50578 2.72102 4.65284 2.81936 4.77667 2.94333L4.81667 2.98333C4.97379 3.13702 5.17334 3.24012 5.38961 3.27934C5.60587 3.31855 5.82892 3.29208 6.03 3.20333H6.08333C6.28051 3.11882 6.44868 2.9785 6.56713 2.79964C6.68558 2.62078 6.74915 2.41119 6.75 2.19667V2.08333C6.75 1.72971 6.89048 1.39057 7.14053 1.14052C7.39057 0.890476 7.72971 0.75 8.08333 0.75C8.43696 0.75 8.77609 0.890476 9.02614 1.14052C9.27619 1.39057 9.41667 1.72971 9.41667 2.08333V2.14333C9.41752 2.35786 9.48109 2.56745 9.59954 2.74631C9.71799 2.92517 9.88615 3.06549 10.0833 3.15C10.2844 3.23874 10.5075 3.26522 10.7237 3.226C10.94 3.18679 11.1395 3.08369 11.2967 2.93L11.3367 2.89C11.4605 2.76603 11.6076 2.66769 11.7694 2.60059C11.9313 2.53349 12.1048 2.49895 12.28 2.49895C12.4552 2.49895 12.6287 2.53349 12.7906 2.60059C12.9525 2.66769 13.0995 2.76603 13.2233 2.89C13.3473 3.01383 13.4456 3.16088 13.5127 3.32275C13.5798 3.48461 13.6144 3.65811 13.6144 3.83333C13.6144 4.00855 13.5798 4.18206 13.5127 4.34392C13.4456 4.50578 13.3473 4.65284 13.2233 4.77667L13.1833 4.81667C13.0296 4.97379 12.9265 5.17334 12.8873 5.38961C12.8481 5.60587 12.8746 5.82892 12.9633 6.03V6.08333C13.0478 6.28051 13.1882 6.44868 13.367 6.56713C13.5459 6.68558 13.7555 6.74914 13.97 6.75H14.0833C14.437 6.75 14.7761 6.89048 15.0261 7.14052C15.2762 7.39057 15.4167 7.72971 15.4167 8.08333C15.4167 8.43695 15.2762 8.77609 15.0261 9.02614C14.7761 9.27619 14.437 9.41667 14.0833 9.41667H14.0233C13.8088 9.41752 13.5992 9.48109 13.4204 9.59954C13.2415 9.71799 13.1012 9.88615 13.0167 10.0833Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <g transform="translate(5.856 5.856) scale(0.810)">
+        <path d="M2.75 4.75C3.85457 4.75 4.75 3.85457 4.75 2.75C4.75 1.64543 3.85457 0.75 2.75 0.75C1.64543 0.75 0.75 1.64543 0.75 2.75C0.75 3.85457 1.64543 4.75 2.75 4.75Z" stroke="currentColor" stroke-width="1.852" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </svg>
+    <span class="landing-customize__label">Customize homepage</span>
+  </button>
 
   <script>
     const html = document.documentElement;
@@ -434,6 +482,23 @@
     document.getElementById('landingSearchForm').addEventListener('submit', e => {
       e.preventDefault();
       goToResults(searchInput.value);
+    });
+
+    const CUSTOMIZE_KEY = 'landingHomepageCustomized';
+    const customizeBtn = document.getElementById('landingCustomizeBtn');
+    const promosEl = document.getElementById('landingPromos');
+
+    function setHomepageCustomized(on) {
+      promosEl.classList.toggle('is-hidden', on);
+      customizeBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (on) storageSet(CUSTOMIZE_KEY, '1');
+      else storageSet(CUSTOMIZE_KEY, '');
+    }
+
+    if (storageGet(CUSTOMIZE_KEY) === '1') setHomepageCustomized(true);
+
+    customizeBtn.addEventListener('click', () => {
+      setHomepageCustomized(!promosEl.classList.contains('is-hidden'));
     });
 
     document.querySelectorAll('[data-btn]').forEach(btn => {
