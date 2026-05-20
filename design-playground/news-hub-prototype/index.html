@@ -1282,7 +1282,7 @@
 
     /* All tab — compact news row below ads */
     .serp-all-news {
-      --news-publisher-max-chars: 28;
+      --news-publisher-max-chars: 14;
       width: 100%;
       max-width: 628px;
       margin-top: var(--spacing-16);
@@ -1328,6 +1328,7 @@
         / var(--serp-all-news-visible)
       );
       min-width: 0;
+      overflow: hidden;
       scroll-snap-align: start;
     }
     .serp-all-news__prev,
@@ -1388,15 +1389,17 @@
       display: flex;
       align-items: center;
       flex-wrap: nowrap;
-      gap: var(--spacing-12);
+      gap: var(--spacing-4);
       min-width: 0;
+      overflow: hidden;
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
       color: var(--color-text-tertiary);
     }
     .serp-all-news-card__meta .news-article__publisher {
-      flex: 0 0 auto;
-      max-width: min(calc(var(--news-publisher-max-chars, 28) * 1ch), 100%);
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: min(calc(var(--news-publisher-max-chars, 14) * 1ch), 100%);
     }
     .serp-all-news-card__time {
       flex: 0 0 auto;
@@ -3412,6 +3415,7 @@
     }
 
     const NEWS_PUBLISHER_MAX_CHARS = 28;
+    const SERP_ALL_NEWS_PUBLISHER_MAX_CHARS = 14;
 
     function truncatePublisherName(name, maxChars) {
       if (name.length <= maxChars) return name;
@@ -3632,7 +3636,7 @@
           <img class="serp-all-news-card__thumb-img" src="${imgSrc}" width="400" height="225" alt="" loading="lazy" decoding="async" />
         </div>
         <div class="serp-all-news-card__meta">
-          ${renderNewsPublisher(article.publisher, query)}
+          ${renderNewsPublisher(article.publisher, query, SERP_ALL_NEWS_PUBLISHER_MAX_CHARS)}
           <span class="serp-all-news-card__time">${timeLabel}</span>
         </div>
         <a class="serp-all-news-card__title" href="#">${highlight(article.title, query)}</a>
