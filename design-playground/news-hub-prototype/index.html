@@ -2254,8 +2254,11 @@
         document.activeElement.blur();
       }
       scrollPageToTop();
-      activeNewsCategory = 'top-stories';
-      syncNewsSidebarActive('top-stories');
+      activeNewsCategory = null;
+      document.querySelectorAll('.news-sidebar__link').forEach(link => {
+        link.classList.remove('news-sidebar__link--active');
+        link.removeAttribute('aria-current');
+      });
       applySearchTab('News', { preserveNewsCategory: true });
     }
 
