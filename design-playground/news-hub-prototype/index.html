@@ -568,7 +568,6 @@
     }
     .news-hub__top-ad {
       width: 100%;
-      max-width: 728px;
     }
     .news-hub__top-ad[hidden] {
       display: none;
@@ -603,13 +602,24 @@
       line-height: var(--font-body-xs-lh);
     }
     .display-ad--leaderboard {
+      --display-ad-leaderboard-width: 728px;
+      --display-ad-leaderboard-height: 90px;
       width: 100%;
-      max-width: 728px;
+    }
+    .display-ad--leaderboard .display-ad__stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: var(--display-ad-leaderboard-height);
+      background: var(--color-background-tertiary);
+      border-radius: var(--radius-sm);
     }
     .display-ad--leaderboard .display-ad__slot {
-      width: 100%;
-      max-width: 728px;
-      height: 90px;
+      width: var(--display-ad-leaderboard-width);
+      height: var(--display-ad-leaderboard-height);
+      flex-shrink: 0;
+      background: var(--color-background-primary);
     }
     .display-ad--rectangle {
       width: 100%;
@@ -4274,9 +4284,13 @@
       const isLeaderboard = variant === 'leaderboard';
       const modifier = isLeaderboard ? 'display-ad--leaderboard' : 'display-ad--rectangle';
       const sizeLabel = isLeaderboard ? '728 × 90' : '300 × 250';
+      const slotHtml = `<div class="display-ad__slot" aria-hidden="true">${sizeLabel}</div>`;
+      const adBody = isLeaderboard
+        ? `<div class="display-ad__stage">${slotHtml}</div>`
+        : slotHtml;
       return `<div class="display-ad ${modifier}" data-display-ad="${variant}">
         <span class="display-ad__label">Ad</span>
-        <div class="display-ad__slot" aria-hidden="true">${sizeLabel}</div>
+        ${adBody}
       </div>`;
     }
 
