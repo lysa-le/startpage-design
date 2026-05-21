@@ -498,7 +498,7 @@
     .knowledge-panel__feedback:hover { text-decoration: underline; }
     .news-related__query-strong {
       font-weight: var(--font-weight-semibold);
-      color: var(--color-text-primary);
+      color: inherit;
     }
 
     /* ─────────────────────────────────────────────
@@ -596,7 +596,7 @@
       box-sizing: border-box;
       border: none;
       border-radius: var(--radius-sm);
-      background: var(--color-background-secondary);
+      background: var(--color-background-tertiary);
       color: var(--color-text-tertiary);
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
@@ -612,7 +612,7 @@
       justify-content: center;
       width: 100%;
       height: var(--display-ad-leaderboard-height);
-      background: var(--color-background-secondary);
+      background: var(--color-background-tertiary);
       border-radius: var(--radius-sm);
     }
     .display-ad--leaderboard .display-ad__slot {
@@ -634,6 +634,7 @@
       width: 300px;
       max-width: 100%;
       height: 250px;
+      background: var(--color-background-secondary);
     }
     .news-sidebar__list {
       list-style: none;
@@ -1176,15 +1177,15 @@
     }
     .news-related__link:hover {
       background: var(--color-background-secondary);
-      color: var(--color-text-brandblue);
+      color: var(--color-text-link);
+      text-decoration: underline;
     }
     .news-related__icon {
       flex-shrink: 0;
       width: var(--spacing-16);
       height: var(--spacing-16);
-      color: var(--color-icon-tertiary);
+      color: currentColor;
     }
-    .news-related__link:hover .news-related__icon { color: var(--color-icon-secondary); }
 
     /* ─────────────────────────────────────────────
        Responsive — Compact desktop (≤1280px)
@@ -1497,6 +1498,7 @@
       margin: 0;
     }
     .serp-all-news-card__title {
+      margin: 0;
       font-size: var(--font-body-md);
       line-height: var(--font-body-md-lh);
       font-weight: var(--font-weight-regular);
@@ -1509,6 +1511,22 @@
       text-overflow: ellipsis;
     }
     .serp-all-news-card__title:hover { text-decoration: underline; }
+    .serp-all-news-card__description {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .serp-all-news-card--rail .serp-all-news-card__description {
+      -webkit-line-clamp: 1;
+    }
+
     .serp-all-news__more {
       display: flex;
       align-items: center;
@@ -1530,7 +1548,7 @@
     /* Images tab — news stack in right rail (desktop) */
     .serp-all-news--rail {
       --news-publisher-max-chars: 28;
-      --serp-rail-news-thumb-size: 88px;
+      --serp-rail-news-thumb-size: calc(var(--spacing-24) * 4);
       width: 100%;
       max-width: none;
       margin: 0;
@@ -1554,7 +1572,7 @@
     .serp-all-news-card--rail .serp-all-news-card__body {
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
+      align-items: center;
       gap: var(--spacing-16);
       min-width: 0;
     }
@@ -1563,7 +1581,7 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-8);
+      gap: var(--spacing-4);
     }
     .serp-all-news-card--rail .serp-all-news-card__meta {
       gap: var(--spacing-8);
@@ -3840,6 +3858,8 @@
     const ALL_TAB_MAX_ADS = 3;
     const ALL_TAB_NEWS_COUNT = 6;
     const ALL_TAB_NEWS_RAIL_COUNT = 4;
+    const ALL_TAB_NEWS_RAIL_AD_INDEX = 2;
+    const ALL_TAB_NEWS_CAROUSEL_AD_INDEX = 3;
     function formatNewsArticleTime(time) {
       return time
         .replace(/\bminutes\b/gi, 'min')
@@ -3867,11 +3887,11 @@
       const timeLabel = formatNewsArticleTime(article.time);
       const favicon = renderAllTabNewsPublisherFavicon(article.publisher);
       if (options.layout === 'rail') {
-        const thumbSrc = newsArticlePicsumUrl(article, 176, 176);
+        const thumbSrc = newsArticlePicsumUrl(article, 192, 192);
         return `<li class="serp-all-news-card serp-all-news-card--rail">
           <div class="serp-all-news-card__body">
             <div class="serp-all-news-card__thumb" aria-hidden="true">
-              <img class="serp-all-news-card__thumb-img" src="${thumbSrc}" width="88" height="88" alt="" loading="lazy" decoding="async" />
+              <img class="serp-all-news-card__thumb-img" src="${thumbSrc}" width="96" height="96" alt="" loading="lazy" decoding="async" />
             </div>
             <div class="serp-all-news-card__text">
               <div class="serp-all-news-card__meta">
@@ -3881,6 +3901,7 @@
                 <span class="serp-all-news-card__time">${timeLabel}</span>
               </div>
               <a class="serp-all-news-card__title" href="#">${highlight(article.title, query)}</a>
+              ${article.snippet ? `<p class="serp-all-news-card__description">${highlight(article.snippet, query)}</p>` : ''}
             </div>
           </div>
         </li>`;
@@ -3897,7 +3918,94 @@
           <span class="serp-all-news-card__time">${timeLabel}</span>
         </div>
         <a class="serp-all-news-card__title" href="#">${highlight(article.title, query)}</a>
+        ${article.snippet ? `<p class="serp-all-news-card__description">${highlight(article.snippet, query)}</p>` : ''}
       </li>`;
+    }
+
+    function getContextualAd(query, index) {
+      const ads = generateSponsoredAds(query);
+      return ads[index] || ads[0] || null;
+    }
+
+    function getAllTabCarouselContextualAd(query) {
+      return getContextualAd(query, ALL_TAB_NEWS_CAROUSEL_AD_INDEX);
+    }
+
+    function getAllTabRailContextualAd(query) {
+      return getContextualAd(query, ALL_TAB_NEWS_RAIL_AD_INDEX);
+    }
+
+    function renderAllTabNewsCarouselAd(ad, query) {
+      if (!ad) return '';
+      const publisherMax = SERP_ALL_NEWS_PUBLISHER_MAX_CHARS;
+      const favicon = renderAllTabNewsPublisherFavicon(ad.siteName);
+      return `<li class="serp-all-news-card serp-all-news-card--ad" aria-label="Sponsored advertisement">
+        <div class="serp-all-news-card__thumb" aria-hidden="true"></div>
+        <div class="serp-all-news-card__meta">
+          ${favicon}
+          ${renderNewsPublisher(ad.siteName, query, publisherMax)}
+          <span class="serp-all-news-card__meta-sep" aria-hidden="true">·</span>
+          <span class="serp-all-news-card__time">Sponsored</span>
+        </div>
+        <a class="serp-all-news-card__title" href="#">${highlight(ad.title, query)}</a>
+        <p class="serp-all-news-card__description">${highlight(ad.description, query)}</p>
+      </li>`;
+    }
+
+    function renderAllTabNewsRailAd(ad, query) {
+      if (!ad) return '';
+      const publisherMax = NEWS_PUBLISHER_MAX_CHARS;
+      const favicon = renderAllTabNewsPublisherFavicon(ad.siteName);
+      return `<li class="serp-all-news-card serp-all-news-card--rail serp-all-news-card--ad" aria-label="Sponsored advertisement">
+        <div class="serp-all-news-card__body">
+          <div class="serp-all-news-card__thumb" aria-hidden="true"></div>
+          <div class="serp-all-news-card__text">
+            <div class="serp-all-news-card__meta">
+              ${favicon}
+              ${renderNewsPublisher(ad.siteName, query, publisherMax)}
+              <span class="serp-all-news-card__meta-sep" aria-hidden="true">·</span>
+              <span class="serp-all-news-card__time">Sponsored</span>
+            </div>
+            <a class="serp-all-news-card__title" href="#">${highlight(ad.title, query)}</a>
+            <p class="serp-all-news-card__description">${highlight(ad.description, query)}</p>
+          </div>
+        </div>
+      </li>`;
+    }
+
+    function buildAllTabNewsRailItems(query) {
+      const articles = getAllTabNewsArticles(query, ALL_TAB_NEWS_RAIL_COUNT - 1);
+      if (!articles.length) return '';
+      const items = [];
+      let articleIndex = 0;
+      for (let i = 0; i < ALL_TAB_NEWS_RAIL_COUNT; i++) {
+        if (i === ALL_TAB_NEWS_RAIL_AD_INDEX) {
+          items.push(renderAllTabNewsRailAd(getAllTabRailContextualAd(query), query));
+        } else if (articleIndex < articles.length) {
+          items.push(renderAllTabNewsCard(articles[articleIndex++], query, {
+            layout: 'rail',
+            publisherMaxChars: NEWS_PUBLISHER_MAX_CHARS,
+          }));
+        }
+      }
+      return items.filter(Boolean).join('');
+    }
+
+    function buildAllTabNewsCarouselItems(query, options = {}) {
+      const includeAd = options.includeCarouselAd !== false;
+      const articleCount = includeAd ? ALL_TAB_NEWS_COUNT - 1 : ALL_TAB_NEWS_COUNT;
+      const articles = getAllTabNewsArticles(query, articleCount);
+      if (!articles.length && !includeAd) return '';
+      const items = [];
+      let articleIndex = 0;
+      for (let i = 0; i < ALL_TAB_NEWS_COUNT; i++) {
+        if (includeAd && i === ALL_TAB_NEWS_CAROUSEL_AD_INDEX) {
+          items.push(renderAllTabNewsCarouselAd(getAllTabCarouselContextualAd(query), query));
+        } else if (articleIndex < articles.length) {
+          items.push(renderAllTabNewsCard(articles[articleIndex++], query));
+        }
+      }
+      return items.filter(Boolean).join('');
     }
 
     function renderAllTabNewsMoreButton() {
@@ -3946,21 +4054,21 @@
     }
 
     function renderAllTabNewsRail(query) {
-      const articles = getAllTabNewsArticles(query, ALL_TAB_NEWS_RAIL_COUNT);
-      if (!articles.length) return '';
+      const railItems = buildAllTabNewsRailItems(query);
+      if (!railItems) return '';
       const newsLabel = getAllTabNewsSectionLabel(query);
       return `<section class="serp-all-news serp-all-news--rail" aria-label="News">
         <h2 class="results-section-label">${newsLabel}</h2>
         <ul class="serp-all-news__list">
-          ${articles.map(article => renderAllTabNewsCard(article, query, { layout: 'rail', publisherMaxChars: NEWS_PUBLISHER_MAX_CHARS })).join('')}
+          ${railItems}
         </ul>
         ${renderAllTabNewsMoreButton()}
       </section>`;
     }
 
     function renderAllTabNewsRow(query, options = {}) {
-      const articles = getAllTabNewsArticles(query);
-      if (!articles.length) return '';
+      const carouselItems = buildAllTabNewsCarouselItems(query, options);
+      if (!carouselItems) return '';
       const extraClass = options.extraClass ? ` ${options.extraClass}` : '';
       const newsLabel = getAllTabNewsSectionLabel(query);
       return `<section class="serp-all-news${extraClass}" aria-label="News">
@@ -3968,7 +4076,7 @@
         <div class="serp-all-news__carousel">
           <div class="serp-all-news__viewport">
             <ul class="serp-all-news__row" aria-label="News results carousel">
-              ${articles.map(article => renderAllTabNewsCard(article, query)).join('')}
+              ${carouselItems}
             </ul>
           </div>
           <button type="button" class="serp-all-news__prev" hidden aria-label="Show previous news results">
@@ -4379,7 +4487,7 @@
       }
       const listAds = allTabAds.slice(1);
       const newsInMain = allTabNewsInRail()
-        ? renderAllTabNewsRow(query, { extraClass: 'serp-all-news--mobile-fallback' })
+        ? renderAllTabNewsRow(query, { extraClass: 'serp-all-news--mobile-fallback', includeCarouselAd: false })
         : renderAllTabNewsRow(query);
       list.innerHTML =
         listAds.map(r => renderAd(r, query)).join('') +
