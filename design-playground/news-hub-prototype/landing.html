@@ -13,6 +13,7 @@
       --color-background-primary:    var(--color-black-900);
       --color-background-secondary:  var(--color-black-550);
       --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
       --color-text-primary:          var(--color-whisper-100);
       --color-text-secondary:        var(--color-midnight-200);
       --color-text-tertiary:         var(--color-midnight-100);
@@ -43,7 +44,8 @@
     .theme-toggle {
       position: fixed;
       top: var(--spacing-24);
-      right: var(--spacing-24);
+      left: var(--spacing-24);
+      right: auto;
       display: inline-flex;
       align-items: center;
       gap: var(--spacing-8);
@@ -65,6 +67,13 @@
       align-items: center;
       justify-content: flex-end;
       padding: var(--spacing-24) var(--spacing-32);
+      position: relative;
+      z-index: 100;
+    }
+    .landing-header__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
     }
     .landing-header__menu {
       display: inline-flex;
@@ -75,6 +84,7 @@
       background: none;
       cursor: pointer;
       color: var(--color-icon-primary);
+      flex-shrink: 0;
     }
     .landing-header__menu:hover { color: var(--color-icon-secondary); }
 
@@ -86,6 +96,16 @@
       max-width: calc(var(--spacing-24) * 30);
       margin: 0 auto;
       padding: var(--spacing-48) var(--spacing-24) var(--spacing-80);
+    }
+    body[data-widgets-enabled="true"] .landing-main {
+      max-width: min(100%, calc(var(--spacing-24) * 48));
+      align-items: stretch;
+    }
+    .landing-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
     }
 
     .landing-logo {
@@ -218,12 +238,33 @@
       width: 100%;
       margin-top: var(--spacing-48);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .landing-promos--in-feed {
+      margin-top: 0;
+    }
+    .landing-promos__label {
+      margin: 0 0 var(--spacing-12);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      display: none;
+    }
+    .landing-promos--in-feed .landing-promos__label {
+      display: block;
     }
     .landing-promos__grid {
       display: grid;
       grid-template-columns: repeat(2, 258px);
       gap: var(--spacing-16);
+      justify-content: center;
+    }
+    .landing-promos--in-feed .landing-promos__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      justify-content: stretch;
+      width: 100%;
     }
     .landing-promo-card {
       width: 258px;
@@ -313,51 +354,1022 @@
       color: var(--color-text-inverted);
     }
 
-    .landing-customize {
+    /* Product button — filled (from components/button) */
+    .btn--product-filled {
+      padding: var(--spacing-12) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+      background-color: var(--color-button-productfilled);
+      color: var(--color-text-primary);
+      transition: background-color 0.15s ease;
+    }
+    .btn--product-filled::before {
+      display: none;
+    }
+    .btn--product-filled:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+    .btn.btn--product-filled.landing-header__customize {
+      flex-shrink: 0;
+      padding: var(--spacing-8) var(--spacing-12);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+    }
+    .btn:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    .landing-promo-toggle {
       position: fixed;
       bottom: var(--spacing-24);
-      left: var(--spacing-24);
+      right: var(--spacing-24);
       z-index: 100;
-      display: inline-flex;
-      align-items: center;
-      gap: var(--spacing-8);
       padding: 0;
       border: none;
       background: none;
       cursor: pointer;
       font-family: var(--font-family);
       font-size: calc((var(--font-size-12) + var(--font-size-14)) / 2);
+      line-height: 1;
       font-weight: var(--font-weight-regular);
       color: var(--color-text-link);
       text-decoration: none;
     }
-    .landing-customize:hover {
+    .landing-promo-toggle:hover {
       text-decoration: underline;
-    }
-    .landing-customize__icon {
-      display: block;
-      width: calc((var(--spacing-16) + var(--spacing-20)) / 2);
-      height: calc((var(--spacing-16) + var(--spacing-20)) / 2);
-      flex-shrink: 0;
-    }
-    .landing-customize__label {
-      line-height: 1;
     }
     .landing-promos.is-hidden {
       display: none;
     }
 
+    /* Homepage widget feed (wireframe 2-column) */
+    .landing-feed[hidden] {
+      display: none !important;
+    }
+    .landing-feed {
+      width: 100%;
+      margin-top: var(--spacing-40);
+    }
+    .landing-feed__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(calc(var(--spacing-24) * 12), 320px);
+      gap: var(--spacing-24);
+      align-items: start;
+    }
+    body[data-home-layout="centered"] .landing-feed__grid {
+      grid-template-columns: 1fr;
+    }
+    .landing-feed__main {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-32);
+      min-width: 0;
+    }
+    .landing-feed__sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+      min-width: 0;
+    }
+    .home-widget.is-hidden {
+      display: none;
+    }
+    .home-widget {
+      padding: var(--spacing-20);
+      border-radius: var(--radius-xl);
+      background: var(--color-background-quaternary);
+    }
+    .home-widget__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+      margin-bottom: var(--spacing-16);
+    }
+    .home-widget__title-row {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      min-width: 0;
+    }
+    .home-widget__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: calc(var(--spacing-24) + var(--spacing-4));
+      height: calc(var(--spacing-24) + var(--spacing-4));
+      color: var(--color-icon-secondary);
+      flex-shrink: 0;
+    }
+    .home-widget__title {
+      margin: 0;
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .home-widget__more {
+      flex-shrink: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .home-widget__more:hover {
+      text-decoration: underline;
+    }
+    /* Top stories — matches All tab news carousel (serp-all-news-card) */
+    .home-top-stories {
+      width: 100%;
+    }
+    .home-top-stories .serp-all-news__viewport {
+      width: 100%;
+      overflow: hidden;
+    }
+    .home-top-stories .serp-all-news__row {
+      --serp-all-news-carousel-gap: var(--spacing-24);
+      --serp-all-news-visible: 3;
+      --news-publisher-max-chars: 14;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: var(--serp-all-news-carousel-gap);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .home-top-stories .serp-all-news__row::-webkit-scrollbar {
+      display: none;
+    }
+    .home-top-stories .serp-all-news-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      flex: 0 0 calc(
+        (100% - (var(--serp-all-news-carousel-gap) * (var(--serp-all-news-visible) - 1)))
+        / var(--serp-all-news-visible)
+      );
+      min-width: 0;
+      overflow: hidden;
+      scroll-snap-align: start;
+    }
+    .home-top-stories .serp-all-news-card__thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, var(--color-background-tertiary) 0%, transparent 55%),
+        var(--color-background-secondary);
+    }
+    .home-top-stories .serp-all-news-card__thumb-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .home-top-stories .serp-all-news-card__meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: var(--spacing-8);
+      min-width: 0;
+      overflow: hidden;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .home-top-stories .serp-all-news-card__meta .news-article__favicon {
+      flex-shrink: 0;
+    }
+    .home-top-stories .serp-all-news-card__meta .news-article__publisher {
+      flex: 0 1 auto;
+      min-width: 0;
+      max-width: min(calc(var(--news-publisher-max-chars, 14) * 1ch), 100%);
+    }
+    .home-top-stories .serp-all-news-card__time {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+    .home-top-stories .serp-all-news-card__meta-sep {
+      flex: 0 0 auto;
+      color: var(--color-text-tertiary);
+      line-height: 1;
+    }
+    .home-top-stories .serp-all-news-card__time::before {
+      content: none;
+      margin: 0;
+    }
+    .home-top-stories .serp-all-news-card__title {
+      margin: 0;
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .home-top-stories .serp-all-news-card__title:hover {
+      text-decoration: underline;
+    }
+    .home-top-stories .serp-all-news-card__description {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .home-top-stories .news-article__favicon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: calc(var(--spacing-24) + var(--spacing-4));
+      height: calc(var(--spacing-24) + var(--spacing-4));
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+      background-color: var(--color-background-tertiary);
+    }
+    .home-top-stories .news-article__favicon-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1;
+      color: var(--color-text-secondary);
+    }
+    .home-top-stories .news-article__publisher {
+      flex: 0 0 auto;
+      max-width: min(calc(var(--news-publisher-max-chars) * 1ch), 100%);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+    }
+    .home-scores__header-main {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+      width: 100%;
+      min-width: 0;
+    }
+    .home-scores__favicon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: calc(var(--spacing-24) + var(--spacing-4));
+      height: calc(var(--spacing-24) + var(--spacing-4));
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+      background-color: var(--color-background-tertiary);
+    }
+    .home-scores__favicon-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1;
+      color: var(--color-text-secondary);
+    }
+    .home-scores__filters {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--spacing-8);
+      margin-left: auto;
+    }
+    .home-scores__filter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: calc(var(--spacing-24) + var(--spacing-4));
+      padding: 0 var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-full);
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .home-scores__filter:hover {
+      border-color: var(--color-stroke-primary-button);
+      color: var(--color-text-primary);
+    }
+    .home-scores__filter--active {
+      border-color: var(--color-stroke-primary-button);
+      background: var(--color-background-primary);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-brandblue);
+    }
+    .home-scores__filter:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 2px;
+    }
+    .home-scores__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-12);
+      list-style: none;
+    }
+    .home-score-card {
+      padding: var(--spacing-16);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+    }
+    .home-score-card__league {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-tertiary);
+    }
+    .home-score-card__matchup {
+      margin-top: var(--spacing-8);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .home-score-card__score {
+      margin-top: var(--spacing-4);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+    }
+    /* Weather widget — Startpage Design Home (Figma node 286:3425) */
+    .home-weather {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+      width: 100%;
+      min-width: 0;
+    }
+    .home-weather__top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+    }
+    .home-weather__location-block {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .home-weather__location {
+      margin: 0;
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+    .home-weather__meta {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: baseline;
+      gap: var(--spacing-4);
+      margin: var(--spacing-4) 0 0;
+      width: 100%;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+    .home-weather__meta-sep {
+      flex-shrink: 0;
+      color: var(--color-text-secondary);
+    }
+    .home-weather__units {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      flex-shrink: 0;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      white-space: nowrap;
+    }
+    .home-weather__unit {
+      padding: 0;
+      border: none;
+      background: none;
+      font-family: var(--font-family);
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+    }
+    .home-weather__unit--active {
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      cursor: default;
+    }
+    .home-weather__unit-sep {
+      color: var(--color-text-secondary);
+      user-select: none;
+    }
+    .home-weather__hero {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-16);
+      margin-top: calc(-1 * var(--spacing-8));
+    }
+    .home-weather__hero-main {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      min-width: 0;
+    }
+    .home-weather__icon {
+      width: var(--spacing-40);
+      height: var(--spacing-40);
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+    .home-weather__temp {
+      margin: 0;
+      font-size: var(--spacing-40);
+      line-height: 1;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      letter-spacing: -0.02em;
+    }
+    .home-weather__temp-degree {
+      font-weight: var(--font-weight-semibold);
+    }
+    .home-weather__segments-scroll {
+      width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .home-weather__segments-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .home-weather__segments {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: var(--spacing-8);
+      width: max-content;
+      min-width: 100%;
+    }
+    .home-weather__segment {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      white-space: nowrap;
+      height: var(--spacing-32);
+      padding: var(--spacing-8) var(--spacing-12);
+      border: var(--border-stroke-sm) solid transparent;
+      border-radius: var(--radius-lg);
+      background: var(--color-background-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .home-weather__segment--active {
+      border-color: var(--color-stroke-primary-button);
+      background: var(--color-background-primary);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-brandblue);
+    }
+    .home-weather__segment:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 2px;
+    }
+    .home-weather__chart {
+      --home-weather-chart-graph-height: calc(var(--spacing-24) * 2.5);
+      --home-weather-chart-temp-stagger: var(--spacing-24);
+      --home-weather-chart-temp-overlap: var(--spacing-20);
+      --home-weather-chart-temp-gap: calc(-1 * var(--home-weather-chart-temp-overlap));
+      --home-weather-chart-plot-height: var(--home-weather-chart-graph-height);
+      width: 100%;
+      min-width: 0;
+    }
+    .home-weather__chart-panel {
+      width: 100%;
+      min-width: 0;
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      overflow: visible;
+    }
+    .home-weather__chart-scroll {
+      width: 100%;
+      min-width: 0;
+      padding: calc(var(--font-utility-caption-lh) + var(--home-weather-chart-temp-stagger) + var(--spacing-8) - var(--home-weather-chart-temp-overlap)) var(--spacing-12) var(--spacing-12);
+      overflow: visible;
+    }
+    .home-weather__chart-track {
+      --home-weather-chart-points: 6;
+      /* Prototype only: 10px time labels (below DS minimum 12px) */
+      --home-weather-chart-time-font-size: 0.625rem;
+      --home-weather-chart-time-line-height: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      width: 100%;
+      min-width: 0;
+    }
+    .home-weather__chart-plot {
+      position: relative;
+      width: 100%;
+      height: var(--home-weather-chart-plot-height);
+      overflow: visible;
+    }
+    .home-weather__chart-svg {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      height: var(--home-weather-chart-graph-height);
+      overflow: visible;
+    }
+    .home-weather__chart-area {
+      fill: url(#homeWeatherChartFill);
+    }
+    .home-weather__chart-line {
+      fill: none;
+      stroke: var(--color-accent-gold);
+      stroke-width: var(--border-stroke-sm);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .home-weather__chart-temps {
+      position: absolute;
+      top: auto;
+      right: 0;
+      bottom: 100%;
+      left: 0;
+      display: grid;
+      grid-template-columns: repeat(var(--home-weather-chart-points), minmax(0, 1fr));
+      align-items: start;
+      height: calc(var(--font-utility-caption-lh) + var(--home-weather-chart-temp-stagger));
+      margin: 0 0 var(--home-weather-chart-temp-gap);
+      padding: 0;
+      list-style: none;
+      pointer-events: none;
+    }
+    .home-weather__chart-temp {
+      justify-self: center;
+      margin-top: calc(var(--chart-temp-offset, 0) * 1px);
+      font-size: var(--font-utility-caption);
+      line-height: var(--font-utility-caption-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+    .home-weather__chart-times {
+      display: grid;
+      grid-template-columns: repeat(var(--home-weather-chart-points), minmax(0, 1fr));
+      gap: 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: var(--home-weather-chart-time-font-size);
+      line-height: var(--home-weather-chart-time-line-height);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      text-align: center;
+    }
+    .home-weather__chart-times li {
+      min-width: 0;
+    }
+    .home-weather__daily {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-8);
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .home-weather__day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-12);
+      min-width: 0;
+      padding: var(--spacing-12) var(--spacing-8);
+      border-radius: var(--radius-lg);
+      text-align: center;
+    }
+    .home-weather__day--active {
+      background: var(--color-background-primary);
+    }
+    .home-weather__day-name {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .home-weather__day-icon {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+    .home-weather__day-temps {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-4);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+    }
+    .home-weather__day-high {
+      color: var(--color-text-primary);
+    }
+    .home-weather__day-low {
+      color: var(--color-text-secondary);
+    }
+    .home-weather__footer {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-secondary);
+    }
+    .home-weather__attribution {
+      margin: 0;
+    }
+    .home-weather__footer-link {
+      padding: 0;
+      border: none;
+      background: none;
+      font-family: var(--font-family);
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--color-text-link);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .home-weather__footer-link:hover {
+      text-decoration: underline;
+    }
+    .landing-edit-widgets {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-8);
+      width: 100%;
+      padding: var(--spacing-12) var(--spacing-16);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: border-color 150ms ease, color 150ms ease;
+    }
+    .landing-edit-widgets:hover {
+      border-color: var(--color-stroke-primary);
+      color: var(--color-text-primary);
+    }
+    .landing-edit-widgets__icon {
+      color: var(--color-icon-tertiary);
+    }
+    .customize-home__master {
+      padding-bottom: var(--spacing-24);
+      margin-bottom: var(--spacing-24);
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .customize-home__master-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+    }
+    .customize-home__widgets.is-disabled .customize-home__widget,
+    .customize-home__layout-section.is-disabled .customize-home__layout-grid {
+      opacity: 0.55;
+      pointer-events: none;
+    }
+    .customize-home__widgets-hint {
+      margin: 0 0 var(--spacing-12);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+
+    /* Customize home panel */
+    .customize-home-backdrop[hidden] {
+      display: none;
+    }
+    .customize-home-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 350;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: calc(var(--spacing-24) + var(--spacing-48)) var(--spacing-32) var(--spacing-32);
+      background-color: color-mix(in srgb, var(--color-black-900) 20%, transparent);
+    }
+    .customize-home {
+      width: min(100%, 400px);
+      max-height: calc(100vh - var(--spacing-48) * 2);
+      overflow: auto;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-card);
+    }
+    .customize-home__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      padding: var(--spacing-20) var(--spacing-24);
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .customize-home__title {
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .customize-home__header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+      flex-shrink: 0;
+    }
+    .customize-home__save {
+      padding: 0;
+      border: none;
+      background: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      cursor: pointer;
+    }
+    .customize-home__save:hover {
+      text-decoration: underline;
+    }
+    .customize-home__close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-24);
+      height: var(--spacing-24);
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--color-icon-primary);
+      cursor: pointer;
+    }
+    .customize-home__close:hover {
+      color: var(--color-icon-secondary);
+    }
+    .customize-home__body {
+      padding: var(--spacing-24);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+    }
+    .customize-home__section-label {
+      margin: 0 0 var(--spacing-12);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .customize-home__layout-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-12);
+    }
+    .customize-home__layout-option {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-8);
+      padding: var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      cursor: pointer;
+      font-family: var(--font-family);
+      text-align: center;
+      transition: border-color 150ms ease, color 150ms ease;
+    }
+    .customize-home__layout-option:hover {
+      border-color: var(--color-stroke-primary);
+    }
+    .customize-home__layout-option[aria-pressed="true"] {
+      border-color: var(--color-stroke-primary-button);
+      border-width: var(--border-stroke-md);
+      padding: calc(var(--spacing-12) - 1px);
+    }
+    .customize-home__layout-option[aria-pressed="true"] .customize-home__layout-name {
+      color: var(--color-text-link);
+      font-weight: var(--font-weight-medium);
+    }
+    .customize-home__layout-preview {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: var(--spacing-8);
+      min-height: calc(var(--spacing-24) * 2.5);
+      padding: var(--spacing-12);
+      border-radius: var(--radius-md);
+      background: var(--color-background-tertiary);
+    }
+    .customize-home__layout-bar {
+      border-radius: var(--radius-sm);
+      background: var(--color-background-secondary);
+      min-height: calc(var(--spacing-24) + var(--spacing-8));
+    }
+    .customize-home__layout-bar--wide {
+      flex: 2 1 0;
+      min-width: 0;
+    }
+    .customize-home__layout-bar--narrow {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .customize-home__layout-bar--center {
+      flex: 1 1 auto;
+      width: 70%;
+      margin: 0 auto;
+    }
+    .customize-home__layout-name {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+    }
+    .customize-home__widgets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+    }
+    .customize-home__widget {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      padding: var(--spacing-12) var(--spacing-16);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+    }
+    .customize-home__drag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-16);
+      height: var(--spacing-24);
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--color-icon-tertiary);
+      cursor: grab;
+      flex-shrink: 0;
+    }
+    .customize-home__widget-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: calc(var(--spacing-24) + var(--spacing-4));
+      height: calc(var(--spacing-24) + var(--spacing-4));
+      border-radius: var(--radius-md);
+      background: var(--color-background-tertiary);
+      color: var(--color-icon-secondary);
+      flex-shrink: 0;
+    }
+    .customize-home__widget-text {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .customize-home__widget-title {
+      display: block;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .customize-home__widget-desc {
+      display: block;
+      margin-top: var(--spacing-4);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+
+    /* Toggle (from components/toggle) */
+    .toggle {
+      --toggle-width: var(--spacing-40);
+      --toggle-height: var(--spacing-24);
+      --toggle-thumb-gap: 3px;
+      --toggle-thumb-size: calc(var(--toggle-height) - var(--toggle-thumb-gap) * 2);
+      --toggle-travel: calc(var(--toggle-width) - var(--toggle-height));
+      display: inline-flex;
+      align-items: center;
+      width: var(--toggle-width);
+      height: var(--toggle-height);
+      border-radius: var(--radius-full);
+      border: none;
+      padding: 0;
+      background-color: var(--color-stroke-primary);
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      flex-shrink: 0;
+    }
+    .toggle[aria-checked="true"] {
+      background-color: var(--color-icon-secondary);
+    }
+    .toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+    .toggle__thumb {
+      width: var(--toggle-thumb-size);
+      height: var(--toggle-thumb-size);
+      border-radius: var(--radius-full);
+      background-color: var(--color-toggle-thumb);
+      box-shadow: var(--shadow-card);
+      margin-left: var(--toggle-thumb-gap);
+      flex-shrink: 0;
+      transform: translateX(0);
+      transition: transform 0.2s ease;
+    }
+    .toggle[aria-checked="true"] .toggle__thumb {
+      transform: translateX(var(--toggle-travel));
+    }
+
     @media (max-width: 768px) {
-      .landing-header { padding: var(--spacing-16); }
-      .landing-customize {
-        bottom: var(--spacing-16);
+      .theme-toggle {
+        top: var(--spacing-16);
         left: var(--spacing-16);
+      }
+      .landing-header { padding: var(--spacing-16); }
+      .landing-header__actions { gap: var(--spacing-12); }
+      .landing-promo-toggle {
+        bottom: var(--spacing-16);
+        right: var(--spacing-16);
       }
       .landing-main { padding-top: var(--spacing-24); }
       .landing-logo__svg { width: calc(var(--spacing-24) * 7); }
+      .landing-feed__grid {
+        grid-template-columns: 1fr;
+      }
+      .home-top-stories .serp-all-news__row {
+        --serp-all-news-carousel-gap: var(--spacing-16);
+        --serp-all-news-visible: 1;
+      }
+      .home-scores__grid {
+        grid-template-columns: 1fr;
+      }
       .landing-promos__grid {
         grid-template-columns: 258px;
         justify-content: center;
+      }
+      .landing-promos--in-feed .landing-promos__grid {
+        grid-template-columns: 1fr;
+      }
+      .customize-home-backdrop {
+        padding: var(--spacing-16);
+        justify-content: center;
+      }
+      .customize-home {
+        width: 100%;
+        max-height: calc(100vh - var(--spacing-32));
       }
     }
   </style>
@@ -369,14 +1381,22 @@
   </button>
 
   <header class="landing-header">
-    <button type="button" class="landing-header__menu" aria-label="Open menu">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M4 7H20M4 12H20M4 17H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-    </button>
+    <div class="landing-header__actions">
+      <button type="button" class="btn btn--product-filled landing-header__customize" id="landingCustomizeHomepageBtn" aria-label="Customize homepage">
+        <span class="btn__label">Customize homepage</span>
+      </button>
+      <button type="button" class="landing-header__menu" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <line x1="1" y1="4" x2="19" y2="4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="1" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="1" y1="16" x2="19" y2="16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
   </header>
 
   <main class="landing-main">
+    <div class="landing-hero">
     <a href="landing.html" class="landing-logo" aria-label="Startpage home">
       <svg class="landing-logo__svg" viewBox="0 0 104 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <g clip-path="url(#lp-lc)">
@@ -415,7 +1435,176 @@
       </form>
     </div>
 
-    <section class="landing-promos" id="landingPromos">
+    <div class="landing-promo-slot-hero" id="landingPromoSlotHero"></div>
+    </div>
+
+    <div class="landing-feed" id="landingFeed" hidden>
+      <div class="landing-feed__grid">
+        <div class="landing-feed__main">
+          <section class="home-widget" id="homeWidgetNews" data-widget-section="news" aria-labelledby="homeWidgetNewsTitle">
+            <header class="home-widget__header">
+              <div class="home-widget__title-row">
+                <span class="home-widget__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 18 18" fill="none">
+                    <rect x="2" y="4" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.25"/>
+                    <line x1="4" y1="7" x2="14" y2="7" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+                    <line x1="4" y1="10" x2="11" y2="10" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+                  </svg>
+                </span>
+                <h2 class="home-widget__title" id="homeWidgetNewsTitle">Top stories</h2>
+              </div>
+              <a class="home-widget__more" href="index.html?tab=All&amp;q=taylor%20swift" id="homeTopStoriesMore">More</a>
+            </header>
+            <div class="home-top-stories">
+              <div class="serp-all-news__viewport">
+                <ul class="serp-all-news__row" id="homeTopStoriesRow" aria-label="Top stories"></ul>
+              </div>
+            </div>
+          </section>
+
+          <section class="home-widget" id="homeWidgetSports" data-widget-section="sports" aria-labelledby="homeWidgetSportsTitle">
+            <header class="home-widget__header">
+              <div class="home-scores__header-main">
+                <div class="home-widget__title-row">
+                  <span class="home-scores__favicon" aria-hidden="true">
+                    <span class="home-scores__favicon-label">SP</span>
+                  </span>
+                  <h2 class="home-widget__title" id="homeWidgetSportsTitle">Sports scores</h2>
+                </div>
+                <div class="home-scores__filters" role="group" aria-label="League">
+                  <button type="button" class="home-scores__filter home-scores__filter--active" data-sports-filter="nba" aria-pressed="true">NBA</button>
+                  <button type="button" class="home-scores__filter" data-sports-filter="fifa" aria-pressed="false">FIFA</button>
+                  <button type="button" class="home-scores__filter" data-sports-filter="nfl" aria-pressed="false">NFL</button>
+                  <button type="button" class="home-scores__filter" data-sports-filter="mlb" aria-pressed="false">MLB</button>
+                </div>
+              </div>
+            </header>
+            <ul class="home-scores__grid">
+              <li class="home-score-card">
+                <p class="home-score-card__league">NBA · Final</p>
+                <p class="home-score-card__matchup">Lakers vs Warriors</p>
+                <p class="home-score-card__score">108 – 104</p>
+              </li>
+              <li class="home-score-card">
+                <p class="home-score-card__league">NBA · 4th · 2:14</p>
+                <p class="home-score-card__matchup">Celtics vs Knicks</p>
+                <p class="home-score-card__score">98 – 95</p>
+              </li>
+              <li class="home-score-card">
+                <p class="home-score-card__league">NBA · Tonight · 7:30 PM</p>
+                <p class="home-score-card__matchup">Nuggets vs Suns</p>
+                <p class="home-score-card__score">—</p>
+              </li>
+            </ul>
+          </section>
+
+        </div>
+
+        <aside class="landing-feed__sidebar">
+          <section class="home-widget home-weather" id="homeWidgetWeather" data-widget-section="weather" aria-labelledby="homeWeatherLocation">
+            <div class="home-weather__top">
+              <div class="home-weather__location-block">
+                <h2 class="home-weather__location" id="homeWeatherLocation">Paris, France</h2>
+                <p class="home-weather__meta">
+                  <span class="home-weather__date">Monday April 28</span>
+                  <span class="home-weather__meta-sep" aria-hidden="true">·</span>
+                  <span class="home-weather__condition">Partly Cloudy</span>
+                </p>
+              </div>
+              <div class="home-weather__units" role="group" aria-label="Temperature unit">
+                <button type="button" class="home-weather__unit home-weather__unit--active" id="homeWeatherUnitF" aria-pressed="true" aria-label="Fahrenheit">°F</button>
+                <span class="home-weather__unit-sep" aria-hidden="true">|</span>
+                <button type="button" class="home-weather__unit" id="homeWeatherUnitC" aria-pressed="false" aria-label="Celsius">°C</button>
+              </div>
+            </div>
+
+            <div class="home-weather__hero">
+              <div class="home-weather__hero-main">
+                <img
+                  class="home-weather__icon"
+                  src="../../assets/icons/weather/partly-cloudy.svg"
+                  width="40"
+                  height="40"
+                  alt=""
+                />
+                <p class="home-weather__temp"><span class="home-weather__temp-value">66</span><span class="home-weather__temp-degree">°</span></p>
+              </div>
+              <div class="home-weather__segments-scroll" tabindex="0" aria-label="Weather data view, scroll horizontally">
+                <div class="home-weather__segments" role="tablist" aria-label="Weather data view">
+                  <button type="button" class="home-weather__segment home-weather__segment--active" role="tab" aria-selected="true" data-weather-segment="temperature">Temperature</button>
+                  <button type="button" class="home-weather__segment" role="tab" aria-selected="false" data-weather-segment="precipitation">Precipitation</button>
+                  <button type="button" class="home-weather__segment" role="tab" aria-selected="false" data-weather-segment="wind">Wind</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="home-weather__chart" aria-hidden="false">
+              <div class="home-weather__chart-panel">
+              <div class="home-weather__chart-scroll" aria-label="Hourly temperature forecast">
+                <div class="home-weather__chart-track">
+                  <div class="home-weather__chart-plot">
+                    <svg class="home-weather__chart-svg" viewBox="0 0 280 48" preserveAspectRatio="none" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="homeWeatherChartFill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stop-color="var(--color-accent-gold)" stop-opacity="0.35"/>
+                          <stop offset="100%" stop-color="var(--color-accent-gold)" stop-opacity="0"/>
+                        </linearGradient>
+                      </defs>
+                      <path class="home-weather__chart-area" d="M0 7 L56 9 L112 21 L168 31 L224 48 L280 41 L280 48 L0 48 Z"/>
+                      <path class="home-weather__chart-line" d="M0 7 L56 9 L112 21 L168 31 L224 48 L280 41"/>
+                    </svg>
+                    <ol class="home-weather__chart-temps" aria-hidden="true">
+                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 0" data-temp-f="66">66</li>
+                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 3" data-temp-f="65">65</li>
+                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 9" data-temp-f="60">60</li>
+                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 16" data-temp-f="57">57</li>
+                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 22" data-temp-f="53">53</li>
+                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 20" data-temp-f="55">55</li>
+                    </ol>
+                  </div>
+                  <ol class="home-weather__chart-times" aria-hidden="true">
+                    <li>3PM</li><li>6PM</li><li>9PM</li><li>12AM</li><li>3AM</li><li>6AM</li>
+                  </ol>
+                </div>
+              </div>
+              </div>
+            </div>
+
+            <ul class="home-weather__daily" aria-label="3-day forecast">
+              <li class="home-weather__day home-weather__day--active">
+                <span class="home-weather__day-name">Mon</span>
+                <img class="home-weather__day-icon" src="../../assets/icons/weather/partly-cloudy.svg" width="32" height="32" alt="" />
+                <span class="home-weather__day-temps"><span class="home-weather__day-high">67°</span><span class="home-weather__day-low">53°</span></span>
+              </li>
+              <li class="home-weather__day">
+                <span class="home-weather__day-name">Tues</span>
+                <img class="home-weather__day-icon" src="../../assets/icons/weather/sunny.svg" width="32" height="32" alt="" />
+                <span class="home-weather__day-temps"><span class="home-weather__day-high">73°</span><span class="home-weather__day-low">56°</span></span>
+              </li>
+              <li class="home-weather__day">
+                <span class="home-weather__day-name">Wed</span>
+                <img class="home-weather__day-icon" src="../../assets/icons/weather/partly-cloudy.svg" width="32" height="32" alt="" />
+                <span class="home-weather__day-temps"><span class="home-weather__day-high">69°</span><span class="home-weather__day-low">54°</span></span>
+              </li>
+            </ul>
+
+            <footer class="home-weather__footer">
+              <p class="home-weather__attribution">Powered by <a class="home-weather__footer-link" href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a></p>
+            </footer>
+          </section>
+          <button type="button" class="landing-edit-widgets" id="landingEditWidgetsBtn">
+            <svg class="landing-edit-widgets__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+              <circle cx="12.5" cy="11.5" r="1.5" fill="currentColor"/>
+            </svg>
+            Edit widgets
+          </button>
+        </aside>
+      </div>
+    </div>
+
+    <section class="landing-promos" id="landingPromos" data-widget-section="promos">
+      <p class="landing-promos__label">Promoted</p>
       <div class="landing-promos__grid">
         <article class="landing-promo-card">
           <div class="landing-promo-card__icon" aria-hidden="true"></div>
@@ -431,15 +1620,176 @@
     </section>
   </main>
 
-  <button type="button" class="landing-customize" id="landingCustomizeBtn" aria-pressed="false">
-    <svg class="landing-customize__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path d="M13.0167 10.0833C12.9279 10.2844 12.9015 10.5075 12.9407 10.7237C12.9799 10.94 13.083 11.1395 13.2367 11.2967L13.2767 11.3367C13.4006 11.4605 13.499 11.6075 13.5661 11.7694C13.6332 11.9313 13.6677 12.1048 13.6677 12.28C13.6677 12.4552 13.6332 12.6287 13.5661 12.7906C13.499 12.9525 13.4006 13.0995 13.2767 13.2233C13.1528 13.3473 13.0058 13.4456 12.8439 13.5127C12.6821 13.5798 12.5086 13.6144 12.3333 13.6144C12.1581 13.6144 11.9846 13.5798 11.8227 13.5127C11.6609 13.4456 11.5138 13.3473 11.39 13.2233L11.35 13.1833C11.1929 13.0296 10.9933 12.9265 10.7771 12.8873C10.5608 12.8481 10.3377 12.8746 10.1367 12.9633C9.93949 13.0478 9.77132 13.1882 9.65287 13.367C9.53442 13.5459 9.47086 13.7555 9.47 13.97V14.0833C9.47 14.437 9.32952 14.7761 9.07948 15.0261C8.82943 15.2762 8.49029 15.4167 8.13667 15.4167C7.78305 15.4167 7.44391 15.2762 7.19386 15.0261C6.94381 14.7761 6.80333 14.437 6.80333 14.0833V14.0233C6.79817 13.8027 6.72675 13.5887 6.59834 13.4091C6.46994 13.2296 6.29049 13.0929 6.08333 13.0167C5.88226 12.9279 5.65921 12.9015 5.44294 12.9407C5.22668 12.9799 5.02712 13.083 4.87 13.2367L4.83 13.2767C4.70617 13.4006 4.55912 13.499 4.39725 13.5661C4.23539 13.6332 4.06189 13.6677 3.88667 13.6677C3.71145 13.6677 3.53794 13.6332 3.37608 13.5661C3.21422 13.499 3.06716 13.4006 2.94333 13.2767C2.81936 13.1528 2.72102 13.0058 2.65392 12.8439C2.58682 12.6821 2.55228 12.5086 2.55228 12.3333C2.55228 12.1581 2.58682 11.9846 2.65392 11.8227C2.72102 11.6609 2.81936 11.5138 2.94333 11.39L2.98333 11.35C3.13702 11.1929 3.24012 10.9933 3.27934 10.7771C3.31855 10.5608 3.29208 10.3377 3.20333 10.1367C3.11882 9.93949 2.9785 9.77132 2.79964 9.65287C2.62078 9.53442 2.41119 9.47086 2.19667 9.47H2.08333C1.72971 9.47 1.39057 9.32952 1.14052 9.07947C0.890476 8.82943 0.75 8.49029 0.75 8.13667C0.75 7.78304 0.890476 7.44391 1.14052 7.19386C1.39057 6.94381 1.72971 6.80333 2.08333 6.80333H2.14333C2.364 6.79817 2.578 6.72675 2.75753 6.59834C2.93706 6.46993 3.07381 6.29049 3.15 6.08333C3.23874 5.88226 3.26522 5.6592 3.226 5.44294C3.18679 5.22668 3.08369 5.02712 2.93 4.87L2.89 4.83C2.76603 4.70617 2.66769 4.55912 2.60059 4.39725C2.53349 4.23539 2.49895 4.06189 2.49895 3.88667C2.49895 3.71145 2.53349 3.53794 2.60059 3.37608C2.66769 3.21422 2.76603 3.06716 2.89 2.94333C3.01383 2.81936 3.16088 2.72102 3.32275 2.65392C3.48461 2.58682 3.65811 2.55228 3.83333 2.55228C4.00855 2.55228 4.18206 2.58682 4.34392 2.65392C4.50578 2.72102 4.65284 2.81936 4.77667 2.94333L4.81667 2.98333C4.97379 3.13702 5.17334 3.24012 5.38961 3.27934C5.60587 3.31855 5.82892 3.29208 6.03 3.20333H6.08333C6.28051 3.11882 6.44868 2.9785 6.56713 2.79964C6.68558 2.62078 6.74915 2.41119 6.75 2.19667V2.08333C6.75 1.72971 6.89048 1.39057 7.14053 1.14052C7.39057 0.890476 7.72971 0.75 8.08333 0.75C8.43696 0.75 8.77609 0.890476 9.02614 1.14052C9.27619 1.39057 9.41667 1.72971 9.41667 2.08333V2.14333C9.41752 2.35786 9.48109 2.56745 9.59954 2.74631C9.71799 2.92517 9.88615 3.06549 10.0833 3.15C10.2844 3.23874 10.5075 3.26522 10.7237 3.226C10.94 3.18679 11.1395 3.08369 11.2967 2.93L11.3367 2.89C11.4605 2.76603 11.6076 2.66769 11.7694 2.60059C11.9313 2.53349 12.1048 2.49895 12.28 2.49895C12.4552 2.49895 12.6287 2.53349 12.7906 2.60059C12.9525 2.66769 13.0995 2.76603 13.2233 2.89C13.3473 3.01383 13.4456 3.16088 13.5127 3.32275C13.5798 3.48461 13.6144 3.65811 13.6144 3.83333C13.6144 4.00855 13.5798 4.18206 13.5127 4.34392C13.4456 4.50578 13.3473 4.65284 13.2233 4.77667L13.1833 4.81667C13.0296 4.97379 12.9265 5.17334 12.8873 5.38961C12.8481 5.60587 12.8746 5.82892 12.9633 6.03V6.08333C13.0478 6.28051 13.1882 6.44868 13.367 6.56713C13.5459 6.68558 13.7555 6.74914 13.97 6.75H14.0833C14.437 6.75 14.7761 6.89048 15.0261 7.14052C15.2762 7.39057 15.4167 7.72971 15.4167 8.08333C15.4167 8.43695 15.2762 8.77609 15.0261 9.02614C14.7761 9.27619 14.437 9.41667 14.0833 9.41667H14.0233C13.8088 9.41752 13.5992 9.48109 13.4204 9.59954C13.2415 9.71799 13.1012 9.88615 13.0167 10.0833Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <g transform="translate(5.856 5.856) scale(0.810)">
-        <path d="M2.75 4.75C3.85457 4.75 4.75 3.85457 4.75 2.75C4.75 1.64543 3.85457 0.75 2.75 0.75C1.64543 0.75 0.75 1.64543 0.75 2.75C0.75 3.85457 1.64543 4.75 2.75 4.75Z" stroke="currentColor" stroke-width="1.852" stroke-linecap="round" stroke-linejoin="round"/>
-      </g>
-    </svg>
-    <span class="landing-customize__label">Customize homepage</span>
+  <button type="button" class="landing-promo-toggle" id="landingPromoToggleBtn" aria-pressed="false">
+    Promo messaging on
   </button>
+
+  <div class="customize-home-backdrop" id="customizeHomeBackdrop" hidden>
+    <div
+      class="customize-home"
+      id="customizeHomePanel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="customizeHomeTitle"
+    >
+      <header class="customize-home__header">
+        <h2 class="customize-home__title" id="customizeHomeTitle">Customize home</h2>
+        <div class="customize-home__header-actions">
+          <button type="button" class="customize-home__save" id="customizeHomeSave">Save</button>
+          <button type="button" class="customize-home__close" id="customizeHomeClose" aria-label="Close customize home">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <line x1="4.5" y1="4.5" x2="15.5" y2="15.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+              <line x1="15.5" y1="4.5" x2="4.5" y2="15.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div class="customize-home__body">
+        <section class="customize-home__master" aria-labelledby="customizeMasterLabel">
+          <p class="customize-home__section-label" id="customizeMasterLabel">Homepage</p>
+          <div class="customize-home__master-row">
+            <div class="customize-home__widget-text">
+              <span class="customize-home__widget-title">Homepage widgets</span>
+              <span class="customize-home__widget-desc">Top stories, scores, weather &amp; more</span>
+            </div>
+            <button
+              type="button"
+              class="toggle"
+              role="switch"
+              id="customizeWidgetsMaster"
+              aria-checked="false"
+              aria-label="Show homepage widgets"
+            >
+              <span class="toggle__thumb" aria-hidden="true"></span>
+            </button>
+          </div>
+        </section>
+        <section class="customize-home__layout-section is-disabled" id="customizeLayoutSection" aria-labelledby="customizeLayoutLabel">
+          <p class="customize-home__section-label" id="customizeLayoutLabel">LAYOUT</p>
+          <div class="customize-home__layout-grid" role="group" aria-label="Homepage layout">
+            <button
+              type="button"
+              class="customize-home__layout-option"
+              id="customizeLayoutTwoCol"
+              data-layout="two-column"
+              aria-pressed="true"
+            >
+              <span class="customize-home__layout-preview" aria-hidden="true">
+                <span class="customize-home__layout-bar customize-home__layout-bar--wide"></span>
+                <span class="customize-home__layout-bar customize-home__layout-bar--narrow"></span>
+              </span>
+              <span class="customize-home__layout-name">2-column</span>
+            </button>
+            <button
+              type="button"
+              class="customize-home__layout-option"
+              id="customizeLayoutCentered"
+              data-layout="centered"
+              aria-pressed="false"
+            >
+              <span class="customize-home__layout-preview" aria-hidden="true">
+                <span class="customize-home__layout-bar customize-home__layout-bar--center"></span>
+              </span>
+              <span class="customize-home__layout-name">Centered</span>
+            </button>
+          </div>
+        </section>
+        <section aria-labelledby="customizeWidgetsLabel">
+          <p class="customize-home__section-label" id="customizeWidgetsLabel">WIDGETS</p>
+          <p class="customize-home__widgets-hint" id="customizeWidgetsHint">Turn on homepage widgets to customize what appears below search.</p>
+          <ul class="customize-home__widgets is-disabled" id="customizeHomeWidgets">
+            <li class="customize-home__widget" data-widget="news">
+              <button type="button" class="customize-home__drag" aria-label="Reorder News carousel" tabindex="-1">
+                <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
+                  <circle cx="2" cy="2" r="1.25"/><circle cx="8" cy="2" r="1.25"/>
+                  <circle cx="2" cy="7" r="1.25"/><circle cx="8" cy="7" r="1.25"/>
+                  <circle cx="2" cy="12" r="1.25"/><circle cx="8" cy="12" r="1.25"/>
+                </svg>
+              </button>
+              <span class="customize-home__widget-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <rect x="2" y="4" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.25"/>
+                  <line x1="4" y1="7" x2="14" y2="7" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+                  <line x1="4" y1="10" x2="11" y2="10" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <div class="customize-home__widget-text">
+                <span class="customize-home__widget-title">News carousel</span>
+                <span class="customize-home__widget-desc">3 stories · personalized</span>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Show News carousel" data-widget-toggle="news">
+                <span class="toggle__thumb" aria-hidden="true"></span>
+              </button>
+            </li>
+            <li class="customize-home__widget" data-widget="sports">
+              <button type="button" class="customize-home__drag" aria-label="Reorder Sports scores" tabindex="-1">
+                <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
+                  <circle cx="2" cy="2" r="1.25"/><circle cx="8" cy="2" r="1.25"/>
+                  <circle cx="2" cy="7" r="1.25"/><circle cx="8" cy="7" r="1.25"/>
+                  <circle cx="2" cy="12" r="1.25"/><circle cx="8" cy="12" r="1.25"/>
+                </svg>
+              </button>
+              <span class="customize-home__widget-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M9 2.5l1.2 3.7h3.9l-3.2 2.3 1.2 3.7L9 9.9 5.9 12.2l1.2-3.7-3.2-2.3h3.9L9 2.5z" stroke="currentColor" stroke-width="1.15" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <div class="customize-home__widget-text">
+                <span class="customize-home__widget-title">Sports scores</span>
+                <span class="customize-home__widget-desc">NBA · MLB · NFL</span>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Show Sports scores" data-widget-toggle="sports">
+                <span class="toggle__thumb" aria-hidden="true"></span>
+              </button>
+            </li>
+            <li class="customize-home__widget" data-widget="weather">
+              <button type="button" class="customize-home__drag" aria-label="Reorder Weather" tabindex="-1">
+                <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
+                  <circle cx="2" cy="2" r="1.25"/><circle cx="8" cy="2" r="1.25"/>
+                  <circle cx="2" cy="7" r="1.25"/><circle cx="8" cy="7" r="1.25"/>
+                  <circle cx="2" cy="12" r="1.25"/><circle cx="8" cy="12" r="1.25"/>
+                </svg>
+              </button>
+              <span class="customize-home__widget-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M6.5 12.5a3.5 3.5 0 0 1 0-7 4 4 0 0 1 7.6-1.2A3 3 0 0 1 14.5 11h-8z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <div class="customize-home__widget-text">
+                <span class="customize-home__widget-title">Weather</span>
+                <span class="customize-home__widget-desc">Current location · sidebar</span>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Show Weather" data-widget-toggle="weather">
+                <span class="toggle__thumb" aria-hidden="true"></span>
+              </button>
+            </li>
+            <li class="customize-home__widget" data-widget="promos">
+              <button type="button" class="customize-home__drag" aria-label="Reorder Promo messaging" tabindex="-1">
+                <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
+                  <circle cx="2" cy="2" r="1.25"/><circle cx="8" cy="2" r="1.25"/>
+                  <circle cx="2" cy="7" r="1.25"/><circle cx="8" cy="7" r="1.25"/>
+                  <circle cx="2" cy="12" r="1.25"/><circle cx="8" cy="12" r="1.25"/>
+                </svg>
+              </button>
+              <span class="customize-home__widget-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <rect x="3" y="3" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.25"/>
+                  <path d="M6 9h6M6 12h4" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <div class="customize-home__widget-text">
+                <span class="customize-home__widget-title">Promo messaging</span>
+                <span class="customize-home__widget-desc">2 cards · homepage</span>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Show Promo messaging" data-widget-toggle="promos">
+                <span class="toggle__thumb" aria-hidden="true"></span>
+              </button>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
 
   <script>
     const html = document.documentElement;
@@ -484,21 +1834,320 @@
       goToResults(searchInput.value);
     });
 
-    const CUSTOMIZE_KEY = 'landingHomepageCustomized';
-    const customizeBtn = document.getElementById('landingCustomizeBtn');
-    const promosEl = document.getElementById('landingPromos');
+    const HOME_TOP_STORIES = [
+      {
+        publisher: 'BBC News',
+        time: '35 minutes ago',
+        title: 'Taylor Swift announces surprise single ahead of summer festival appearances',
+        snippet: 'The release is expected to preview new material tied to upcoming stadium dates, with streaming platforms already listing a midnight drop.',
+      },
+      {
+        publisher: 'The Hollywood Reporter',
+        time: '1 hour ago',
+        title: 'Eras Tour documentary team reveals behind-the-scenes footage from final U.S. leg',
+        snippet: 'Editors say the film focuses on stagecraft, crew logistics, and the fan experience across the tour\'s closing American run.',
+      },
+      {
+        publisher: 'Nikkei Asia',
+        time: '3 hours ago',
+        title: 'Fans gather in Tokyo as Taylor Swift vinyl release lands in record shops across Asia',
+        snippet: 'Limited-edition pressings sold out within hours, with resale listings climbing on collector marketplaces.',
+      },
+    ];
+    const HOME_PUBLISHER_MAX_CHARS = 14;
 
-    function setHomepageCustomized(on) {
-      promosEl.classList.toggle('is-hidden', on);
-      customizeBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-      if (on) storageSet(CUSTOMIZE_KEY, '1');
-      else storageSet(CUSTOMIZE_KEY, '');
+    function formatHomeNewsTime(time) {
+      return time
+        .replace(/\bminutes\b/gi, 'min')
+        .replace(/\bminute\b/gi, 'min')
+        .replace(/\bhours\b/gi, 'hrs')
+        .replace(/\bhour\b/gi, 'hr')
+        .replace(/\bdays\b/gi, 'd')
+        .replace(/\bday\b/gi, 'd');
     }
 
-    if (storageGet(CUSTOMIZE_KEY) === '1') setHomepageCustomized(true);
+    function getHomePublisherMonogram(publisher) {
+      const words = publisher
+        .replace(/[^a-zA-Z0-9\s]/g, ' ')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+      if (!words.length) return '?';
+      if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+      return `${words[0][0]}${words[1][0]}`.toUpperCase();
+    }
 
-    customizeBtn.addEventListener('click', () => {
-      setHomepageCustomized(!promosEl.classList.contains('is-hidden'));
+    function truncateHomePublisher(name, maxChars) {
+      if (name.length <= maxChars) return name;
+      return `${name.slice(0, maxChars - 1).trimEnd()}…`;
+    }
+
+    function homeNewsPicsumUrl(article, width, height) {
+      let h = 0;
+      const s = `${article.title}|${article.publisher}|${article.time}`;
+      for (let i = 0; i < s.length; i++) {
+        h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+      }
+      const seed = (h >>> 0).toString(16);
+      return `https://picsum.photos/seed/${seed}/${width}/${height}`;
+    }
+
+    function renderHomeTopStoryCard(article) {
+      const monogram = getHomePublisherMonogram(article.publisher);
+      const publisherShort = truncateHomePublisher(article.publisher, HOME_PUBLISHER_MAX_CHARS);
+      const publisherTitle = publisherShort !== article.publisher
+        ? ` title="${article.publisher.replace(/"/g, '&quot;')}"`
+        : '';
+      const imgSrc = homeNewsPicsumUrl(article, 400, 225);
+      const timeLabel = formatHomeNewsTime(article.time);
+      return `<li class="serp-all-news-card">
+        <div class="serp-all-news-card__thumb" aria-hidden="true">
+          <img class="serp-all-news-card__thumb-img" src="${imgSrc}" width="400" height="225" alt="" loading="lazy" decoding="async" />
+        </div>
+        <div class="serp-all-news-card__meta">
+          <span class="news-article__favicon" aria-hidden="true"><span class="news-article__favicon-label">${monogram}</span></span>
+          <span class="news-article__publisher"${publisherTitle}>${publisherShort}</span>
+          <span class="serp-all-news-card__meta-sep" aria-hidden="true">·</span>
+          <span class="serp-all-news-card__time">${timeLabel}</span>
+        </div>
+        <a class="serp-all-news-card__title" href="index.html?tab=All&amp;q=taylor%20swift">${article.title}</a>
+        <p class="serp-all-news-card__description">${article.snippet}</p>
+      </li>`;
+    }
+
+    function renderHomeTopStories() {
+      const row = document.getElementById('homeTopStoriesRow');
+      if (!row) return;
+      row.innerHTML = HOME_TOP_STORIES.map(renderHomeTopStoryCard).join('');
+    }
+    renderHomeTopStories();
+
+    const PROMO_OFF_KEY = 'landingPromoMessagingOff';
+    const promoToggleBtn = document.getElementById('landingPromoToggleBtn');
+    const promosEl = document.getElementById('landingPromos');
+
+    function isPromoMessagingOff() {
+      return promosEl.classList.contains('is-hidden');
+    }
+
+    function setPromoMessagingOff(off) {
+      promosEl.classList.toggle('is-hidden', off);
+      promoToggleBtn.setAttribute('aria-pressed', off ? 'true' : 'false');
+      promoToggleBtn.textContent = off ? 'Promo messaging off' : 'Promo messaging on';
+      promoToggleBtn.setAttribute('aria-label', off ? 'Promo messaging is off' : 'Promo messaging is on');
+      if (off) storageSet(PROMO_OFF_KEY, '1');
+      else storageSet(PROMO_OFF_KEY, '');
+    }
+
+    const CUSTOMIZE_LAYOUT_KEY = 'landingHomeLayout';
+    const CUSTOMIZE_WIDGETS_KEY = 'landingHomeWidgets';
+    const WIDGETS_ENABLED_KEY = 'landingWidgetsEnabled';
+    const customizeBackdrop = document.getElementById('customizeHomeBackdrop');
+    const customizeOpenBtn = document.getElementById('landingCustomizeHomepageBtn');
+    const customizeCloseBtn = document.getElementById('customizeHomeClose');
+    const customizeSaveBtn = document.getElementById('customizeHomeSave');
+    const customizeWidgetsMaster = document.getElementById('customizeWidgetsMaster');
+    const customizeWidgetsList = document.getElementById('customizeHomeWidgets');
+    const customizeLayoutSection = document.getElementById('customizeLayoutSection');
+    const landingFeed = document.getElementById('landingFeed');
+    const landingPromoSlotHero = document.getElementById('landingPromoSlotHero');
+    const landingEditWidgetsBtn = document.getElementById('landingEditWidgetsBtn');
+    const layoutButtons = document.querySelectorAll('.customize-home__layout-option');
+    const widgetToggles = document.querySelectorAll('[data-widget-toggle]');
+    const widgetSections = document.querySelectorAll('[data-widget-section]');
+
+    let draftLayout = 'two-column';
+    let draftWidgetsEnabled = false;
+    const draftWidgets = { news: true, sports: true, weather: true, promos: true };
+
+    function parseWidgetsJson(raw) {
+      if (!raw) return null;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') return parsed;
+      } catch (e) {}
+      return null;
+    }
+
+    function loadCustomizePrefs() {
+      draftLayout = storageGet(CUSTOMIZE_LAYOUT_KEY) || 'two-column';
+      draftWidgetsEnabled = storageGet(WIDGETS_ENABLED_KEY) === '1';
+      const savedWidgets = parseWidgetsJson(storageGet(CUSTOMIZE_WIDGETS_KEY));
+      if (savedWidgets) {
+        ['news', 'sports', 'weather', 'promos'].forEach(key => {
+          if (typeof savedWidgets[key] === 'boolean') draftWidgets[key] = savedWidgets[key];
+        });
+      }
+      if (storageGet(PROMO_OFF_KEY) === '1') draftWidgets.promos = false;
+    }
+
+    function applyCustomizeDraftToPanel() {
+      customizeWidgetsMaster.setAttribute('aria-checked', draftWidgetsEnabled ? 'true' : 'false');
+      customizeWidgetsList.classList.toggle('is-disabled', !draftWidgetsEnabled);
+      customizeLayoutSection.classList.toggle('is-disabled', !draftWidgetsEnabled);
+      layoutButtons.forEach(btn => {
+        const on = btn.dataset.layout === draftLayout;
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      widgetToggles.forEach(toggle => {
+        const key = toggle.dataset.widgetToggle;
+        const on = !!draftWidgets[key];
+        toggle.setAttribute('aria-checked', on ? 'true' : 'false');
+      });
+    }
+
+    function placePromosSection() {
+      if (promosEl.parentElement !== landingPromoSlotHero) {
+        landingPromoSlotHero.appendChild(promosEl);
+      }
+      promosEl.classList.remove('landing-promos--in-feed');
+    }
+
+    function applyWidgetSectionVisibility() {
+      widgetSections.forEach(section => {
+        const key = section.dataset.widgetSection;
+        if (key === 'promos') return;
+        const visible = draftWidgetsEnabled && !!draftWidgets[key];
+        section.classList.toggle('is-hidden', !visible);
+      });
+    }
+
+    function applyCustomizePrefsToPage() {
+      document.body.dataset.homeLayout = draftLayout;
+      document.body.dataset.widgetsEnabled = draftWidgetsEnabled ? 'true' : 'false';
+      landingFeed.hidden = !draftWidgetsEnabled;
+      placePromosSection();
+      applyWidgetSectionVisibility();
+      promoToggleBtn.hidden = draftWidgetsEnabled;
+      if (draftWidgetsEnabled) {
+        promosEl.classList.add('is-hidden');
+      } else if (draftWidgets.promos) {
+        setPromoMessagingOff(false);
+      } else {
+        setPromoMessagingOff(true);
+      }
+    }
+
+    function persistCustomizePrefs() {
+      storageSet(CUSTOMIZE_LAYOUT_KEY, draftLayout);
+      storageSet(CUSTOMIZE_WIDGETS_KEY, JSON.stringify(draftWidgets));
+      storageSet(WIDGETS_ENABLED_KEY, draftWidgetsEnabled ? '1' : '');
+      storageSet('landingHomepageCustomized', '1');
+      applyCustomizePrefsToPage();
+    }
+
+    function openCustomizeHome() {
+      loadCustomizePrefs();
+      applyCustomizeDraftToPanel();
+      customizeBackdrop.hidden = false;
+      document.body.style.overflow = 'hidden';
+      customizeCloseBtn.focus();
+    }
+
+    function closeCustomizeHome() {
+      customizeBackdrop.hidden = true;
+      document.body.style.overflow = '';
+      customizeOpenBtn.focus();
+    }
+
+    landingPromoSlotHero.appendChild(promosEl);
+    loadCustomizePrefs();
+    applyCustomizePrefsToPage();
+
+    customizeOpenBtn.addEventListener('click', openCustomizeHome);
+    landingEditWidgetsBtn.addEventListener('click', openCustomizeHome);
+
+    customizeWidgetsMaster.addEventListener('click', () => {
+      draftWidgetsEnabled = customizeWidgetsMaster.getAttribute('aria-checked') !== 'true';
+      customizeWidgetsMaster.setAttribute('aria-checked', draftWidgetsEnabled ? 'true' : 'false');
+      customizeWidgetsList.classList.toggle('is-disabled', !draftWidgetsEnabled);
+      customizeLayoutSection.classList.toggle('is-disabled', !draftWidgetsEnabled);
+    });
+    customizeCloseBtn.addEventListener('click', closeCustomizeHome);
+    customizeSaveBtn.addEventListener('click', () => {
+      persistCustomizePrefs();
+      closeCustomizeHome();
+    });
+    customizeBackdrop.addEventListener('click', e => {
+      if (e.target === customizeBackdrop) closeCustomizeHome();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !customizeBackdrop.hidden) closeCustomizeHome();
+    });
+
+    layoutButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        draftLayout = btn.dataset.layout;
+        applyCustomizeDraftToPanel();
+      });
+    });
+
+    widgetToggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const key = toggle.dataset.widgetToggle;
+        draftWidgets[key] = toggle.getAttribute('aria-checked') !== 'true';
+        toggle.setAttribute('aria-checked', draftWidgets[key] ? 'true' : 'false');
+      });
+    });
+
+    promoToggleBtn.addEventListener('click', () => {
+      setPromoMessagingOff(!isPromoMessagingOff());
+      draftWidgets.promos = !isPromoMessagingOff();
+      const promoToggle = document.querySelector('[data-widget-toggle="promos"]');
+      if (promoToggle && !customizeBackdrop.hidden) {
+        promoToggle.setAttribute('aria-checked', draftWidgets.promos ? 'true' : 'false');
+      }
+    });
+
+    const homeWeatherUnitF = document.getElementById('homeWeatherUnitF');
+    const homeWeatherUnitC = document.getElementById('homeWeatherUnitC');
+    const homeWeatherTempValue = document.querySelector('.home-weather__temp-value');
+    const homeWeatherTempsF = document.querySelectorAll('#homeWidgetWeather [data-temp-f]');
+    const WEATHER_TEMP_F = 66;
+
+    function weatherTempFtoC(fahrenheit) {
+      return Math.round((fahrenheit - 32) * 5 / 9);
+    }
+
+    function formatWeatherTemp(fahrenheit, useCelsius) {
+      return String(useCelsius ? weatherTempFtoC(fahrenheit) : fahrenheit);
+    }
+
+    function setWeatherUnit(useCelsius) {
+      homeWeatherUnitF.classList.toggle('home-weather__unit--active', !useCelsius);
+      homeWeatherUnitC.classList.toggle('home-weather__unit--active', useCelsius);
+      homeWeatherUnitF.setAttribute('aria-pressed', useCelsius ? 'false' : 'true');
+      homeWeatherUnitC.setAttribute('aria-pressed', useCelsius ? 'true' : 'false');
+      if (homeWeatherTempValue) {
+        homeWeatherTempValue.textContent = formatWeatherTemp(WEATHER_TEMP_F, useCelsius);
+      }
+      homeWeatherTempsF.forEach(el => {
+        const f = Number(el.dataset.tempF);
+        if (Number.isNaN(f)) return;
+        el.textContent = formatWeatherTemp(f, useCelsius);
+      });
+    }
+    homeWeatherUnitF.addEventListener('click', () => setWeatherUnit(false));
+    homeWeatherUnitC.addEventListener('click', () => setWeatherUnit(true));
+
+    document.querySelectorAll('[data-sports-filter]').forEach(filter => {
+      filter.addEventListener('click', () => {
+        document.querySelectorAll('[data-sports-filter]').forEach(btn => {
+          const active = btn === filter;
+          btn.classList.toggle('home-scores__filter--active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      });
+    });
+
+    document.querySelectorAll('[data-weather-segment]').forEach(segment => {
+      segment.addEventListener('click', () => {
+        document.querySelectorAll('[data-weather-segment]').forEach(btn => {
+          const active = btn === segment;
+          btn.classList.toggle('home-weather__segment--active', active);
+          btn.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+      });
     });
 
     document.querySelectorAll('[data-btn]').forEach(btn => {
