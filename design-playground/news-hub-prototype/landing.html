@@ -416,6 +416,12 @@
       margin-top: var(--spacing-40);
     }
     .landing-feed__grid {
+      container-type: inline-size;
+      --home-scores-sidebar-col: min(calc(var(--spacing-24) * 12), 320px);
+      --home-scores-main-card-width: calc(
+        ((100cqi - var(--spacing-24) - var(--home-scores-sidebar-col)) - (var(--spacing-20) * 2) - (var(--spacing-12) * 2))
+        / 3
+      );
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(calc(var(--spacing-24) * 12), 320px);
       gap: var(--spacing-24);
@@ -423,6 +429,9 @@
     }
     body[data-home-layout="centered"] .landing-feed__grid {
       grid-template-columns: 1fr;
+    }
+    .landing-feed__grid--main-full .landing-feed__main {
+      grid-column: 1 / -1;
     }
     .landing-feed__main {
       display: flex;
@@ -835,17 +844,25 @@
     .home-top-stories .serp-all-news-card__title:hover {
       text-decoration: underline;
     }
-    .home-top-stories .serp-all-news-card__description {
-      margin: 0;
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-primary);
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .home-top-stories .serp-all-news-card__category {
+      position: absolute;
+      top: var(--spacing-4);
+      left: var(--spacing-4);
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      height: var(--spacing-24);
+      padding: 0 var(--spacing-8);
+      border-radius: var(--radius-md);
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-brandblue);
+      white-space: nowrap;
+      cursor: default;
+      pointer-events: none;
     }
     .home-top-stories .news-article__favicon {
       display: inline-flex;
@@ -924,16 +941,14 @@
       border-color: var(--color-stroke-primary-button);
     }
     .home-scores__filters .home-scores__filter--selected {
+      background: var(--color-background-primary);
       border-color: var(--color-stroke-primary-button);
       color: var(--color-text-brandblue);
     }
     .home-scores__filters .home-scores__filter--selected:hover {
-      background: var(--color-background-secondary);
+      background: var(--color-background-primary);
       border-color: var(--color-stroke-primary-button);
       color: var(--color-text-brandblue);
-    }
-    [data-theme="dark"] .home-scores__filters .home-scores__filter--selected:hover {
-      background: var(--color-background-quaternary);
     }
     .home-scores__filters .tag__dismiss {
       display: none;
@@ -1020,12 +1035,58 @@
         (100% - (var(--home-scores-carousel-gap) * (var(--home-scores-visible) - 1)))
         / var(--home-scores-visible)
       );
+      flex-shrink: 0;
       min-width: 0;
       padding: var(--spacing-16);
       border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
       border-radius: var(--radius-lg);
       background: var(--color-background-primary);
       scroll-snap-align: start;
+    }
+    /* Narrow column (sidebar): peek score cards + compact header */
+    #homeWidgetSports.home-scores--narrow-column .home-scores__grid {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
+    #homeWidgetSports.home-scores--narrow-column .home-score-card {
+      box-sizing: border-box;
+      flex: none !important;
+      flex-shrink: 0 !important;
+      scroll-snap-align: start;
+    }
+    #homeWidgetSports.home-scores--narrow-column .home-widget__header {
+      align-items: flex-start;
+    }
+    #homeWidgetSports.home-scores--narrow-column .home-scores__header-main {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: var(--spacing-8);
+      width: 100%;
+    }
+    #homeWidgetSports.home-scores--narrow-column .home-scores__filters {
+      flex: none;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-self: stretch;
+      margin-left: 0;
+      width: 100%;
+      gap: var(--spacing-8);
+    }
+    #homeWidgetSports.home-scores--narrow-column .home-scores__filters .tag {
+      flex-shrink: 0;
+      height: var(--spacing-24);
+      padding: 0 var(--spacing-8);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+    }
+    #homeWidgetSports.home-scores--narrow-column .home-scores__filters .tag__dismiss {
+      width: var(--spacing-12);
+      height: var(--spacing-12);
+    }
+    #homeWidgetSports.home-scores--narrow-column .home-scores__filters .tag__dismiss svg {
+      width: var(--spacing-12);
+      height: var(--spacing-12);
     }
     .home-score-card__matchup {
       margin-top: var(--spacing-8);
@@ -1293,6 +1354,39 @@
       cursor: pointer;
       transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
     }
+    .landing-feed__main #homeWidgetWeather .home-weather__segment {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+    }
+    .home-weather--wide .home-weather__chart {
+      --home-weather-chart-graph-height: calc(var(--spacing-24) * 5);
+      --home-weather-chart-plot-height: var(--home-weather-chart-graph-height);
+      --home-weather-chart-temp-label-gap: var(--spacing-12);
+      --home-weather-chart-temp-stagger: 0;
+      --home-weather-chart-temp-overlap: 0;
+    }
+    .home-weather--wide .home-weather__chart-scroll {
+      padding: calc(var(--font-utility-caption-lh) + var(--spacing-16)) var(--spacing-12) var(--spacing-12);
+    }
+    .home-weather--wide .home-weather__chart-track {
+      --home-weather-chart-points: 9;
+      --home-weather-chart-time-font-size: var(--font-body-xs);
+      --home-weather-chart-time-line-height: var(--font-body-xs-lh);
+    }
+    .home-weather--wide .home-weather__daily {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+    #homeWidgetWeather:not(.home-weather--wide) .home-weather__chart-track {
+      --home-weather-chart-time-font-size: var(--font-body-xs);
+      --home-weather-chart-time-line-height: var(--font-body-xs-lh);
+    }
+    #homeWidgetWeather:not(.home-weather--wide) .home-weather__chart-temp {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+    }
+    #homeWidgetWeather:not(.home-weather--wide) .home-weather__chart-temps {
+      height: calc(var(--font-body-xs-lh) + var(--home-weather-chart-temp-stagger));
+    }
     .home-weather__segment--active {
       border-color: var(--color-stroke-primary-button);
       background: var(--color-background-primary);
@@ -1355,12 +1449,21 @@
     .home-weather__chart-area {
       fill: url(#homeWeatherChartFill);
     }
+    .home-weather__chart[data-weather-segment-view="precipitation"] .home-weather__chart-area {
+      fill: url(#homeWeatherChartFillPrecip);
+    }
     .home-weather__chart-line {
       fill: none;
       stroke: var(--color-accent-gold);
       stroke-width: var(--border-stroke-sm);
       stroke-linecap: round;
       stroke-linejoin: round;
+    }
+    .home-weather__chart[data-weather-segment-view="precipitation"] .home-weather__chart-line {
+      stroke: var(--color-text-brandblue);
+    }
+    .home-weather__chart[data-weather-segment-view="precipitation"] .home-weather__chart-temps--curve .home-weather__chart-temp {
+      --home-weather-chart-temp-label-gap: var(--spacing-8);
     }
     .home-weather__chart-temps {
       position: absolute;
@@ -1384,6 +1487,22 @@
       line-height: var(--font-utility-caption-lh);
       font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
+    }
+    .home-weather__chart-temps--curve {
+      display: block;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      margin: 0;
+    }
+    .home-weather__chart-temps--curve .home-weather__chart-temp {
+      position: absolute;
+      left: calc(var(--chart-temp-x) * 1%);
+      top: calc(var(--chart-temp-y) * 1%);
+      margin-top: 0;
+      transform: translate(-50%, calc(-100% - var(--home-weather-chart-temp-label-gap, var(--spacing-4))));
+      justify-self: auto;
+      white-space: nowrap;
     }
     .home-weather__chart-times {
       display: grid;
@@ -1510,6 +1629,10 @@
     .customize-home__layout-section.is-disabled .customize-home__layout-grid {
       opacity: 0.55;
       pointer-events: none;
+    }
+    .customize-home__widgets.is-disabled .customize-home__drag {
+      pointer-events: auto;
+      opacity: 1;
     }
     .customize-home__widgets-hint {
       margin: 0 0 var(--spacing-12);
@@ -1708,6 +1831,25 @@
       color: var(--color-icon-tertiary);
       cursor: grab;
       flex-shrink: 0;
+      touch-action: none;
+    }
+    .customize-home__drag:active {
+      cursor: grabbing;
+    }
+    .customize-home__drag:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+    .customize-home__widgets.is-dragging {
+      user-select: none;
+    }
+    .customize-home__widget.is-dragging {
+      opacity: 0.45;
+    }
+    .customize-home__widget.is-drop-target {
+      border-color: var(--color-stroke-primary-button);
+      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-stroke-primary-button);
     }
     .customize-home__widget-icon {
       display: inline-flex;
@@ -1806,6 +1948,12 @@
       }
       .home-scores__grid {
         --home-scores-visible: 1;
+      }
+      #homeWidgetSports.home-scores--narrow-column .home-score-card {
+        flex: 0 0 calc(100% - var(--home-scores-carousel-gap)) !important;
+        width: calc(100% - var(--home-scores-carousel-gap)) !important;
+        min-width: calc(100% - var(--home-scores-carousel-gap)) !important;
+        max-width: calc(100% - var(--home-scores-carousel-gap)) !important;
       }
       .landing-promos__grid {
         grid-template-columns: 258px;
@@ -2382,14 +2530,13 @@
                 <div class="home-weather__segments" role="tablist" aria-label="Weather data view">
                   <button type="button" class="home-weather__segment home-weather__segment--active" role="tab" aria-selected="true" data-weather-segment="temperature">Temperature</button>
                   <button type="button" class="home-weather__segment" role="tab" aria-selected="false" data-weather-segment="precipitation">Precipitation</button>
-                  <button type="button" class="home-weather__segment" role="tab" aria-selected="false" data-weather-segment="wind">Wind</button>
                 </div>
               </div>
             </div>
 
-            <div class="home-weather__chart" aria-hidden="false">
+            <div class="home-weather__chart" id="homeWeatherChart" data-weather-segment-view="temperature" aria-hidden="false">
               <div class="home-weather__chart-panel">
-              <div class="home-weather__chart-scroll" aria-label="Hourly temperature forecast">
+              <div class="home-weather__chart-scroll" id="homeWeatherChartScroll" aria-label="Hourly temperature forecast">
                 <div class="home-weather__chart-track">
                   <div class="home-weather__chart-plot">
                     <svg class="home-weather__chart-svg" viewBox="0 0 280 48" preserveAspectRatio="none" aria-hidden="true">
@@ -2398,44 +2545,23 @@
                           <stop offset="0%" stop-color="var(--color-accent-gold)" stop-opacity="0.35"/>
                           <stop offset="100%" stop-color="var(--color-accent-gold)" stop-opacity="0"/>
                         </linearGradient>
+                        <linearGradient id="homeWeatherChartFillPrecip" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stop-color="var(--color-text-brandblue)" stop-opacity="0.35"/>
+                          <stop offset="100%" stop-color="var(--color-text-brandblue)" stop-opacity="0"/>
+                        </linearGradient>
                       </defs>
-                      <path class="home-weather__chart-area" d="M0 7 L56 9 L112 21 L168 31 L224 48 L280 41 L280 48 L0 48 Z"/>
-                      <path class="home-weather__chart-line" d="M0 7 L56 9 L112 21 L168 31 L224 48 L280 41"/>
+                      <path class="home-weather__chart-area" id="homeWeatherChartArea" d=""/>
+                      <path class="home-weather__chart-line" id="homeWeatherChartLine" d=""/>
                     </svg>
-                    <ol class="home-weather__chart-temps" aria-hidden="true">
-                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 0" data-temp-f="66">66</li>
-                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 3" data-temp-f="65">65</li>
-                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 9" data-temp-f="60">60</li>
-                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 16" data-temp-f="57">57</li>
-                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 22" data-temp-f="53">53</li>
-                      <li class="home-weather__chart-temp" style="--chart-temp-offset: 20" data-temp-f="55">55</li>
-                    </ol>
+                    <ol class="home-weather__chart-temps" id="homeWeatherChartTemps" aria-hidden="true"></ol>
                   </div>
-                  <ol class="home-weather__chart-times" aria-hidden="true">
-                    <li>3PM</li><li>6PM</li><li>9PM</li><li>12AM</li><li>3AM</li><li>6AM</li>
-                  </ol>
+                  <ol class="home-weather__chart-times" id="homeWeatherChartTimes" aria-hidden="true"></ol>
                 </div>
               </div>
               </div>
             </div>
 
-            <ul class="home-weather__daily" aria-label="3-day forecast">
-              <li class="home-weather__day home-weather__day--active">
-                <span class="home-weather__day-name">Mon</span>
-                <img class="home-weather__day-icon" src="../../assets/icons/weather/partly-cloudy.svg" width="32" height="32" alt="" />
-                <span class="home-weather__day-temps"><span class="home-weather__day-high">67°</span><span class="home-weather__day-low">53°</span></span>
-              </li>
-              <li class="home-weather__day">
-                <span class="home-weather__day-name">Tues</span>
-                <img class="home-weather__day-icon" src="../../assets/icons/weather/sunny.svg" width="32" height="32" alt="" />
-                <span class="home-weather__day-temps"><span class="home-weather__day-high">73°</span><span class="home-weather__day-low">56°</span></span>
-              </li>
-              <li class="home-weather__day">
-                <span class="home-weather__day-name">Wed</span>
-                <img class="home-weather__day-icon" src="../../assets/icons/weather/partly-cloudy.svg" width="32" height="32" alt="" />
-                <span class="home-weather__day-temps"><span class="home-weather__day-high">69°</span><span class="home-weather__day-low">54°</span></span>
-              </li>
-            </ul>
+            <ul class="home-weather__daily" id="homeWeatherDaily" aria-label="3-day forecast"></ul>
 
             <footer class="home-weather__footer">
               <p class="home-weather__attribution">Powered by <a class="home-weather__footer-link" href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a></p>
@@ -2548,13 +2674,13 @@
           <p class="customize-home__widgets-hint" id="customizeWidgetsHint">Turn on homepage widgets to customize what appears below search.</p>
           <ul class="customize-home__widgets is-disabled" id="customizeHomeWidgets">
             <li class="customize-home__widget" data-widget="news">
-              <button type="button" class="customize-home__drag" aria-label="Reorder News carousel" tabindex="-1">
+              <span class="customize-home__drag" role="button" tabindex="0" aria-label="Reorder News carousel">
                 <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
                   <circle cx="2" cy="2" r="1.25"/><circle cx="8" cy="2" r="1.25"/>
                   <circle cx="2" cy="7" r="1.25"/><circle cx="8" cy="7" r="1.25"/>
                   <circle cx="2" cy="12" r="1.25"/><circle cx="8" cy="12" r="1.25"/>
                 </svg>
-              </button>
+              </span>
               <span class="customize-home__widget-icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                   <rect x="2" y="4" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.25"/>
@@ -2571,13 +2697,13 @@
               </button>
             </li>
             <li class="customize-home__widget" data-widget="sports">
-              <button type="button" class="customize-home__drag" aria-label="Reorder Sports scores" tabindex="-1">
+              <span class="customize-home__drag" role="button" tabindex="0" aria-label="Reorder Sports scores">
                 <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
                   <circle cx="2" cy="2" r="1.25"/><circle cx="8" cy="2" r="1.25"/>
                   <circle cx="2" cy="7" r="1.25"/><circle cx="8" cy="7" r="1.25"/>
                   <circle cx="2" cy="12" r="1.25"/><circle cx="8" cy="12" r="1.25"/>
                 </svg>
-              </button>
+              </span>
               <span class="customize-home__widget-icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                   <path d="M9 2.5l1.2 3.7h3.9l-3.2 2.3 1.2 3.7L9 9.9 5.9 12.2l1.2-3.7-3.2-2.3h3.9L9 2.5z" stroke="currentColor" stroke-width="1.15" stroke-linejoin="round"/>
@@ -2592,13 +2718,13 @@
               </button>
             </li>
             <li class="customize-home__widget" data-widget="weather">
-              <button type="button" class="customize-home__drag" aria-label="Reorder Weather" tabindex="-1">
+              <span class="customize-home__drag" role="button" tabindex="0" aria-label="Reorder Weather">
                 <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
                   <circle cx="2" cy="2" r="1.25"/><circle cx="8" cy="2" r="1.25"/>
                   <circle cx="2" cy="7" r="1.25"/><circle cx="8" cy="7" r="1.25"/>
                   <circle cx="2" cy="12" r="1.25"/><circle cx="8" cy="12" r="1.25"/>
                 </svg>
-              </button>
+              </span>
               <span class="customize-home__widget-icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                   <path d="M6.5 12.5a3.5 3.5 0 0 1 0-7 4 4 0 0 1 7.6-1.2A3 3 0 0 1 14.5 11h-8z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
@@ -2674,7 +2800,6 @@
     ];
     const HOME_NEWS_CATEGORY_IDS = HOME_NEWS_CATEGORIES.map(c => c.id);
     const HOME_NEWS_DEFAULT_CATEGORIES = ['top-stories'];
-    const HOME_TOP_STORIES_MIN_COUNT = 3;
     const HOME_NEWS_CATEGORIES_STORAGE_KEY = 'startpage-landing-news-categories';
 
     const HOME_NEWS_POOL = [
@@ -2693,48 +2818,72 @@
       { category: 'world', publisher: 'BBC World', time: '42 minutes ago',
         title: 'Ceasefire talks resume as aid convoys wait at a contested border crossing',
         snippet: 'Mediators reported incremental progress on prisoner exchanges and civilian corridor access.' },
+      { category: 'world', publisher: 'Al Jazeera', time: '1 hour ago',
+        title: 'Regional summit backs new trade corridor linking ports across three continents',
+        snippet: 'Leaders signed a framework agreement on customs harmonization and shared infrastructure funding.' },
       { category: 'us', publisher: 'The Associated Press', time: '24 minutes ago',
         title: 'White House and congressional leaders resume budget talks after spring recess',
         snippet: 'Staffers said both sides are weighing a short-term extension while longer spending caps remain unresolved.' },
       { category: 'us', publisher: 'NPR', time: '51 minutes ago',
         title: 'Supreme Court calendar sets up decisions on agency power and voting rules',
         snippet: 'Legal analysts expect rulings this month that could reshape federal regulatory authority.' },
+      { category: 'us', publisher: 'Politico', time: '1 hour ago',
+        title: 'Senate panel advances bill expanding rural broadband grants',
+        snippet: 'Lawmakers added amendments requiring annual progress reports from participating carriers.' },
       { category: 'sports', publisher: 'ESPN', time: '19 minutes ago',
         title: 'NBA playoffs: underdogs force Game 7 after overtime rally on the road',
         snippet: 'Coaches credited defensive switches and bench scoring for the comeback in the final two minutes.' },
       { category: 'sports', publisher: 'The Athletic', time: '44 minutes ago',
         title: 'Champions League semifinal lineup news shakes up fantasy and betting markets',
         snippet: 'Injury reports listed two starters as doubtful, opening chances for younger squad players.' },
+      { category: 'sports', publisher: 'ESPN', time: '1 hour ago',
+        title: 'Tennis star returns to clay season after three-month injury layoff',
+        snippet: 'Coaches said mobility drills went well ahead of a tune-up tournament in Madrid.' },
       { category: 'entertainment', publisher: 'Variety', time: '21 minutes ago',
         title: 'Summer box office heats up as franchise sequel tops opening-night sales',
         snippet: 'Studios said premium formats and strong international presales offset softer weekday traffic.' },
       { category: 'entertainment', publisher: 'The Hollywood Reporter', time: '47 minutes ago',
         title: 'Streaming service renews hit drama for a final season after cliffhanger finale',
         snippet: 'Showrunners promised to resolve long-running storylines while trimming episode count.' },
+      { category: 'entertainment', publisher: 'Billboard', time: '1 hour ago',
+        title: 'Festival lineup adds surprise headliner after weeks of fan speculation',
+        snippet: 'Organizers said ticket tiers would stay unchanged despite the late addition.' },
       { category: 'technology', publisher: 'The Verge', time: '17 minutes ago',
         title: 'Phone makers preview AI features that run fully on-device for privacy',
         snippet: 'Executives said local models would handle summaries and photo edits without cloud uploads.' },
       { category: 'technology', publisher: 'Wired', time: '39 minutes ago',
         title: 'Chipmakers outline roadmap for more efficient data-center accelerators',
         snippet: 'Engineers promised lower power draw per token as hyperscalers expand inference clusters.' },
+      { category: 'technology', publisher: 'Ars Technica', time: '1 hour ago',
+        title: 'Open-source project ships faster browser engine build for low-end devices',
+        snippet: 'Maintainers credited community patches that cut startup time on older hardware.' },
       { category: 'business', publisher: 'Bloomberg', time: '20 minutes ago',
         title: 'Major retailer beats earnings estimates on stronger online grocery demand',
         snippet: 'Executives raised full-year guidance while warning that freight costs remain volatile.' },
       { category: 'business', publisher: 'Reuters', time: '46 minutes ago',
         title: 'Oil prices slip as producers signal flexible output after demand data',
         snippet: 'Traders weighed inventory builds in Asia against tighter refined product supplies in Europe.' },
+      { category: 'business', publisher: 'Financial Times', time: '1 hour ago',
+        title: 'European banks pass stress tests with stronger capital buffers than last year',
+        snippet: 'Regulators said lenders could still lend through a moderate recession scenario.' },
       { category: 'science', publisher: 'Nature', time: '26 minutes ago',
         title: 'Study links deep-ocean currents to faster Antarctic ice shelf melting',
         snippet: 'Modeling teams said warmer water pulses could raise sea-level projections for coastal cities.' },
       { category: 'science', publisher: 'Scientific American', time: '52 minutes ago',
         title: 'Telescope array captures detailed map of star-forming region in nearby galaxy',
         snippet: 'Astronomers plan follow-up observations to trace magnetic fields shaping new suns.' },
+      { category: 'science', publisher: 'NASA', time: '1 hour ago',
+        title: 'Rover team shares new images of ancient riverbed rocks on Mars',
+        snippet: 'Geologists said layered sediments point to long periods of flowing water.' },
       { category: 'local', publisher: 'Chicago Tribune', time: '23 minutes ago',
         title: 'Downtown council approves pilot for late-night transit on festival weekends',
         snippet: 'Officials said extra trains and buses would run through summer events and baseball games.' },
       { category: 'local', publisher: 'The Seattle Times', time: '49 minutes ago',
         title: 'City opens cooling centers as early heat wave strains power demand',
         snippet: 'Utility crews staged repair teams while libraries extended hours for residents.' },
+      { category: 'local', publisher: 'LA Times', time: '1 hour ago',
+        title: 'Metro expands weekend service on popular beach and stadium lines',
+        snippet: 'Ridership data showed strong demand after pilot routes ran through last summer.' },
     ];
 
     let selectedHomeNewsCategories = loadSelectedHomeNewsCategories();
@@ -2777,6 +2926,10 @@
       return `https://picsum.photos/seed/${seed}/${width}/${height}`;
     }
 
+    function getHomeNewsCategoryLabel(categoryId) {
+      return HOME_NEWS_CATEGORIES.find(category => category.id === categoryId)?.label ?? categoryId;
+    }
+
     function renderHomeTopStoryCard(article) {
       const monogram = getHomePublisherMonogram(article.publisher);
       const publisherShort = truncateHomePublisher(article.publisher, HOME_PUBLISHER_MAX_CHARS);
@@ -2785,9 +2938,11 @@
         : '';
       const imgSrc = homeNewsPicsumUrl(article, 400, 225);
       const timeLabel = formatHomeNewsTime(article.time);
+      const categoryLabel = getHomeNewsCategoryLabel(article.category);
       return `<li class="serp-all-news-card">
-        <div class="serp-all-news-card__thumb" aria-hidden="true">
+        <div class="serp-all-news-card__thumb">
           <img class="serp-all-news-card__thumb-img" src="${imgSrc}" width="400" height="225" alt="" loading="lazy" decoding="async" />
+          <span class="serp-all-news-card__category">${categoryLabel}</span>
         </div>
         <div class="serp-all-news-card__meta">
           <span class="news-article__favicon" aria-hidden="true"><span class="news-article__favicon-label">${monogram}</span></span>
@@ -2796,7 +2951,6 @@
           <span class="serp-all-news-card__time">${timeLabel}</span>
         </div>
         <a class="serp-all-news-card__title" href="index.html?tab=News">${article.title}</a>
-        <p class="serp-all-news-card__description">${article.snippet}</p>
       </li>`;
     }
 
@@ -2857,19 +3011,8 @@
       localStorage.setItem(HOME_NEWS_CATEGORIES_STORAGE_KEY, JSON.stringify(selectedHomeNewsCategories));
     }
 
-    function getFilteredHomeNewsStories() {
-      const matched = HOME_NEWS_POOL.filter(article => selectedHomeNewsCategories.includes(article.category));
-      if (matched.length >= HOME_TOP_STORIES_MIN_COUNT) return matched;
-
-      const result = [...matched];
-      const seen = new Set(result.map(article => article.title));
-      for (const article of HOME_NEWS_POOL) {
-        if (result.length >= HOME_TOP_STORIES_MIN_COUNT) break;
-        if (seen.has(article.title)) continue;
-        seen.add(article.title);
-        result.push(article);
-      }
-      return result;
+    function getFilteredHomeNewsStories(categories = selectedHomeNewsCategories) {
+      return HOME_NEWS_POOL.filter(article => categories.includes(article.category));
     }
 
     function areAllHomeNewsCategoriesSelected(categories) {
@@ -2941,6 +3084,7 @@
     function closeHomeTopStoriesMenu({ revertPending = true } = {}) {
       if (revertPending) {
         pendingHomeNewsCategories = [...selectedHomeNewsCategories];
+        renderHomeTopStories();
       }
       setHomeTopStoriesMenuOpen(false);
     }
@@ -2965,12 +3109,13 @@
       closeHomeTopStoriesMenu({ revertPending: false });
     }
 
-    function renderHomeTopStories() {
+    function renderHomeTopStories(categories = selectedHomeNewsCategories) {
       const row = document.getElementById('homeTopStoriesRow');
       if (!row) return;
-      const stories = getFilteredHomeNewsStories();
+      const stories = getFilteredHomeNewsStories(categories);
       row.innerHTML = stories.map(renderHomeTopStoryCard).join('');
       const carousel = document.getElementById('homeTopStoriesCarousel');
+      row.scrollLeft = 0;
       if (carousel) {
         syncLandingCarousel(carousel);
         requestAnimationFrame(syncTopStoriesArrowAlign);
@@ -3011,6 +3156,7 @@
             ? [...HOME_NEWS_CATEGORY_IDS]
             : [...HOME_NEWS_DEFAULT_CATEGORIES];
           renderHomeTopStoriesCategoryMenu();
+          renderHomeTopStories(pendingHomeNewsCategories);
           return;
         }
 
@@ -3028,6 +3174,7 @@
         }
         syncHomeTopStoriesSelectAllCheckbox();
         syncHomeTopStoriesSaveButton();
+        renderHomeTopStories(pendingHomeNewsCategories);
       });
 
       document.addEventListener('click', e => {
@@ -3071,7 +3218,7 @@
     }, true);
 
     window.addEventListener('resize', () => {
-      syncAllLandingCarousels();
+      syncSportsScoresLayout();
       syncTopStoriesArrowAlign();
     });
 
@@ -3103,18 +3250,27 @@
     const customizeWidgetsList = document.getElementById('customizeHomeWidgets');
     const customizeLayoutSection = document.getElementById('customizeLayoutSection');
     const landingFeed = document.getElementById('landingFeed');
+    const landingFeedGrid = document.querySelector('.landing-feed__grid');
+    const landingFeedMain = document.querySelector('.landing-feed__main');
+    const landingFeedSidebar = document.querySelector('.landing-feed__sidebar');
     const landingPromoSlotHero = document.getElementById('landingPromoSlotHero');
     const landingEditWidgetsBtn = document.getElementById('landingEditWidgetsBtn');
     const layoutButtons = document.querySelectorAll('.customize-home__layout-option');
     const widgetToggles = document.querySelectorAll('[data-widget-toggle]');
     const widgetSections = document.querySelectorAll('[data-widget-section]');
 
+    const DEFAULT_WIDGET_ORDER = ['news', 'sports', 'weather'];
+
     let draftLayout = 'two-column';
     let draftWidgetsEnabled = false;
     const draftWidgets = { news: true, sports: true, weather: true };
+    let draftWidgetOrder = [...DEFAULT_WIDGET_ORDER];
     let savedLayout = 'two-column';
     let savedWidgetsEnabled = false;
     const savedWidgets = { news: true, sports: true, weather: true };
+    let savedWidgetOrder = [...DEFAULT_WIDGET_ORDER];
+    let customizePointerDragId = null;
+    let customizePointerDragItem = null;
 
     function parseWidgetsJson(raw) {
       if (!raw) return null;
@@ -3133,6 +3289,15 @@
         ['news', 'sports', 'weather'].forEach(key => {
           if (typeof storedWidgets[key] === 'boolean') draftWidgets[key] = storedWidgets[key];
         });
+        if (Array.isArray(storedWidgets.order)) {
+          const valid = storedWidgets.order.filter(id => DEFAULT_WIDGET_ORDER.includes(id));
+          const missing = DEFAULT_WIDGET_ORDER.filter(id => !valid.includes(id));
+          draftWidgetOrder = [...valid, ...missing];
+        } else {
+          draftWidgetOrder = [...DEFAULT_WIDGET_ORDER];
+        }
+      } else {
+        draftWidgetOrder = [...DEFAULT_WIDGET_ORDER];
       }
       snapshotCustomizePrefs();
     }
@@ -3143,12 +3308,405 @@
       ['news', 'sports', 'weather'].forEach(key => {
         savedWidgets[key] = draftWidgets[key];
       });
+      savedWidgetOrder = [...draftWidgetOrder];
+    }
+
+    function widgetOrdersEqual(a, b) {
+      if (a.length !== b.length) return false;
+      return a.every((id, index) => id === b[index]);
     }
 
     function hasCustomizeHomeChanges() {
       if (draftLayout !== savedLayout) return true;
       if (draftWidgetsEnabled !== savedWidgetsEnabled) return true;
+      if (!widgetOrdersEqual(draftWidgetOrder, savedWidgetOrder)) return true;
       return ['news', 'sports', 'weather'].some(key => draftWidgets[key] !== savedWidgets[key]);
+    }
+
+    function getWidgetSection(key) {
+      return document.querySelector(`[data-widget-section="${key}"]`);
+    }
+
+    function reorderCustomizeWidgetList() {
+      draftWidgetOrder.forEach(id => {
+        const item = customizeWidgetsList.querySelector(`[data-widget="${id}"]`);
+        if (item) customizeWidgetsList.appendChild(item);
+      });
+    }
+
+    function getRightColumnWidgetId() {
+      return draftWidgetOrder[2] ?? null;
+    }
+
+    function isWidgetInRightColumn(id) {
+      if (draftLayout === 'centered') return false;
+      return id === getRightColumnWidgetId();
+    }
+
+    function isSportsInNarrowColumn() {
+      if (draftLayout === 'centered') return false;
+      const sports = document.getElementById('homeWidgetSports');
+      return sports?.parentElement === landingFeedSidebar;
+    }
+
+    function isWeatherInWideColumn() {
+      const weather = document.getElementById('homeWidgetWeather');
+      if (!weather) return false;
+      if (draftLayout === 'centered') return true;
+      return weather.parentElement === landingFeedMain;
+    }
+
+    const WEATHER_CHART_VIEW_WIDTH = 280;
+    const WEATHER_CHART_VIEW_HEIGHT = 48;
+    const WEATHER_ICON_BASE = '../../assets/icons/weather';
+
+    const WEATHER_HOURLY_COMPACT = [
+      { time: '3PM', tempF: 66, precipPct: 20 },
+      { time: '6PM', tempF: 65, precipPct: 45 },
+      { time: '9PM', tempF: 60, precipPct: 70 },
+      { time: '12AM', tempF: 57, precipPct: 30 },
+      { time: '3AM', tempF: 53, precipPct: 10 },
+      { time: '6AM', tempF: 55, precipPct: 15 },
+    ];
+
+    const WEATHER_HOURLY_WIDE = [
+      { time: '5PM', tempF: 65, precipPct: 20 },
+      { time: '8PM', tempF: 64, precipPct: 97 },
+      { time: '11PM', tempF: 60, precipPct: 67 },
+      { time: '2AM', tempF: 54, precipPct: 0 },
+      { time: '5AM', tempF: 52, precipPct: 20 },
+      { time: '8AM', tempF: 56, precipPct: 15 },
+      { time: '11AM', tempF: 64, precipPct: 10 },
+      { time: '2PM', tempF: 67, precipPct: 5 },
+      { time: '5PM', tempF: 65, precipPct: 20 },
+    ];
+
+    const WEATHER_DAILY_COMPACT = [
+      { name: 'Mon', icon: 'partly-cloudy', highF: 67, lowF: 53, active: true },
+      { name: 'Tues', icon: 'sunny', highF: 73, lowF: 56 },
+      { name: 'Wed', icon: 'partly-cloudy', highF: 69, lowF: 54 },
+    ];
+
+    const WEATHER_DAILY_WIDE = [
+      { name: 'Mon', icon: 'partly-cloudy', highF: 67, lowF: 53, active: true },
+      { name: 'Tues', icon: 'sunny', highF: 73, lowF: 56 },
+      { name: 'Wed', icon: 'partly-cloudy', highF: 69, lowF: 54 },
+      { name: 'Thurs', icon: 'cloudy', highF: 64, lowF: 50 },
+      { name: 'Fri', icon: 'rain', highF: 61, lowF: 48 },
+      { name: 'Sat', icon: 'partly-cloudy', highF: 66, lowF: 52 },
+      { name: 'Sun', icon: 'sunny', highF: 70, lowF: 55 },
+    ];
+
+    function weatherChartY(value, min, max) {
+      const pad = 4;
+      const range = max - min || 1;
+      return WEATHER_CHART_VIEW_HEIGHT - pad - ((value - min) / range) * (WEATHER_CHART_VIEW_HEIGHT - pad * 2);
+    }
+
+    const WEATHER_CHART_TEMP_OFFSETS_COMPACT = [0, 3, 9, 16, 22, 20];
+
+    function weatherChartX(index, count, xInsetPct = 0) {
+      if (count === 1) {
+        return { x: WEATHER_CHART_VIEW_WIDTH / 2, xPct: 50 };
+      }
+      const inset = xInsetPct / 100;
+      const t = index / (count - 1);
+      return {
+        x: Math.round((inset + t * (1 - 2 * inset)) * WEATHER_CHART_VIEW_WIDTH),
+        xPct: inset * 100 + t * (100 - inset * 200),
+      };
+    }
+
+    function buildWeatherSeriesChart(hourly, valueKey, { padMin = 2, padMax = 2, floor = null, xInsetPct = 0 } = {}) {
+      const values = hourly.map(point => point[valueKey]);
+      const min = (floor !== null ? Math.min(...values, floor) : Math.min(...values)) - padMin;
+      const max = Math.max(...values) + padMax;
+      const count = hourly.length;
+      const points = hourly.map((point, index) => {
+        const { x, xPct } = weatherChartX(index, count, xInsetPct);
+        const y = weatherChartY(point[valueKey], min, max);
+        const yPct = (y / WEATHER_CHART_VIEW_HEIGHT) * 100;
+        return {
+          x: Math.round(x),
+          y: Math.round(y),
+          xPct,
+          yPct,
+          value: point[valueKey],
+          time: point.time,
+          point,
+        };
+      });
+      const lineD = points.map((point, index) => `${index === 0 ? 'M' : 'L'}${point.x} ${point.y}`).join(' ');
+      const areaD = `${lineD} L${WEATHER_CHART_VIEW_WIDTH} ${WEATHER_CHART_VIEW_HEIGHT} L0 ${WEATHER_CHART_VIEW_HEIGHT} Z`;
+      return { lineD, areaD, points };
+    }
+
+    let weatherUseCelsius = false;
+    let weatherActiveSegment = 'temperature';
+
+    function weatherTempFtoC(fahrenheit) {
+      return Math.round((fahrenheit - 32) * 5 / 9);
+    }
+
+    function formatWeatherTemp(fahrenheit, useCelsius) {
+      return String(useCelsius ? weatherTempFtoC(fahrenheit) : fahrenheit);
+    }
+
+    function syncWeatherForecastLayout() {
+      const weather = document.getElementById('homeWidgetWeather');
+      if (!weather) return;
+
+      const wide = isWeatherInWideColumn();
+      weather.classList.toggle('home-weather--wide', wide);
+      renderWeatherForecast(wide);
+    }
+
+    function getWeatherHourlySeries(wide) {
+      return wide ? WEATHER_HOURLY_WIDE : WEATHER_HOURLY_COMPACT;
+    }
+
+    function renderWeatherChart(wide) {
+      const hourly = getWeatherHourlySeries(wide);
+      const chart = document.getElementById('homeWeatherChart');
+      const chartScroll = document.getElementById('homeWeatherChartScroll');
+      const chartArea = document.getElementById('homeWeatherChartArea');
+      const chartLine = document.getElementById('homeWeatherChartLine');
+      const chartTemps = document.getElementById('homeWeatherChartTemps');
+      const chartTimes = document.getElementById('homeWeatherChartTimes');
+      const chartTrack = document.querySelector('#homeWidgetWeather .home-weather__chart-track');
+
+      if (!chart || !chartArea || !chartLine || !chartTemps || !chartTimes) return;
+
+      chart.dataset.weatherSegmentView = weatherActiveSegment;
+
+      const scrollLabels = {
+        temperature: 'Hourly temperature forecast',
+        precipitation: 'Hourly precipitation forecast',
+      };
+      if (chartScroll) {
+        chartScroll.setAttribute('aria-label', scrollLabels[weatherActiveSegment] ?? scrollLabels.temperature);
+      }
+
+      const pointCount = String(hourly.length);
+      [chartTrack, chartTemps, chartTimes].forEach(el => {
+        el?.style.setProperty('--home-weather-chart-points', pointCount);
+      });
+
+      chartTimes.innerHTML = hourly.map(point => `<li>${point.time}</li>`).join('');
+
+      const valueKey = weatherActiveSegment === 'precipitation' ? 'precipPct' : 'tempF';
+      const chartOptions = weatherActiveSegment === 'precipitation'
+        ? { padMin: 0, padMax: 5, floor: 0, xInsetPct: 10 }
+        : { padMin: 2, padMax: 2, xInsetPct: 0 };
+      const { lineD, areaD, points } = buildWeatherSeriesChart(hourly, valueKey, chartOptions);
+      chartArea.setAttribute('d', areaD);
+      chartLine.setAttribute('d', lineD);
+
+      const useCurveLabels = wide || weatherActiveSegment === 'precipitation';
+      chartTemps.classList.toggle('home-weather__chart-temps--curve', useCurveLabels);
+
+      if (useCurveLabels) {
+        chartTemps.innerHTML = points.map(point => {
+          const label = weatherActiveSegment === 'precipitation'
+            ? `${point.value}%`
+            : formatWeatherTemp(point.value, weatherUseCelsius);
+          const dataAttr = weatherActiveSegment === 'temperature'
+            ? ` data-temp-f="${point.value}"`
+            : '';
+          return `<li class="home-weather__chart-temp" style="--chart-temp-x: ${point.xPct}; --chart-temp-y: ${point.yPct}"${dataAttr}>${label}</li>`;
+        }).join('');
+      } else {
+        chartTemps.innerHTML = points.map((point, index) => (
+          `<li class="home-weather__chart-temp" style="--chart-temp-offset: ${WEATHER_CHART_TEMP_OFFSETS_COMPACT[index] ?? 0}" data-temp-f="${point.value}">${formatWeatherTemp(point.value, weatherUseCelsius)}</li>`
+        )).join('');
+      }
+    }
+
+    function setWeatherSegment(segment) {
+      if (!['temperature', 'precipitation'].includes(segment)) return;
+      weatherActiveSegment = segment;
+      document.querySelectorAll('[data-weather-segment]').forEach(btn => {
+        const active = btn.dataset.weatherSegment === segment;
+        btn.classList.toggle('home-weather__segment--active', active);
+        btn.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      renderWeatherChart(isWeatherInWideColumn());
+    }
+
+    function renderWeatherForecast(wide) {
+      const daily = wide ? WEATHER_DAILY_WIDE : WEATHER_DAILY_COMPACT;
+      const dailyList = document.getElementById('homeWeatherDaily');
+
+      if (!dailyList) return;
+
+      renderWeatherChart(wide);
+
+      dailyList.setAttribute('aria-label', wide ? '7-day forecast' : '3-day forecast');
+      dailyList.innerHTML = daily.map(day => `
+        <li class="home-weather__day${day.active ? ' home-weather__day--active' : ''}">
+          <span class="home-weather__day-name">${day.name}</span>
+          <img class="home-weather__day-icon" src="${WEATHER_ICON_BASE}/${day.icon}.svg" width="32" height="32" alt="" />
+          <span class="home-weather__day-temps">
+            <span class="home-weather__day-high" data-temp-f="${day.highF}">${formatWeatherTemp(day.highF, weatherUseCelsius)}°</span>
+            <span class="home-weather__day-low" data-temp-f="${day.lowF}">${formatWeatherTemp(day.lowF, weatherUseCelsius)}°</span>
+          </span>
+        </li>
+      `).join('');
+    }
+
+    function getSportsPeekCardWidthPx(sports) {
+      const viewport = sports.querySelector('.home-scores__viewport');
+      const grid = sports.querySelector('.home-scores__grid');
+      if (!viewport || !grid) return 220;
+      const gap = parseFloat(getComputedStyle(grid).gap) || 12;
+      const viewportWidth = viewport.getBoundingClientRect().width;
+      const mainWidth = landingFeedMain?.getBoundingClientRect().width || 0;
+      const refWidget = landingFeedMain?.querySelector('.home-widget');
+      const widgetPad = refWidget ? parseFloat(getComputedStyle(refWidget).paddingLeft) * 2 : 40;
+      const mainColumnCard = mainWidth > 0
+        ? (mainWidth - widgetPad - gap * 2) / 3
+        : 0;
+      const peekCard = viewportWidth > 0 ? (viewportWidth - gap) / 1.5 : 0;
+      const width = mainColumnCard > 0 ? mainColumnCard : peekCard;
+      return Math.max(180, Math.round(width || 220));
+    }
+
+    function syncSportsScoresLayout() {
+      const sports = document.getElementById('homeWidgetSports');
+      if (!sports || landingFeed.hidden) {
+        syncAllLandingCarousels();
+        return;
+      }
+
+      const useNarrowColumn = isSportsInNarrowColumn();
+      sports.classList.toggle('home-scores--narrow-column', useNarrowColumn);
+
+      sports.querySelectorAll('.home-score-card').forEach(card => {
+        card.style.removeProperty('flex');
+        card.style.removeProperty('width');
+        card.style.removeProperty('min-width');
+        card.style.removeProperty('max-width');
+      });
+
+      const applyPeekWidths = () => {
+        if (!sports.classList.contains('home-scores--narrow-column')) return;
+        const cardWidthPx = getSportsPeekCardWidthPx(sports);
+        const widthValue = `${cardWidthPx}px`;
+        sports.querySelectorAll('.home-score-card').forEach(card => {
+          card.style.flex = `0 0 ${widthValue}`;
+          card.style.width = widthValue;
+          card.style.minWidth = widthValue;
+          card.style.maxWidth = widthValue;
+        });
+        syncAllLandingCarousels();
+      };
+
+      if (useNarrowColumn) {
+        applyPeekWidths();
+        requestAnimationFrame(() => {
+          applyPeekWidths();
+          requestAnimationFrame(applyPeekWidths);
+        });
+      } else {
+        syncAllLandingCarousels();
+      }
+    }
+
+    function getWidgetMountTarget(id) {
+      if (draftLayout === 'centered') return landingFeedMain;
+      return isWidgetInRightColumn(id) ? landingFeedSidebar : landingFeedMain;
+    }
+
+    function applyWidgetOrderToPage() {
+      if (!landingFeedMain || !landingFeedSidebar || !landingFeedGrid) return;
+
+      draftWidgetOrder.forEach(id => {
+        const section = getWidgetSection(id);
+        if (!section) return;
+        getWidgetMountTarget(id).appendChild(section);
+      });
+
+      landingFeedSidebar.hidden = draftLayout === 'centered';
+      landingFeedGrid.classList.remove('landing-feed__grid--main-full');
+      landingFeedGrid.insertBefore(landingFeedMain, landingFeedSidebar);
+      syncSportsScoresLayout();
+      syncWeatherForecastLayout();
+    }
+
+    function moveWidgetInOrder(dragId, targetId, insertAfter) {
+      if (!dragId || !targetId || dragId === targetId) return;
+      const next = draftWidgetOrder.filter(id => id !== dragId);
+      const targetIndex = next.indexOf(targetId);
+      if (targetIndex === -1) return;
+      const insertIndex = insertAfter ? targetIndex + 1 : targetIndex;
+      next.splice(insertIndex, 0, dragId);
+      draftWidgetOrder = next;
+    }
+
+    function clearCustomizeWidgetDropTargets() {
+      customizeWidgetsList.querySelectorAll('.customize-home__widget.is-drop-target').forEach(item => {
+        item.classList.remove('is-drop-target');
+      });
+    }
+
+    function finishCustomizeWidgetPointerDrag(clientX, clientY) {
+      const dragId = customizePointerDragId;
+      const dragItem = customizePointerDragItem;
+      customizePointerDragId = null;
+      customizePointerDragItem = null;
+      customizeWidgetsList?.classList.remove('is-dragging');
+      dragItem?.classList.remove('is-dragging');
+      clearCustomizeWidgetDropTargets();
+
+      if (!dragId || !dragItem || !customizeWidgetsList) return;
+
+      const targetItem = document.elementFromPoint(clientX, clientY)?.closest('.customize-home__widget');
+      if (!targetItem || targetItem === dragItem) return;
+
+      const rect = targetItem.getBoundingClientRect();
+      const insertAfter = clientY > rect.top + rect.height / 2;
+      moveWidgetInOrder(dragId, targetItem.dataset.widget, insertAfter);
+      reorderCustomizeWidgetList();
+      applyCustomizeDraftToPage();
+      syncCustomizeHomeSaveButton();
+    }
+
+    function initCustomizeWidgetDragDrop() {
+      if (!customizeWidgetsList) return;
+
+      customizeWidgetsList.addEventListener('pointerdown', e => {
+        if (e.button !== 0) return;
+        const handle = e.target.closest('.customize-home__drag');
+        if (!handle) return;
+        const item = handle.closest('.customize-home__widget');
+        if (!item) return;
+
+        customizePointerDragId = item.dataset.widget;
+        customizePointerDragItem = item;
+        item.classList.add('is-dragging');
+        customizeWidgetsList.classList.add('is-dragging');
+        handle.setPointerCapture(e.pointerId);
+        e.preventDefault();
+      });
+
+      customizeWidgetsList.addEventListener('pointermove', e => {
+        if (!customizePointerDragId) return;
+        const targetItem = document.elementFromPoint(e.clientX, e.clientY)?.closest('.customize-home__widget');
+        clearCustomizeWidgetDropTargets();
+        if (targetItem && targetItem !== customizePointerDragItem) {
+          targetItem.classList.add('is-drop-target');
+        }
+      });
+
+      customizeWidgetsList.addEventListener('pointerup', e => {
+        if (!customizePointerDragId) return;
+        finishCustomizeWidgetPointerDrag(e.clientX, e.clientY);
+      });
+
+      customizeWidgetsList.addEventListener('pointercancel', e => {
+        if (!customizePointerDragId) return;
+        finishCustomizeWidgetPointerDrag(e.clientX, e.clientY);
+      });
     }
 
     function syncCustomizeHomeSaveButton() {
@@ -3168,6 +3726,15 @@
         const on = !!draftWidgets[key];
         toggle.setAttribute('aria-checked', on ? 'true' : 'false');
       });
+      reorderCustomizeWidgetList();
+    }
+
+    function applyCustomizeDraftToPage() {
+      document.body.dataset.homeLayout = draftLayout;
+      document.body.dataset.widgetsEnabled = draftWidgetsEnabled ? 'true' : 'false';
+      landingFeed.hidden = !draftWidgetsEnabled;
+      applyWidgetOrderToPage();
+      applyWidgetSectionVisibility();
     }
 
     function placePromosSection() {
@@ -3191,6 +3758,7 @@
       document.body.dataset.widgetsEnabled = draftWidgetsEnabled ? 'true' : 'false';
       landingFeed.hidden = !draftWidgetsEnabled;
       placePromosSection();
+      applyWidgetOrderToPage();
       applyWidgetSectionVisibility();
       promoToggleBtn.hidden = draftWidgetsEnabled;
       if (draftWidgetsEnabled) {
@@ -3202,7 +3770,7 @@
 
     function persistCustomizePrefs() {
       storageSet(CUSTOMIZE_LAYOUT_KEY, draftLayout);
-      storageSet(CUSTOMIZE_WIDGETS_KEY, JSON.stringify(draftWidgets));
+      storageSet(CUSTOMIZE_WIDGETS_KEY, JSON.stringify({ ...draftWidgets, order: draftWidgetOrder }));
       storageSet(WIDGETS_ENABLED_KEY, draftWidgetsEnabled ? '1' : '');
       storageSet('landingHomepageCustomized', '1');
       applyCustomizePrefsToPage();
@@ -3219,7 +3787,19 @@
       customizeCloseBtn.focus();
     }
 
-    function closeCustomizeHome() {
+    function revertCustomizeDraft() {
+      draftLayout = savedLayout;
+      draftWidgetsEnabled = savedWidgetsEnabled;
+      ['news', 'sports', 'weather'].forEach(key => {
+        draftWidgets[key] = savedWidgets[key];
+      });
+      draftWidgetOrder = [...savedWidgetOrder];
+      applyCustomizePrefsToPage();
+      applyCustomizeDraftToPanel();
+    }
+
+    function closeCustomizeHome({ revertDraft = true } = {}) {
+      if (revertDraft) revertCustomizeDraft();
       customizeBackdrop.hidden = true;
       document.body.style.overflow = '';
       customizeOpenBtn.focus();
@@ -3228,6 +3808,11 @@
     landingPromoSlotHero.appendChild(promosEl);
     loadCustomizePrefs();
     applyCustomizePrefsToPage();
+    if (landingFeedGrid && typeof ResizeObserver !== 'undefined') {
+      const scoresLayoutObserver = new ResizeObserver(() => syncSportsScoresLayout());
+      scoresLayoutObserver.observe(landingFeedGrid);
+    }
+    requestAnimationFrame(() => syncSportsScoresLayout());
 
     customizeOpenBtn.addEventListener('click', openCustomizeHome);
     landingEditWidgetsBtn.addEventListener('click', openCustomizeHome);
@@ -3237,13 +3822,14 @@
       customizeWidgetsMaster.setAttribute('aria-checked', draftWidgetsEnabled ? 'true' : 'false');
       customizeWidgetsList.classList.toggle('is-disabled', !draftWidgetsEnabled);
       customizeLayoutSection.classList.toggle('is-disabled', !draftWidgetsEnabled);
+      applyCustomizeDraftToPage();
       syncCustomizeHomeSaveButton();
     });
     customizeCloseBtn.addEventListener('click', closeCustomizeHome);
     customizeSaveBtn.addEventListener('click', () => {
       if (customizeSaveBtn.disabled) return;
       persistCustomizePrefs();
-      closeCustomizeHome();
+      closeCustomizeHome({ revertDraft: false });
     });
     customizeBackdrop.addEventListener('click', e => {
       if (e.target === customizeBackdrop) closeCustomizeHome();
@@ -3256,6 +3842,7 @@
       btn.addEventListener('click', () => {
         draftLayout = btn.dataset.layout;
         applyCustomizeDraftToPanel();
+        applyCustomizeDraftToPage();
         syncCustomizeHomeSaveButton();
       });
     });
@@ -3265,6 +3852,7 @@
         const key = toggle.dataset.widgetToggle;
         draftWidgets[key] = toggle.getAttribute('aria-checked') !== 'true';
         toggle.setAttribute('aria-checked', draftWidgets[key] ? 'true' : 'false');
+        applyCustomizeDraftToPage();
         syncCustomizeHomeSaveButton();
       });
     });
@@ -3273,21 +3861,15 @@
       setPromoMessagingOff(!isPromoMessagingOff());
     });
 
+    initCustomizeWidgetDragDrop();
+
     const homeWeatherUnitF = document.getElementById('homeWeatherUnitF');
     const homeWeatherUnitC = document.getElementById('homeWeatherUnitC');
     const homeWeatherTempValue = document.querySelector('.home-weather__temp-value');
-    const homeWeatherTempsF = document.querySelectorAll('#homeWidgetWeather [data-temp-f]');
     const WEATHER_TEMP_F = 66;
 
-    function weatherTempFtoC(fahrenheit) {
-      return Math.round((fahrenheit - 32) * 5 / 9);
-    }
-
-    function formatWeatherTemp(fahrenheit, useCelsius) {
-      return String(useCelsius ? weatherTempFtoC(fahrenheit) : fahrenheit);
-    }
-
     function setWeatherUnit(useCelsius) {
+      weatherUseCelsius = useCelsius;
       homeWeatherUnitF.classList.toggle('home-weather__unit--active', !useCelsius);
       homeWeatherUnitC.classList.toggle('home-weather__unit--active', useCelsius);
       homeWeatherUnitF.setAttribute('aria-pressed', useCelsius ? 'false' : 'true');
@@ -3295,14 +3877,19 @@
       if (homeWeatherTempValue) {
         homeWeatherTempValue.textContent = formatWeatherTemp(WEATHER_TEMP_F, useCelsius);
       }
-      homeWeatherTempsF.forEach(el => {
+      document.querySelectorAll('#homeWidgetWeather [data-temp-f]').forEach(el => {
         const f = Number(el.dataset.tempF);
         if (Number.isNaN(f)) return;
-        el.textContent = formatWeatherTemp(f, useCelsius);
+        const suffix = el.classList.contains('home-weather__day-high') || el.classList.contains('home-weather__day-low') ? '°' : '';
+        el.textContent = formatWeatherTemp(f, useCelsius) + suffix;
       });
+      if (weatherActiveSegment === 'temperature') {
+        renderWeatherChart(isWeatherInWideColumn());
+      }
     }
     homeWeatherUnitF.addEventListener('click', () => setWeatherUnit(false));
     homeWeatherUnitC.addEventListener('click', () => setWeatherUnit(true));
+    syncWeatherForecastLayout();
 
     function syncSportsLeaguePanels() {
       document.querySelectorAll('[data-sports-league]').forEach(panel => {
@@ -3310,7 +3897,7 @@
         const filterBtn = document.querySelector(`[data-sports-filter="${league}"]`);
         panel.hidden = !(filterBtn && filterBtn.classList.contains('home-scores__filter--selected'));
       });
-      syncAllLandingCarousels();
+      syncSportsScoresLayout();
     }
 
     function setSportsFilterSelected(filter, selected) {
@@ -3333,11 +3920,7 @@
 
     document.querySelectorAll('[data-weather-segment]').forEach(segment => {
       segment.addEventListener('click', () => {
-        document.querySelectorAll('[data-weather-segment]').forEach(btn => {
-          const active = btn === segment;
-          btn.classList.toggle('home-weather__segment--active', active);
-          btn.setAttribute('aria-selected', active ? 'true' : 'false');
-        });
+        setWeatherSegment(segment.dataset.weatherSegment);
       });
     });
 
