@@ -30,6 +30,8 @@
       --color-stroke-primary:        var(--color-black-400);
       --color-stroke-secondary:      var(--color-black-550);
       --color-stroke-primary-button: var(--color-brand-blue-100);
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -455,38 +457,284 @@
       gap: var(--spacing-8);
       min-width: 0;
     }
-    .home-widget__icon {
+    .home-widget__title {
+      margin: 0;
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+    .home-top-stories__settings {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .home-top-stories__settings-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: calc(var(--spacing-24) + var(--spacing-4));
-      height: calc(var(--spacing-24) + var(--spacing-4));
+      width: calc(var(--spacing-24) + var(--spacing-8));
+      height: calc(var(--spacing-24) + var(--spacing-8));
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-icon-primary);
+      cursor: pointer;
+      transition: color 0.15s ease, background-color 0.15s ease;
+    }
+    .home-top-stories__settings-btn:hover {
       color: var(--color-icon-secondary);
-      flex-shrink: 0;
+      background: var(--color-background-secondary);
     }
-    .home-widget__title {
+    .home-top-stories__settings-btn[aria-expanded="true"] {
+      color: var(--color-icon-secondary);
+      background: var(--color-background-secondary);
+    }
+    .home-top-stories__settings-btn:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 2px;
+    }
+    .home-top-stories__settings-btn svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+    }
+    .home-top-stories__menu {
+      position: absolute;
+      top: calc(100% + var(--spacing-8));
+      right: 0;
+      z-index: 20;
+      width: calc(var(--spacing-24) * 10);
+      max-height: calc(var(--spacing-24) * 14);
+      overflow-y: auto;
+      padding: var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      box-shadow: var(--shadow-dropdown);
+    }
+    .home-top-stories__menu[hidden] {
+      display: none;
+    }
+    .home-top-stories__menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-8);
+      margin-bottom: var(--spacing-12);
+    }
+    .home-top-stories__menu-title {
       margin: 0;
-      font-size: var(--font-body-md);
-      line-height: var(--font-body-md-lh);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-primary);
+      padding: 0 var(--spacing-4);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      flex: 1;
+      min-width: 0;
     }
-    .home-widget__more {
+    .home-top-stories__menu-save {
       flex-shrink: 0;
+      padding: var(--spacing-4) var(--spacing-12);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      background-color: var(--color-button-inactive);
+      color: var(--color-text-tertiary);
+      cursor: not-allowed;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .home-top-stories__menu-save:not(:disabled) {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+      cursor: pointer;
+    }
+    .home-top-stories__menu-save:not(:disabled):hover {
+      background-color: var(--color-button-brandbluehover);
+    }
+    .home-top-stories__menu-save:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 2px;
+    }
+    .home-top-stories__menu-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+    .home-top-stories__menu-item {
+      margin: 0;
+    }
+    .home-top-stories__menu-item--select-all {
+      padding-bottom: var(--spacing-8);
+      margin-bottom: var(--spacing-4);
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .home-top-stories__menu-label {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-4);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .home-top-stories__menu-label:hover {
+      background: var(--color-background-secondary);
+    }
+    .home-top-stories__checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      position: relative;
+      flex-shrink: 0;
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      margin: 0;
+      border: var(--border-stroke-md) solid var(--color-stroke-primary);
+      border-radius: var(--radius-sm);
+      background: var(--color-background-primary);
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .home-top-stories__checkbox::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: var(--spacing-8);
+      height: var(--spacing-8);
+      opacity: 0;
+      background-color: var(--color-background-primary);
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10.5 8.58056' fill='none'%3E%3Cpath d='M0.75 4.547L3.9 7.5L9.75 0.75' stroke='%23000' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      mask-repeat: no-repeat;
+      mask-position: center;
+      mask-size: contain;
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10.5 8.58056' fill='none'%3E%3Cpath d='M0.75 4.547L3.9 7.5L9.75 0.75' stroke='%23000' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      -webkit-mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      -webkit-mask-size: contain;
+      transition: opacity 0.15s ease;
+    }
+    .home-top-stories__checkbox:checked {
+      border-color: var(--color-stroke-primary-button);
+      background: var(--color-button-brandblue);
+    }
+    .home-top-stories__checkbox:checked::after {
+      opacity: 1;
+    }
+    .home-top-stories__checkbox:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 2px;
+    }
+    .home-top-stories__menu-text {
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-link);
-      text-decoration: none;
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      user-select: none;
     }
-    .home-widget__more:hover {
-      text-decoration: underline;
+    .home-top-stories__empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(var(--spacing-24) * 6);
+      padding: var(--spacing-24);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+      text-align: center;
+    }
+    /* Carousel nav — matches index.html serp-all-news */
+    .icn-arrows {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--color-icon-primary);
+    }
+    .icn-arrows--left-circle,
+    .icn-arrows--right-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      background: var(--color-background-primary);
+      box-sizing: border-box;
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      box-shadow: var(--shadow-search);
+    }
+    .home-top-stories .serp-all-news__carousel,
+    .home-scores__carousel {
+      position: relative;
+      width: 100%;
+    }
+    .home-top-stories .serp-all-news__carousel {
+      --serp-all-news-carousel-gap: var(--spacing-24);
+      --serp-all-news-visible: 3;
+      --serp-all-news-thumb-center: 0px;
+    }
+    .home-top-stories .serp-all-news__prev,
+    .home-top-stories .serp-all-news__next,
+    .home-scores__prev,
+    .home-scores__next {
+      position: absolute;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--color-icon-primary);
+      transform: translateY(-50%);
+    }
+    .home-top-stories .serp-all-news__prev,
+    .home-top-stories .serp-all-news__next {
+      top: var(--serp-all-news-thumb-center);
+    }
+    .home-scores__prev,
+    .home-scores__next {
+      top: 50%;
+    }
+    .home-top-stories .serp-all-news__prev,
+    .home-scores__prev {
+      left: var(--spacing-8);
+    }
+    .home-top-stories .serp-all-news__next,
+    .home-scores__next {
+      right: var(--spacing-8);
+    }
+    .home-top-stories .serp-all-news__next:disabled,
+    .home-scores__next:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+    .home-top-stories .serp-all-news__prev:not(:disabled):hover .icn-arrows--left-circle,
+    .home-top-stories .serp-all-news__next:not(:disabled):hover .icn-arrows--right-circle,
+    .home-scores__prev:not(:disabled):hover .icn-arrows--left-circle,
+    .home-scores__next:not(:disabled):hover .icn-arrows--right-circle {
+      background: var(--color-button-brandblue);
+      border-color: transparent;
+      color: var(--color-text-inverted);
+    }
+    .home-top-stories .serp-all-news__prev[hidden],
+    .home-top-stories .serp-all-news__next[hidden],
+    .home-scores__prev[hidden],
+    .home-scores__next[hidden] {
+      display: none;
     }
     /* Top stories — matches All tab news carousel (serp-all-news-card) */
     .home-top-stories {
       width: 100%;
     }
-    .home-top-stories .serp-all-news__viewport {
+    .home-top-stories .serp-all-news__viewport,
+    .home-scores__viewport {
       width: 100%;
       overflow: hidden;
     }
@@ -633,79 +881,151 @@
       width: 100%;
       min-width: 0;
     }
-    .home-scores__favicon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: calc(var(--spacing-24) + var(--spacing-4));
-      height: calc(var(--spacing-24) + var(--spacing-4));
-      border-radius: var(--radius-full);
-      flex-shrink: 0;
-      background-color: var(--color-background-tertiary);
-    }
-    .home-scores__favicon-label {
-      font-size: var(--font-body-xs);
-      font-weight: var(--font-weight-semibold);
-      line-height: 1;
-      color: var(--color-text-secondary);
-    }
     .home-scores__filters {
-      display: inline-flex;
+      display: flex;
+      flex: 1 1 auto;
       flex-wrap: wrap;
       align-items: center;
       justify-content: flex-end;
       gap: var(--spacing-8);
+      min-width: 0;
       margin-left: auto;
     }
-    .home-scores__filter {
+    /* tags component — components/tags (league filter chips) */
+    .home-scores__filters .tag {
+      --tag-gap: 6px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      height: calc(var(--spacing-24) + var(--spacing-4));
+      gap: var(--tag-gap);
       padding: 0 var(--spacing-12);
-      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      height: 28px;
       border-radius: var(--radius-full);
-      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid transparent;
+      background: transparent;
       font-family: var(--font-family);
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
+      font-size: var(--font-label-xs);
+      line-height: var(--font-label-xs-lh);
       font-weight: var(--font-weight-regular);
-      color: var(--color-text-secondary);
+      color: var(--color-text-primary);
       white-space: nowrap;
       cursor: pointer;
-      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     }
-    .home-scores__filter:hover {
-      border-color: var(--color-stroke-primary-button);
+    .home-scores__filters .tag--outline {
+      background: var(--color-background-secondary);
+      border-color: var(--color-stroke-secondary);
       color: var(--color-text-primary);
     }
-    .home-scores__filter--active {
+    [data-theme="dark"] .home-scores__filters .tag--outline {
+      background: var(--color-background-quaternary);
+    }
+    .home-scores__filters .tag--outline:hover {
       border-color: var(--color-stroke-primary-button);
-      background: var(--color-background-primary);
-      font-weight: var(--font-weight-medium);
+    }
+    .home-scores__filters .home-scores__filter--selected {
+      border-color: var(--color-stroke-primary-button);
       color: var(--color-text-brandblue);
     }
-    .home-scores__filter:focus-visible {
+    .home-scores__filters .home-scores__filter--selected:hover {
+      background: var(--color-background-secondary);
+      border-color: var(--color-stroke-primary-button);
+      color: var(--color-text-brandblue);
+    }
+    [data-theme="dark"] .home-scores__filters .home-scores__filter--selected:hover {
+      background: var(--color-background-quaternary);
+    }
+    .home-scores__filters .tag__dismiss {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: inherit;
+      pointer-events: none;
+    }
+    .home-scores__filters .home-scores__filter--selected .tag__dismiss {
+      display: inline-flex;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .home-scores__filters .tag__text {
+      line-height: inherit;
+    }
+    .home-scores__filters .tag:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: 2px;
     }
+    .home-scores__body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-20);
+    }
+    .home-scores__footer {
+      padding-top: var(--spacing-24);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-secondary);
+    }
+    .home-scores__attribution {
+      margin: 0;
+    }
+    .home-scores__footer-link {
+      padding: 0;
+      border: none;
+      background: none;
+      font-family: var(--font-family);
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--color-text-link);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .home-scores__footer-link:hover {
+      text-decoration: underline;
+    }
+    .home-scores__league[hidden] {
+      display: none !important;
+    }
+    .home-scores__league-title {
+      margin: 0 0 var(--spacing-8);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-secondary);
+    }
     .home-scores__grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--spacing-12);
+      --home-scores-carousel-gap: var(--spacing-12);
+      --home-scores-visible: 3;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: var(--home-scores-carousel-gap);
+      margin: 0;
+      padding: 0;
       list-style: none;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .home-scores__grid::-webkit-scrollbar {
+      display: none;
     }
     .home-score-card {
+      flex: 0 0 calc(
+        (100% - (var(--home-scores-carousel-gap) * (var(--home-scores-visible) - 1)))
+        / var(--home-scores-visible)
+      );
+      min-width: 0;
       padding: var(--spacing-16);
       border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
       border-radius: var(--radius-lg);
       background: var(--color-background-primary);
-    }
-    .home-score-card__league {
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-tertiary);
+      scroll-snap-align: start;
     }
     .home-score-card__matchup {
       margin-top: var(--spacing-8);
@@ -714,10 +1034,125 @@
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-primary);
     }
-    .home-score-card__score {
-      margin-top: var(--spacing-4);
+    .home-scores__league[data-sports-league="nba"] .home-score-card,
+    .home-scores__league[data-sports-league="fifa"] .home-score-card,
+    .home-scores__league[data-sports-league="mlb"] .home-score-card {
+      padding-top: var(--spacing-16);
+      padding-bottom: var(--spacing-20);
+    }
+    .home-scores__league[data-sports-league="nba"] .home-score-card__header,
+    .home-scores__league[data-sports-league="fifa"] .home-score-card__header,
+    .home-scores__league[data-sports-league="mlb"] .home-score-card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-8);
+      min-width: 0;
+    }
+    .home-score-card__status,
+    .home-score-card__competition {
+      margin: 0;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      min-width: 0;
+    }
+    .home-score-card__status {
+      flex: 1 1 auto;
+      color: var(--color-text-secondary);
+    }
+    .home-score-card__competition {
+      flex-shrink: 0;
+      text-align: right;
+      color: var(--color-text-secondary);
+    }
+    .home-score-card__status--final {
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-bold);
+    }
+    .home-score-card__status--final:has(.home-score-card__status-keyword) {
+      font-weight: var(--font-weight-regular);
+    }
+    .home-score-card__status-keyword {
+      font-weight: var(--font-weight-bold);
+    }
+    .home-score-card__header .home-score-card__score {
+      display: none;
+    }
+    .home-scores__league[data-sports-league="nba"] .home-score-card__matchup,
+    .home-scores__league[data-sports-league="fifa"] .home-score-card__matchup,
+    .home-scores__league[data-sports-league="mlb"] .home-score-card__matchup {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      column-gap: var(--spacing-8);
+      align-items: center;
+      margin-top: var(--spacing-20);
+      min-width: 0;
+      min-height: calc(
+        var(--spacing-20) + var(--spacing-4) + var(--font-body-sm-lh) + var(--spacing-4) + var(--font-body-sm-lh)
+      );
+      font-weight: var(--font-weight-regular);
+    }
+    .home-scores__league[data-sports-league="nba"] .home-score-card__team,
+    .home-scores__league[data-sports-league="fifa"] .home-score-card__team,
+    .home-scores__league[data-sports-league="mlb"] .home-score-card__team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-4);
+      min-width: 0;
+      max-width: 100%;
+      justify-self: center;
+    }
+    .home-scores__league[data-sports-league="nba"] .home-score-card__team-logo,
+    .home-scores__league[data-sports-league="fifa"] .home-score-card__team-logo,
+    .home-scores__league[data-sports-league="mlb"] .home-score-card__team-logo {
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+    .home-score-card__team-logo--placeholder {
+      display: block;
+      border-radius: var(--radius-full);
+      background: var(--color-button-inactive);
+    }
+    .home-score-card__team-score {
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+    .home-score-card__team-score--pending {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+    }
+    .home-scores__league[data-sports-league="nba"] .home-score-card__team-name,
+    .home-scores__league[data-sports-league="fifa"] .home-score-card__team-name,
+    .home-scores__league[data-sports-league="mlb"] .home-score-card__team-name {
+      max-width: 100%;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .home-score-card__team--leading .home-score-card__team-score,
+    .home-score-card__team--leading .home-score-card__team-name {
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+    .home-scores__league[data-sports-league="nba"] .home-score-card__vs,
+    .home-scores__league[data-sports-league="fifa"] .home-score-card__vs,
+    .home-scores__league[data-sports-league="mlb"] .home-score-card__vs {
+      justify-self: center;
+      align-self: center;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-secondary);
     }
     /* Weather widget — Startpage Design Home (Figma node 286:3425) */
@@ -1127,18 +1562,30 @@
       flex-shrink: 0;
     }
     .customize-home__save {
-      padding: 0;
+      flex-shrink: 0;
+      padding: var(--spacing-4) var(--spacing-12);
       border: none;
-      background: none;
+      border-radius: var(--radius-lg);
       font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-link);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      background-color: var(--color-button-inactive);
+      color: var(--color-text-tertiary);
+      cursor: not-allowed;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .customize-home__save:not(:disabled) {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
       cursor: pointer;
     }
-    .customize-home__save:hover {
-      text-decoration: underline;
+    .customize-home__save:not(:disabled):hover {
+      background-color: var(--color-button-brandbluehover);
+    }
+    .customize-home__save:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 2px;
     }
     .customize-home__close {
       display: inline-flex;
@@ -1349,12 +1796,16 @@
       .landing-feed__grid {
         grid-template-columns: 1fr;
       }
+      .home-top-stories .serp-all-news__carousel {
+        --serp-all-news-carousel-gap: var(--spacing-16);
+        --serp-all-news-visible: 1;
+      }
       .home-top-stories .serp-all-news__row {
         --serp-all-news-carousel-gap: var(--spacing-16);
         --serp-all-news-visible: 1;
       }
       .home-scores__grid {
-        grid-template-columns: 1fr;
+        --home-scores-visible: 1;
       }
       .landing-promos__grid {
         grid-template-columns: 258px;
@@ -1444,20 +1895,59 @@
           <section class="home-widget" id="homeWidgetNews" data-widget-section="news" aria-labelledby="homeWidgetNewsTitle">
             <header class="home-widget__header">
               <div class="home-widget__title-row">
-                <span class="home-widget__icon" aria-hidden="true">
-                  <svg width="20" height="20" viewBox="0 0 18 18" fill="none">
-                    <rect x="2" y="4" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.25"/>
-                    <line x1="4" y1="7" x2="14" y2="7" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
-                    <line x1="4" y1="10" x2="11" y2="10" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
-                  </svg>
-                </span>
                 <h2 class="home-widget__title" id="homeWidgetNewsTitle">Top stories</h2>
               </div>
-              <a class="home-widget__more" href="index.html?tab=All&amp;q=taylor%20swift" id="homeTopStoriesMore">More</a>
+              <div class="home-top-stories__settings">
+                <button
+                  type="button"
+                  class="home-top-stories__settings-btn"
+                  id="homeTopStoriesSettingsBtn"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                  aria-controls="homeTopStoriesSettingsMenu"
+                  aria-label="Choose news categories"
+                >
+                  <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M13.0167 10.0833C12.9279 10.2844 12.9015 10.5075 12.9407 10.7237C12.9799 10.94 13.083 11.1395 13.2367 11.2967L13.2767 11.3367C13.4006 11.4605 13.499 11.6075 13.5661 11.7694C13.6332 11.9313 13.6677 12.1048 13.6677 12.28C13.6677 12.4552 13.6332 12.6287 13.5661 12.7906C13.499 12.9525 13.4006 13.0995 13.2767 13.2233C13.1528 13.3473 13.0058 13.4456 12.8439 13.5127C12.6821 13.5798 12.5086 13.6144 12.3333 13.6144C12.1581 13.6144 11.9846 13.5798 11.8227 13.5127C11.6609 13.4456 11.5138 13.3473 11.39 13.2233L11.35 13.1833C11.1929 13.0296 10.9933 12.9265 10.7771 12.8873C10.5608 12.8481 10.3377 12.8746 10.1367 12.9633C9.93949 13.0478 9.77132 13.1882 9.65287 13.367C9.53442 13.5459 9.47086 13.7555 9.47 13.97V14.0833C9.47 14.437 9.32952 14.7761 9.07948 15.0261C8.82943 15.2762 8.49029 15.4167 8.13667 15.4167C7.78305 15.4167 7.44391 15.2762 7.19386 15.0261C6.94381 14.7761 6.80333 14.437 6.80333 14.0833V14.0233C6.79817 13.8027 6.72675 13.5887 6.59834 13.4091C6.46994 13.2296 6.29049 13.0929 6.08333 13.0167C5.88226 12.9279 5.65921 12.9015 5.44294 12.9407C5.22668 12.9799 5.02712 13.083 4.87 13.2367L4.83 13.2767C4.70617 13.4006 4.55912 13.499 4.39725 13.5661C4.23539 13.6332 4.06189 13.6677 3.88667 13.6677C3.71145 13.6677 3.53794 13.6332 3.37608 13.5661C3.21422 13.499 3.06716 13.4006 2.94333 13.2767C2.81936 13.1528 2.72102 13.0058 2.65392 12.8439C2.58682 12.6821 2.55228 12.5086 2.55228 12.3333C2.55228 12.1581 2.58682 11.9846 2.65392 11.8227C2.72102 11.6609 2.81936 11.5138 2.94333 11.39L2.98333 11.35C3.13702 11.1929 3.24012 10.9933 3.27934 10.7771C3.31855 10.5608 3.29208 10.3377 3.20333 10.1367C3.11882 9.93949 2.9785 9.77132 2.79964 9.65287C2.62078 9.53442 2.41119 9.47086 2.19667 9.47H2.08333C1.72971 9.47 1.39057 9.32952 1.14052 9.07947C0.890476 8.82943 0.75 8.49029 0.75 8.13667C0.75 7.78304 0.890476 7.44391 1.14052 7.19386C1.39057 6.94381 1.72971 6.80333 2.08333 6.80333H2.14333C2.364 6.79817 2.578 6.72675 2.75753 6.59834C2.93706 6.46993 3.07381 6.29049 3.15 6.08333C3.23874 5.88226 3.26522 5.6592 3.226 5.44294C3.18679 5.22668 3.08369 5.02712 2.93 4.87L2.89 4.83C2.76603 4.70617 2.66769 4.55912 2.60059 4.39725C2.53349 4.23539 2.49895 4.06189 2.49895 3.88667C2.49895 3.71145 2.53349 3.53794 2.60059 3.37608C2.66769 3.21422 2.76603 3.06716 2.89 2.94333C3.01383 2.81936 3.16088 2.72102 3.32275 2.65392C3.48461 2.58682 3.65811 2.55228 3.83333 2.55228C4.00855 2.55228 4.18206 2.58682 4.34392 2.65392C4.50578 2.72102 4.65284 2.81936 4.77667 2.94333L4.81667 2.98333C4.97379 3.13702 5.17334 3.24012 5.38961 3.27934C5.60587 3.31855 5.82892 3.29208 6.03 3.20333H6.08333C6.28051 3.11882 6.44868 2.9785 6.56713 2.79964C6.68558 2.62078 6.74915 2.41119 6.75 2.19667V2.08333C6.75 1.72971 6.89048 1.39057 7.14053 1.14052C7.39057 0.890476 7.72971 0.75 8.08333 0.75C8.43696 0.75 8.77609 0.890476 9.02614 1.14052C9.27619 1.39057 9.41667 1.72971 9.41667 2.08333V2.14333C9.41752 2.35786 9.48109 2.56745 9.59954 2.74631C9.71799 2.92517 9.88615 3.06549 10.0833 3.15C10.2844 3.23874 10.5075 3.26522 10.7237 3.226C10.94 3.18679 11.1395 3.08369 11.2967 2.93L11.3367 2.89C11.4605 2.76603 11.6076 2.66769 11.7694 2.60059C11.9313 2.53349 12.1048 2.49895 12.28 2.49895C12.4552 2.49895 12.6287 2.53349 12.7906 2.60059C12.9525 2.66769 13.0995 2.76603 13.2233 2.89C13.3473 3.01383 13.4456 3.16088 13.5127 3.32275C13.5798 3.48461 13.6144 3.65811 13.6144 3.83333C13.6144 4.00855 13.5798 4.18206 13.5127 4.34392C13.4456 4.50578 13.3473 4.65284 13.2233 4.77667L13.1833 4.81667C13.0296 4.97379 12.9265 5.17334 12.8873 5.38961C12.8481 5.60587 12.8746 5.82892 12.9633 6.03V6.08333C13.0478 6.28051 13.1882 6.44868 13.367 6.56713C13.5459 6.68558 13.7555 6.74914 13.97 6.75H14.0833C14.437 6.75 14.7761 6.89048 15.0261 7.14052C15.2762 7.39057 15.4167 7.72971 15.4167 8.08333C15.4167 8.43695 15.2762 8.77609 15.0261 9.02614C14.7761 9.27619 14.437 9.41667 14.0833 9.41667H14.0233C13.8088 9.41752 13.5992 9.48109 13.4204 9.59954C13.2415 9.71799 13.1012 9.88615 13.0167 10.0833Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g transform="translate(5.856 5.856) scale(0.810)">
+                      <path d="M2.75 4.75C3.85457 4.75 4.75 3.85457 4.75 2.75C4.75 1.64543 3.85457 0.75 2.75 0.75C1.64543 0.75 0.75 1.64543 0.75 2.75C0.75 3.85457 1.64543 4.75 2.75 4.75Z" stroke="currentColor" stroke-width="1.852" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                  </svg>
+                </button>
+                <div
+                  class="home-top-stories__menu"
+                  id="homeTopStoriesSettingsMenu"
+                  role="dialog"
+                  aria-label="News categories"
+                  hidden
+                >
+                  <div class="home-top-stories__menu-header">
+                    <p class="home-top-stories__menu-title" id="homeTopStoriesSettingsMenuTitle">Show stories from</p>
+                    <button type="button" class="home-top-stories__menu-save" id="homeTopStoriesSaveBtn" disabled>Save</button>
+                  </div>
+                  <ul class="home-top-stories__menu-list" id="homeTopStoriesCategoryList" aria-labelledby="homeTopStoriesSettingsMenuTitle"></ul>
+                </div>
+              </div>
             </header>
             <div class="home-top-stories">
-              <div class="serp-all-news__viewport">
-                <ul class="serp-all-news__row" id="homeTopStoriesRow" aria-label="Top stories"></ul>
+              <div class="serp-all-news__carousel" id="homeTopStoriesCarousel">
+                <div class="serp-all-news__viewport">
+                  <ul class="serp-all-news__row" id="homeTopStoriesRow" aria-label="Top stories"></ul>
+                </div>
+                <button type="button" class="serp-all-news__prev" hidden aria-label="Show previous top stories">
+                  <span class="icn-arrows icn-arrows--left-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M14 8.5L10 12L14 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="serp-all-news__next" aria-label="Show more top stories">
+                  <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M10 8.5L14 12L10 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
               </div>
             </div>
           </section>
@@ -1466,36 +1956,395 @@
             <header class="home-widget__header">
               <div class="home-scores__header-main">
                 <div class="home-widget__title-row">
-                  <span class="home-scores__favicon" aria-hidden="true">
-                    <span class="home-scores__favicon-label">SP</span>
-                  </span>
                   <h2 class="home-widget__title" id="homeWidgetSportsTitle">Sports scores</h2>
                 </div>
-                <div class="home-scores__filters" role="group" aria-label="League">
-                  <button type="button" class="home-scores__filter home-scores__filter--active" data-sports-filter="nba" aria-pressed="true">NBA</button>
-                  <button type="button" class="home-scores__filter" data-sports-filter="fifa" aria-pressed="false">FIFA</button>
-                  <button type="button" class="home-scores__filter" data-sports-filter="nfl" aria-pressed="false">NFL</button>
-                  <button type="button" class="home-scores__filter" data-sports-filter="mlb" aria-pressed="false">MLB</button>
+                <div class="home-scores__filters" role="group" aria-label="League filters">
+                  <button type="button" class="tag home-scores__filter home-scores__filter--selected" data-sports-filter="nba" aria-pressed="true">
+                    <span class="tag__dismiss" data-sports-filter-dismiss aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M4.5 4.5L11.5 11.5M11.5 4.5L4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span class="tag__text">Basketball</span>
+                  </button>
+                  <button type="button" class="tag tag--outline home-scores__filter" data-sports-filter="fifa" aria-pressed="false">
+                    <span class="tag__dismiss" data-sports-filter-dismiss aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M4.5 4.5L11.5 11.5M11.5 4.5L4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span class="tag__text">Soccer</span>
+                  </button>
+                  <button type="button" class="tag tag--outline home-scores__filter" data-sports-filter="mlb" aria-pressed="false">
+                    <span class="tag__dismiss" data-sports-filter-dismiss aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M4.5 4.5L11.5 11.5M11.5 4.5L4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span class="tag__text">Baseball</span>
+                  </button>
                 </div>
               </div>
             </header>
-            <ul class="home-scores__grid">
-              <li class="home-score-card">
-                <p class="home-score-card__league">NBA · Final</p>
-                <p class="home-score-card__matchup">Lakers vs Warriors</p>
-                <p class="home-score-card__score">108 – 104</p>
-              </li>
-              <li class="home-score-card">
-                <p class="home-score-card__league">NBA · 4th · 2:14</p>
-                <p class="home-score-card__matchup">Celtics vs Knicks</p>
-                <p class="home-score-card__score">98 – 95</p>
-              </li>
-              <li class="home-score-card">
-                <p class="home-score-card__league">NBA · Tonight · 7:30 PM</p>
-                <p class="home-score-card__matchup">Nuggets vs Suns</p>
-                <p class="home-score-card__score">—</p>
-              </li>
-            </ul>
+            <div class="home-scores__body" id="homeScoresBody">
+              <section class="home-scores__league" data-sports-league="nba" aria-labelledby="homeScoresLeagueNba">
+                <h3 class="home-scores__league-title" id="homeScoresLeagueNba">Basketball</h3>
+                <div class="home-scores__carousel">
+                <div class="home-scores__viewport">
+                  <ul class="home-scores__grid">
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status home-score-card__status--final"><span class="home-score-card__status-keyword">Final</span></p>
+                        <p class="home-score-card__competition">NBA</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team home-score-card__team--leading">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/nba/lakers.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">108</span>
+                          <span class="home-score-card__team-name" title="Lakers">Lakers</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/nba/warriors.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">104</span>
+                          <span class="home-score-card__team-name" title="Warriors">Warriors</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">4th · 2:14</p>
+                        <p class="home-score-card__competition">NBA</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team home-score-card__team--leading">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/nba/celtics.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">98</span>
+                          <span class="home-score-card__team-name" title="Celtics">Celtics</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/nba/knicks.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">95</span>
+                          <span class="home-score-card__team-name" title="Knicks">Knicks</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">3rd · 5:42</p>
+                        <p class="home-score-card__competition">NBA</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team home-score-card__team--leading">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/nba/bucks.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">87</span>
+                          <span class="home-score-card__team-name" title="Bucks">Bucks</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/nba/heat.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">82</span>
+                          <span class="home-score-card__team-name" title="Heat">Heat</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">Halftime</p>
+                        <p class="home-score-card__competition">NBA</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team home-score-card__team--leading">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/nba/mavericks.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">54</span>
+                          <span class="home-score-card__team-name" title="Mavericks">Mavericks</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/nba/thunder.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">51</span>
+                          <span class="home-score-card__team-name" title="Thunder">Thunder</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">Tonight · 7:30 PM</p>
+                        <p class="home-score-card__competition">NBA</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/nba/nuggets.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score home-score-card__team-score--pending">-</span>
+                          <span class="home-score-card__team-name" title="Nuggets">Nuggets</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/nba/suns.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score home-score-card__team-score--pending">-</span>
+                          <span class="home-score-card__team-name" title="Suns">Suns</span>
+                        </span>
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+                <button type="button" class="home-scores__prev" hidden aria-label="Show previous Basketball scores">
+                  <span class="icn-arrows icn-arrows--left-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M14 8.5L10 12L14 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="home-scores__next" aria-label="Show more Basketball scores">
+                  <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M10 8.5L14 12L10 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                </div>
+              </section>
+              <section class="home-scores__league" data-sports-league="fifa" aria-labelledby="homeScoresLeagueFifa" hidden>
+                <h3 class="home-scores__league-title" id="homeScoresLeagueFifa">Soccer</h3>
+                <div class="home-scores__carousel">
+                <div class="home-scores__viewport">
+                  <ul class="home-scores__grid">
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status home-score-card__status--final"><span class="home-score-card__status-keyword">Final</span></p>
+                        <p class="home-score-card__competition">FIFA World Cup</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team home-score-card__team--leading">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/worldcup/argentina.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">3</span>
+                          <span class="home-score-card__team-name" title="Argentina">Argentina</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/worldcup/france.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">2</span>
+                          <span class="home-score-card__team-name" title="France">France</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">67'</p>
+                        <p class="home-score-card__competition">FIFA World Cup</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/worldcup/brazil.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">1</span>
+                          <span class="home-score-card__team-name" title="Brazil">Brazil</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/worldcup/germany.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">1</span>
+                          <span class="home-score-card__team-name" title="Germany">Germany</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">52'</p>
+                        <p class="home-score-card__competition">FIFA World Cup</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/worldcup/spain.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">0</span>
+                          <span class="home-score-card__team-name" title="Spain">Spain</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/worldcup/netherlands.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">0</span>
+                          <span class="home-score-card__team-name" title="Netherlands">Netherlands</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">Today · 12:30 PM</p>
+                        <p class="home-score-card__competition">FIFA World Cup</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/worldcup/usa.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score home-score-card__team-score--pending">-</span>
+                          <span class="home-score-card__team-name" title="USA">USA</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/worldcup/mexico.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score home-score-card__team-score--pending">-</span>
+                          <span class="home-score-card__team-name" title="Mexico">Mexico</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">Today · 2:00 PM</p>
+                        <p class="home-score-card__competition">FIFA World Cup</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/worldcup/england.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score home-score-card__team-score--pending">-</span>
+                          <span class="home-score-card__team-name" title="England">England</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/worldcup/senegal.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score home-score-card__team-score--pending">-</span>
+                          <span class="home-score-card__team-name" title="Senegal">Senegal</span>
+                        </span>
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+                <button type="button" class="home-scores__prev" hidden aria-label="Show previous Soccer scores">
+                  <span class="icn-arrows icn-arrows--left-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M14 8.5L10 12L14 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="home-scores__next" aria-label="Show more Soccer scores">
+                  <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M10 8.5L14 12L10 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                </div>
+              </section>
+              <section class="home-scores__league" data-sports-league="mlb" aria-labelledby="homeScoresLeagueMlb" hidden>
+                <h3 class="home-scores__league-title" id="homeScoresLeagueMlb">Baseball</h3>
+                <div class="home-scores__carousel">
+                <div class="home-scores__viewport">
+                  <ul class="home-scores__grid">
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status home-score-card__status--final"><span class="home-score-card__status-keyword">Final</span></p>
+                        <p class="home-score-card__competition">MLB</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team home-score-card__team--leading">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/mlb/yankees.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">5</span>
+                          <span class="home-score-card__team-name" title="Yankees">Yankees</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/mlb/redsox.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">3</span>
+                          <span class="home-score-card__team-name" title="Red Sox">Red Sox</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">Top 8th</p>
+                        <p class="home-score-card__competition">MLB</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team home-score-card__team--leading">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/mlb/dodgers.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">4</span>
+                          <span class="home-score-card__team-name" title="Dodgers">Dodgers</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/mlb/padres.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">2</span>
+                          <span class="home-score-card__team-name" title="Padres">Padres</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">Bot 6th</p>
+                        <p class="home-score-card__competition">MLB</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/mlb/braves.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">3</span>
+                          <span class="home-score-card__team-name" title="Braves">Braves</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/mlb/marlins.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score">3</span>
+                          <span class="home-score-card__team-name" title="Marlins">Marlins</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">Today · 4:10 PM</p>
+                        <p class="home-score-card__competition">MLB</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/mlb/astros.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score home-score-card__team-score--pending">-</span>
+                          <span class="home-score-card__team-name" title="Astros">Astros</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/mlb/rangers.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score home-score-card__team-score--pending">-</span>
+                          <span class="home-score-card__team-name" title="Rangers">Rangers</span>
+                        </span>
+                      </p>
+                    </li>
+                    <li class="home-score-card">
+                      <div class="home-score-card__header">
+                        <p class="home-score-card__status">Tonight · 7:10 PM</p>
+                        <p class="home-score-card__competition">MLB</p>
+                      </div>
+                      <p class="home-score-card__matchup">
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/mlb/mets.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score home-score-card__team-score--pending">-</span>
+                          <span class="home-score-card__team-name" title="Mets">Mets</span>
+                        </span>
+                        <span class="home-score-card__vs" aria-hidden="true">vs</span>
+                        <span class="home-score-card__team">
+                          <img class="home-score-card__team-logo" src="../../assets/icons/sports/mlb/phillies.png" width="20" height="20" alt="" />
+                          <span class="home-score-card__team-score home-score-card__team-score--pending">-</span>
+                          <span class="home-score-card__team-name" title="Phillies">Phillies</span>
+                        </span>
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+                <button type="button" class="home-scores__prev" hidden aria-label="Show previous Baseball scores">
+                  <span class="icn-arrows icn-arrows--left-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M14 8.5L10 12L14 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="home-scores__next" aria-label="Show more Baseball scores">
+                  <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M10 8.5L14 12L10 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                </div>
+              </section>
+            </div>
+            <footer class="home-scores__footer">
+              <p class="home-scores__attribution">Powered by <a class="home-scores__footer-link" href="https://api-sports.io/" target="_blank" rel="noopener noreferrer">API-SPORTS</a></p>
+            </footer>
           </section>
 
         </div>
@@ -1635,7 +2484,7 @@
       <header class="customize-home__header">
         <h2 class="customize-home__title" id="customizeHomeTitle">Customize home</h2>
         <div class="customize-home__header-actions">
-          <button type="button" class="customize-home__save" id="customizeHomeSave">Save</button>
+          <button type="button" class="customize-home__save" id="customizeHomeSave" disabled>Save</button>
           <button type="button" class="customize-home__close" id="customizeHomeClose" aria-label="Close customize home">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
               <line x1="4.5" y1="4.5" x2="15.5" y2="15.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
@@ -1736,7 +2585,7 @@
               </span>
               <div class="customize-home__widget-text">
                 <span class="customize-home__widget-title">Sports scores</span>
-                <span class="customize-home__widget-desc">NBA · MLB · NFL</span>
+                <span class="customize-home__widget-desc">NFL</span>
               </div>
               <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Show Sports scores" data-widget-toggle="sports">
                 <span class="toggle__thumb" aria-hidden="true"></span>
@@ -1760,28 +2609,6 @@
                 <span class="customize-home__widget-desc">Current location · sidebar</span>
               </div>
               <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Show Weather" data-widget-toggle="weather">
-                <span class="toggle__thumb" aria-hidden="true"></span>
-              </button>
-            </li>
-            <li class="customize-home__widget" data-widget="promos">
-              <button type="button" class="customize-home__drag" aria-label="Reorder Promo messaging" tabindex="-1">
-                <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
-                  <circle cx="2" cy="2" r="1.25"/><circle cx="8" cy="2" r="1.25"/>
-                  <circle cx="2" cy="7" r="1.25"/><circle cx="8" cy="7" r="1.25"/>
-                  <circle cx="2" cy="12" r="1.25"/><circle cx="8" cy="12" r="1.25"/>
-                </svg>
-              </button>
-              <span class="customize-home__widget-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <rect x="3" y="3" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.25"/>
-                  <path d="M6 9h6M6 12h4" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
-                </svg>
-              </span>
-              <div class="customize-home__widget-text">
-                <span class="customize-home__widget-title">Promo messaging</span>
-                <span class="customize-home__widget-desc">2 cards · homepage</span>
-              </div>
-              <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Show Promo messaging" data-widget-toggle="promos">
                 <span class="toggle__thumb" aria-hidden="true"></span>
               </button>
             </li>
@@ -1834,26 +2661,84 @@
       goToResults(searchInput.value);
     });
 
-    const HOME_TOP_STORIES = [
-      {
-        publisher: 'BBC News',
-        time: '35 minutes ago',
-        title: 'Taylor Swift announces surprise single ahead of summer festival appearances',
-        snippet: 'The release is expected to preview new material tied to upcoming stadium dates, with streaming platforms already listing a midnight drop.',
-      },
-      {
-        publisher: 'The Hollywood Reporter',
-        time: '1 hour ago',
-        title: 'Eras Tour documentary team reveals behind-the-scenes footage from final U.S. leg',
-        snippet: 'Editors say the film focuses on stagecraft, crew logistics, and the fan experience across the tour\'s closing American run.',
-      },
-      {
-        publisher: 'Nikkei Asia',
-        time: '3 hours ago',
-        title: 'Fans gather in Tokyo as Taylor Swift vinyl release lands in record shops across Asia',
-        snippet: 'Limited-edition pressings sold out within hours, with resale listings climbing on collector marketplaces.',
-      },
+    const HOME_NEWS_CATEGORIES = [
+      { id: 'top-stories', label: 'Top stories' },
+      { id: 'world', label: 'World' },
+      { id: 'us', label: 'U.S.' },
+      { id: 'sports', label: 'Sports' },
+      { id: 'entertainment', label: 'Entertainment' },
+      { id: 'technology', label: 'Technology' },
+      { id: 'business', label: 'Business' },
+      { id: 'science', label: 'Science' },
+      { id: 'local', label: 'Local' },
     ];
+    const HOME_NEWS_CATEGORY_IDS = HOME_NEWS_CATEGORIES.map(c => c.id);
+    const HOME_NEWS_DEFAULT_CATEGORIES = ['top-stories'];
+    const HOME_TOP_STORIES_MIN_COUNT = 3;
+    const HOME_NEWS_CATEGORIES_STORAGE_KEY = 'startpage-landing-news-categories';
+
+    const HOME_NEWS_POOL = [
+      { category: 'top-stories', publisher: 'Reuters', time: '22 minutes ago',
+        title: 'Global leaders meet on trade and climate as summit opens in Geneva',
+        snippet: 'Delegates opened two days of talks focused on tariffs, energy transition funding, and coordinated disaster response.' },
+      { category: 'top-stories', publisher: 'BBC News', time: '48 minutes ago',
+        title: 'Central banks signal caution after inflation data surprises economists',
+        snippet: 'Policymakers said they would keep rates steady while watching labor markets and energy prices.' },
+      { category: 'top-stories', publisher: 'The Associated Press', time: '1 hour ago',
+        title: 'Rescue crews search coastal towns after overnight storms',
+        snippet: 'Officials reported widespread outages and closed highways as emergency shelters opened across the region.' },
+      { category: 'world', publisher: 'Reuters', time: '18 minutes ago',
+        title: 'G7 ministers seek common ground on maritime security in the Red Sea',
+        snippet: 'Officials discussed escort missions and sanctions enforcement after another week of shipping disruptions.' },
+      { category: 'world', publisher: 'BBC World', time: '42 minutes ago',
+        title: 'Ceasefire talks resume as aid convoys wait at a contested border crossing',
+        snippet: 'Mediators reported incremental progress on prisoner exchanges and civilian corridor access.' },
+      { category: 'us', publisher: 'The Associated Press', time: '24 minutes ago',
+        title: 'White House and congressional leaders resume budget talks after spring recess',
+        snippet: 'Staffers said both sides are weighing a short-term extension while longer spending caps remain unresolved.' },
+      { category: 'us', publisher: 'NPR', time: '51 minutes ago',
+        title: 'Supreme Court calendar sets up decisions on agency power and voting rules',
+        snippet: 'Legal analysts expect rulings this month that could reshape federal regulatory authority.' },
+      { category: 'sports', publisher: 'ESPN', time: '19 minutes ago',
+        title: 'NBA playoffs: underdogs force Game 7 after overtime rally on the road',
+        snippet: 'Coaches credited defensive switches and bench scoring for the comeback in the final two minutes.' },
+      { category: 'sports', publisher: 'The Athletic', time: '44 minutes ago',
+        title: 'Champions League semifinal lineup news shakes up fantasy and betting markets',
+        snippet: 'Injury reports listed two starters as doubtful, opening chances for younger squad players.' },
+      { category: 'entertainment', publisher: 'Variety', time: '21 minutes ago',
+        title: 'Summer box office heats up as franchise sequel tops opening-night sales',
+        snippet: 'Studios said premium formats and strong international presales offset softer weekday traffic.' },
+      { category: 'entertainment', publisher: 'The Hollywood Reporter', time: '47 minutes ago',
+        title: 'Streaming service renews hit drama for a final season after cliffhanger finale',
+        snippet: 'Showrunners promised to resolve long-running storylines while trimming episode count.' },
+      { category: 'technology', publisher: 'The Verge', time: '17 minutes ago',
+        title: 'Phone makers preview AI features that run fully on-device for privacy',
+        snippet: 'Executives said local models would handle summaries and photo edits without cloud uploads.' },
+      { category: 'technology', publisher: 'Wired', time: '39 minutes ago',
+        title: 'Chipmakers outline roadmap for more efficient data-center accelerators',
+        snippet: 'Engineers promised lower power draw per token as hyperscalers expand inference clusters.' },
+      { category: 'business', publisher: 'Bloomberg', time: '20 minutes ago',
+        title: 'Major retailer beats earnings estimates on stronger online grocery demand',
+        snippet: 'Executives raised full-year guidance while warning that freight costs remain volatile.' },
+      { category: 'business', publisher: 'Reuters', time: '46 minutes ago',
+        title: 'Oil prices slip as producers signal flexible output after demand data',
+        snippet: 'Traders weighed inventory builds in Asia against tighter refined product supplies in Europe.' },
+      { category: 'science', publisher: 'Nature', time: '26 minutes ago',
+        title: 'Study links deep-ocean currents to faster Antarctic ice shelf melting',
+        snippet: 'Modeling teams said warmer water pulses could raise sea-level projections for coastal cities.' },
+      { category: 'science', publisher: 'Scientific American', time: '52 minutes ago',
+        title: 'Telescope array captures detailed map of star-forming region in nearby galaxy',
+        snippet: 'Astronomers plan follow-up observations to trace magnetic fields shaping new suns.' },
+      { category: 'local', publisher: 'Chicago Tribune', time: '23 minutes ago',
+        title: 'Downtown council approves pilot for late-night transit on festival weekends',
+        snippet: 'Officials said extra trains and buses would run through summer events and baseball games.' },
+      { category: 'local', publisher: 'The Seattle Times', time: '49 minutes ago',
+        title: 'City opens cooling centers as early heat wave strains power demand',
+        snippet: 'Utility crews staged repair teams while libraries extended hours for residents.' },
+    ];
+
+    let selectedHomeNewsCategories = loadSelectedHomeNewsCategories();
+    let pendingHomeNewsCategories = [...selectedHomeNewsCategories];
     const HOME_PUBLISHER_MAX_CHARS = 14;
 
     function formatHomeNewsTime(time) {
@@ -1910,17 +2795,285 @@
           <span class="serp-all-news-card__meta-sep" aria-hidden="true">·</span>
           <span class="serp-all-news-card__time">${timeLabel}</span>
         </div>
-        <a class="serp-all-news-card__title" href="index.html?tab=All&amp;q=taylor%20swift">${article.title}</a>
+        <a class="serp-all-news-card__title" href="index.html?tab=News">${article.title}</a>
         <p class="serp-all-news-card__description">${article.snippet}</p>
       </li>`;
+    }
+
+    function getLandingCarouselRow(carousel) {
+      return carousel.querySelector('.serp-all-news__row, .home-scores__grid');
+    }
+
+    function syncLandingCarousel(carousel) {
+      const row = getLandingCarouselRow(carousel);
+      const prevBtn = carousel.querySelector('.serp-all-news__prev, .home-scores__prev');
+      const nextBtn = carousel.querySelector('.serp-all-news__next, .home-scores__next');
+      if (!row || !prevBtn || !nextBtn) return;
+      const leaguePanel = carousel.closest('.home-scores__league');
+      if (leaguePanel && leaguePanel.hidden) return;
+      const canScroll = row.scrollWidth > row.clientWidth + 2;
+      const atStart = row.scrollLeft <= 2;
+      const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 2;
+      prevBtn.hidden = !canScroll || atStart;
+      nextBtn.hidden = !canScroll;
+      nextBtn.disabled = atEnd;
+    }
+
+    function syncAllLandingCarousels() {
+      document.querySelectorAll('.home-top-stories .serp-all-news__carousel, .home-scores__carousel').forEach(syncLandingCarousel);
+    }
+
+    function scrollLandingCarousel(carousel, direction) {
+      const row = getLandingCarouselRow(carousel);
+      const card = row?.querySelector('.serp-all-news-card, .home-score-card');
+      if (!row || !card) return;
+      const gap = parseFloat(getComputedStyle(row).gap) || 24;
+      const step = card.offsetWidth + gap;
+      row.scrollBy({ left: direction * step, behavior: 'smooth' });
+    }
+
+    function syncTopStoriesArrowAlign() {
+      const carousel = document.getElementById('homeTopStoriesCarousel');
+      const thumb = carousel?.querySelector('.serp-all-news-card__thumb');
+      if (!carousel || !thumb) return;
+      const carouselTop = carousel.getBoundingClientRect().top;
+      const thumbRect = thumb.getBoundingClientRect();
+      const centerY = thumbRect.top - carouselTop + thumbRect.height / 2;
+      carousel.style.setProperty('--serp-all-news-thumb-center', `${centerY}px`);
+    }
+
+    function loadSelectedHomeNewsCategories() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(HOME_NEWS_CATEGORIES_STORAGE_KEY) || 'null');
+        if (!Array.isArray(saved)) return [...HOME_NEWS_DEFAULT_CATEGORIES];
+        const valid = saved.filter(id => HOME_NEWS_CATEGORY_IDS.includes(id));
+        return valid.length ? valid : [...HOME_NEWS_DEFAULT_CATEGORIES];
+      } catch {
+        return [...HOME_NEWS_DEFAULT_CATEGORIES];
+      }
+    }
+
+    function saveSelectedHomeNewsCategories() {
+      localStorage.setItem(HOME_NEWS_CATEGORIES_STORAGE_KEY, JSON.stringify(selectedHomeNewsCategories));
+    }
+
+    function getFilteredHomeNewsStories() {
+      const matched = HOME_NEWS_POOL.filter(article => selectedHomeNewsCategories.includes(article.category));
+      if (matched.length >= HOME_TOP_STORIES_MIN_COUNT) return matched;
+
+      const result = [...matched];
+      const seen = new Set(result.map(article => article.title));
+      for (const article of HOME_NEWS_POOL) {
+        if (result.length >= HOME_TOP_STORIES_MIN_COUNT) break;
+        if (seen.has(article.title)) continue;
+        seen.add(article.title);
+        result.push(article);
+      }
+      return result;
+    }
+
+    function areAllHomeNewsCategoriesSelected(categories) {
+      return HOME_NEWS_CATEGORY_IDS.every(id => categories.includes(id));
+    }
+
+    function normalizeHomeNewsCategories(categories) {
+      return HOME_NEWS_CATEGORY_IDS.filter(id => categories.includes(id));
+    }
+
+    function homeNewsCategoriesEqual(a, b) {
+      const normA = normalizeHomeNewsCategories(a);
+      const normB = normalizeHomeNewsCategories(b);
+      if (normA.length !== normB.length) return false;
+      return normA.every((id, index) => id === normB[index]);
+    }
+
+    function hasPendingHomeNewsCategoryChanges() {
+      return !homeNewsCategoriesEqual(pendingHomeNewsCategories, selectedHomeNewsCategories);
+    }
+
+    function syncHomeTopStoriesSaveButton() {
+      const saveBtn = document.getElementById('homeTopStoriesSaveBtn');
+      if (!saveBtn) return;
+      saveBtn.disabled = !hasPendingHomeNewsCategoryChanges();
+    }
+
+    function syncHomeTopStoriesSelectAllCheckbox() {
+      const selectAll = document.getElementById('homeTopStoriesSelectAll');
+      if (!selectAll) return;
+      const allSelected = areAllHomeNewsCategoriesSelected(pendingHomeNewsCategories);
+      const someSelected = pendingHomeNewsCategories.length > 0 && !allSelected;
+      selectAll.checked = allSelected;
+      selectAll.indeterminate = someSelected;
+    }
+
+    function renderHomeTopStoriesCategoryMenu() {
+      const list = document.getElementById('homeTopStoriesCategoryList');
+      if (!list) return;
+      const allSelected = areAllHomeNewsCategoriesSelected(pendingHomeNewsCategories);
+      const someSelected = pendingHomeNewsCategories.length > 0 && !allSelected;
+      const selectAllRow = `<li class="home-top-stories__menu-item home-top-stories__menu-item--select-all">
+          <label class="home-top-stories__menu-label">
+            <input type="checkbox" class="home-top-stories__checkbox" id="homeTopStoriesSelectAll"${allSelected ? ' checked' : ''} />
+            <span class="home-top-stories__menu-text">Select all</span>
+          </label>
+        </li>`;
+      const categoryRows = HOME_NEWS_CATEGORIES.map(({ id, label }) => {
+        const checked = pendingHomeNewsCategories.includes(id);
+        return `<li class="home-top-stories__menu-item">
+          <label class="home-top-stories__menu-label">
+            <input type="checkbox" class="home-top-stories__checkbox" name="homeNewsCategory" value="${id}"${checked ? ' checked' : ''} />
+            <span class="home-top-stories__menu-text">${label}</span>
+          </label>
+        </li>`;
+      }).join('');
+      list.innerHTML = selectAllRow + categoryRows;
+      const selectAll = document.getElementById('homeTopStoriesSelectAll');
+      if (selectAll) selectAll.indeterminate = someSelected;
+      syncHomeTopStoriesSaveButton();
+    }
+
+    function openHomeTopStoriesMenu() {
+      pendingHomeNewsCategories = [...selectedHomeNewsCategories];
+      renderHomeTopStoriesCategoryMenu();
+      setHomeTopStoriesMenuOpen(true);
+    }
+
+    function closeHomeTopStoriesMenu({ revertPending = true } = {}) {
+      if (revertPending) {
+        pendingHomeNewsCategories = [...selectedHomeNewsCategories];
+      }
+      setHomeTopStoriesMenuOpen(false);
+    }
+
+    function setHomeTopStoriesMenuOpen(isOpen) {
+      const btn = document.getElementById('homeTopStoriesSettingsBtn');
+      const menu = document.getElementById('homeTopStoriesSettingsMenu');
+      if (!btn || !menu) return;
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      menu.hidden = !isOpen;
+    }
+
+    function applyHomeTopStoriesSave() {
+      if (!hasPendingHomeNewsCategoryChanges()) return;
+      pendingHomeNewsCategories = pendingHomeNewsCategories.filter(id => HOME_NEWS_CATEGORY_IDS.includes(id));
+      if (!pendingHomeNewsCategories.length) {
+        pendingHomeNewsCategories = [...HOME_NEWS_DEFAULT_CATEGORIES];
+      }
+      selectedHomeNewsCategories = [...pendingHomeNewsCategories];
+      saveSelectedHomeNewsCategories();
+      renderHomeTopStories();
+      closeHomeTopStoriesMenu({ revertPending: false });
     }
 
     function renderHomeTopStories() {
       const row = document.getElementById('homeTopStoriesRow');
       if (!row) return;
-      row.innerHTML = HOME_TOP_STORIES.map(renderHomeTopStoryCard).join('');
+      const stories = getFilteredHomeNewsStories();
+      row.innerHTML = stories.map(renderHomeTopStoryCard).join('');
+      const carousel = document.getElementById('homeTopStoriesCarousel');
+      if (carousel) {
+        syncLandingCarousel(carousel);
+        requestAnimationFrame(syncTopStoriesArrowAlign);
+        row.querySelectorAll('.serp-all-news-card__thumb-img').forEach(img => {
+          if (img.complete) return;
+          img.addEventListener('load', syncTopStoriesArrowAlign, { once: true });
+        });
+      }
     }
+
+    function initHomeTopStoriesSettings() {
+      const btn = document.getElementById('homeTopStoriesSettingsBtn');
+      const menu = document.getElementById('homeTopStoriesSettingsMenu');
+      const list = document.getElementById('homeTopStoriesCategoryList');
+      const saveBtn = document.getElementById('homeTopStoriesSaveBtn');
+
+      btn?.addEventListener('click', e => {
+        e.stopPropagation();
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+        if (isOpen) {
+          closeHomeTopStoriesMenu();
+        } else {
+          openHomeTopStoriesMenu();
+        }
+      });
+
+      saveBtn?.addEventListener('click', e => {
+        e.stopPropagation();
+        applyHomeTopStoriesSave();
+      });
+
+      list?.addEventListener('change', e => {
+        const input = e.target.closest('.home-top-stories__checkbox');
+        if (!input) return;
+
+        if (input.id === 'homeTopStoriesSelectAll') {
+          pendingHomeNewsCategories = input.checked
+            ? [...HOME_NEWS_CATEGORY_IDS]
+            : [...HOME_NEWS_DEFAULT_CATEGORIES];
+          renderHomeTopStoriesCategoryMenu();
+          return;
+        }
+
+        const { value, checked } = input;
+        if (checked) {
+          if (!pendingHomeNewsCategories.includes(value)) {
+            pendingHomeNewsCategories.push(value);
+          }
+        } else {
+          if (pendingHomeNewsCategories.length <= 1) {
+            input.checked = true;
+            return;
+          }
+          pendingHomeNewsCategories = pendingHomeNewsCategories.filter(id => id !== value);
+        }
+        syncHomeTopStoriesSelectAllCheckbox();
+        syncHomeTopStoriesSaveButton();
+      });
+
+      document.addEventListener('click', e => {
+        if (menu?.hidden) return;
+        if (e.target.closest('.home-top-stories__settings')) return;
+        closeHomeTopStoriesMenu();
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') {
+          closeHomeTopStoriesMenu();
+          btn.focus();
+        }
+      });
+    }
+
     renderHomeTopStories();
+    initHomeTopStoriesSettings();
+
+    document.addEventListener('click', e => {
+      const prevBtn = e.target.closest('.home-top-stories .serp-all-news__prev, .home-scores__prev');
+      if (prevBtn) {
+        e.preventDefault();
+        const carousel = prevBtn.closest('.serp-all-news__carousel, .home-scores__carousel');
+        if (carousel && !prevBtn.hidden) scrollLandingCarousel(carousel, -1);
+        return;
+      }
+      const nextBtn = e.target.closest('.home-top-stories .serp-all-news__next, .home-scores__next');
+      if (nextBtn) {
+        e.preventDefault();
+        const carousel = nextBtn.closest('.serp-all-news__carousel, .home-scores__carousel');
+        if (carousel && !nextBtn.hidden && !nextBtn.disabled) scrollLandingCarousel(carousel, 1);
+      }
+    });
+
+    document.addEventListener('scroll', e => {
+      const row = e.target.closest?.('.serp-all-news__row, .home-scores__grid');
+      if (!row) return;
+      const carousel = row.closest('.serp-all-news__carousel, .home-scores__carousel');
+      if (carousel) syncLandingCarousel(carousel);
+    }, true);
+
+    window.addEventListener('resize', () => {
+      syncAllLandingCarousels();
+      syncTopStoriesArrowAlign();
+    });
 
     const PROMO_OFF_KEY = 'landingPromoMessagingOff';
     const promoToggleBtn = document.getElementById('landingPromoToggleBtn');
@@ -1958,7 +3111,10 @@
 
     let draftLayout = 'two-column';
     let draftWidgetsEnabled = false;
-    const draftWidgets = { news: true, sports: true, weather: true, promos: true };
+    const draftWidgets = { news: true, sports: true, weather: true };
+    let savedLayout = 'two-column';
+    let savedWidgetsEnabled = false;
+    const savedWidgets = { news: true, sports: true, weather: true };
 
     function parseWidgetsJson(raw) {
       if (!raw) return null;
@@ -1972,13 +3128,31 @@
     function loadCustomizePrefs() {
       draftLayout = storageGet(CUSTOMIZE_LAYOUT_KEY) || 'two-column';
       draftWidgetsEnabled = storageGet(WIDGETS_ENABLED_KEY) === '1';
-      const savedWidgets = parseWidgetsJson(storageGet(CUSTOMIZE_WIDGETS_KEY));
-      if (savedWidgets) {
-        ['news', 'sports', 'weather', 'promos'].forEach(key => {
-          if (typeof savedWidgets[key] === 'boolean') draftWidgets[key] = savedWidgets[key];
+      const storedWidgets = parseWidgetsJson(storageGet(CUSTOMIZE_WIDGETS_KEY));
+      if (storedWidgets) {
+        ['news', 'sports', 'weather'].forEach(key => {
+          if (typeof storedWidgets[key] === 'boolean') draftWidgets[key] = storedWidgets[key];
         });
       }
-      if (storageGet(PROMO_OFF_KEY) === '1') draftWidgets.promos = false;
+      snapshotCustomizePrefs();
+    }
+
+    function snapshotCustomizePrefs() {
+      savedLayout = draftLayout;
+      savedWidgetsEnabled = draftWidgetsEnabled;
+      ['news', 'sports', 'weather'].forEach(key => {
+        savedWidgets[key] = draftWidgets[key];
+      });
+    }
+
+    function hasCustomizeHomeChanges() {
+      if (draftLayout !== savedLayout) return true;
+      if (draftWidgetsEnabled !== savedWidgetsEnabled) return true;
+      return ['news', 'sports', 'weather'].some(key => draftWidgets[key] !== savedWidgets[key]);
+    }
+
+    function syncCustomizeHomeSaveButton() {
+      customizeSaveBtn.disabled = !hasCustomizeHomeChanges();
     }
 
     function applyCustomizeDraftToPanel() {
@@ -2021,10 +3195,8 @@
       promoToggleBtn.hidden = draftWidgetsEnabled;
       if (draftWidgetsEnabled) {
         promosEl.classList.add('is-hidden');
-      } else if (draftWidgets.promos) {
-        setPromoMessagingOff(false);
       } else {
-        setPromoMessagingOff(true);
+        promosEl.classList.toggle('is-hidden', isPromoMessagingOff());
       }
     }
 
@@ -2034,11 +3206,14 @@
       storageSet(WIDGETS_ENABLED_KEY, draftWidgetsEnabled ? '1' : '');
       storageSet('landingHomepageCustomized', '1');
       applyCustomizePrefsToPage();
+      snapshotCustomizePrefs();
+      syncCustomizeHomeSaveButton();
     }
 
     function openCustomizeHome() {
       loadCustomizePrefs();
       applyCustomizeDraftToPanel();
+      syncCustomizeHomeSaveButton();
       customizeBackdrop.hidden = false;
       document.body.style.overflow = 'hidden';
       customizeCloseBtn.focus();
@@ -2062,9 +3237,11 @@
       customizeWidgetsMaster.setAttribute('aria-checked', draftWidgetsEnabled ? 'true' : 'false');
       customizeWidgetsList.classList.toggle('is-disabled', !draftWidgetsEnabled);
       customizeLayoutSection.classList.toggle('is-disabled', !draftWidgetsEnabled);
+      syncCustomizeHomeSaveButton();
     });
     customizeCloseBtn.addEventListener('click', closeCustomizeHome);
     customizeSaveBtn.addEventListener('click', () => {
+      if (customizeSaveBtn.disabled) return;
       persistCustomizePrefs();
       closeCustomizeHome();
     });
@@ -2079,6 +3256,7 @@
       btn.addEventListener('click', () => {
         draftLayout = btn.dataset.layout;
         applyCustomizeDraftToPanel();
+        syncCustomizeHomeSaveButton();
       });
     });
 
@@ -2087,16 +3265,12 @@
         const key = toggle.dataset.widgetToggle;
         draftWidgets[key] = toggle.getAttribute('aria-checked') !== 'true';
         toggle.setAttribute('aria-checked', draftWidgets[key] ? 'true' : 'false');
+        syncCustomizeHomeSaveButton();
       });
     });
 
     promoToggleBtn.addEventListener('click', () => {
       setPromoMessagingOff(!isPromoMessagingOff());
-      draftWidgets.promos = !isPromoMessagingOff();
-      const promoToggle = document.querySelector('[data-widget-toggle="promos"]');
-      if (promoToggle && !customizeBackdrop.hidden) {
-        promoToggle.setAttribute('aria-checked', draftWidgets.promos ? 'true' : 'false');
-      }
     });
 
     const homeWeatherUnitF = document.getElementById('homeWeatherUnitF');
@@ -2130,15 +3304,32 @@
     homeWeatherUnitF.addEventListener('click', () => setWeatherUnit(false));
     homeWeatherUnitC.addEventListener('click', () => setWeatherUnit(true));
 
-    document.querySelectorAll('[data-sports-filter]').forEach(filter => {
-      filter.addEventListener('click', () => {
-        document.querySelectorAll('[data-sports-filter]').forEach(btn => {
-          const active = btn === filter;
-          btn.classList.toggle('home-scores__filter--active', active);
-          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-        });
+    function syncSportsLeaguePanels() {
+      document.querySelectorAll('[data-sports-league]').forEach(panel => {
+        const league = panel.dataset.sportsLeague;
+        const filterBtn = document.querySelector(`[data-sports-filter="${league}"]`);
+        panel.hidden = !(filterBtn && filterBtn.classList.contains('home-scores__filter--selected'));
       });
+      syncAllLandingCarousels();
+    }
+
+    function setSportsFilterSelected(filter, selected) {
+      filter.classList.toggle('home-scores__filter--selected', selected);
+      filter.classList.toggle('tag--outline', !selected);
+      filter.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      syncSportsLeaguePanels();
+    }
+
+    const scoresFilters = document.querySelector('.home-scores__filters');
+    scoresFilters?.addEventListener('click', (e) => {
+      const filter = e.target.closest('[data-sports-filter]');
+      if (!filter) return;
+
+      const selected = filter.classList.contains('home-scores__filter--selected');
+      setSportsFilterSelected(filter, !selected);
     });
+    syncSportsLeaguePanels();
+    syncAllLandingCarousels();
 
     document.querySelectorAll('[data-weather-segment]').forEach(segment => {
       segment.addEventListener('click', () => {
