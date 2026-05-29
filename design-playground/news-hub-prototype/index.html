@@ -530,12 +530,12 @@
     }
     .serp-body--news .news-hub__main {
       grid-column: 1;
-      margin-inline-start: calc(var(--news-sidebar-width) + var(--spacing-48));
+      margin-inline-start: calc(var(--news-sidebar-width) + var(--spacing-32));
     }
     .news-hub__main {
       display: grid;
       grid-template-columns: minmax(0, 1fr) max-content;
-      column-gap: var(--spacing-64);
+      column-gap: var(--spacing-32);
       align-items: start;
       min-width: 0;
     }
@@ -878,7 +878,7 @@
       display: flex;
       align-items: center;
       flex-wrap: nowrap;
-      gap: var(--spacing-4);
+      gap: var(--spacing-8);
       min-width: 0;
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
@@ -916,8 +916,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: calc(var(--spacing-24) + var(--spacing-4));
-      height: calc(var(--spacing-24) + var(--spacing-4));
+      width: var(--spacing-24);
+      height: var(--spacing-24);
       border-radius: var(--radius-full);
       flex-shrink: 0;
       background-color: var(--color-background-tertiary);
@@ -935,7 +935,7 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       font-weight: var(--font-weight-medium);
-      color: var(--color-text-secondary);
+      color: var(--color-text-primary);
     }
     .news-article__time {
       flex-shrink: 0;
@@ -959,6 +959,11 @@
     }
     .news-article__footer .algo-result__av-link {
       min-width: 0;
+      color: var(--color-text-primary);
+    }
+    .news-article__footer .algo-result__av-link:hover {
+      color: var(--color-text-link);
+      text-decoration: underline;
     }
     .news-ai-summary__btn {
       display: inline-flex;
@@ -1119,7 +1124,7 @@
       display: flex;
       align-items: center;
       flex-wrap: nowrap;
-      gap: var(--spacing-4);
+      gap: var(--spacing-8);
       min-width: 0;
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
@@ -1464,6 +1469,49 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+    .serp-all-news-card:has(.serp-all-news-card__thumb:hover) .serp-all-news-card__thumb-img,
+    .serp-all-news-card:has(.serp-all-news-card__title:hover) .serp-all-news-card__thumb-img {
+      transform: scale(1.03);
+    }
+    .serp-all-news-card:has(.serp-all-news-card__thumb:hover) .serp-all-news-card__title {
+      text-decoration: underline;
+    }
+    .news-article__favicon--img {
+      overflow: hidden;
+      background-color: var(--color-whisper-0);
+    }
+    .news-article__favicon-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius-full);
+      display: block;
+    }
+    .serp-all-news-card .news-article__publisher {
+      color: var(--color-text-primary);
+    }
+    .serp-all-news-card__av-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-4);
+      align-self: flex-start;
+      margin-top: auto;
+      padding-top: var(--spacing-4);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    .serp-all-news-card__av-link:hover {
+      color: var(--color-text-link);
+      text-decoration: underline;
+    }
+    .serp-all-news-card__av-icon {
+      display: inline-flex;
+      flex-shrink: 0;
+      color: var(--color-icon-secondary);
     }
     .serp-all-news-card__meta {
       display: flex;
@@ -1525,6 +1573,13 @@
     }
     .serp-all-news-card--rail .serp-all-news-card__description {
       -webkit-line-clamp: 1;
+    }
+    .serp-all-news-card--ad .serp-all-news-card__description {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      -webkit-line-clamp: 1;
+      margin-top: auto;
+      padding-top: var(--spacing-4);
     }
 
     .serp-all-news__more {
@@ -3877,9 +3932,73 @@
       return pool.slice(0, count);
     }
 
+    const ALL_TAB_NEWS_FAVICON_BASE = '../../assets/icons/news-favicons/';
+    const ALL_TAB_NEWS_FAVICONS = {
+      'Reuters': 'reuters.png',
+      'BBC News': 'bbc.png',
+      'BBC World': 'bbc.png',
+      'The Associated Press': 'ap.png',
+      'Al Jazeera': 'aljazeera.png',
+      'NPR': 'npr.png',
+      'Politico': 'politico.png',
+      'ESPN': 'espn.png',
+      'The Athletic': 'the-athletic.png',
+      'Variety': 'variety.png',
+      'The Hollywood Reporter': 'hollywood-reporter.png',
+      'Billboard': 'billboard.png',
+      'The Verge': 'the-verge.png',
+      'Wired': 'wired.png',
+      'Ars Technica': 'ars-technica.png',
+      'Financial Times': 'financial-times.png',
+      'Nature': 'nature.png',
+      'Scientific American': 'scientific-american.png',
+      'NASA': 'nasa.png',
+      'Chicago Tribune': 'chicago-tribune.jpg',
+      'The Seattle Times': 'seattle-times.png',
+      'LA Times': 'la-times.png',
+      'Nikkei Asia': 'nikkei-asia.png',
+      'Walmart': 'walmart.jpg',
+      'Bloomberg': 'bloomberg.png',
+      'The Tennessean': 'the-tennessean.png',
+      'Rolling Stone': 'rolling-stone.png',
+      'CNN': 'cnn.png',
+      'E! News': 'e-news.png',
+      'Forbes': 'forbes.png',
+      'The Independent': 'the-independent.png',
+      'Fox Sports': 'fox-sports.png',
+      'Popular Science': 'popular-science.png',
+      'Houston Chronicle': 'houston-chronicle.png',
+      'ABC News': 'abc.png',
+      'Vulture': 'vulture.png',
+      'USA Today': 'usa-today.png',
+      'CNBC': 'cnbc.jpg',
+      'Engadget': 'engadget.png',
+      'CBS Sports': 'cbssports.png',
+      'Atlanta Journal-Constitution': 'atlanta-journal-constitution.png',
+      'Pitchfork': 'pitchfork.png',
+      'NBC News': 'nbc-news.png',
+      'The New York Times': 'new-york-times.png',
+      'The Wall Street Journal': 'wallstreetjournal.png',
+      'TechCrunch': 'techcrunch.jpg',
+      'Sydney Morning Herald': 'sydneymorningherald.png',
+      'GQ': 'gq.png',
+      'Star Tribune': 'star-tribune.png',
+    };
+
     function renderAllTabNewsPublisherFavicon(publisher) {
+      const file = ALL_TAB_NEWS_FAVICONS[publisher];
+      if (file) {
+        return `<span class="news-article__favicon news-article__favicon--img" aria-hidden="true"><img class="news-article__favicon-img" src="${ALL_TAB_NEWS_FAVICON_BASE}${file}" alt="" width="28" height="28" loading="lazy" decoding="async" /></span>`;
+      }
       const monogram = getPublisherMonogram(publisher);
       return `<span class="news-article__favicon" aria-hidden="true"><span class="news-article__favicon-label">${monogram}</span></span>`;
+    }
+
+    function renderAllTabNewsAvLink() {
+      return `<a class="serp-all-news-card__av-link" href="#">
+          <span class="serp-all-news-card__av-icon" aria-hidden="true"><svg width="20" height="20" aria-hidden="true"><use href="#icon-av-mask"/></svg></span>
+          Visit in Anonymous View
+        </a>`;
     }
 
     function renderAllTabNewsCard(article, query, options = {}) {
@@ -3901,7 +4020,7 @@
                 <span class="serp-all-news-card__time">${timeLabel}</span>
               </div>
               <a class="serp-all-news-card__title" href="#">${highlight(article.title, query)}</a>
-              ${article.snippet ? `<p class="serp-all-news-card__description">${highlight(article.snippet, query)}</p>` : ''}
+              ${renderAllTabNewsAvLink()}
             </div>
           </div>
         </li>`;
@@ -3918,7 +4037,7 @@
           <span class="serp-all-news-card__time">${timeLabel}</span>
         </div>
         <a class="serp-all-news-card__title" href="#">${highlight(article.title, query)}</a>
-        ${article.snippet ? `<p class="serp-all-news-card__description">${highlight(article.snippet, query)}</p>` : ''}
+        ${renderAllTabNewsAvLink()}
       </li>`;
     }
 
@@ -4099,11 +4218,10 @@
     }
 
     function renderNewsFeedItem(article, query) {
-      const monogram = getPublisherMonogram(article.publisher);
       const thumbClass = article.hasThumb ? ' news-article--text-has-thumb' : '';
       const contentBlock = `
           <div class="news-article__meta">
-            <span class="news-article__favicon" aria-hidden="true"><span class="news-article__favicon-label">${monogram}</span></span>
+            ${renderAllTabNewsPublisherFavicon(article.publisher)}
             ${renderNewsPublisher(article.publisher, query)}
             <span class="news-article__time">${formatNewsArticleTime(article.time)}</span>
           </div>
@@ -4126,13 +4244,12 @@
     }
 
     function renderFeaturedCard(article, query) {
-      const monogram = getPublisherMonogram(article.publisher);
       const featSrc = newsArticlePicsumUrl(article, 800, 450);
       return `<article class="news-featured-card">
         <div class="news-featured-card__thumb" aria-hidden="true"><img class="news-featured-card__thumb-img" src="${featSrc}" width="800" height="450" alt="" loading="lazy" decoding="async" /></div>
         <div class="news-featured-card__body">
           <div class="news-featured-card__meta">
-            <span class="news-article__favicon" aria-hidden="true"><span class="news-article__favicon-label">${monogram}</span></span>
+            ${renderAllTabNewsPublisherFavicon(article.publisher)}
             ${renderNewsPublisher(article.publisher, query)}
             <span class="news-article__time">${formatNewsArticleTime(article.time)}</span>
           </div>
