@@ -275,7 +275,7 @@
       align-items: center;
       gap: var(--spacing-20);
       padding: var(--spacing-40) var(--spacing-24);
-      border-radius: var(--radius-2xl);
+      border-radius: var(--radius-xl);
       background: var(--color-background-tertiary);
       text-align: center;
     }
@@ -452,6 +452,9 @@
       padding: var(--spacing-20);
       border-radius: var(--radius-xl);
       background: var(--color-background-quaternary);
+    }
+    [data-theme="dark"] .home-widget {
+      background: var(--color-background-tertiary);
     }
     .home-widget__header {
       display: flex;
@@ -1334,11 +1337,17 @@
       min-width: 0;
       scroll-snap-align: start;
     }
+    /* Narrow column (right rail): keep card size, side-scroll like sports */
+    #homeWidgetNews.home-top-stories--narrow-column .serp-all-news-card {
+      flex: none !important;
+      flex-shrink: 0 !important;
+      scroll-snap-align: start;
+    }
     .home-top-stories .serp-all-news-card__thumb {
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-xl);
       overflow: hidden;
       background:
         linear-gradient(135deg, var(--color-background-tertiary) 0%, transparent 55%),
@@ -1493,8 +1502,8 @@
       border: var(--border-stroke-sm) solid transparent;
       background: transparent;
       font-family: var(--font-family);
-      font-size: var(--font-label-xs);
-      line-height: var(--font-label-xs-lh);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
       font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
       white-space: nowrap;
@@ -1515,6 +1524,7 @@
     .home-scores__filters .home-scores__filter--selected {
       background: var(--color-background-primary);
       border-color: var(--color-stroke-primary-button);
+      font-weight: var(--font-weight-medium);
       color: var(--color-text-brandblue);
     }
     .home-scores__filters .home-scores__filter--selected:hover {
@@ -1611,7 +1621,7 @@
       min-width: 0;
       padding: var(--spacing-16);
       border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-xl);
       background: var(--color-background-primary);
       scroll-snap-align: start;
     }
@@ -1813,6 +1823,56 @@
       font-weight: var(--font-weight-bold);
       color: var(--color-text-primary);
     }
+    .home-weather__empty {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--spacing-16);
+      padding: var(--spacing-40) var(--spacing-16) var(--spacing-32);
+    }
+    .home-weather--empty .home-weather__top,
+    .home-weather--empty .home-weather__hero,
+    .home-weather--empty .home-weather__chart,
+    .home-weather--empty .home-weather__daily,
+    .home-weather--empty .home-weather__footer {
+      display: none;
+    }
+    .home-weather--empty .home-weather__empty {
+      display: flex;
+    }
+    .home-weather__empty-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-48);
+      height: var(--spacing-48);
+      border-radius: var(--radius-full);
+      background: var(--color-background-tertiary);
+      color: var(--color-icon-secondary);
+    }
+    .home-weather__empty-copy {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+      max-width: 30ch;
+    }
+    .home-weather__empty-title {
+      margin: 0;
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+    .home-weather__empty-text {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+    }
+    .home-weather__empty-btn {
+      margin-top: var(--spacing-4);
+    }
     .home-weather__meta {
       display: flex;
       flex-wrap: nowrap;
@@ -1981,7 +2041,7 @@
     .home-weather__chart-panel {
       width: 100%;
       min-width: 0;
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-xl);
       background: var(--color-background-primary);
       overflow: visible;
     }
@@ -2108,7 +2168,7 @@
       gap: var(--spacing-12);
       min-width: 0;
       padding: var(--spacing-12) var(--spacing-8);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-xl);
       text-align: center;
     }
     .home-weather__day--active {
@@ -2448,6 +2508,74 @@
     .customize-home__widget-desc {
       display: block;
       margin-top: var(--spacing-4);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .customize-home__widget--expandable {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .customize-home__widget-main {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+    .customize-home__widget-detail {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      margin-top: var(--spacing-12);
+      padding-top: var(--spacing-12);
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .customize-home__widget-detail[hidden] {
+      display: none;
+    }
+    .customize-home__detail-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .customize-home__detail-field {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-md);
+      background: var(--color-background-primary);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .customize-home__detail-field:focus-within {
+      border-color: var(--color-stroke-primary-button);
+      box-shadow: 0 0 0 var(--border-stroke-sm) var(--color-stroke-primary-button);
+    }
+    .customize-home__detail-icon {
+      flex-shrink: 0;
+      color: var(--color-icon-secondary);
+    }
+    .customize-home__detail-input {
+      flex: 1 1 auto;
+      min-width: 0;
+      border: none;
+      background: none;
+      padding: 0;
+      font-family: inherit;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+    .customize-home__detail-input:focus {
+      outline: none;
+    }
+    .customize-home__detail-input::placeholder {
+      color: var(--color-text-secondary);
+      opacity: 0.6;
+    }
+    .customize-home__detail-hint {
+      margin: 0;
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
       color: var(--color-text-tertiary);
@@ -3124,6 +3252,22 @@
             <footer class="home-weather__footer">
               <p class="home-weather__attribution">Powered by <a class="home-weather__footer-link" href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeatherMap</a></p>
             </footer>
+
+            <div class="home-weather__empty">
+              <span class="home-weather__empty-icon" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2.6a6.4 6.4 0 0 0-6.4 6.4c0 4.6 6.4 11.4 6.4 11.4S18.4 13.6 18.4 9A6.4 6.4 0 0 0 12 2.6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                  <circle cx="12" cy="9" r="2.3" stroke="currentColor" stroke-width="1.8"/>
+                </svg>
+              </span>
+              <div class="home-weather__empty-copy">
+                <h2 class="home-weather__empty-title">See your local weather</h2>
+                <p class="home-weather__empty-text">Startpage doesn’t track where you are. Add a city to get its current forecast.</p>
+              </div>
+              <button type="button" class="btn btn--teal btn--sm home-weather__empty-btn" id="homeWeatherSetLocationBtn" data-btn>
+                <span class="btn__label">Set location</span>
+              </button>
+            </div>
           </section>
           <button type="button" class="landing-edit-widgets" id="landingEditWidgetsBtn">
             <svg class="landing-edit-widgets__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -3340,10 +3484,10 @@
                 </svg>
               </span>
               <span class="customize-home__widget-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <rect x="2" y="4" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.25"/>
-                  <line x1="4" y1="7" x2="14" y2="7" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
-                  <line x1="4" y1="10" x2="11" y2="10" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <rect x="3.5" y="4.5" width="13" height="11" rx="2" stroke="currentColor" stroke-width="1.7"/>
+                  <line x1="6" y1="8.2" x2="14" y2="8.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                  <line x1="6" y1="11.8" x2="11.5" y2="11.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
                 </svg>
               </span>
               <div class="customize-home__widget-text">
@@ -3363,8 +3507,10 @@
                 </svg>
               </span>
               <span class="customize-home__widget-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <path d="M9 2.5l1.2 3.7h3.9l-3.2 2.3 1.2 3.7L9 9.9 5.9 12.2l1.2-3.7-3.2-2.3h3.9L9 2.5z" stroke="currentColor" stroke-width="1.15" stroke-linejoin="round"/>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5.5 4h9v3a4.5 4.5 0 0 1-9 0V4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                  <path d="M5.5 5.2H3.8a1.7 1.7 0 0 0 0 3.4h.5M14.5 5.2h1.7a1.7 1.7 0 0 1 0 3.4h-.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M10 11.5v2.6M7 16h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
                 </svg>
               </span>
               <div class="customize-home__widget-text">
@@ -3375,26 +3521,40 @@
                 <span class="toggle__thumb" aria-hidden="true"></span>
               </button>
             </li>
-            <li class="customize-home__widget" data-widget="weather">
-              <span class="customize-home__drag" role="button" tabindex="0" aria-label="Reorder Weather">
-                <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
-                  <circle cx="2" cy="2" r="1.25"/><circle cx="8" cy="2" r="1.25"/>
-                  <circle cx="2" cy="7" r="1.25"/><circle cx="8" cy="7" r="1.25"/>
-                  <circle cx="2" cy="12" r="1.25"/><circle cx="8" cy="12" r="1.25"/>
-                </svg>
-              </span>
-              <span class="customize-home__widget-icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <path d="M6.5 12.5a3.5 3.5 0 0 1 0-7 4 4 0 0 1 7.6-1.2A3 3 0 0 1 14.5 11h-8z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
-                </svg>
-              </span>
-              <div class="customize-home__widget-text">
-                <span class="customize-home__widget-title">Weather</span>
-                <span class="customize-home__widget-desc">Current location · sidebar</span>
+            <li class="customize-home__widget customize-home__widget--expandable" data-widget="weather">
+              <div class="customize-home__widget-main">
+                <span class="customize-home__drag" role="button" tabindex="0" aria-label="Reorder Weather">
+                  <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
+                    <circle cx="2" cy="2" r="1.25"/><circle cx="8" cy="2" r="1.25"/>
+                    <circle cx="2" cy="7" r="1.25"/><circle cx="8" cy="7" r="1.25"/>
+                    <circle cx="2" cy="12" r="1.25"/><circle cx="8" cy="12" r="1.25"/>
+                  </svg>
+                </span>
+                <span class="customize-home__widget-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <circle cx="10" cy="10" r="3.3" stroke="currentColor" stroke-width="1.7"/>
+                    <path d="M10 2.4v2.1M10 15.5v2.1M2.4 10h2.1M15.5 10h2.1M4.7 4.7l1.5 1.5M13.8 13.8l1.5 1.5M15.3 4.7l-1.5 1.5M6.2 13.8l-1.5 1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                  </svg>
+                </span>
+                <div class="customize-home__widget-text">
+                  <span class="customize-home__widget-title">Weather</span>
+                  <span class="customize-home__widget-desc" id="customizeWeatherDesc">Set your location · sidebar</span>
+                </div>
+                <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Show Weather" data-widget-toggle="weather">
+                  <span class="toggle__thumb" aria-hidden="true"></span>
+                </button>
               </div>
-              <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Show Weather" data-widget-toggle="weather">
-                <span class="toggle__thumb" aria-hidden="true"></span>
-              </button>
+              <div class="customize-home__widget-detail" id="customizeWeatherDetail" hidden>
+                <label class="customize-home__detail-label" for="customizeWeatherLocation">Show weather for</label>
+                <div class="customize-home__detail-field">
+                  <svg class="customize-home__detail-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M10 2.2a5.3 5.3 0 0 0-5.3 5.3c0 3.8 5.3 9.3 5.3 9.3s5.3-5.5 5.3-9.3A5.3 5.3 0 0 0 10 2.2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                    <circle cx="10" cy="7.5" r="1.9" stroke="currentColor" stroke-width="1.7"/>
+                  </svg>
+                  <input type="text" id="customizeWeatherLocation" class="customize-home__detail-input" placeholder="Enter a city, e.g. Paris, France" autocomplete="off" spellcheck="false" />
+                </div>
+                <p class="customize-home__detail-hint">Startpage never detects where you are — weather only shows for the city you enter.</p>
+              </div>
             </li>
           </ul>
         </section>
@@ -3801,7 +3961,10 @@
       row.scrollLeft = 0;
       if (carousel) {
         syncLandingCarousel(carousel);
-        requestAnimationFrame(syncTopStoriesArrowAlign);
+        requestAnimationFrame(() => {
+          syncNewsStoriesLayout();
+          syncTopStoriesArrowAlign();
+        });
         row.querySelectorAll('.serp-all-news-card__thumb-img').forEach(img => {
           if (img.complete) return;
           img.addEventListener('load', syncTopStoriesArrowAlign, { once: true });
@@ -4191,6 +4354,7 @@
     const CUSTOMIZE_LAYOUT_KEY = 'landingHomeLayout';
     const CUSTOMIZE_WIDGETS_KEY = 'landingHomeWidgets';
     const WIDGETS_ENABLED_KEY = 'landingWidgetsEnabled';
+    const WEATHER_LOCATION_KEY = 'landingWeatherLocation';
     const customizeBackdrop = document.getElementById('customizeHomeBackdrop');
     const customizeOpenBtn = document.getElementById('landingCustomizeHomepageBtn');
     const customizeCloseBtn = document.getElementById('customizeHomeClose');
@@ -4207,6 +4371,10 @@
     const layoutButtons = document.querySelectorAll('.customize-home__layout-option');
     const widgetToggles = document.querySelectorAll('[data-widget-toggle]');
     const widgetSections = document.querySelectorAll('[data-widget-section]');
+    const customizeWeatherDetail = document.getElementById('customizeWeatherDetail');
+    const customizeWeatherLocationInput = document.getElementById('customizeWeatherLocation');
+    const customizeWeatherDesc = document.getElementById('customizeWeatherDesc');
+    const homeWeatherLocationEl = document.getElementById('homeWeatherLocation');
 
     const DEFAULT_WIDGET_ORDER = ['news', 'sports', 'weather'];
 
@@ -4214,10 +4382,12 @@
     let draftWidgetsEnabled = false;
     const draftWidgets = { news: true, sports: true, weather: true };
     let draftWidgetOrder = [...DEFAULT_WIDGET_ORDER];
+    let draftWeatherLocation = '';
     let savedLayout = 'two-column';
     let savedWidgetsEnabled = false;
     const savedWidgets = { news: true, sports: true, weather: true };
     let savedWidgetOrder = [...DEFAULT_WIDGET_ORDER];
+    let savedWeatherLocation = '';
     let customizePointerDragId = null;
     let customizePointerDragItem = null;
 
@@ -4248,6 +4418,7 @@
       } else {
         draftWidgetOrder = [...DEFAULT_WIDGET_ORDER];
       }
+      draftWeatherLocation = (storageGet(WEATHER_LOCATION_KEY) || '').trim();
       snapshotCustomizePrefs();
     }
 
@@ -4258,6 +4429,7 @@
         savedWidgets[key] = draftWidgets[key];
       });
       savedWidgetOrder = [...draftWidgetOrder];
+      savedWeatherLocation = draftWeatherLocation;
     }
 
     function widgetOrdersEqual(a, b) {
@@ -4269,6 +4441,7 @@
       if (draftLayout !== savedLayout) return true;
       if (draftWidgetsEnabled !== savedWidgetsEnabled) return true;
       if (!widgetOrdersEqual(draftWidgetOrder, savedWidgetOrder)) return true;
+      if (draftWeatherLocation !== savedWeatherLocation) return true;
       return ['news', 'sports', 'weather'].some(key => draftWidgets[key] !== savedWidgets[key]);
     }
 
@@ -4521,6 +4694,7 @@
     }
 
     function syncSportsScoresLayout() {
+      syncNewsStoriesLayout();
       const sports = document.getElementById('homeWidgetSports');
       if (!sports || landingFeed.hidden) {
         syncAllLandingCarousels();
@@ -4548,6 +4722,67 @@
           card.style.maxWidth = widthValue;
         });
         syncAllLandingCarousels();
+      };
+
+      if (useNarrowColumn) {
+        applyPeekWidths();
+        requestAnimationFrame(() => {
+          applyPeekWidths();
+          requestAnimationFrame(applyPeekWidths);
+        });
+      } else {
+        syncAllLandingCarousels();
+      }
+    }
+
+    function isNewsInNarrowColumn() {
+      if (draftLayout === 'centered') return false;
+      const news = document.getElementById('homeWidgetNews');
+      return news?.parentElement === landingFeedSidebar;
+    }
+
+    function getNewsPeekCardWidthPx(news) {
+      const viewport = news.querySelector('.serp-all-news__viewport');
+      const row = news.querySelector('.serp-all-news__row');
+      if (!viewport || !row) return 240;
+      const gap = parseFloat(getComputedStyle(row).gap) || 24;
+      const mainWidth = landingFeedMain?.getBoundingClientRect().width || 0;
+      const refWidget = landingFeedMain?.querySelector('.home-widget');
+      const widgetPad = refWidget ? parseFloat(getComputedStyle(refWidget).paddingLeft) * 2 : 40;
+      const mainColumnCard = mainWidth > 0
+        ? (mainWidth - widgetPad - gap * 2) / 3
+        : 0;
+      const viewportWidth = viewport.getBoundingClientRect().width;
+      const peekCard = viewportWidth > 0 ? (viewportWidth - gap) / 1.5 : 0;
+      const width = mainColumnCard > 0 ? mainColumnCard : peekCard;
+      return Math.max(200, Math.round(width || 240));
+    }
+
+    function syncNewsStoriesLayout() {
+      const news = document.getElementById('homeWidgetNews');
+      if (!news || landingFeed.hidden) return;
+
+      const useNarrowColumn = isNewsInNarrowColumn();
+      news.classList.toggle('home-top-stories--narrow-column', useNarrowColumn);
+
+      news.querySelectorAll('.serp-all-news-card').forEach(card => {
+        card.style.removeProperty('flex');
+        card.style.removeProperty('width');
+        card.style.removeProperty('min-width');
+        card.style.removeProperty('max-width');
+      });
+
+      const applyPeekWidths = () => {
+        if (!news.classList.contains('home-top-stories--narrow-column')) return;
+        const widthValue = `${getNewsPeekCardWidthPx(news)}px`;
+        news.querySelectorAll('.serp-all-news-card').forEach(card => {
+          card.style.flex = `0 0 ${widthValue}`;
+          card.style.width = widthValue;
+          card.style.minWidth = widthValue;
+          card.style.maxWidth = widthValue;
+        });
+        syncAllLandingCarousels();
+        requestAnimationFrame(syncTopStoriesArrowAlign);
       };
 
       if (useNarrowColumn) {
@@ -4675,7 +4910,31 @@
         const on = !!draftWidgets[key];
         toggle.setAttribute('aria-checked', on ? 'true' : 'false');
       });
+      syncCustomizeWeatherDetail();
       reorderCustomizeWidgetList();
+    }
+
+    function syncCustomizeWeatherDetail() {
+      if (customizeWeatherDetail) {
+        customizeWeatherDetail.hidden = !draftWidgets.weather;
+      }
+      if (customizeWeatherLocationInput && customizeWeatherLocationInput.value !== draftWeatherLocation) {
+        customizeWeatherLocationInput.value = draftWeatherLocation;
+      }
+      if (customizeWeatherDesc) {
+        customizeWeatherDesc.textContent = (draftWeatherLocation || 'Set your location') + ' · sidebar';
+      }
+    }
+
+    function applyWeatherLocation() {
+      const location = (draftWeatherLocation || '').trim();
+      const weatherSection = document.getElementById('homeWidgetWeather');
+      if (weatherSection) {
+        weatherSection.classList.toggle('home-weather--empty', !location);
+      }
+      if (homeWeatherLocationEl && location) {
+        homeWeatherLocationEl.textContent = location;
+      }
     }
 
     function applyCustomizeDraftToPage() {
@@ -4709,6 +4968,7 @@
       placePromosSection();
       applyWidgetOrderToPage();
       applyWidgetSectionVisibility();
+      applyWeatherLocation();
       promoToggleBtn.hidden = draftWidgetsEnabled;
       if (draftWidgetsEnabled) {
         promosEl.classList.add('is-hidden');
@@ -4721,6 +4981,7 @@
       storageSet(CUSTOMIZE_LAYOUT_KEY, draftLayout);
       storageSet(CUSTOMIZE_WIDGETS_KEY, JSON.stringify({ ...draftWidgets, order: draftWidgetOrder }));
       storageSet(WIDGETS_ENABLED_KEY, draftWidgetsEnabled ? '1' : '');
+      storageSet(WEATHER_LOCATION_KEY, draftWeatherLocation);
       storageSet('landingHomepageCustomized', '1');
       applyCustomizePrefsToPage();
       snapshotCustomizePrefs();
@@ -4743,6 +5004,7 @@
         draftWidgets[key] = savedWidgets[key];
       });
       draftWidgetOrder = [...savedWidgetOrder];
+      draftWeatherLocation = savedWeatherLocation;
       applyCustomizePrefsToPage();
       applyCustomizeDraftToPanel();
     }
@@ -4765,6 +5027,19 @@
 
     customizeOpenBtn.addEventListener('click', openCustomizeHome);
     landingEditWidgetsBtn.addEventListener('click', openCustomizeHome);
+
+    const homeWeatherSetLocationBtn = document.getElementById('homeWeatherSetLocationBtn');
+    if (homeWeatherSetLocationBtn) {
+      homeWeatherSetLocationBtn.addEventListener('click', () => {
+        openCustomizeHome();
+        requestAnimationFrame(() => {
+          if (customizeWeatherLocationInput) {
+            customizeWeatherLocationInput.scrollIntoView({ block: 'center' });
+            customizeWeatherLocationInput.focus();
+          }
+        });
+      });
+    }
 
     customizeWidgetsMaster.addEventListener('click', () => {
       draftWidgetsEnabled = customizeWidgetsMaster.getAttribute('aria-checked') !== 'true';
@@ -4801,10 +5076,22 @@
         const key = toggle.dataset.widgetToggle;
         draftWidgets[key] = toggle.getAttribute('aria-checked') !== 'true';
         toggle.setAttribute('aria-checked', draftWidgets[key] ? 'true' : 'false');
+        if (key === 'weather') syncCustomizeWeatherDetail();
         applyCustomizeDraftToPage();
         syncCustomizeHomeSaveButton();
       });
     });
+
+    if (customizeWeatherLocationInput) {
+      customizeWeatherLocationInput.addEventListener('input', () => {
+        draftWeatherLocation = customizeWeatherLocationInput.value.replace(/\s+/g, ' ').trim();
+        if (customizeWeatherDesc) {
+          customizeWeatherDesc.textContent = (draftWeatherLocation || 'Set your location') + ' · sidebar';
+        }
+        applyWeatherLocation();
+        syncCustomizeHomeSaveButton();
+      });
+    }
 
     promoToggleBtn.addEventListener('click', () => {
       setPromoMessagingOff(!isPromoMessagingOff());

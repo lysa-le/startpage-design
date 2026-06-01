@@ -508,7 +508,7 @@
       display: none;
       --news-publisher-max-chars: 28;
       --news-hub-y-gap: var(--spacing-24);
-      --news-sidebar-width: calc(var(--spacing-24) * 9);
+      --news-sidebar-width: calc(var(--spacing-24) * 7);
       --news-sidebar-inset-left: calc(var(--spacing-24) + 104px + var(--spacing-24));
       grid-template-columns: var(--news-sidebar-width) minmax(0, 1fr);
       gap: var(--spacing-48);
@@ -545,6 +545,8 @@
       gap: var(--news-hub-y-gap);
       min-width: 0;
       width: 100%;
+      container-type: inline-size;
+      container-name: news-feed;
     }
     .news-hub__content {
       display: flex;
@@ -621,7 +623,15 @@
       flex-shrink: 0;
       background: var(--color-background-secondary);
     }
-    @media (max-width: 727px) {
+    /* Once the feed narrows to the 728px ad width, the surrounding grey
+       stage no longer adds anything, so drop it and let the ad sit as a
+       plain 728px slot. Below 728px there's no room, so it disappears. */
+    @container news-feed (max-width: 728px) {
+      .display-ad--leaderboard .display-ad__stage {
+        background: transparent;
+      }
+    }
+    @container news-feed (max-width: 727px) {
       .news-hub__top-ad {
         display: none !important;
       }
@@ -754,7 +764,7 @@
     .news-results__list {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: var(--spacing-40);
+      column-gap: var(--spacing-24);
       row-gap: var(--news-hub-y-gap);
       width: 100%;
       min-width: 0;
@@ -1076,7 +1086,7 @@
       display: flex;
       flex-wrap: nowrap;
       flex-direction: row;
-      column-gap: var(--spacing-40);
+      column-gap: var(--spacing-24);
       row-gap: var(--news-hub-y-gap);
       width: 100%;
       min-width: 0;
@@ -1200,7 +1210,10 @@
         padding: var(--spacing-32) var(--spacing-32) var(--spacing-32) calc(var(--spacing-24) + 104px + var(--spacing-24));
       }
       .serp-body--news {
-        padding-inline: var(--spacing-32);
+        /* sidebar stays fixed in this band, so keep the left padding
+           aligned to its inset to avoid the feed sliding underneath it */
+        padding-inline-start: calc(var(--spacing-24) + 104px + var(--spacing-24));
+        padding-inline-end: var(--spacing-32);
       }
 
       .site-header__right { gap: var(--spacing-24); }
@@ -1213,43 +1226,16 @@
       }
       .site-header--desktop .site-header__nav .site-header__tabs-row::-webkit-scrollbar { display: none; }
 
-      .news-hub {
-        grid-template-columns: minmax(0, 1fr);
-        gap: var(--spacing-24);
-        min-width: 0;
-      }
+      /* First responsive step: drop the right rail but keep the fixed
+         sidebar, letting the feed widen into the space the rail vacated.
+         The full single-column collapse happens lower, at ≤1024px. */
       .news-hub__main {
         grid-template-columns: minmax(0, 1fr);
         row-gap: var(--news-hub-y-gap);
         column-gap: 0;
         min-width: 0;
       }
-      .news-hub__sidebar {
-        position: static;
-        top: auto;
-        left: auto;
-        width: auto;
-        z-index: auto;
-        background: transparent;
-      }
-      .serp-body--news .news-hub__main { margin-inline-start: 0; }
-      .news-hub__rail { margin-inline-start: 0; }
-      .news-related { position: static; top: auto; }
-      .news-hub__feed { max-width: none; }
-      .news-sidebar__list {
-        flex-direction: row;
-        gap: var(--spacing-8);
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        padding-bottom: var(--spacing-4);
-      }
-      .news-sidebar__list::-webkit-scrollbar { display: none; }
-      .news-sidebar__link { width: auto; white-space: nowrap; }
-
-      .news-featured-band__row {
-        flex-direction: column;
-      }
+      .news-hub__rail { display: none; }
 
       .results-list,
       .banner { max-width: 100%; }
@@ -1280,6 +1266,31 @@
       .serp-body--news {
         padding-inline: var(--spacing-24);
       }
+
+      /* Second responsive step: collapse to a single full-width column.
+         The fixed sidebar drops into a horizontal scroller above the feed. */
+      .news-hub__sidebar {
+        position: static;
+        top: auto;
+        left: auto;
+        width: auto;
+        z-index: auto;
+        background: transparent;
+      }
+      .serp-body--news .news-hub__main { margin-inline-start: 0; }
+      .news-related { position: static; top: auto; }
+      .news-hub__feed { max-width: none; }
+      .news-sidebar__list {
+        flex-direction: row;
+        gap: var(--spacing-8);
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-bottom: var(--spacing-4);
+      }
+      .news-sidebar__list::-webkit-scrollbar { display: none; }
+      .news-sidebar__link { width: auto; white-space: nowrap; }
+      .news-featured-band__row { flex-direction: column; }
 
       .site-header--desktop {
         grid-template-columns:
