@@ -680,9 +680,14 @@
     }
     .news-sidebar__icon {
       flex-shrink: 0;
-      width: var(--spacing-20);
-      height: var(--spacing-20);
-      color: currentColor;
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      color: var(--color-icon-primary);
+      transition: color 150ms ease;
+    }
+    .news-sidebar__link:hover .news-sidebar__icon,
+    .news-sidebar__link--active .news-sidebar__icon {
+      color: var(--color-icon-secondary);
     }
     .icn-arrows--right-sm {
       width: var(--spacing-16);
@@ -1070,6 +1075,60 @@
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
       color: var(--color-text-secondary);
+    }
+    .news-results__no-results {
+      max-width: 560px;
+      padding: var(--spacing-16) 0 var(--spacing-48);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+    }
+    .news-results__no-results-icon {
+      width: var(--spacing-48);
+      height: var(--spacing-48);
+      color: var(--color-text-tertiary);
+    }
+    .news-results__no-results-title {
+      margin: 0;
+      font-size: var(--font-heading-xxs);
+      line-height: var(--font-heading-xxs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .news-results__no-results-intro {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+    }
+    .news-results__no-results-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+    .news-results__no-results-list li {
+      position: relative;
+      padding-left: var(--spacing-20);
+      font-size: var(--font-body-sm);
+      line-height: 1.35;
+      color: var(--color-text-secondary);
+    }
+    .news-results__no-results-list li::before {
+      content: "";
+      position: absolute;
+      left: var(--spacing-4);
+      top: 0.5em;
+      width: var(--spacing-4);
+      height: var(--spacing-4);
+      border-radius: var(--radius-full);
+      background: var(--color-text-tertiary);
+    }
+    .news-results__no-results-list strong {
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary);
     }
     .news-feed-chunk {
       width: 100%;
@@ -2175,50 +2234,72 @@
     <symbol id="icon-av-mask" viewBox="0 0 20 20" fill="none">
       <path d="M10.0167 6C-1.04828 6 1.07747 14 6.05523 14C7.05273 14 7.99198 13.569 8.59073 12.8363L9.23399 12.049C9.62549 11.57 10.4082 11.57 10.7997 12.049L11.443 12.8363C12.0415 13.569 12.9807 14 13.9782 14C18.7248 14 21.244 6 10.0167 6ZM6.59998 11.0908C5.57348 11.0908 4.90598 10.5562 4.59798 10.2356C4.46723 10.0996 4.46723 9.90042 4.59798 9.76417C4.90598 9.44333 5.57323 8.90896 6.59998 8.90896C7.62673 8.90896 8.29398 9.44354 8.60198 9.76417C8.73273 9.90021 8.73273 10.0994 8.60198 10.2356C8.29398 10.5565 7.62648 11.0908 6.59998 11.0908ZM13.4 11.0908C12.3735 11.0908 11.706 10.5562 11.398 10.2356C11.2672 10.0996 11.2672 9.90042 11.398 9.76417C11.706 9.44333 12.3732 8.90896 13.4 8.90896C14.4267 8.90896 15.094 9.44354 15.402 9.76417C15.5327 9.90021 15.5327 10.0994 15.402 10.2356C15.094 10.5565 14.4265 11.0908 13.4 11.0908Z" fill="currentColor"/>
     </symbol>
-    <symbol id="icon-news-top-stories" viewBox="0 0 20 20" fill="none">
-      <path d="M4 14V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M8 14V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M12 14V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M16 14V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <symbol id="icon-news-top-stories" viewBox="0 0 16 16" fill="none">
+      <path d="M1.19998 9.33684L6.44695 3.77895L9.33278 6.83579L14.8421 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M1.19998 13.1263L1.19998 15.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M10.2947 12.3684L10.2947 15.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M5.74738 10.0947L5.74738 15.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M15 8L15 15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
     </symbol>
-    <symbol id="icon-news-world" viewBox="0 0 20 20" fill="none">
-      <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M2.75 10H17.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M10 2.75C12.1 5.35 13.25 7.55 13.25 10C13.25 12.45 12.1 14.65 10 17.25C7.9 14.65 6.75 12.45 6.75 10C6.75 7.55 7.9 5.35 10 2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    <symbol id="icon-news-world" viewBox="0 0 16 16" fill="none">
+      <circle cx="7.99999" cy="7.99999" r="7.2" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M2.29999 3.72452C3.72354 5.24782 5.75057 6.20001 7.99999 6.20001C10.2494 6.20001 12.2764 5.24782 13.7 3.72452" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M2.09818 12.5C3.52844 10.8463 5.64205 9.80002 8.00004 9.80002C10.358 9.80002 12.4716 10.8463 13.9019 12.5" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M7.4 15.2C5.93006 13.4552 5 10.8767 5 8.00004C5 5.12341 5.93006 2.5449 7.4 0.800043" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M8.60006 15.2C10.07 13.4552 11.0001 10.8767 11.0001 8.00004C11.0001 5.12341 10.07 2.5449 8.60006 0.800043" stroke="currentColor" stroke-width="1.2"/>
     </symbol>
-    <symbol id="icon-news-us" viewBox="0 0 20 20" fill="none">
-      <path d="M4.5 6.5H15.5V13.5H4.5V6.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M4.5 9.25H15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M8.25 6.5V13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <symbol id="icon-news-us" viewBox="0 0 16 16" fill="none">
+      <rect x="0.799988" y="3.20001" width="14.4" height="9.59999" rx="0.444444" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M0.799988 8H15.2" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M0.799988 10.4H15.2" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M6.79999 5.60001L15.2 5.60001" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M6.79999 3.20001V7.80001" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="2.25" cy="4.79999" r="0.5" fill="currentColor" stroke="currentColor" stroke-width="0.16"/>
+      <circle cx="2.25" cy="6.29999" r="0.5" fill="currentColor" stroke="currentColor" stroke-width="0.16"/>
+      <circle cx="3.75" cy="4.79999" r="0.5" fill="currentColor" stroke="currentColor" stroke-width="0.16"/>
+      <circle cx="3.75" cy="6.29999" r="0.5" fill="currentColor" stroke="currentColor" stroke-width="0.16"/>
+      <circle cx="5.25" cy="4.79999" r="0.5" fill="currentColor" stroke="currentColor" stroke-width="0.16"/>
+      <circle cx="5.25" cy="6.29999" r="0.5" fill="currentColor" stroke="currentColor" stroke-width="0.16"/>
     </symbol>
-    <symbol id="icon-news-sports" viewBox="0 0 20 20" fill="none">
-      <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M3.25 10H16.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M10 2.75C12.35 5.1 13.25 7.35 13.25 10C13.25 12.65 12.35 14.9 10 17.25C7.65 14.9 6.75 12.65 6.75 10C6.75 7.35 7.65 5.1 10 2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    <symbol id="icon-news-sports" viewBox="0 0 16 16" fill="none">
+      <path d="M5.96751 13.4675C5.96751 12.5764 6.64253 11.9823 6.98004 11.7966C6.98004 11.7348 6.98004 11.3882 6.98004 10.4971C6.98004 9.60591 6.57503 9.78819 5.5625 9.19747C3.33492 7.89789 3.13242 5.67004 3.13242 3.81349V1.89659C3.13242 1.62232 3.35475 1.39998 3.62902 1.39998H7.62131" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M10.0363 13.4675C10.0363 12.5764 9.33898 11.9823 8.9903 11.7966C8.9903 11.7347 8.9903 11.3882 8.9903 10.497C8.9903 9.6059 9.40872 9.78818 10.4548 9.19746C12.7561 7.89788 12.9653 5.67002 12.9653 3.81347L12.9653 1.89657C12.9653 1.6223 12.7429 1.39996 12.4687 1.39996H7.40759" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M9.512 13.4675H10.1843C10.7328 13.4675 11.1775 13.9122 11.1775 14.4607V14.8083H4.92023V14.4607C4.92023 13.9122 5.3649 13.4675 5.91344 13.4675H6.56" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M7.92022 3.40787C7.97773 3.30945 8.11997 3.30945 8.17748 3.40787L8.73962 4.36984C8.76064 4.40582 8.79579 4.43136 8.83651 4.44024L9.92511 4.67759C10.0365 4.70188 10.0804 4.83715 10.0046 4.92226L9.26343 5.75415C9.2357 5.78527 9.22228 5.82658 9.22642 5.86806L9.33707 6.97672C9.34839 7.09015 9.23332 7.17376 9.12894 7.12794L8.10873 6.6801C8.07057 6.66335 8.02713 6.66335 7.98897 6.6801L6.96876 7.12794C6.86438 7.17376 6.74931 7.09015 6.76063 6.97672L6.87128 5.86805C6.87542 5.82658 6.862 5.78527 6.83427 5.75415L6.09309 4.92226C6.01726 4.83715 6.06121 4.70188 6.17259 4.67759L7.26119 4.44024C7.30191 4.43136 7.33705 4.40582 7.35808 4.36984L7.92022 3.40787Z" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M3.21352 2.7408H1.72731C1.21764 2.7408 0.785059 3.12738 0.805636 3.63663C0.872058 5.28052 1.54541 7.50825 3.92861 7.65721" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M12.7865 2.7408H14.2727C14.7824 2.7408 15.2149 3.12738 15.1944 3.63663C15.1279 5.28052 14.4546 7.50825 12.0714 7.65721" stroke="currentColor" stroke-width="1.2"/>
     </symbol>
-    <symbol id="icon-news-entertainment" viewBox="0 0 20 20" fill="none">
-      <rect x="3.75" y="5.75" width="12.5" height="8.5" rx="1.25" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M8.5 8.25L12.75 10.5L8.5 12.75V8.25Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    <symbol id="icon-news-entertainment" viewBox="0 0 16 17" fill="none">
+      <rect x="1.29221" y="6.26889" width="13.6722" height="2.73445" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M5.12045 6.26889L2.93289 9.00334" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M9.18756 6L7 8.73445" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M13.3237 6.26889L11.1362 9.00334" stroke="currentColor" stroke-width="1.2"/>
+      <rect width="13.6722" height="2.73445" transform="matrix(-0.984413 0.175872 0.175872 0.984413 14.2591 0.800003)" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M10.4905 1.47328L13.1249 3.78037" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M7.00001 2.38473L9.63438 4.69182" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M2.41502 2.91601L5.04939 5.22311" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M1.29221 9.00334V14.4401C1.29221 15.0619 1.7963 15.566 2.41813 15.566H13.8385C14.4603 15.566 14.9644 15.0619 14.9644 14.4401V9.00334" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M4.02667 11.4643H12.5035" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
     </symbol>
-    <symbol id="icon-news-technology" viewBox="0 0 20 20" fill="none">
-      <rect x="3.25" y="4.75" width="13.5" height="8.5" rx="1.25" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M7.25 16.25H12.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M10 13.25V16.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <symbol id="icon-news-technology" viewBox="0 0 17 16" fill="none">
+      <path d="M0.618875 12.8375L1.97697 10.6006C2.00115 10.5608 2.04436 10.5365 2.09094 10.5365H14.1009C14.1475 10.5365 14.1907 10.5608 14.2149 10.6006L15.5729 12.8375C15.6269 12.9263 15.5658 13.04 15.4619 13.04H0.729312C0.625361 13.04 0.564927 12.9263 0.618875 12.8375Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M2.07925 10.5365V3.06666C2.07925 2.69847 2.37773 2.39999 2.74592 2.39999H13.4459C13.8141 2.39999 14.1126 2.69847 14.1126 3.06666V10.5365" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M6.82925 11.824H9.36259" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
     </symbol>
-    <symbol id="icon-news-business" viewBox="0 0 20 20" fill="none">
-      <path d="M4.75 7.25H15.25V15.25H4.75V7.25Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M7.25 7.25V5.75C7.25 4.95 7.9 4.75 8.5 4.75H11.5C12.1 4.75 12.75 4.95 12.75 5.75V7.25" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M4.75 10.25H15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <symbol id="icon-news-business" viewBox="0 0 16 16" fill="none">
+      <rect x="0.6" y="3.5" width="14.8" height="10.3" rx="0.9" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M5 3.15V2.4C5 1.84772 5.44772 1.4 6 1.4H10C10.5523 1.4 11 1.84772 11 2.4V3.15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <rect x="6.4" y="7.05" width="3.2" height="2.7" rx="0.85" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M0.799988 8.6C1.07732 8.6 4.38221 8.6 5.99999 8.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M9.60001 8.6C9.89867 8.6 13.4578 8.6 15.2 8.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
     </symbol>
-    <symbol id="icon-news-science" viewBox="0 0 20 20" fill="none">
-      <path d="M7.25 4.75H12.75L14.75 15.25H5.25L7.25 4.75Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M6.75 9.25H13.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M8.25 4.75V3.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M11.75 4.75V3.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <symbol id="icon-news-science" viewBox="0 0 16 16" fill="none">
+      <ellipse cx="7.83998" cy="8" rx="2.8" ry="7.2" stroke="currentColor" stroke-width="1.2"/>
+      <ellipse cx="8.12153" cy="8.11891" rx="2.67013" ry="7.34286" transform="rotate(60 8.12153 8.11891)" stroke="currentColor" stroke-width="1.2"/>
+      <ellipse cx="2.67013" cy="7.34286" rx="2.67013" ry="7.34286" transform="matrix(-0.5 0.866025 0.866025 0.5 2.91013 2.13509)" stroke="currentColor" stroke-width="1.2"/>
     </symbol>
-    <symbol id="icon-news-local" viewBox="0 0 20 20" fill="none">
-      <path d="M10 17.25C10 17.25 15.25 12.35 15.25 8.75C15.25 5.95 12.9 3.75 10 3.75C7.1 3.75 4.75 5.95 4.75 8.75C4.75 12.35 10 17.25 10 17.25Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-      <circle cx="10" cy="8.75" r="2" stroke="currentColor" stroke-width="1.5"/>
+    <symbol id="icon-news-local" viewBox="0 0 16 16" fill="none">
+      <path d="M7.43476 15.0156L6.9449 15.3621L6.94548 15.3629L7.43476 15.0156ZM5.5164 12.3321L6.00338 11.9816V11.9816L5.5164 12.3321ZM8.56524 15.0156L9.05452 15.3629L9.0551 15.3621L8.56524 15.0156ZM10.4836 12.3321L9.99662 11.9816V11.9816L10.4836 12.3321ZM7.43476 15.0156L7.92462 14.6692C7.18072 13.6174 6.54491 12.734 6.00338 11.9816L5.5164 12.3321L5.02942 12.6826C5.57095 13.435 6.20416 14.3148 6.9449 15.3621L7.43476 15.0156ZM8.56524 15.0156L8.07596 14.6683C8.06126 14.6891 8.03665 14.7042 8 14.7042C7.96334 14.7042 7.93874 14.6891 7.92405 14.6684L7.43476 15.0156L6.94548 15.3629C7.45774 16.0846 8.5422 16.0847 9.05452 15.3629L8.56524 15.0156ZM10.4836 12.3321L9.99662 11.9816C9.45509 12.734 8.81928 13.6174 8.07538 14.6692L8.56524 15.0156L9.0551 15.3621C9.79584 14.3148 10.4291 13.435 10.9706 12.6826L10.4836 12.3321ZM13.5 6.36409H12.9C12.9 7.16427 12.7893 7.69198 12.3969 8.4342C11.979 9.22478 11.2566 10.231 9.99662 11.9816L10.4836 12.3321L10.9706 12.6826C12.2055 10.9668 12.9912 9.87761 13.4578 8.99502C13.9499 8.06408 14.1 7.34094 14.1 6.36409H13.5ZM8 1V1.6C10.7204 1.6 12.9 3.74701 12.9 6.36409H13.5H14.1C14.1 3.05614 11.3547 0.4 8 0.4V1ZM2.5 6.36409H3.1C3.1 3.74701 5.27955 1.6 8 1.6V1V0.4C4.64529 0.4 1.9 3.05614 1.9 6.36409H2.5ZM5.5164 12.3321L6.00338 11.9816C4.74344 10.231 4.02101 9.22478 3.60308 8.4342C3.21072 7.69198 3.1 7.16427 3.1 6.36409H2.5H1.9C1.9 7.34094 2.05007 8.06408 2.5422 8.99502C3.00876 9.87761 3.79453 10.9668 5.02942 12.6826L5.5164 12.3321ZM9.83321 6.36396H9.23321C9.23321 7.00603 8.69526 7.55199 7.99987 7.55199V8.15199V8.75199C9.32952 8.75199 10.4332 7.6969 10.4332 6.36396H9.83321ZM7.99987 4.57593V5.17593C8.69526 5.17593 9.23321 5.7219 9.23321 6.36396H9.83321H10.4332C10.4332 5.03103 9.32952 3.97593 7.99987 3.97593V4.57593ZM6.16654 6.36396H6.76654C6.76654 5.7219 7.30448 5.17593 7.99987 5.17593V4.57593V3.97593C6.67022 3.97593 5.56654 5.03103 5.56654 6.36396H6.16654ZM7.99987 8.15199V7.55199C7.30448 7.55199 6.76654 7.00603 6.76654 6.36396H6.16654H5.56654C5.56654 7.6969 6.67022 8.75199 7.99987 8.75199V8.15199Z" fill="currentColor"/>
     </symbol>
   </svg>
 
@@ -3633,6 +3714,12 @@
       return !q || /taylor|swift/i.test(q);
     }
 
+    /* Demo: the single-character query 'y' returns no news results so the
+       empty state can be showcased. */
+    function isNoResultsNewsQuery(query) {
+      return query.trim().toLowerCase() === 'y';
+    }
+
     function clearNewsCategorySelection() {
       activeNewsCategory = null;
       document.querySelectorAll('.news-sidebar__link').forEach(link => {
@@ -4382,9 +4469,30 @@
       </div>`;
     }
 
+    function renderNewsNoResults(query) {
+      return `<div class="news-results__no-results">
+        <svg class="news-results__no-results-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+          <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h2 class="news-results__no-results-title">No results found for this search.</h2>
+        <p class="news-results__no-results-intro">Try one of the following:</p>
+        <ul class="news-results__no-results-list">
+          <li>Use broader or fewer search terms.</li>
+          <li>Check for spelling errors.</li>
+          <li>Adjust or remove filters that may be limiting results.</li>
+        </ul>
+      </div>`;
+    }
+
     function renderNewsFeed(query) {
       const newsContent = document.getElementById('newsHubContent');
       if (!newsContent) return;
+
+      if (isNoResultsNewsQuery(query)) {
+        newsContent.innerHTML = renderNewsNoResults(query);
+        return;
+      }
 
       if (activeNewsCategory === 'top-stories') {
         newsContent.innerHTML = renderNewsTopStoriesHub(query);
@@ -4578,11 +4686,12 @@
       if (isNewsTab()) {
         if (serpTopAdEl) { serpTopAdEl.innerHTML = ''; serpTopAdEl.hidden = true; }
         syncSerpViewRail('');
-        syncNewsHubDisplayAds(true);
+        const noResults = isNoResultsNewsQuery(query);
+        syncNewsHubDisplayAds(!noResults);
         if (isSwiftNewsQuery(query) && !options.preserveNewsCategory) clearNewsCategorySelection();
         if (list) { list.innerHTML = ''; meta.textContent = ''; }
         renderNewsFeed(query);
-        if (newsRail) newsRail.innerHTML = renderNewsHubRail(query);
+        if (newsRail) newsRail.innerHTML = noResults ? '' : renderNewsHubRail(query);
         if (options.scrollToTop) scrollPageToTopAfterRender();
         return;
       }
