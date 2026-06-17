@@ -37,18 +37,21 @@
   <style>
     /* ── Reset ───────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-font-smoothing: antialiased; }
+    html {
+      -webkit-font-smoothing: antialiased;
+      background: var(--bg-primary);
+    }
     body {
       /* design-system: theme.fontFamily */
       font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-      /* design-system: whisper #fbfbfd = backgroundPrimary */
-      background: #F6F6FF;
+      background: var(--bg-primary);
       /* design-system: brandBlueAlt7 #202C46 = Figma midnight (NOT colors.midnight #202945) */
       color: #202C46;
       /* clip (not hidden) prevents horizontal scroll WITHOUT making <body> a
          scroll container — required so the floating banner's position: sticky
          still resolves against the viewport. */
       overflow-x: clip;
+      min-height: 100vh;
     }
     a { text-decoration: none; color: inherit; }
     button { font-family: inherit; cursor: pointer; border: none; background: none; }
@@ -65,8 +68,13 @@
       --text-secondary:  #5B627A;   /* midnightSubtext */
       --text-muted:      #7f869e;   /* midnightMedium */
       --text-link:       #2E39B3;   /* color/text/link light = color-brand-blue-600 */
-      --bg-primary:      #F6F6FF;   /* whisper */
+      --bg-primary:      #FFFFFF;   /* color-background-primary = whisper-0 */
+      --bg-secondary:    #E7E9FB;   /* color-background-secondary = whisper-300 */
+      --bg-tertiary:     #F7F7FF;   /* color-background-tertiary = brand-blue-50 */
       --bg-white:        #ffffff;   /* whisperLight */
+      --stroke-secondary:#EBECF7;   /* color-stroke-secondary = whisper-200 */
+      --icon-primary:    #1E222D;   /* color-icon-primary = black-700 */
+      --shadow-search:   0px 4px 15px 0px rgba(59, 67, 91, 0.08);
       --header-bg:       #fafaff;   /* colors.header.background light */
       --border:          #dee0f7;   /* whisperDarkest = colors.border */
       --border-focused:  #5B6BF8;   /* colors.borderFocused */
@@ -74,6 +82,30 @@
       /* Semantic taxonomy (from tokens.css) */
       --color-button-productfilled:      #E7E9FB;  /* color/button/product filled = whisper-300 */
       --color-button-productfilledhover: #DEE0F7;  /* color/button/product hover  = whisper-400 */
+      --color-button-brandblue:          #5668F1;  /* color/button/brandblue */
+      --color-button-brandbluehover:     #6677FB;  /* color/button/brandblue hover */
+      --color-button-teal:               #5AECDE;  /* color/button/teal */
+      --color-button-tealhover:          #00E7D0;  /* color/button/teal hover */
+      --color-text-brandblue:            #5668F1;  /* color/text/brandblue */
+      --color-text-inverted:             #FBFBFD;  /* color/text/inverted light */
+      --color-whisper-50:                #FBFBFD;
+      --color-stroke-primary-button:     #5668F1;  /* color/stroke/primary-button */
+      --border-stroke-sm:                1px;
+      --border-stroke-md:                1.5px;
+      --border-stroke-lg:                2px;
+      --radius-lg:                       12px;
+      --radius-xl:                       16px;
+      --spacing-8:                       8px;
+      --spacing-12:                      12px;
+      --spacing-16:                      16px;
+      --spacing-20:                      20px;
+      --spacing-24:                      24px;
+      --font-button-sm:                  16px;
+      --font-button-sm-lh:               11px;
+      --font-button-xs:                  14px;
+      --font-button-xs-lh:               10px;
+      --font-weight-bold:                700;
+      --font-weight-regular:             400;
       /* theme.borderRadius / theme.boxShadow */
       --radius:          4px;
       --shadow:          2px 4px 4px rgb(0 0 0 / 10%);
@@ -93,6 +125,8 @@
     ──────────────────────────────────────────────────────────── */
     [data-theme="dark"] {
       --bg-primary:    #09090A;   /* color-black-900 */
+      --bg-secondary:  #34373D;   /* color-background-secondary = black-550 */
+      --bg-tertiary:   #1B1D21;   /* color-background-tertiary = black-800 */
       --bg-white:      #34373D;   /* color-black-550 (secondary surface) */
       --header-bg:     #1B1D21;   /* color-black-800 */
       --text-primary:  #F2F3FF;   /* color-whisper-100 */
@@ -100,18 +134,26 @@
       --text-muted:    #ACB1C2;   /* color-midnight-100 */
       --border:        #494D56;   /* color-black-400 */
       --border-focused:#A0ABFF;   /* color-brand-blue-100 */
+      --stroke-secondary:#34373D; /* color-stroke-secondary dark = black-550 */
       --brand-blue-lt: #1B1D21;   /* color-black-800 */
       --brand-blue-ltr:#1B1D21;   /* color-black-800 */
       --text-link:     #A0ABFF;   /* color/text/link dark = color-brand-blue-100 */
       /* Semantic taxonomy — dark overrides (from tokens.css) */
       --color-button-productfilled:      #34373D;  /* black-550 */
       --color-button-productfilledhover: #494D56;  /* black-400 */
+      --color-button-brandblue:          #A0ABFF;  /* brand-blue-100 */
+      --color-button-brandbluehover:     #6677FB;  /* brand-blue-300 */
+      --color-button-teal:               #00E7D0;  /* teal-400 */
+      --color-button-tealhover:          #5AECDE;  /* teal-200 */
+      --color-text-brandblue:            #A0ABFF;
+      --color-text-inverted:             #1B1D21;  /* black-800 */
+      --color-stroke-primary-button:     #A0ABFF;
     }
     /* Page body + hero */
     [data-theme="dark"] body { background: var(--bg-primary); color: var(--text-primary); }
-    [data-theme="dark"] .hero { background: #1B1D21; }  /* color-background-tertiary dark = color-black-800 */
-    [data-theme="dark"] .wave-white-blue { background: #1B1D21; } /* color-background-tertiary dark */
-    [data-theme="dark"] .wave-white-blue rect { fill: #1B1D21; }
+    [data-theme="dark"] .hero { background: var(--bg-tertiary); }
+    [data-theme="dark"] .wave-white-blue { background: var(--bg-tertiary); }
+    [data-theme="dark"] .wave-white-blue rect { fill: var(--bg-tertiary); }
     /* Sticky header: solid bg-primary (#09090A) in dark mode */
     [data-theme="dark"] .sticky-header {
       background: rgba(9, 9, 10, 0.95); /* --bg-primary color-black-900 at 95% */
@@ -128,50 +170,47 @@
 
     /* Menu panel + search */
     [data-theme="dark"] .menu-panel { background: var(--bg-primary); }
-    [data-theme="dark"] .menu-tagline { color: var(--text-muted); }
+    [data-theme="dark"] .menu-tagline { color: var(--text-secondary); }
     [data-theme="dark"] .menu-cta-card { background: var(--bg-white); border-color: var(--border); }
-    /* Search bars: background on the input itself (not the wrapper div) so the
-       dark fill respects the pill border-radius and has no square corners. */
-    [data-theme="dark"] .menu-search input,
-    [data-theme="dark"] .sticky-search input {
-      background: var(--bg-white); border-color: var(--border); color: var(--text-primary);
+    /* Search field — wrapper only; input stays transparent (see components/search-field) */
+    [data-theme="dark"] .search-field {
+      background: var(--bg-primary);
+      border-color: var(--stroke-secondary);
+      box-shadow: none;
     }
-    [data-theme="dark"] .menu-search input::placeholder,
-    [data-theme="dark"] .sticky-search input::placeholder { color: var(--text-muted); }
+    [data-theme="dark"] .search-field__input {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+    }
+    [data-theme="dark"] .search-field__input::placeholder { color: var(--text-muted); }
 
     /* Veve tiles */
-    [data-theme="dark"] .veve-tile:hover { background-color: #34373D; } /* color-black-550 */
+    [data-theme="dark"] .veve-tile:hover { background-color: var(--bg-tertiary); }
 
     /* Slim promo banner — background was hardcoded #F6F6FF */
     [data-theme="dark"] .cta-slim {
-      background: var(--bg-white);      /* color-black-550 */
-      border-color: var(--border);
+      background: var(--bg-tertiary);
     }
     [data-theme="dark"] .cta-slim__text { color: var(--text-primary); }
     [data-theme="dark"] .cta-slim--float { box-shadow: 0 6px 20px rgba(0,0,0,.45); }
-    /* "Install on Chrome" (btn-teal) in slim banner: always dark font (#202C46),
-       same as light theme — does not switch on theme toggle. */
-    [data-theme="dark"] .cta-slim .btn-teal,
-    [data-theme="dark"] .cta-slim .btn-teal:hover { color: #202C46; }
-
-    /* "Get the app" (btn-teal-outline) in slim banner: text-primary in default state
-       (stays light/white in dark mode), but on hover reverts to the same dark font
-       color (#202C46) as light theme — matching the filled teal button appearance. */
-    [data-theme="dark"] .cta-slim .btn-teal-outline:hover { color: #202C46; }
 
     /* News hub */
     [data-theme="dark"] .news-hub { background: var(--bg-primary); }
+    [data-theme="dark"] .legacy-footer { background: var(--bg-primary); }
     [data-theme="dark"] .news-hub__head-title { color: var(--text-primary); }
-    [data-theme="dark"] .nh-note { background: var(--bg-white); border-color: var(--border); color: var(--text-primary); }
-    [data-theme="dark"] .nh-card { background: var(--bg-white); border-color: var(--border); }
-    [data-theme="dark"] .nh-card__headline { color: var(--text-primary); }
-    [data-theme="dark"] .nh-card__meta { color: var(--text-secondary); }
+    [data-theme="dark"] .nh-note { background: var(--bg-tertiary); color: var(--text-primary); }
+    [data-theme="dark"] .nh-card__pub { color: var(--text-primary); }
+    [data-theme="dark"] .nh-card__pub-icon { background: var(--color-button-productfilled); }
     [data-theme="dark"] .nh-menu-list { background: var(--bg-white); border-color: var(--border); }
     [data-theme="dark"] .nh-menu-list [role="menuitem"] { color: var(--text-primary); }
     [data-theme="dark"] .nh-menu-list [role="menuitem"]:hover { background: var(--brand-blue-lt); }
 
     /* Search icon: color-icon-secondary dark = color-brand-blue-100 */
-    [data-theme="dark"] .srch-icon { color: #A0ABFF; }
+    [data-theme="dark"] .srch-icon,
+    [data-theme="dark"] .search-field__submit { color: #A0ABFF; }
+    [data-theme="dark"] .homepage-header__menu { color: var(--text-primary); }
+    [data-theme="dark"] .homepage-header__menu:hover { color: #A0ABFF; }
 
     /* "here" in "Privacy starts here" — color-text-brandblue dark = color-brand-blue-100 */
     [data-theme="dark"] .blue { color: #A0ABFF; }
@@ -198,6 +237,7 @@
 
     /* Theme toggle button (prototype chrome — not part of the production design) */
     .theme-toggle-btn {
+      position: fixed; top: 24px; left: 24px; z-index: 250;
       display: flex; align-items: center; gap: 6px;
       padding: 6px 12px; border-radius: 999px;
       background: rgba(255,255,255,0.85); backdrop-filter: blur(6px);
@@ -311,7 +351,7 @@
     /* ── Waves ───────────────────────────────────────────────── */
     .wave { display: block; line-height: 0; font-size: 0; }
     .wave svg { display: block; width: 100%; }
-    .wave-white-blue { background: #F7F7FF; margin-top: -1px; } /* color-background-tertiary (brand-blue-50) */
+    .wave-white-blue { background: var(--bg-tertiary); margin-top: -1px; }
     .wave-blue-teal  { background: #5B6BF8; }
     .wave-teal-white { background: var(--teal); }
 
@@ -332,7 +372,7 @@
     .sticky-header {
       position: fixed; top: 0; left: 0; width: 100%; z-index: 300;
       height: 72px;
-      background: rgba(251, 251, 253, 0.92); /* --bg-primary at 92% opacity */
+      background: rgba(255, 255, 255, 0.92); /* --bg-primary at 92% opacity */
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       display: flex; align-items: center; justify-content: space-between;
@@ -349,28 +389,21 @@
     .sticky-header-logo {
       width: 110px; height: auto; display: block; flex-shrink: 0;
     }
-    /* Search bar in sticky header */
+    /* Search bar in sticky header — matches homepage search-field */
     .sticky-search {
       flex: 1;
       max-width: 480px;
       margin: 0 24px 0 40px;
-      position: relative;
     }
-    .sticky-search input {
-      width: 100%; height: 40px;
-      background: var(--bg-white);
-      border: 1.5px solid var(--border);
-      border-radius: 20px;
-      padding: 0 44px 0 18px;
-      font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: 0;
-      font-family: inherit; color: var(--text-primary); outline: none;
-      box-shadow: var(--shadow); transition: border-color .18s;
+    .sticky-search .search-field--homepage {
+      height: 40px;
+      box-shadow: var(--shadow-search);
     }
-    .sticky-search input:focus { border-color: var(--border-focused); }
-    .sticky-search .srch-icon {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      pointer-events: none; color: #5668F1; /* color-icon-secondary light = color-brand-blue-400 */
+    .sticky-search .search-field__input {
+      font-size: 14px; line-height: 20px;
+      padding-left: 18px;
     }
+    .sticky-search .search-field__actions { padding-right: 18px; }
     .sticky-header-right {
       display: flex; align-items: center; gap: 16px; flex-shrink: 0;
     }
@@ -398,74 +431,151 @@
     }
 
     /* ════════════════════════════════════════════════════════════
-       FIXED HEADER
-       Figma: Frame 1171277866 2066:1898 — 24×24, x=1316
-              Group 1171277367 2066:1761 — 32×32, x=736, y=873
+       HOMEPAGE HEADER — matches startpage.com / landing prototype
     ════════════════════════════════════════════════════════════ */
-    .site-header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      display: flex; justify-content: flex-end; align-items: center;
-      gap: 12px; padding: 20px var(--gutter); pointer-events: none;
+    .homepage-header {
+      display: flex; align-items: center; justify-content: flex-end;
+      padding: 24px 32px;
+      position: relative; z-index: 100;
     }
-    .site-header button { pointer-events: all; }
+    .homepage-header__actions {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .homepage-header__menu {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 8px; border: none; background: none; cursor: pointer;
+      color: var(--icon-primary); flex-shrink: 0;
+      transition: color .12s ease;
+    }
+    .homepage-header__menu:hover { color: #5668F1; }
+    .homepage-header__menu:focus-visible {
+      outline: 2px solid var(--border-focused); outline-offset: 2px; border-radius: 4px;
+    }
+    .homepage-header__menu svg { display: block; }
+
+    /* Legacy hdr-btn — sticky header hamburger */
     .hdr-btn {
       width: 40px; height: 40px;
       background: none;
       display: flex; align-items: center; justify-content: center;
+      color: var(--icon-primary);
+      transition: color .12s ease;
     }
+    .hdr-btn:hover { color: #5668F1; }
+    [data-theme="dark"] .hdr-btn { color: var(--text-primary); }
+    [data-theme="dark"] .hdr-btn:hover { color: #A0ABFF; }
 
     /* ════════════════════════════════════════════════════════════
-       HAMBURGER MENU PANEL (expanded state)
-       Figma: Frame 1171277924 2068:1936 — x=570, y=240, 300×99 (logo+tagline)
-              startpage-logo 2066:1749 — 280×63
-              Frame 1171277920 2066:1908 — x=377, y=379, 686×56 (search)
-              card 2066:1910 — x=453, y=491, 258×274
-              Frame 1171277922 2066:1915 — x=731, y=491, 258×274
-              app-icon 2066:1765 — 72×72
-              Group 1171277934 2066:1780 — 72×72
-              Learn more 2066:1793 — x=679, y=923
+       HOMEPAGE HERO — logo, tagline, search (startpage.com layout)
     ════════════════════════════════════════════════════════════ */
-    .menu-panel { background: var(--header-bg); padding-top: 80px; }
-    .menu-inner { text-align: center; padding: 32px 0 0; }
-
-    /* Figma: Frame 1171277924 — 300×99; startpage-logo inside — 280×63 */
+    .menu-panel { background: var(--bg-primary); padding: 0 24px; }
+    .menu-inner { text-align: center; }
+    .menu-hero {
+      display: flex; flex-direction: column; align-items: center;
+      width: 100%; max-width: 720px; margin: 0 auto;
+      padding: 48px 0 0;
+    }
     .startpage-logo {
-      display: block; width: 240px; height: auto;
-      margin: 0 auto;
+      display: inline-flex; color: var(--text-primary);
+      text-decoration: none;
     }
+    .startpage-logo__svg { width: 216px; height: auto; display: block; }
     .menu-tagline {
-      font-size: 18px; font-weight: 400; line-height: 26px; letter-spacing: 0;
-      color: var(--text-muted); margin: 8px 0 28px;
+      margin-top: 12px;
+      font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: 0;
+      color: var(--text-secondary);
+    }
+    .menu-search-wrap {
+      width: 100%; max-width: 686px;
+      margin: 32px auto;
     }
 
-    /* Figma: Frame 1171277920 — 686×56, x=377 (centered) */
-    .menu-search { width: 686px; margin: 0 auto 32px; position: relative; }
-    .menu-search input {
-      width: 100%; height: 52px;
-      background: var(--bg-white); /* searchForm.background */
-      border: 1.5px solid var(--border);
-      border-radius: 26px; padding: 0 52px 0 22px;
-      font-size: 16px; font-weight: 400; line-height: 24px; letter-spacing: 0; /* body2 */
-      font-family: inherit; color: var(--text-primary); outline: none;
-      box-shadow: var(--shadow); transition: border-color .18s;
+    /* Search field — homepage desktop (from components/search-field) */
+    .search-field {
+      position: relative;
+      display: flex; align-items: center;
+      width: 100%;
+      overflow: hidden;
+      background: var(--bg-primary);
+      border: 1px solid var(--stroke-secondary);
+      border-radius: 9999px;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
     }
-    .menu-search input:focus { border-color: var(--border-focused); }
-    .menu-search .srch-icon {
-      position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
-      color: #5668F1; /* color-icon-secondary light = color-brand-blue-400 */
+    .search-field:focus-within {
+      border-color: var(--border-focused);
     }
-    /* Mobile: search bar is fluid, sitting 24px in from each screen edge.
-       (Placed after the base rule so it wins on source order — media queries
-       add no specificity.) */
+    .search-field--homepage {
+      height: 48px;
+      box-shadow: var(--shadow-search);
+    }
+    .search-field--homepage.search-field--desktop {
+      height: 56px;
+    }
+    .search-field__input {
+      flex: 1; min-width: 0; height: 100%;
+      padding: 0 0 0 20px;
+      background: transparent; border: none; outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      font-family: inherit;
+      font-size: 16px; line-height: 24px; font-weight: 400;
+      color: var(--text-secondary);
+      caret-color: var(--text-muted);
+    }
+    .search-field__input::-webkit-search-decoration,
+    .search-field__input::-webkit-search-cancel-button,
+    .search-field__input::-webkit-search-results-button,
+    .search-field__input::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+      appearance: none;
+      display: none;
+    }
+    .search-field__input:focus { color: var(--text-primary); }
+    .search-field__input::placeholder {
+      color: var(--text-secondary); opacity: 0.6;
+    }
+    .search-field__actions {
+      display: flex; align-items: center; gap: 12px;
+      padding-right: 20px; flex-shrink: 0;
+    }
+    .search-field--homepage.search-field--desktop .search-field__actions {
+      padding-right: 24px;
+    }
+    .search-field__clear {
+      display: none; align-items: center; justify-content: center;
+      width: 16px; height: 16px; padding: 0;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); flex-shrink: 0;
+      transition: color 100ms ease;
+    }
+    .search-field__clear:hover { color: var(--icon-primary); }
+    .search-field.has-value .search-field__clear { display: flex; }
+    .search-field__divider {
+      display: none; width: 1px; height: 16px;
+      background: var(--border); flex-shrink: 0;
+    }
+    .search-field.has-value .search-field__divider { display: block; }
+    .search-field__submit {
+      display: flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; padding: 0;
+      background: none; border: none; cursor: pointer;
+      color: #5668F1; flex-shrink: 0;
+      transition: opacity 100ms ease;
+    }
+    .search-field__submit:hover { opacity: 0.75; }
+
     @media (max-width: 767px) {
-      .menu-search { width: auto; margin: 0 24px 32px; }
+      .homepage-header { padding: 16px; }
+      .menu-hero { padding-top: 32px; }
+      .startpage-logo__svg { width: 168px; }
+      .menu-search-wrap { margin: 24px auto; }
     }
 
     /* Figma: card 2066:1910 (258×274, x=453) + Frame 1171277922 2066:1915 (258×274, x=731) */
     .menu-cta-cards { display: flex; gap: 20px; justify-content: center; margin-bottom: 28px; }
     .menu-cta-card {
       width: 258px; height: auto;
-      background: #F6F6FF; border: 1px solid var(--border);
+      background: var(--bg-primary); border: 1px solid var(--border);
       border-radius: 18px; padding: 28px 24px 24px;
       text-align: center; display: flex; flex-direction: column;
       align-items: center; gap: 24px;
@@ -489,14 +599,6 @@
       font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: 0; /* body3 */
       color: var(--text-primary); margin: 0;
     }
-    /* Figma: Learn more 2066:1793 x=679, y=923 */
-    .menu-learn-more {
-      padding: 20px 0 44px;
-      font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: 0; /* body3 */
-      color: var(--text-link); cursor: pointer;
-      display: inline-flex; flex-direction: column; align-items: center; gap: 5px; width: 100%;
-    }
-
     /* ════════════════════════════════════════════════════════════
        HERO
        Figma: yellow-lock 2066:1106 — x=670, y=1092, 104×104
@@ -507,7 +609,7 @@
                 img-squiggle1 2066:1644 — child, 0,396, 212×308
     ════════════════════════════════════════════════════════════ */
     .hero {
-      background: #F7F7FF; /* color-background-tertiary (color-brand-blue-50) */
+      background: var(--bg-tertiary);
       padding: 80px var(--gutter) 20px;
       position: relative;
       text-align: center;
@@ -1185,16 +1287,6 @@
       transform: translateY(0);
     }
 
-    /* ── chevronBounce ──────────────────────────────────────── */
-    .chevron-bounce {
-      display: inline-flex;
-      animation: chevronBounce 1.8s ease-in-out infinite;
-    }
-    @keyframes chevronBounce {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(4px); }
-    }
-
     #magnifier-guy-wrap {
       overflow: visible;
       display: flex;
@@ -1213,47 +1305,38 @@
   <style>
     /* ════════════════════════════════════════════════════════════
        QUICK SETTING — "Hide promotional messaging"
-       Now an inline pill inside .learn-row (next to "Learn more").
-       Desktop: pinned to the hamburger gutter on the Learn more row.
-       Mobile:  stacked above "Learn more", centred.
-       Toggling adds body.promo-hidden, which removes all below-the-fold
-       (promotional) content — everything from the "Privacy starts here"
-       hero down through the footer. The control itself stays visible.
+       Centred below the promo banner. Toggling adds body.promo-hidden,
+       which removes all below-the-fold promotional content. The control
+       itself stays visible.
     ════════════════════════════════════════════════════════════ */
     .promo-toggle {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      height: 40px;
-      padding: 0 16px;
-      border-radius: 20px;
-      background: rgba(250, 250, 255, .8);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      box-shadow: var(--shadow);
-      color: var(--text-secondary);
+      gap: 6px;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 16px;
+      background: transparent;
+      color: var(--text-link);
       font-family: inherit;
-      font-size: 14px; font-weight: 600; line-height: 18px; letter-spacing: 0; /* buttonSmall */
-      transition: background .15s, color .15s;
+      font-size: 12px; font-weight: 400; line-height: 18px; letter-spacing: 0.2px; /* body-xs / font-size-12 */
+      transition: color .15s;
     }
-    .promo-toggle:hover { background: rgba(250, 250, 255, .98); color: var(--text-primary); }
+    .promo-toggle:hover .promo-toggle__label { text-decoration: underline; }
     .promo-toggle:focus-visible { outline: 2px solid var(--border-focused); outline-offset: 3px; }
-    .promo-toggle svg { flex-shrink: 0; display: block; }
+    .promo-toggle svg { flex-shrink: 0; display: block; width: 14px; height: 14px; color: currentColor; }
     .promo-toggle__label { white-space: nowrap; }
 
-    /* "Learn more" row + the on/off control.
-       Desktop: control is absolutely positioned at the hamburger gutter so
-       "Learn more" stays optically centred. */
-    .learn-row { position: relative; padding: 20px 0 44px; }
-    .learn-row .menu-learn-more { padding: 0; }
-    .learn-row .promo-toggle {
-      position: absolute; top: 16px; right: var(--gutter);
+    .learn-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 0 44px;
     }
 
     /* Below-the-fold promotional content — hidden when the setting is on.
        These are the body-level sections starting at the hero.
-       NOTE: the on/off control itself stays visible (so users can re-enable);
-       "Learn more" hides with the promo content. */
+       NOTE: the on/off control itself stays visible (so users can re-enable). */
     body.promo-hidden .hero,
     body.promo-hidden .wave-white-blue,
     body.promo-hidden .blue-section,
@@ -1261,13 +1344,10 @@
     body.promo-hidden .stats-section,
     body.promo-hidden .teal-section,
     body.promo-hidden .wave-teal-white,
-    body.promo-hidden .press-section,
-    body.promo-hidden .menu-learn-more { display: none !important; }
+    body.promo-hidden .press-section { display: none !important; }
 
     @media (max-width: 767px) {
-      /* Mobile: control sits between the docked banner and "Learn more", centred. */
-      .learn-row { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0 36px; }
-      .learn-row .promo-toggle { position: static; }
+      .learn-row { padding: 12px 0 36px; }
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -1322,7 +1402,7 @@
          --color-background-secondary) instead of a neutral gray. */
       transition: background-color .15s ease;
     }
-    .veve-tile:hover { background-color: #E7E9FB; }
+    .veve-tile:hover { background-color: var(--bg-tertiary); }
     .veve-tile img {
       width: 64px; height: 64px; border-radius: 50%; display: block;
       box-shadow: 0 1px 4px rgba(32, 44, 70, .12);
@@ -1349,17 +1429,67 @@
     .cta-slim {
       max-width: 1040px; margin: 0 auto 28px;
       display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap;
-      background: #F6F6FF; border: 1px solid var(--border);
-      border-radius: 14px; padding: 12px 20px;
+      background: var(--bg-primary); border-radius: 14px; padding: 12px 20px;
     }
     .cta-slim__item { display: flex; align-items: center; gap: 12px; }
+    .cta-slim__item .btn { margin-left: 8px; flex-shrink: 0; }
     .cta-slim__item img { border-radius: 8px; flex-shrink: 0; }
-    .cta-slim__text { font-size: 13px; font-weight: 400; line-height: 18px; color: var(--text-primary); }
+    .cta-slim__text { font-size: 14px; font-weight: 400; line-height: 20px; color: var(--text-primary); } /* body-sm / font-size-14 */
     /* Second CTA copy is longer on mobile ("…on desktop."). */
     .cta-slim__text--mobile { display: none; }
     .cta-slim__divider { width: 1px; height: 28px; background: var(--border); }
-    /* Install on Chrome label uses the dark "Get the app" font color, not white. */
-    .cta-slim .btn-teal, .cta-slim .btn-teal:hover { color: var(--text-primary); }
+
+    /* DS product buttons — promo banner only (see components/button) */
+    .cta-slim .btn {
+      opacity: 1;
+      gap: var(--spacing-8);
+      font-weight: var(--font-weight-regular);
+      transition: color 0.45s ease, border-color 0.55s cubic-bezier(0.4,0,0.2,1), background-color 0.15s ease;
+    }
+    .cta-slim .btn:hover { opacity: 1; }
+    .cta-slim .btn--product-selected,
+    .cta-slim .btn--product-brand-blue {
+      padding: var(--spacing-12) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+    }
+    .cta-slim .btn--product-selected::before,
+    .cta-slim .btn--product-brand-blue::before { display: none; }
+    .cta-slim .btn--product-selected {
+      background-color: transparent;
+      color: var(--text-primary);
+      border: var(--border-stroke-md) solid var(--color-stroke-primary-button);
+    }
+    .cta-slim .btn--product-selected:hover {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-whisper-50);
+    }
+    [data-theme="dark"] .cta-slim .btn--product-selected:hover {
+      color: var(--color-text-inverted);
+    }
+    .cta-slim .btn--product-brand-blue {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+      font-weight: var(--font-weight-bold);
+      border: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .cta-slim .btn--product-brand-blue:hover {
+      background-color: var(--color-button-brandbluehover);
+    }
+    [data-theme="dark"] .cta-slim .btn--product-brand-blue {
+      background-color: var(--color-button-brandblue);
+      color: #09090A; /* color-black-900 — DS dark product-brand-blue */
+    }
+    [data-theme="dark"] .cta-slim .btn--product-brand-blue:hover {
+      background-color: var(--color-button-brandbluehover);
+    }
+    .cta-slim .btn:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
 
     body.promo-hidden .cta-slim { display: none !important; }
 
@@ -1367,7 +1497,7 @@
        .promo-dock is the containing block (news hub + banner). The banner uses
        position: sticky; bottom so it floats at the bottom of the viewport while
        Top news scrolls, then docks at the end of .promo-dock — i.e. just above
-       "Learn more". A lifted shadow distinguishes it while floating. */
+       the promo toggle. A lifted shadow distinguishes it while floating. */
     .promo-dock { position: relative; }
     .cta-slim--float {
       position: sticky; bottom: 8px; z-index: 50;
@@ -1375,12 +1505,13 @@
     }
 
     @media (max-width: 560px) {
-      .cta-slim { flex-direction: column; align-items: stretch; gap: 0; padding: 4px 16px; margin: 0 8px 28px; }
+      .cta-slim { flex-direction: column; align-items: stretch; gap: 16px; padding: 16px; margin: 0 8px 28px; }
       /* Icon + message left, button right */
-      .cta-slim__item { justify-content: flex-start; padding: 12px 0; }
+      .cta-slim__item { justify-content: flex-start; align-items: center; padding: 0; }
+      .cta-slim__text { flex: 1; min-width: 0; text-align: left; }
       .cta-slim__item .btn { margin-left: auto; flex-shrink: 0; }
       /* Horizontal divider sits between the two CTAs */
-      .cta-slim__divider { display: block; width: 100%; height: 1px; }
+      .cta-slim__divider { display: block; width: 100%; height: 1px; margin: 0; }
       /* Mobile copy swap for the second CTA */
       .cta-slim__text--desktop { display: none; }
       .cta-slim__text--mobile  { display: inline; }
@@ -1391,64 +1522,94 @@
        Editorial only (no personalisation / reactions). Neutral
        placeholder media. Stays visible in both promo states.
     ════════════════════════════════════════════════════════════ */
-    .news-hub { max-width: 1040px; margin: 0 auto 48px; text-align: left; }
+    .news-hub { max-width: 1040px; margin: 0 auto 48px; text-align: left; background: var(--bg-primary); }
     .news-hub__head {
-      display: flex; align-items: center; justify-content: flex-start; gap: 8px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
       margin-bottom: 20px;
+    }
+    .news-hub__head-left {
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
     }
     .news-hub__title {
       font-size: 22px; font-weight: 600; line-height: 30px; letter-spacing: 0; /* h3 */
       color: var(--text-primary);
     }
-    .news-hub__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .news-hub__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px 24px; }
 
+    /* News cards — flat layout matching news-hub-prototype landing (serp-all-news-card) */
     .nh-card {
       position: relative;
-      display: flex; flex-direction: column; gap: 10px;
-      background: var(--bg-white);
-      border: 1px solid var(--border);
-      border-radius: 14px; padding: 12px; text-align: left;
-      transition: box-shadow .15s ease, transform .15s ease;
+      display: flex; flex-direction: column; gap: 8px;
+      text-align: left;
     }
-    .nh-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
     /* Stretched link: the whole card navigates to the article. The non-interactive
        spans pass clicks through to it; the AV link opts back in above this layer. */
-    .nh-card__link { position: absolute; inset: 0; z-index: 0; border-radius: 14px; }
+    .nh-card__link { position: absolute; inset: 0; z-index: 0; border-radius: 0; }
     .nh-card__link:focus-visible { outline: 2px solid var(--border-focused); outline-offset: 3px; }
     .nh-card__media, .nh-card__title, .nh-card__meta { pointer-events: none; }
     .nh-card__media {
-      width: 100%; aspect-ratio: 16 / 9; border-radius: 8px;
-      background: linear-gradient(135deg, #e7e9fb, #dee0f7); /* neutral placeholder */
+      order: 1;
+      width: 100%; aspect-ratio: 16 / 9;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--bg-secondary);
+      transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1);
     }
-    .nh-card__title {
-      font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: 0; /* h6 */
-      color: var(--text-primary);
-      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-      transition: color .12s ease;
+    .nh-card__link:hover ~ .nh-card__media { transform: scale(1.03); }
+    .nh-card__meta {
+      order: 2;
+      display: flex; align-items: center; flex-wrap: nowrap;
+      gap: 8px; min-width: 0; overflow: hidden;
+      font-size: 12px; line-height: 18px; letter-spacing: 0.2px;
+      color: var(--text-muted);
     }
-    .nh-card:hover .nh-card__title { color: var(--text-link); }
-    .nh-card__meta { display: flex; align-items: center; gap: 8px; margin-top: auto; }
-    .nh-card__pub-icon { width: 18px; height: 18px; border-radius: 50%; background: #dee0f7; flex-shrink: 0; }
+    .nh-card__pub-icon {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--color-button-productfilled);
+      flex-shrink: 0;
+    }
     .nh-card__pub {
-      font-size: 12px; font-weight: 500; line-height: 18px; color: var(--text-secondary);
+      flex: 0 1 auto; min-width: 0;
+      font-size: 12px; font-weight: 500; line-height: 18px;
+      color: var(--text-primary);
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .nh-card__dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; }
-    .nh-card__time { font-size: 12px; line-height: 18px; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+    .nh-card__dot {
+      flex: 0 0 auto;
+      width: auto; height: auto; border-radius: 0; background: none;
+      color: var(--text-muted); line-height: 1;
+      font-size: 12px;
+    }
+    .nh-card__dot::before { content: '·'; }
+    .nh-card__time {
+      flex: 0 0 auto;
+      font-size: 12px; line-height: 18px;
+      color: var(--text-secondary); white-space: nowrap;
+    }
+    .nh-card__title {
+      order: 3;
+      margin: 0;
+      font-size: 16px; font-weight: 400; line-height: 24px; letter-spacing: 0;
+      color: var(--text-link);
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .nh-card__link:hover ~ .nh-card__title { text-decoration: underline; }
 
-    /* "Visit in Anonymous View" — styling mirrors the Search Result component
-       (.algo-result__av-badge): icon = color/icon/secondary, label = color/text/link. */
+    /* "Visit in Anonymous View" — matches landing serp-all-news-card__av-link */
     .nh-card__av {
+      order: 4;
       display: inline-flex; align-items: center; gap: 6px;
-      align-self: flex-start; position: relative; z-index: 1;
+      align-self: flex-start; margin-top: auto; padding-top: 4px;
+      position: relative; z-index: 1;
+      font-size: 12px; line-height: 18px; letter-spacing: 0.2px;
+      color: var(--text-link); text-decoration: none;
     }
     .nh-card__av-icon { width: 16px; height: 16px; flex-shrink: 0; color: #5668F1; }
     [data-theme="dark"] .nh-card__av-icon { color: #A0ABFF; }
-    .nh-card__av-label {
-      font-size: 12px; font-weight: 400; line-height: 18px;
-      color: var(--text-link); text-decoration: none;
-    }
-    .nh-card__av:hover .nh-card__av-label { text-decoration: underline; }
+    .nh-card__av-label { color: inherit; text-decoration: none; }
+    .nh-card__av:hover { text-decoration: underline; }
     .nh-card__av:focus-visible { outline: 2px solid var(--border-focused); outline-offset: 2px; border-radius: 6px; }
 
     /* News hub: kebab options menu (About / Send feedback) + one-time intro note. */
@@ -1484,12 +1645,17 @@
     .nh-menu-item:focus-visible { outline: 2px solid var(--border-focused); outline-offset: -2px; }
 
     .nh-note {
-      display: flex; align-items: flex-start; gap: 12px;
-      background: var(--brand-blue-ltr); border: 1px solid var(--border);
-      border-radius: 12px; padding: 12px 14px; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 1; min-width: 0; margin-left: auto;
+      background: var(--bg-tertiary);
+      border-radius: 8px; padding: 6px 10px;
     }
     .nh-note[hidden] { display: none; }
-    .nh-note__text { flex: 1; font-size: 13px; line-height: 19px; color: var(--text-secondary); }
+    .nh-note__text {
+      flex: 1; min-width: 0;
+      font-size: 13px; line-height: 19px; color: var(--text-secondary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
     .nh-note__link { color: var(--text-link); font-weight: 500; text-decoration: none; }
     .nh-note__link:hover { text-decoration: underline; }
     .nh-note__dismiss {
@@ -1505,10 +1671,10 @@
     @media (max-width: 980px) { .news-hub__grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 560px) {
       /* Mobile: 2 news cards per row */
-      .news-hub__grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      /* Mobile: push the options menu out to the far right */
-      .news-hub__head { gap: 24px; }
-      .nh-menu { margin-left: auto; }
+      .news-hub__grid { grid-template-columns: repeat(2, 1fr); gap: 20px 12px; }
+      .news-hub__head { flex-wrap: wrap; gap: 12px; }
+      .nh-note { flex: 1 1 100%; margin-left: 0; }
+      .nh-note__text { white-space: normal; }
       /* Keep the dropdown inside the viewport when anchored far-right */
       .nh-menu-list { left: auto; right: 0; }
     }
@@ -1532,7 +1698,7 @@
     .legacy-footer {
       width: 100%;
       padding: 18px var(--gutter);
-      background: var(--header-bg);
+      background: var(--bg-primary);
       border-top: 1px solid var(--border);
     }
     .legacy-footer__links {
@@ -1630,13 +1796,24 @@
     </svg>
     <!-- Search bar — hidden on mobile -->
     <div class="sticky-search">
-      <input type="search" placeholder="Search the web privately…" aria-label="Search">
-      <span class="srch-icon">
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-          <circle cx="8.5" cy="8.5" r="5.75" stroke="currentColor" stroke-width="1.75"/>
-          <path d="M13.5 13.5l3.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-        </svg>
-      </span>
+      <form class="search-field search-field--homepage search-field--desktop" role="search">
+        <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search" autocomplete="off" spellcheck="false">
+        <div class="search-field__actions">
+          <button type="button" class="search-field__clear" aria-label="Clear search" tabindex="-1">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <div class="search-field__divider" aria-hidden="true"></div>
+          <button type="submit" class="search-field__submit" aria-label="Submit search">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </form>
     </div>
     <div class="sticky-header-right">
       <!-- Desktop CTA: Install on Chrome (matches menu card style) -->
@@ -1648,35 +1825,35 @@
         <span class="btn__label">Get the app</span>
       </a>
       <!-- Hamburger -->
-      <button class="hdr-btn" aria-label="Menu" style="width:44px;height:44px;pointer-events:all;">
-        <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
-          <path d="M0 1h20M0 7h20M0 13h20" stroke="#5B627A" stroke-width="1.6" stroke-linecap="round"/>
+      <button type="button" class="hdr-btn homepage-header__menu" aria-label="Open menu" style="pointer-events:all;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <line x1="1" y1="4" x2="19" y2="4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="1" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="1" y1="16" x2="19" y2="16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
         </svg>
       </button>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       FIXED HEADER
-       Figma: Frame 1171277866 2066:1898 — 24×24 settings
-              Group 1171277367 2066:1761 — 32×32 hamburger
-  ══════════════════════════════════════════════════════════════ -->
-  <header class="site-header">
-    <!-- Theme switcher (prototype chrome — not in production design) -->
-    <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle colour theme">
-      <svg id="theme-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
-        <!-- Sun icon (shown in light mode) -->
-        <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.22 3.22l1.42 1.42M11.36 11.36l1.42 1.42M3.22 12.78l1.42-1.42M11.36 4.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-      <span id="theme-label">Light</span>
-    </button>
-    <!-- Hamburger -->
-    <button class="hdr-btn" aria-label="Menu" style="width:44px;height:44px;">
-      <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
-        <path d="M0 1h20M0 7h20M0 13h20" stroke="#5B627A" stroke-width="1.6" stroke-linecap="round"/>
-      </svg>
-    </button>
+  <!-- Theme switcher (prototype chrome — not in production design) -->
+  <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle colour theme">
+    <svg id="theme-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.22 3.22l1.42 1.42M11.36 11.36l1.42 1.42M3.22 12.78l1.42-1.42M11.36 4.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <span id="theme-label">Light</span>
+  </button>
+
+  <header class="homepage-header">
+    <div class="homepage-header__actions">
+      <button type="button" class="homepage-header__menu" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <line x1="1" y1="4" x2="19" y2="4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="1" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          <line x1="1" y1="16" x2="19" y2="16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
   </header>
 
   <!-- ═══════════════════════════════════════════════════════════
@@ -1689,46 +1866,45 @@
   <section class="menu-panel">
     <div class="menu-inner">
 
-      <!-- Figma: Frame 1171277924 > startpage-logo 2066:1749 — 280×63
-           Inlined so CSS currentColor drives the wordmark ink (light=dark, dark=white)
-           while the gradient underline is always preserved. -->
-      <svg class="startpage-logo" width="280" height="63" viewBox="0 0 280 63" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Startpage" role="img">
-        <g clip-path="url(#logo-main-clip)">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M0.676707 55.6609C1.35561 54.6864 2.47096 54.0529 3.97425 53.8093C46.3573 46.8417 89.3224 46.793 131.705 53.6144C132.869 53.8093 133.597 54.1504 133.985 54.5402C134.324 54.8813 134.47 55.3198 134.373 55.9532C134.276 56.4892 134.033 56.8302 133.645 57.0251C133.16 57.2688 132.384 57.3662 131.221 57.22C89.2254 52.104 46.9393 53.7606 5.52603 62.1899C5.13809 62.2387 4.75014 62.2874 4.41069 62.2874H4.07123C3.05288 62.2387 2.32548 61.8976 1.88904 61.6052C0.919173 60.9718 0.288761 59.9486 0.0462948 58.7792C-0.0991849 57.6098 0.094788 56.4892 0.676707 55.6609Z" fill="url(#logo-main-grad)"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M161.725 12.1318C164.343 12.1318 166.671 12.7656 168.708 14.1299C170.745 15.4942 172.296 17.346 173.46 19.7334C174.624 22.1695 175.206 24.9952 175.206 28.1621C175.206 31.3292 174.624 34.1066 173.46 36.4941C172.296 38.8816 170.745 40.7332 168.708 42C166.671 43.3156 164.343 43.9492 161.725 43.9492C159.252 43.9492 157.069 43.3647 155.227 42.1953C153.917 41.367 152.947 40.295 152.22 38.9795V57.0068H143.152V21.6816C143.152 20.22 143.103 18.7585 143.055 17.2969C143.006 15.8351 142.861 14.3729 142.667 12.9111H151.202L151.784 18.125C152.463 16.4198 153.578 15.0065 155.227 13.9346C157.069 12.7165 159.252 12.1319 161.725 12.1318ZM159.154 19.0508C156.875 19.0509 155.129 19.8306 153.917 21.3896C152.705 22.9487 152.123 25.1901 152.123 28.0645C152.123 30.939 152.705 33.181 153.917 34.6914C155.129 36.2018 156.875 36.9813 159.154 36.9814C161.385 36.9814 163.083 36.2506 164.295 34.7402C165.507 33.2298 166.089 31.0367 166.138 28.1133C166.138 25.2874 165.507 23.0463 164.295 21.4385C163.083 19.8793 161.336 19.0508 159.154 19.0508Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M228.161 12.1318C230.634 12.1319 232.816 12.7655 234.707 13.9834C236.065 14.8604 237.132 15.9325 237.859 17.248V12.9111H246.879V42.0488C246.879 46.97 245.473 50.6734 242.709 53.207C239.945 55.7407 235.822 57.0068 230.439 57.0068C225.639 57.0068 221.42 56.0817 217.832 54.1816L219.189 47.4082C221.032 48.3339 222.826 49.0166 224.669 49.4551C226.512 49.8936 228.354 50.1367 230.148 50.1367C232.767 50.1367 234.707 49.5521 235.968 48.334C237.277 47.1159 237.908 45.2642 237.908 42.7793V37.4199C237.472 38.0533 236.986 38.6868 236.404 39.2715C235.386 40.2947 234.174 41.0746 232.768 41.708C231.313 42.3414 229.81 42.6337 228.161 42.6338C225.494 42.6338 223.166 42.0002 221.129 40.7334C219.092 39.4666 217.492 37.7119 216.328 35.4219C215.164 33.1319 214.583 30.4522 214.583 27.3828C214.583 24.3132 215.164 21.6816 216.328 19.3916C217.492 17.1504 219.092 15.3478 221.129 14.0811C223.166 12.7655 225.543 12.1318 228.161 12.1318ZM230.828 19.0996C228.597 19.0996 226.803 19.8303 225.542 21.292C224.233 22.7537 223.603 24.7516 223.603 27.334C223.603 29.9164 224.233 31.9631 225.542 33.4248C226.851 34.9352 228.597 35.666 230.779 35.666C232.961 35.666 234.707 34.9351 235.968 33.4736C237.229 32.0119 237.86 29.9652 237.908 27.3828C237.908 24.8492 237.326 22.8025 236.065 21.3408C234.805 19.8304 233.059 19.0997 230.828 19.0996Z" fill="currentColor"/>
-          <path d="M17.8936 0C19.9302 0 21.9187 0.195128 23.8584 0.584961C25.798 1.02353 27.5925 1.55912 29.2412 2.29004C30.8414 2.97228 32.248 3.89852 33.3633 4.92188L30.3564 11.6963C28.4167 10.2343 26.4289 9.11283 24.3438 8.38184C22.2586 7.65087 20.1733 7.30959 17.9912 7.30957C15.5667 7.30957 13.6266 7.79694 12.1719 8.77148C10.7172 9.74606 9.98939 11.0621 9.98926 12.7676C9.98926 13.6935 10.2325 14.4739 10.8145 15.1074C11.3964 15.7408 12.3179 16.3253 13.627 16.8125C14.9363 17.3485 16.7307 17.836 19.0098 18.3721C21.6767 18.9568 24.0047 19.5904 25.9443 20.3701C27.9323 21.1498 29.5322 22.0274 30.793 23.002C32.0537 23.9766 32.9754 25.1461 33.5088 26.4131C34.1392 27.7288 34.4306 29.1909 34.4307 30.8965C34.4307 33.5768 33.751 35.9159 32.3447 37.8652C30.9384 39.8146 28.9018 41.3253 26.2832 42.3975C23.6162 43.4695 20.4643 44.0058 16.7305 44.0059C14.5968 44.0059 12.4625 43.8108 10.4258 43.4209C8.3892 43.031 6.44942 42.4468 4.65527 41.7158C2.86104 40.9848 1.30931 40.0585 0 39.0352L3.05469 32.2607C5.18839 33.7227 7.37121 34.8442 9.65039 35.5752C11.9295 36.3061 14.3056 36.6475 16.8271 36.6475C19.5428 36.6475 21.6282 36.2082 23.083 35.3311C24.5375 34.4539 25.2645 33.2359 25.2646 31.6768C25.2646 30.7508 24.9257 29.9704 24.3438 29.3369C23.7618 28.6547 22.7917 28.1191 21.4824 27.6318C20.1731 27.1445 18.3785 26.6573 16.1963 26.1699C13.4326 25.5852 11.0567 24.9515 9.11719 24.1719C7.17746 23.4409 5.57659 22.5634 4.36426 21.54C3.15197 20.5654 2.27918 19.3957 1.69727 18.0312C1.16384 16.6667 0.873047 15.1069 0.873047 13.3525C0.873102 10.8185 1.60059 8.57698 3.00684 6.53027C4.46163 4.53226 6.45007 2.92348 8.97168 1.75391C11.5416 0.58453 14.4995 5.15001e-05 17.8936 0Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M72.2549 12.1318C74.7279 12.1318 76.8618 12.7166 78.7529 13.9346C80.1107 14.8116 81.1291 15.8838 81.8564 17.1992H81.9053V12.9111H90.8281V43.5107H81.9053V38.9795C81.1779 40.295 80.1595 41.4159 78.8018 42.2441C76.9106 43.4135 74.7283 43.998 72.3037 43.998C69.6367 43.998 67.3091 43.3155 65.2725 42.0488C63.2357 40.7333 61.6349 38.9305 60.5195 36.543C59.4042 34.1555 58.8223 31.378 58.8223 28.2109C58.8223 24.9954 59.3559 22.2183 60.5195 19.7822C61.6834 17.346 63.2357 15.4942 65.2725 14.1299C67.3091 12.8145 69.6364 12.1319 72.2549 12.1318ZM74.874 19.1484C72.6918 19.1484 70.9454 19.9282 69.6846 21.5361C68.4239 23.144 67.794 25.3365 67.7939 28.2109C67.7939 31.037 68.4244 33.2298 69.6367 34.7402C70.849 36.2506 72.5949 36.9814 74.874 36.9814C77.1045 36.9814 78.8014 36.2017 80.0137 34.6914C81.226 33.1809 81.8564 30.9881 81.8564 28.1621C81.8564 25.2388 81.226 23.0464 80.0137 21.4873C78.8014 19.9281 77.0561 19.1485 74.874 19.1484Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M191.646 12.1318C194.119 12.1319 196.252 12.7165 198.144 13.9346C199.501 14.8116 200.52 15.8837 201.247 17.1992V12.9111H210.218V43.5107H201.296V38.9795C200.569 40.295 199.55 41.4158 198.192 42.2441C196.301 43.4135 194.118 43.998 191.693 43.998C189.026 43.998 186.699 43.3156 184.662 42.0488C182.625 40.7333 181.025 38.9304 179.91 36.543C178.795 34.1555 178.213 31.378 178.213 28.2109C178.213 24.9953 178.746 22.2183 179.91 19.7822C181.074 17.3461 182.625 15.4942 184.662 14.1299C186.699 12.8143 189.027 12.1318 191.646 12.1318ZM194.312 19.1484C192.13 19.1484 190.385 19.9282 189.124 21.5361C187.863 23.144 187.232 25.385 187.232 28.2109C187.232 31.037 187.863 33.2298 189.075 34.7402C190.288 36.2506 192.033 36.9814 194.312 36.9814C196.543 36.9814 198.241 36.2019 199.453 34.6914C200.665 33.181 201.247 30.988 201.296 28.1621C201.296 25.239 200.665 23.0464 199.453 21.4873C198.241 19.9281 196.495 19.1484 194.312 19.1484Z" fill="currentColor"/>
-          <path d="M47.7168 12.8633H55.4756V19.6846H47.7168V31.6221C47.7168 32.7914 47.9591 33.7662 48.3955 34.4971C48.8319 35.2279 49.4142 35.7643 50.1416 36.0566C50.869 36.349 51.6454 36.4951 52.4697 36.4951C52.9545 36.4951 53.4397 36.4462 53.876 36.3975C54.3608 36.3 54.8939 36.2019 55.4756 36.1045V43.0723C54.6513 43.4133 53.7784 43.6574 52.9541 43.7549C52.0813 43.901 51.2081 43.9492 50.2383 43.9492C46.5045 43.9491 43.6434 42.8772 41.6553 40.7334C39.6672 38.5896 38.6973 35.5689 38.6973 31.7686V5.75L47.7168 2.79297V12.8633Z" fill="currentColor"/>
-          <path d="M130.737 12.8633H138.496V19.6846H130.737V31.6221C130.737 32.7914 130.98 33.7662 131.416 34.4971C131.852 35.2279 132.435 35.7633 133.162 36.0557C133.89 36.348 134.666 36.4951 135.49 36.4951C135.975 36.4951 136.46 36.4462 136.896 36.3975C137.381 36.3 137.914 36.2019 138.496 36.1045V43.0723C137.672 43.4133 136.799 43.6574 135.975 43.7549C135.102 43.901 134.229 43.9492 133.259 43.9492C129.525 43.9491 126.664 42.8772 124.676 40.7334C122.688 38.5896 121.718 35.5689 121.718 31.7686V5.75L130.737 2.79297V12.8633Z" fill="currentColor"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M266.131 11.9863C268.943 11.9863 271.417 12.6199 273.502 13.8867C275.587 15.1535 277.187 16.9074 278.303 19.2461C279.418 21.5849 280 24.3134 280 27.4805L279.903 30.501H260.069C260.36 32.3038 260.943 33.717 261.815 34.7402C263.173 36.2506 265.21 37.0303 267.974 37.0303C269.574 37.0303 271.174 36.7868 272.726 36.251C274.277 35.715 275.733 34.9842 277.042 34.0098L279.418 40.1484C277.963 41.3178 276.169 42.1958 274.035 42.8779C271.95 43.5113 269.816 43.8516 267.634 43.8516C264.24 43.8515 261.33 43.1699 258.857 41.9033C256.384 40.5878 254.493 38.7847 253.184 36.3975C251.874 34.0587 251.195 31.2323 251.195 27.9678C251.195 24.8007 251.874 22.0232 253.135 19.6357C254.396 17.1996 256.141 15.3477 258.372 13.9834C260.603 12.6679 263.173 11.9863 266.131 11.9863ZM266.373 18.418C264.288 18.4181 262.688 19.1489 261.524 20.6592C260.846 21.6337 260.36 22.803 260.069 24.3135H272.192C271.998 22.6569 271.562 21.3417 270.786 20.3672C269.768 19.0516 268.313 18.418 266.373 18.418Z" fill="currentColor"/>
-          <path d="M115.656 12.1807C116.287 12.1807 116.821 12.2297 117.306 12.3271V20.4639C116.336 20.1715 115.365 20.0254 114.396 20.0254C112.795 20.0254 111.438 20.3666 110.371 20.9512C109.304 21.5846 108.479 22.4126 107.897 23.5332C107.316 24.6539 107.024 25.97 107.024 27.4805V43.4619H97.9561V21.6328C97.956 20.1712 97.9079 18.7096 97.8594 17.248C97.8109 15.7865 97.6656 14.3249 97.4717 12.8633H106.007L106.637 18.1738C107.267 16.5661 108.189 15.2508 109.449 14.2764C111.243 12.8634 113.329 12.1807 115.656 12.1807Z" fill="currentColor"/>
-          <path d="M47.7168 2.79297V2.77734H47.7656L47.7168 2.79297Z" fill="currentColor"/>
-          <path d="M130.737 2.79297V2.77734H130.786L130.737 2.79297Z" fill="currentColor"/>
-        </g>
-        <defs>
-          <linearGradient id="logo-main-grad" x1="13.8086" y1="49.1745" x2="134.178" y2="62.2781" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#6677FB"/>
-            <stop offset="1" stop-color="#29DDCC"/>
-          </linearGradient>
-          <clipPath id="logo-main-clip"><rect width="280" height="62.7083" fill="white"/></clipPath>
-        </defs>
-      </svg>
-      <p class="menu-tagline">The world's most private search engine.</p>
-
-      <!-- Figma: Frame 1171277920 2066:1908 — 686×56, x=377 -->
-      <div class="menu-search">
-        <input type="search" placeholder="Search the web privately…" aria-label="Search">
-        <span class="srch-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="8.5" cy="8.5" r="5.75" stroke="currentColor" stroke-width="1.75"/>
-            <path d="M13.5 13.5l3.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+      <div class="menu-hero">
+        <a href="#" class="startpage-logo" aria-label="Startpage home">
+          <svg class="startpage-logo__svg" viewBox="0 0 104 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g clip-path="url(#logo-main-clip)">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M0.468313 20.5874C0.720478 20.23 1.13475 19.9976 1.69311 19.9083C17.4354 17.3527 33.3938 17.3349 49.1361 19.8368C49.5684 19.9083 49.8386 20.0334 49.9827 20.1763C50.1088 20.3014 50.1628 20.4623 50.1268 20.6946C50.0908 20.8912 50.0007 21.0163 49.8566 21.0878C49.6765 21.1771 49.3883 21.2129 48.956 21.1593C33.3578 19.2828 17.6515 19.8904 2.26949 22.9821C2.1254 23 1.9813 23.0178 1.85522 23.0178H1.72914C1.35089 23 1.08071 22.8749 0.918607 22.7676C0.558372 22.5353 0.324219 22.16 0.23416 21.7311C0.180125 21.3022 0.252172 20.8912 0.468313 20.5874Z" fill="url(#logo-main-grad)"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M11.4375 8.43512C10.9692 8.0777 10.3748 7.75602 9.6363 7.47009C8.91583 7.18415 8.05126 6.95183 7.06062 6.73737C6.21406 6.54079 5.54763 6.36208 5.06131 6.1655C4.57499 5.98679 4.23277 5.77234 4.01663 5.54002C3.80048 5.30769 3.71043 5.02176 3.71043 4.68221C3.71043 4.05672 3.9806 3.5742 4.52096 3.21678C5.06131 2.85936 5.78178 2.68065 6.68237 2.68065C7.4929 2.68065 8.2674 2.80575 9.04191 3.07382C9.81642 3.34188 10.5549 3.75291 11.2754 4.28904L12.3921 1.80497C11.9778 1.42968 11.4555 1.09013 10.8611 0.839938C10.2487 0.571873 9.58226 0.375291 8.86179 0.214452C8.14132 0.0714841 7.40284 0 6.64635 0C5.38552 0 4.2868 0.214452 3.33218 0.643357C2.39557 1.07226 1.65708 1.662 1.11673 2.39472C0.594388 3.1453 0.324212 3.96737 0.324212 4.89666C0.324212 5.54002 0.432283 6.11189 0.630412 6.61228C0.846553 7.11267 1.17077 7.54157 1.62106 7.89899C2.07135 8.27428 2.66574 8.59596 3.38621 8.86402C4.10668 9.14996 4.98926 9.38228 6.01593 9.59674C6.82646 9.77545 7.4929 9.95416 7.97922 10.1329C8.46553 10.3116 8.82577 10.5082 9.04191 10.7584C9.25805 10.9907 9.38413 11.2766 9.38413 11.6162C9.38413 12.188 9.11396 12.6348 8.5736 12.9565C8.03325 13.2782 7.25875 13.439 6.25009 13.439C5.31347 13.439 4.4309 13.3139 3.58434 13.0458C2.73779 12.7778 1.92726 12.3667 1.13474 11.8306L0 14.3147C0.486318 14.69 1.06269 15.0295 1.72913 15.2976C2.39557 15.5657 3.11604 15.7801 3.87253 15.9231C4.62903 16.066 5.42154 16.1375 6.21406 16.1375C7.60097 16.1375 8.77173 15.9409 9.76238 15.5478C10.735 15.1546 11.4915 14.6006 12.0139 13.8858C12.5362 13.1709 12.7884 12.3131 12.7884 11.3302C12.7884 10.7047 12.6803 10.1686 12.4461 9.68609C12.248 9.22145 11.9058 8.79254 11.4375 8.43512ZM17.7235 1.02452V4.71799H20.6054V7.21993H17.7235V11.5983C17.7235 12.0272 17.8136 12.3847 17.9757 12.6527C18.1378 12.9208 18.354 13.1174 18.6241 13.2246C18.8943 13.3318 19.1825 13.3854 19.4887 13.3854C19.6688 13.3854 19.8489 13.3676 20.011 13.3497C20.1912 13.3139 20.3893 13.2782 20.6054 13.2425V15.798C20.2992 15.9231 19.975 16.0125 19.6688 16.0482C19.3446 16.1018 19.0204 16.1197 18.6602 16.1197C17.2733 16.1197 16.2106 15.7265 15.4721 14.9402C14.7336 14.1539 14.3734 13.0459 14.3734 11.6519V2.10882L17.7235 1.02452ZM29.2511 5.111C29.7554 5.43268 30.1337 5.82584 30.4039 6.30836H30.4219V4.73571H33.736V15.9587H30.4219V14.2967C30.1517 14.7792 29.7734 15.1903 29.2691 15.4941C28.5666 15.923 27.7561 16.1374 26.8555 16.1374C25.8649 16.1374 25.0003 15.8872 24.2438 15.4226C23.4873 14.9401 22.8929 14.2788 22.4787 13.4032C22.0644 12.5275 21.8483 11.5088 21.8483 10.3472C21.8483 9.16772 22.0464 8.14908 22.4787 7.25552C22.9109 6.36197 23.4873 5.68287 24.2438 5.18249C25.0003 4.69997 25.8649 4.44977 26.8375 4.44977C27.7561 4.44977 28.5486 4.66423 29.2511 5.111ZM27.8102 13.564C28.6387 13.564 29.2691 13.2781 29.7194 12.7241C30.1697 12.1701 30.4039 11.3659 30.4039 10.3293C30.4039 9.25708 30.1697 8.45288 29.7194 7.88101C29.2691 7.30914 28.6207 7.0232 27.8102 7.0232C26.9996 7.0232 26.3512 7.30914 25.8829 7.89888C25.4146 8.48863 25.1804 9.29282 25.1804 10.3472C25.1804 11.3837 25.4146 12.1879 25.8649 12.7419C26.3152 13.2959 26.9636 13.564 27.8102 13.564ZM48.5597 1.02452V4.71799H51.4416V7.21993H48.5597V11.5983C48.5597 12.0272 48.6498 12.3847 48.8119 12.6527C48.974 12.9208 49.1901 13.1174 49.4603 13.2246C49.7305 13.3318 50.0187 13.3854 50.3249 13.3854C50.505 13.3854 50.6851 13.3676 50.8472 13.3497C51.0273 13.3139 51.2255 13.2782 51.4416 13.2425V15.798C51.1354 15.9231 50.8112 16.0125 50.505 16.0482C50.1808 16.1018 49.8566 16.1197 49.4963 16.1197C48.1094 16.1197 47.0467 15.7265 46.3083 14.9402C45.5698 14.1539 45.2095 13.0459 45.2095 11.6519V2.10882L48.5597 1.02452ZM60.0693 4.44977C61.0419 4.44977 61.9065 4.6821 62.663 5.18249C63.4195 5.68287 63.9958 6.36197 64.4281 7.23765C64.8604 8.1312 65.0766 9.16772 65.0766 10.3293C65.0766 11.491 64.8604 12.5096 64.4281 13.3853C63.9958 14.261 63.4195 14.9401 62.663 15.4047C61.9065 15.8872 61.0419 16.1196 60.0693 16.1196C59.1507 16.1196 58.3402 15.9051 57.6557 15.4762C57.1694 15.1724 56.8091 14.7792 56.539 14.2967V20.909H53.1708V4.73571H56.1607L56.3769 6.64791C56.629 6.02242 57.0433 5.50416 57.6557 5.111C58.3402 4.66423 59.1507 4.44977 60.0693 4.44977ZM59.1147 13.564C59.9432 13.564 60.5736 13.2959 61.0239 12.7419C61.4742 12.1879 61.6903 11.3837 61.7084 10.3115C61.7084 9.27495 61.4742 8.45288 61.0239 7.86314C60.5736 7.29127 59.9252 6.98746 59.1147 6.98746C58.2681 6.98746 57.6197 7.2734 57.1694 7.84527C56.7191 8.41714 56.503 9.23921 56.503 10.2936C56.503 11.348 56.7191 12.1701 57.1694 12.7241C57.6197 13.2781 58.2681 13.564 59.1147 13.564ZM74.7488 6.30836C74.4787 5.82584 74.1004 5.43268 73.5961 5.111C72.8936 4.66423 72.1011 4.44977 71.1825 4.44977C70.2099 4.44977 69.3453 4.69997 68.5888 5.18249C67.8323 5.68287 67.2559 6.36197 66.8236 7.25552C66.3914 8.14908 66.1932 9.16772 66.1932 10.3472C66.1932 11.5088 66.4094 12.5275 66.8236 13.4032C67.2379 14.2788 67.8323 14.9401 68.5888 15.4226C69.3453 15.8872 70.2099 16.1374 71.2005 16.1374C72.1011 16.1374 72.9116 15.923 73.6141 15.4941C74.1184 15.1903 74.4967 14.7792 74.7668 14.2967V15.9587H78.081V4.73571H74.7488V6.30836ZM74.0824 12.7241C73.6321 13.2781 73.0017 13.564 72.1731 13.564C71.3266 13.564 70.6782 13.2959 70.2279 12.7419C69.7776 12.1879 69.5434 11.3837 69.5434 10.3472C69.5434 9.31069 69.7776 8.48863 70.2459 7.89888C70.7142 7.30914 71.3626 7.0232 72.1731 7.0232C72.9837 7.0232 73.6321 7.30914 74.0824 7.88101C74.5327 8.45288 74.7668 9.25708 74.7668 10.3293C74.7488 11.3659 74.5327 12.1701 74.0824 12.7241ZM87.1769 5.12887C87.6813 5.45055 88.0775 5.84371 88.3477 6.32623V4.73571H91.6979V15.4226C91.6979 17.2276 91.1756 18.5858 90.1489 19.515C89.1222 20.4443 87.5912 20.909 85.5919 20.909C83.8087 20.909 82.2417 20.5694 80.9089 19.8725L81.4132 17.3884C82.0976 17.7279 82.7641 17.9781 83.4485 18.139C84.133 18.2998 84.8174 18.3892 85.4838 18.3892C86.4565 18.3892 87.1769 18.1747 87.6453 17.7279C88.1316 17.2812 88.3657 16.6021 88.3657 15.6906V13.7248C88.2036 13.9572 88.0235 14.1895 87.8074 14.4039C87.4291 14.7792 86.9788 15.0652 86.4565 15.2975C85.9161 15.5298 85.3578 15.637 84.7454 15.637C83.7547 15.637 82.8901 15.4047 82.1337 14.9401C81.3772 14.4754 80.7828 13.8321 80.3505 12.9921C79.9182 12.1522 79.7021 11.1693 79.7021 10.0434C79.7021 8.91753 79.9182 7.95249 80.3505 7.11256C80.7828 6.29049 81.3772 5.62926 82.1337 5.16462C82.8901 4.6821 83.7727 4.44977 84.7454 4.44977C85.664 4.44977 86.4745 4.6821 87.1769 5.12887ZM85.718 13.0815C86.5285 13.0815 87.1769 12.8134 87.6453 12.2773C88.1136 11.7412 88.3477 10.9906 88.3657 10.0434C88.3657 9.11411 88.1496 8.36353 87.6813 7.8274C87.213 7.2734 86.5645 7.00533 85.736 7.00533C84.9075 7.00533 84.241 7.2734 83.7727 7.80953C83.2864 8.34566 83.0523 9.07837 83.0523 10.0255C83.0523 10.9727 83.2864 11.7233 83.7727 12.2594C84.259 12.8134 84.9075 13.0815 85.718 13.0815ZM40.6526 5.23607C40.1843 5.59349 39.8421 6.07601 39.6079 6.66576L39.3738 4.71781H36.2037C36.2757 5.25395 36.3298 5.79008 36.3478 6.32621C36.3658 6.86256 36.3838 7.39858 36.3838 7.9346V15.9408H39.752V10.0791C39.752 9.52512 39.8601 9.0426 40.0762 8.63157C40.2924 8.22053 40.5986 7.91673 40.9948 7.6844C41.3911 7.46995 41.8954 7.34485 42.4898 7.34485C42.85 7.34485 43.2103 7.39847 43.5705 7.50569V4.52123C43.3904 4.48549 43.1923 4.46762 42.9581 4.46762C42.0935 4.46762 41.319 4.71781 40.6526 5.23607ZM103.37 7.05902C103.784 7.91683 104 8.9176 104 10.0792L103.964 11.1872H96.5972C96.7052 11.8485 96.9214 12.3667 97.2456 12.742C97.7499 13.296 98.5064 13.5819 99.5331 13.5819C100.127 13.5819 100.722 13.4926 101.298 13.296C101.875 13.0994 102.415 12.8314 102.901 12.4739L103.784 14.7257C103.243 15.1546 102.577 15.4763 101.785 15.7265C101.01 15.9588 100.218 16.0839 99.407 16.0839C98.1462 16.0839 97.0655 15.8337 96.1469 15.369C95.2283 14.8865 94.5258 14.2253 94.0395 13.3496C93.5532 12.4918 93.301 11.4553 93.301 10.2579C93.301 9.09631 93.5532 8.07767 94.0215 7.20199C94.4898 6.30843 95.1382 5.62934 95.9667 5.12895C96.7953 4.64643 97.7499 4.39624 98.8486 4.39624C99.8933 4.39624 100.812 4.62856 101.586 5.0932C102.361 5.55785 102.955 6.20121 103.37 7.05902ZM97.1375 7.57728C96.8853 7.9347 96.7052 8.3636 96.5972 8.9176H101.1C101.028 8.30999 100.866 7.82747 100.578 7.47005C100.2 6.98753 99.6592 6.75521 98.9387 6.75521C98.1642 6.75521 97.5698 7.02328 97.1375 7.57728Z" fill="currentColor"/>
+            </g>
+            <defs>
+              <linearGradient id="logo-main-grad" x1="5.34587" y1="18.2083" x2="50.0412" y2="23.1356" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#5668F1"/><stop offset="1" stop-color="#5AECDE"/>
+              </linearGradient>
+              <clipPath id="logo-main-clip"><rect width="104" height="23" fill="white"/></clipPath>
+            </defs>
           </svg>
-        </span>
+        </a>
+        <p class="menu-tagline">The world&rsquo;s most private search engine.</p>
+        <div class="menu-search-wrap menu-search">
+          <form class="search-field search-field--homepage search-field--desktop" role="search">
+            <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search" autocomplete="off" spellcheck="false">
+            <div class="search-field__actions">
+              <button type="button" class="search-field__clear" aria-label="Clear search" tabindex="-1">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <div class="search-field__divider" aria-hidden="true"></div>
+              <button type="submit" class="search-field__submit" aria-label="Submit search">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                  <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
 
-      <!-- ── Affiliate quick-link tiles ──
+            <!-- ── Affiliate quick-link tiles ──
            Each tile is simply an image wrapped in an affiliate link.
            rel="sponsored" marks the commercial relationship; href="#" are
            placeholders. Self-contained placeholder logos in assets/tiles/. -->
@@ -1792,7 +1968,7 @@
       <!-- ── News hub + floating promo banner (Option A) ──
            .promo-dock is the banner's containing block: the slim banner uses
            position: sticky; bottom, so it floats at the bottom of the viewport
-           while Top news scrolls, then docks above "Learn more" at the end of
+           while Top news scrolls, then docks above the promo toggle at the end of
            this wrapper. -->
       <div class="promo-dock">
 
@@ -1802,44 +1978,46 @@
            Placeholder media (neutral panels) — no third-party CDN links. -->
       <section class="news-hub" aria-labelledby="news-hub-title">
         <div class="news-hub__head">
-          <h2 class="news-hub__title" id="news-hub-title">Top news</h2>
-          <div class="nh-menu">
-            <button class="nh-menu-btn" type="button" id="nh-menu-btn"
-                    aria-label="Top news options" aria-haspopup="true"
-                    aria-expanded="false" aria-controls="nh-menu-list">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <circle cx="12" cy="5" r="1.6"/>
-                <circle cx="12" cy="12" r="1.6"/>
-                <circle cx="12" cy="19" r="1.6"/>
-              </svg>
-            </button>
-            <div class="nh-menu-list" id="nh-menu-list" role="menu"
-                 aria-label="Top news options" hidden>
-              <!-- Support article is hosted externally; href is a placeholder. -->
-              <a class="nh-menu-item" role="menuitem"
-                 href="https://support.startpage.com/hc/articles/top-news"
-                 target="_blank" rel="noopener">About Top News</a>
-              <button class="nh-menu-item" role="menuitem" type="button" id="nh-feedback">
-                Send feedback
+          <div class="news-hub__head-left">
+            <h2 class="news-hub__title" id="news-hub-title">Top News</h2>
+            <div class="nh-menu">
+              <button class="nh-menu-btn" type="button" id="nh-menu-btn"
+                      aria-label="Top News options" aria-haspopup="true"
+                      aria-expanded="false" aria-controls="nh-menu-list">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <circle cx="12" cy="5" r="1.6"/>
+                  <circle cx="12" cy="12" r="1.6"/>
+                  <circle cx="12" cy="19" r="1.6"/>
+                </svg>
               </button>
+              <div class="nh-menu-list" id="nh-menu-list" role="menu"
+                   aria-label="Top News options" hidden>
+                <!-- Support article is hosted externally; href is a placeholder. -->
+                <a class="nh-menu-item" role="menuitem"
+                   href="https://support.startpage.com/hc/articles/top-news"
+                   target="_blank" rel="noopener">About Top News</a>
+                <button class="nh-menu-item" role="menuitem" type="button" id="nh-feedback">
+                  Send feedback
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="nh-note" id="nh-note" role="note" hidden>
-          <span class="nh-note__text">
-            See what's happening today without the tracking.
-            <a class="nh-note__link"
-               href="https://support.startpage.com/hc/articles/top-news"
-               target="_blank" rel="noopener">Learn more about Top News</a>
-          </span>
-          <button class="nh-note__dismiss" type="button" id="nh-note-dismiss"
-                  aria-label="Dismiss this message">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor"
-                    stroke-width="1.6" stroke-linecap="round"/>
-            </svg>
-          </button>
+          <div class="nh-note" id="nh-note" role="note" hidden>
+            <span class="nh-note__text">
+              See what's happening today without the tracking.
+              <a class="nh-note__link"
+                 href="https://support.startpage.com/hc/articles/top-news"
+                 target="_blank" rel="noopener">Learn more about Top News</a>
+            </span>
+            <button class="nh-note__dismiss" type="button" id="nh-note-dismiss"
+                    aria-label="Dismiss this message">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor"
+                      stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div class="news-hub__grid">
@@ -2071,13 +2249,13 @@
         </div>
       </section>
 
-      <!-- ── Slim promo banner (floats, then docks above Learn more).
+      <!-- ── Slim promo banner (floats, then docks above promo toggle).
            Promo-on only; hidden via body.promo-hidden. -->
       <div class="cta-slim cta-slim--float" aria-label="Get Startpage">
         <div class="cta-slim__item">
           <img src="assets/icon-mobile.svg" alt="" width="32" height="32">
           <span class="cta-slim__text">Browse privately with our mobile app.</span>
-          <a href="#" class="btn btn-teal-outline btn-sm" data-btn><span class="btn__label">Get the app</span></a>
+          <a href="#" class="btn btn--product-selected" data-btn><span class="btn__label">Get the app</span></a>
         </div>
         <span class="cta-slim__divider" aria-hidden="true"></span>
         <div class="cta-slim__item">
@@ -2086,35 +2264,21 @@
             <span class="cta-slim__text--desktop">Make Startpage your default.</span>
             <span class="cta-slim__text--mobile">Make Startpage your default on desktop.</span>
           </span>
-          <a href="#" class="btn btn-teal btn-sm" data-btn><span class="btn__label">Install on Chrome</span></a>
+          <a href="#" class="btn btn--product-brand-blue" data-btn><span class="btn__label">Install on Chrome</span></a>
         </div>
       </div>
 
       </div><!-- /.promo-dock -->
 
-      <!-- ── Learn more + promo on/off control ──
-           Desktop: control sits to the right of (centered) "Learn more", aligned
-           to the hamburger gutter. Mobile: control sits between the docked banner
-           and "Learn more", centred. Control stays visible in both promo states. -->
+      <!-- ── Promo on/off control (centred below banner) ── -->
       <div class="learn-row">
-        <!-- Quick setting: hide / show promotional messaging -->
         <button class="promo-toggle" id="promo-toggle" type="button" aria-pressed="false">
-          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M13.0167 10.0833C12.9279 10.2844 12.9015 10.5075 12.9407 10.7237C12.9799 10.94 13.083 11.1395 13.2367 11.2967L13.2767 11.3367C13.4006 11.4605 13.499 11.6075 13.5661 11.7694C13.6332 11.9313 13.6677 12.1048 13.6677 12.28C13.6677 12.4552 13.6332 12.6287 13.5661 12.7906C13.499 12.9525 13.4006 13.0995 13.2767 13.2233C13.1528 13.3473 13.0058 13.4456 12.8439 13.5127C12.6821 13.5798 12.5086 13.6144 12.3333 13.6144C12.1581 13.6144 11.9846 13.5798 11.8227 13.5127C11.6609 13.4456 11.5138 13.3473 11.39 13.2233L11.35 13.1833C11.1929 13.0296 10.9933 12.9265 10.7771 12.8873C10.5608 12.8481 10.3377 12.8746 10.1367 12.9633C9.93949 13.0478 9.77132 13.1882 9.65287 13.367C9.53442 13.5459 9.47086 13.7555 9.47 13.97V14.0833C9.47 14.437 9.32952 14.7761 9.07948 15.0261C8.82943 15.2762 8.49029 15.4167 8.13667 15.4167C7.78305 15.4167 7.44391 15.2762 7.19386 15.0261C6.94381 14.7761 6.80333 14.437 6.80333 14.0833V14.0233C6.79817 13.8027 6.72675 13.5887 6.59834 13.4091C6.46994 13.2296 6.29049 13.0929 6.08333 13.0167C5.88226 12.9279 5.65921 12.9015 5.44294 12.9407C5.22668 12.9799 5.02712 13.083 4.87 13.2367L4.83 13.2767C4.70617 13.4006 4.55912 13.499 4.39725 13.5661C4.23539 13.6332 4.06189 13.6677 3.88667 13.6677C3.71145 13.6677 3.53794 13.6332 3.37608 13.5661C3.21422 13.499 3.06716 13.4006 2.94333 13.2767C2.81936 13.1528 2.72102 13.0058 2.65392 12.8439C2.58682 12.6821 2.55228 12.5086 2.55228 12.3333C2.55228 12.1581 2.58682 11.9846 2.65392 11.8227C2.72102 11.6609 2.81936 11.5138 2.94333 11.39L2.98333 11.35C3.13702 11.1929 3.24012 10.9933 3.27934 10.7771C3.31855 10.5608 3.29208 10.3377 3.20333 10.1367C3.11882 9.93949 2.9785 9.77132 2.79964 9.65287C2.62078 9.53442 2.41119 9.47086 2.19667 9.47H2.08333C1.72971 9.47 1.39057 9.32952 1.14052 9.07947C0.890476 8.82943 0.75 8.49029 0.75 8.13667C0.75 7.78304 0.890476 7.44391 1.14052 7.19386C1.39057 6.94381 1.72971 6.80333 2.08333 6.80333H2.14333C2.364 6.79817 2.578 6.72675 2.75753 6.59834C2.93706 6.46993 3.07381 6.29049 3.15 6.08333C3.23874 5.88226 3.26522 5.6592 3.226 5.44294C3.18679 5.22668 3.08369 5.02712 2.93 4.87L2.89 4.83C2.76603 4.70617 2.66769 4.55912 2.60059 4.39725C2.53349 4.23539 2.49895 4.06189 2.49895 3.88667C2.49895 3.71145 2.53349 3.53794 2.60059 3.37608C2.66769 3.21422 2.76603 3.06716 2.89 2.94333C3.01383 2.81936 3.16088 2.72102 3.32275 2.65392C3.48461 2.58682 3.65811 2.55228 3.83333 2.55228C4.00855 2.55228 4.18206 2.58682 4.34392 2.65392C4.50578 2.72102 4.65284 2.81936 4.77667 2.94333L4.81667 2.98333C4.97379 3.13702 5.17334 3.24012 5.38961 3.27934C5.60587 3.31855 5.82892 3.29208 6.03 3.20333H6.08333C6.28051 3.11882 6.44868 2.9785 6.56713 2.79964C6.68558 2.62078 6.74915 2.41119 6.75 2.19667V2.08333C6.75 1.72971 6.89048 1.39057 7.14053 1.14052C7.39057 0.890476 7.72971 0.75 8.08333 0.75C8.43696 0.75 8.77609 0.890476 9.02614 1.14052C9.27619 1.39057 9.41667 1.72971 9.41667 2.08333V2.14333C9.41752 2.35786 9.48109 2.56745 9.59954 2.74631C9.71799 2.92517 9.88615 3.06549 10.0833 3.15C10.2844 3.23874 10.5075 3.26522 10.7237 3.226C10.94 3.18679 11.1395 3.08369 11.2967 2.93L11.3367 2.89C11.4605 2.76603 11.6076 2.66769 11.7694 2.60059C11.9313 2.53349 12.1048 2.49895 12.28 2.49895C12.4552 2.49895 12.6287 2.53349 12.7906 2.60059C12.9525 2.66769 13.0995 2.76603 13.2233 2.89C13.3473 3.01383 13.4456 3.16088 13.5127 3.32275C13.5798 3.48461 13.6144 3.65811 13.6144 3.83333C13.6144 4.00855 13.5798 4.18206 13.5127 4.34392C13.4456 4.50578 13.3473 4.65284 13.2233 4.77667L13.1833 4.81667C13.0296 4.97379 12.9265 5.17334 12.8873 5.38961C12.8481 5.60587 12.8746 5.82892 12.9633 6.03V6.08333C13.0478 6.28051 13.1882 6.44868 13.367 6.56713C13.5459 6.68558 13.7555 6.74914 13.97 6.75H14.0833C14.437 6.75 14.7761 6.89048 15.0261 7.14052C15.2762 7.39057 15.4167 7.72971 15.4167 8.08333C15.4167 8.43695 15.2762 8.77609 15.0261 9.02614C14.7761 9.27619 14.437 9.41667 14.0833 9.41667H14.0233C13.8088 9.41752 13.5992 9.48109 13.4204 9.59954C13.2415 9.71799 13.1012 9.88615 13.0167 10.0833Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="8" cy="8" r="2.25" stroke="currentColor" stroke-width="1.5"/>
           </svg>
           <span class="promo-toggle__label" id="promo-toggle-label">Hide promotional messaging</span>
         </button>
-
-        <!-- Figma: Learn more 2066:1793 — x=679, y=923 -->
-        <div class="menu-learn-more">
-          Learn more
-          <span class="chevron-bounce">
-            <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
-              <path d="M1 1l7 7 7-7" stroke="#5B6BF8" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </div>
       </div>
 
     </div>
@@ -2160,7 +2324,7 @@
   <div class="wave wave-white-blue">
     <svg viewBox="0 0 1439 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
       <!-- Hero background above the curve — color-background-tertiary -->
-      <rect x="0" y="0" width="1439" height="200" fill="#F7F7FF"/>
+      <rect x="0" y="0" width="1439" height="200" fill="var(--bg-tertiary)"/>
       <!-- Blue fill below the curve — matches blue-section background -->
       <path d="M0.5 1 C25.17 23 155.7 70 480.5 86 C886.5 106 1366.5 160 1438.5 188 L1439 200 L0 200 Z" fill="#5B6BF8"/>
       <!-- Semi-transparent overlay matching scroll wave stroke color -->
@@ -3198,7 +3362,7 @@
   </script>
   <!-- ═══════════════════════════════════════════════════════════
        QUICK SETTING — Hide promotional messaging
-       Now lives inline in .learn-row (next to "Learn more"); see markup above.
+       Centred below the promo banner; see markup above.
   ══════════════════════════════════════════════════════════════ -->
   <script>
     /* ── Quick setting: hide / show below-the-fold promotional content ── */
@@ -3291,6 +3455,31 @@
           localStorage.setItem(NOTE_KEY, '1');
         });
       }
+    })();
+  </script>
+
+  <script>
+    /* ── Homepage search fields — has-value + clear (from search-field component) ── */
+    (function () {
+      document.querySelectorAll('.search-field__input').forEach(function (input) {
+        var field = input.closest('.search-field');
+        if (!field) return;
+        var sync = function () {
+          field.classList.toggle('has-value', input.value.trim().length > 0);
+        };
+        input.addEventListener('input', sync);
+        sync();
+      });
+      document.querySelectorAll('.search-field__clear').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var field = btn.closest('.search-field');
+          var input = field && field.querySelector('.search-field__input');
+          if (!input) return;
+          input.value = '';
+          field.classList.remove('has-value');
+          input.focus();
+        });
+      });
     })();
   </script>
 
