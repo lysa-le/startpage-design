@@ -1444,7 +1444,7 @@
       opacity: 1;
       gap: var(--spacing-8);
       font-weight: var(--font-weight-regular);
-      transition: color 0.45s ease, border-color 0.55s cubic-bezier(0.4,0,0.2,1), background-color 0.15s ease;
+      transition: color 0.45s ease, border-color 0.55s cubic-bezier(0.4,0,0.2,1);
     }
     .cta-slim .btn:hover { opacity: 1; }
     .cta-slim .btn--product-selected,
@@ -1454,16 +1454,27 @@
       font-size: var(--font-button-xs);
       line-height: var(--font-button-xs-lh);
     }
-    .cta-slim .btn--product-selected::before,
-    .cta-slim .btn--product-brand-blue::before { display: none; }
+    .cta-slim .btn--product-selected::before {
+      background: var(--color-button-brandblue);
+    }
+    .cta-slim .btn--product-brand-blue::before {
+      background: var(--color-button-brandbluehover);
+    }
+    .cta-slim .btn--product-selected:hover::before,
+    .cta-slim .btn--product-brand-blue:hover::before {
+      transform: translateY(0%);
+    }
     .cta-slim .btn--product-selected {
       background-color: transparent;
       color: var(--text-primary);
       border: var(--border-stroke-md) solid var(--color-stroke-primary-button);
+      font-weight: var(--font-weight-bold);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     .cta-slim .btn--product-selected:hover {
-      background-color: var(--color-button-brandblue);
       color: var(--color-whisper-50);
+      border-color: var(--color-button-brandblue);
     }
     [data-theme="dark"] .cta-slim .btn--product-selected:hover {
       color: var(--color-text-inverted);
@@ -1476,15 +1487,9 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-    .cta-slim .btn--product-brand-blue:hover {
-      background-color: var(--color-button-brandbluehover);
-    }
     [data-theme="dark"] .cta-slim .btn--product-brand-blue {
       background-color: var(--color-button-brandblue);
       color: #09090A; /* color-black-900 — DS dark product-brand-blue */
-    }
-    [data-theme="dark"] .cta-slim .btn--product-brand-blue:hover {
-      background-color: var(--color-button-brandbluehover);
     }
     .cta-slim .btn:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
