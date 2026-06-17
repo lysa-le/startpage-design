@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Promotional messaging</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="demo-body">
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">☀️</span>
+    <span id="themeLabel">Light</span>
+  </button>
+
+  <!-- Inline sprite — file:// safe -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="icon-info" viewBox="0 0 15 15" fill="none">
+      <circle cx="7.5" cy="7.5" r="6.75" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M7.5 7.19995V10.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="7.49998" cy="4.59995" r="0.9" fill="currentColor"/>
+    </symbol>
+  </svg>
+
+  <h1 class="demo-h1">Settings — Promotional messaging</h1>
+  <p class="demo-sub">This single control drives the homepage. Off: a clean homepage with no content blocks (news stays reachable from the News link). On: the homepage shows a Top News module below the search box. It never changes what we collect — nothing, ever.</p>
+
+  <section class="demo-section">
+    <p class="demo-section__label">Setting</p>
+
+    <div class="settings-card">
+      <div class="settings-row">
+        <div class="settings-row__text">
+          <div class="settings-row__title">Show promotional messaging</div>
+          <p class="settings-row__help">
+            Turn this on to see Top News and other content on your homepage, below the search box.
+            It's the same for everyone in your region — we don't track you, build a profile, or tailor any of it to you.
+            Leave it off for a clean homepage; you can still open <strong>News</strong> from the top menu any time.
+          </p>
+        </div>
+
+        <button class="toggle" role="switch" aria-checked="true" id="promoToggle"
+                aria-label="Show promotional messaging" aria-controls="promoPreview">
+          <span class="toggle__thumb"></span>
+        </button>
+      </div>
+
+      <hr class="settings-divider">
+
+      <!-- Live preview reflects the toggle state -->
+      <div class="settings-preview" id="promoPreview">
+        <svg aria-hidden="true"><use href="#icon-info"/></svg>
+        <span>On — your homepage shows a Top News module below the search box.</span>
+      </div>
+      <div class="settings-preview" id="promoPreviewOff" hidden>
+        <svg aria-hidden="true"><use href="#icon-info"/></svg>
+        <span>Off — your homepage stays clean. Open News from the top menu whenever you want it.</span>
+      </div>
+    </div>
+  </section>
+
+  <script src="prototype.js"></script>
+  <script>
+    /* Page-specific: swap the two preview rows as the toggle changes.
+       (Shared prototype.js handles aria-checked + the generic aria-controls hide.) */
+    (function () {
+      var toggle = document.getElementById("promoToggle");
+      var on = document.getElementById("promoPreview");
+      var off = document.getElementById("promoPreviewOff");
+      if (!toggle) return;
+      function sync() {
+        var checked = toggle.getAttribute("aria-checked") === "true";
+        on.hidden = !checked;
+        off.hidden = checked;
+      }
+      toggle.addEventListener("click", sync);
+      sync();
+    }());
+  </script>
+</body>
+</html>

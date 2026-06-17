@@ -1,0 +1,713 @@
+/* ============================================================================
+   News Hub — shared prototype stylesheet
+   ----------------------------------------------------------------------------
+   Single source of truth for all five prototype pages. Imports the real design
+   system token layer; every value below references a token — no raw hex, no
+   off-scale sizes — except where explicitly commented as a design-system GAP.
+
+   Token layer lives in the sibling design-system repo:
+     /Users/lysa.le/Documents/startpage-design/tokens.css
+   ========================================================================== */
+
+@import url("../../startpage-design/tokens.css");
+
+/* ----------------------------------------------------------------------------
+   DARK MODE — class-driven token overrides
+   tokens.css ships dark values behind @media(prefers-color-scheme); the design
+   system convention (CLAUDE.md) is a [data-theme="dark"] block per file so a
+   toggle can drive it independently of the OS. Mirrored here verbatim.
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --color-background-primary:    var(--color-black-900);
+  --color-background-secondary:  var(--color-black-550);
+  --color-background-tertiary:   var(--color-black-800);
+  --color-background-quaternary: var(--color-black-650);
+
+  --color-text-primary:   var(--color-whisper-100);
+  --color-text-secondary: var(--color-midnight-200);
+  --color-text-tertiary:  var(--color-midnight-100);
+  --color-text-inverted:  var(--color-black-800);
+  --color-text-brandblue: var(--color-brand-blue-100);
+  --color-text-link:      var(--color-brand-blue-100);
+  --color-text-teal:      var(--color-teal-400);
+  --color-text-error:     var(--color-red-400);
+
+  --color-icon-primary:   var(--color-whisper-200);
+  --color-icon-secondary: var(--color-brand-blue-100);
+  --color-icon-tertiary:  var(--color-midnight-100);
+
+  --color-toggle-thumb: var(--color-whisper-0);
+
+  --color-button-brandblue:          var(--color-brand-blue-100);
+  --color-button-brandbluehover:     var(--color-brand-blue-300);
+  --color-button-productfilled:      var(--color-black-550);
+  --color-button-productfilledhover: var(--color-black-400);
+  --color-button-inactive:           var(--color-black-600);
+
+  --color-stroke-primary:        var(--color-black-400);
+  --color-stroke-secondary:      var(--color-black-550);
+  --color-stroke-primary-button: var(--color-brand-blue-100);
+  --color-stroke-error:          var(--color-red-400);
+
+  --color-accent-gold:     var(--color-gold-200);
+  --color-accent-teal:     var(--color-teal-200);
+}
+
+/* ----------------------------------------------------------------------------
+   RESET & PAGE
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-family);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Accessible-but-visually-hidden helper (skip link target text, etc.) */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link — a11y landmark navigation */
+.skip-link {
+  position: absolute;
+  left: var(--spacing-16);
+  top: calc(-1 * var(--spacing-64));
+  z-index: 300;
+  padding: var(--spacing-8) var(--spacing-16);
+  background: var(--color-background-primary);
+  color: var(--color-text-link);
+  border: var(--border-stroke-sm) solid var(--color-stroke-primary-button);
+  border-radius: var(--radius-full);
+  font-size: var(--font-body-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus { top: var(--spacing-16); }
+
+/* ----------------------------------------------------------------------------
+   THEME TOGGLE (prototype scaffold — not a shipped component)
+   -------------------------------------------------------------------------- */
+.theme-toggle {
+  position: fixed;
+  top: var(--spacing-24);
+  right: var(--spacing-24);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-16);
+  border-radius: var(--radius-full);
+  border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+  background-color: var(--color-background-primary);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  font-size: var(--font-body-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  z-index: 200;
+}
+.theme-toggle:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-stroke-primary-button);
+}
+
+/* ============================================================================
+   GLOBAL HEADER (homepage variant)
+   Reuses the design-system `header` component anatomy. Homepage header is the
+   logo + a slim global nav (no SERP search row); the News link lives here so
+   news stays reachable by pull even when promo content blocks are off.
+   ========================================================================== */
+.site-header {
+  position: relative;
+  width: 100%;
+  background: var(--color-background-primary);
+  font-family: var(--font-family);
+  border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-24);
+  padding: var(--spacing-20) var(--spacing-40);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.site-header__logo {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.site-header__logo-svg {
+  display: block;
+  width: 104px;
+  height: auto;
+  color: var(--color-text-primary); /* logo text path uses currentColor */
+}
+
+/* Global nav (links + utility). Distinct from the SERP category tabs. */
+.global-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-32);
+}
+.global-nav__link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-4) 0;
+  font-family: var(--font-family);
+  font-size: var(--font-body-sm);
+  line-height: var(--font-body-sm-lh);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 150ms ease;
+}
+.global-nav__link:hover { color: var(--color-text-brandblue); }
+.global-nav__link--active { color: var(--color-text-brandblue); }
+
+.site-header__pp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-body-sm);
+  line-height: var(--font-body-sm-lh);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  transition: color 150ms ease;
+}
+.site-header__pp-btn:hover { color: var(--color-text-brandblue); }
+
+.icn-arrows--down-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  background: var(--color-button-inactive);
+  color: var(--color-icon-primary);
+}
+
+/* ============================================================================
+   HOMEPAGE HERO — logo + search box, vertically centered above the fold
+   ========================================================================== */
+.hero {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-40);
+  padding: var(--spacing-96) var(--spacing-24);
+  text-align: center;
+}
+
+.hero__logo-svg {
+  display: block;
+  width: 280px;             /* GAP: homepage hero logo size not tokenised (display-scale asset sizing) */
+  max-width: 80vw;
+  height: auto;
+  color: var(--color-text-primary);
+}
+
+.hero__tagline {
+  font-size: var(--font-body-lg);
+  line-height: var(--font-body-lg-lh);
+  color: var(--color-text-secondary);
+  max-width: 40ch;
+}
+
+/* Homepage search field — large pill (mirrors search-field homepage variant) */
+.search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 628px;
+  background: var(--color-background-primary);
+  border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+  border-radius: var(--radius-full);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.search-field:focus-within {
+  border-color: var(--color-stroke-primary-button);
+  box-shadow: var(--shadow-search);
+}
+.search-field--home { height: 56px; }
+
+.search-field__input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 0 0 var(--spacing-24);
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-family);
+  font-size: var(--font-body-md);
+  line-height: var(--font-body-md-lh);
+  color: var(--color-text-primary);
+  caret-color: var(--color-text-tertiary);
+}
+.search-field__input::placeholder { color: var(--color-text-secondary); opacity: 0.7; }
+
+.search-field__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-16);
+  padding-right: var(--spacing-24);
+  flex-shrink: 0;
+}
+.search-field__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-icon-secondary);
+  transition: opacity 100ms ease;
+}
+.search-field__submit:hover { opacity: 0.75; }
+
+/* ============================================================================
+   PAGE SHELL / LAYOUT
+   ========================================================================== */
+.page-main {
+  flex: 1 0 auto;
+  width: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;        /* GAP: content max-width not tokenised; layout container width */
+  margin: 0 auto;
+  padding: 0 var(--spacing-40);
+}
+
+/* ============================================================================
+   SECTION HEADER (e.g. "Top News" + "More news" link)
+   ========================================================================== */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-24);
+  margin-bottom: var(--spacing-24);
+}
+.section-head__title {
+  font-size: var(--font-heading-xs);
+  line-height: var(--font-heading-xs-lh);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+.section-head__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  font-size: var(--font-body-sm);
+  line-height: var(--font-body-sm-lh);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-link);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 120ms ease;
+}
+.section-head__link:hover { opacity: 0.8; text-decoration: underline; }
+.section-head__link svg { width: 14px; height: 14px; }
+
+/* Locale indicator — content is region-scoped, never personalised */
+.locale-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  margin-bottom: var(--spacing-16);
+  font-size: var(--font-body-sm);
+  line-height: var(--font-body-sm-lh);
+  color: var(--color-text-secondary);
+}
+.locale-indicator svg { width: 16px; height: 16px; color: var(--color-icon-tertiary); }
+
+/* ============================================================================
+   NEWS GRID + NEWS CARD COMPONENT
+   Composed from primitives (radius, spacing, color, shadow tokens). No
+   dedicated card token set exists in the system — see README gaps.
+   ========================================================================== */
+.news-grid {
+  display: grid;
+  /* GAP: no grid/track tokens in system. 280px min track is a layout decision. */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-32);
+}
+.news-grid--dense {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--spacing-24);
+}
+
+/* ── Card ── */
+.news-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+  background: var(--color-background-primary);
+  border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-12);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+.news-card:hover {
+  box-shadow: var(--shadow-dropdown);
+  border-color: var(--color-stroke-primary);
+  transform: translateY(-2px);   /* GAP: 2px micro-lift offset is outside the spacing scale */
+}
+.news-card:hover .news-card__title { color: var(--color-text-link); }
+.news-card:focus-visible {
+  outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+  outline-offset: 3px;
+}
+
+/* Card image — fixed 16:9 neutral placeholder */
+.news-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-background-secondary);
+  flex-shrink: 0;
+}
+.news-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Image-missing fallback — centered image glyph on neutral field */
+.news-card__media--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background-tertiary);
+}
+.news-card__media--fallback .news-card__fallback-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--color-icon-tertiary);
+}
+.news-card__media--fallback .news-card__fallback-label {
+  position: absolute;
+  bottom: var(--spacing-8);
+  font-size: var(--font-utility-caption);
+  line-height: var(--font-utility-caption-lh);
+  color: var(--color-text-tertiary);
+}
+
+.news-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: 0 var(--spacing-4) var(--spacing-4);
+}
+
+.news-card__title {
+  font-size: var(--font-body-lg);
+  line-height: var(--font-body-lg-lh);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  transition: color 120ms ease;
+  /* Clamp to 3 lines for even card heights */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.news-grid--dense .news-card__title {
+  font-size: var(--font-body-md);
+  line-height: var(--font-body-md-lh);
+  -webkit-line-clamp: 2;
+}
+
+/* Meta row: publisher icon + name + relative time */
+.news-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  margin-top: auto;
+}
+.news-card__pub-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--color-background-secondary);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.news-card__pub-icon img { width: 100%; height: 100%; object-fit: cover; }
+.news-card__pub-name {
+  font-size: var(--font-body-xs);
+  line-height: var(--font-body-xs-lh);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.news-card__dot {
+  width: 3px; height: 3px;     /* GAP: 3px meta separator dot is outside the spacing scale */
+  border-radius: var(--radius-full);
+  background: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+.news-card__time {
+  font-size: var(--font-body-xs);
+  line-height: var(--font-body-xs-lh);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Skeleton / loading state ── */
+.news-card--skeleton { pointer-events: none; }
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-sm);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-background-quaternary),
+    transparent
+  );
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+.skeleton-line { height: var(--spacing-16); width: 100%; }
+.skeleton-line--short { width: 60%; }
+.skeleton-pill { height: var(--spacing-20); width: var(--spacing-20); border-radius: var(--radius-full); }
+.skeleton-meta { height: var(--font-body-xs); width: 40%; }
+
+@keyframes skeleton-shimmer {
+  100% { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after { animation: none; }
+  .news-card:hover { transform: none; }
+}
+
+/* ============================================================================
+   FOOTER (lightweight prototype footer)
+   ========================================================================== */
+.site-footer {
+  flex-shrink: 0;
+  margin-top: var(--spacing-96);
+  padding: var(--spacing-40);
+  border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+}
+.site-footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-16);
+}
+.site-footer__note {
+  font-size: var(--font-body-xs);
+  line-height: var(--font-body-xs-lh);
+  color: var(--color-text-tertiary);
+  max-width: 60ch;
+}
+.site-footer__links {
+  display: flex;
+  gap: var(--spacing-24);
+  flex-wrap: wrap;
+}
+.site-footer__link {
+  font-size: var(--font-body-xs);
+  line-height: var(--font-body-xs-lh);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+.site-footer__link:hover { color: var(--color-text-link); text-decoration: underline; }
+
+/* ============================================================================
+   PROTOTYPE DEMO CHROME (used by settings-toggle.html)
+   ========================================================================== */
+.demo-body { padding: var(--spacing-48); display: block; }
+.demo-h1 {
+  font-size: var(--font-heading-xs);
+  line-height: var(--font-heading-xs-lh);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-8);
+}
+.demo-sub {
+  font-size: var(--font-body-sm);
+  line-height: var(--font-body-sm-lh);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-48);
+  max-width: 60ch;
+}
+.demo-section { margin-bottom: var(--spacing-64); }
+.demo-section__label {
+  font-size: var(--font-body-xs);
+  line-height: var(--font-body-xs-lh);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--spacing-20);
+}
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-40);
+  align-items: start;
+}
+
+/* ============================================================================
+   SETTINGS ROW (promotional messaging toggle)
+   ========================================================================== */
+.settings-card {
+  max-width: 640px;
+  border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+  border-radius: var(--radius-lg);
+  background: var(--color-background-primary);
+  padding: var(--spacing-32);
+}
+.settings-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-32);
+}
+.settings-row__text { flex: 1; min-width: 0; }
+.settings-row__title {
+  font-size: var(--font-body-lg);
+  line-height: var(--font-body-lg-lh);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-8);
+}
+.settings-row__help {
+  font-size: var(--font-body-sm);
+  line-height: var(--font-body-sm-lh);
+  color: var(--color-text-secondary);
+}
+.settings-divider {
+  height: var(--border-stroke-sm);
+  background: var(--color-stroke-secondary);
+  border: none;
+  margin: var(--spacing-24) 0;
+}
+.settings-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-md);
+  background: var(--color-background-tertiary);
+  font-size: var(--font-body-sm);
+  line-height: var(--font-body-sm-lh);
+  color: var(--color-text-secondary);
+}
+.settings-preview svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--color-icon-secondary); }
+
+/* ── Toggle component (mirrors design-system toggle) ── */
+.toggle {
+  --toggle-width:      var(--spacing-48);
+  --toggle-height:     var(--spacing-24);
+  --toggle-thumb-gap:  3px; /* GAP: documented in toggle spec — outside spacing scale */
+  --toggle-thumb-size: calc(var(--toggle-height) - var(--toggle-thumb-gap) * 2);
+  --toggle-travel:     calc(var(--toggle-width) - var(--toggle-height));
+  display: inline-flex;
+  align-items: center;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  border-radius: var(--radius-full);
+  border: none;
+  padding: 0;
+  background-color: var(--color-stroke-primary);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+.toggle[aria-checked="true"] { background-color: var(--color-icon-secondary); }
+.toggle__thumb {
+  width: var(--toggle-thumb-size);
+  height: var(--toggle-thumb-size);
+  border-radius: var(--radius-full);
+  background-color: var(--color-toggle-thumb);
+  box-shadow: var(--shadow-card);
+  margin-left: var(--toggle-thumb-gap);
+  transform: translateX(0);
+  transition: transform 0.2s ease;
+}
+.toggle[aria-checked="true"] .toggle__thumb { transform: translateX(var(--toggle-travel)); }
+
+/* ============================================================================
+   RESPONSIVE — mobile breakpoint
+   ========================================================================== */
+@media (max-width: 640px) {
+  .site-header__inner { padding: var(--spacing-16) var(--spacing-20); }
+  .global-nav { gap: var(--spacing-20); }
+  .site-header__pp-btn { display: none; } /* utility collapses into hamburger on mobile */
+  .container { padding: 0 var(--spacing-20); }
+  .hero { padding: var(--spacing-64) var(--spacing-20); gap: var(--spacing-32); }
+  .hero__logo-svg { width: 200px; }
+  .section-head__title { font-size: var(--font-heading-xxs); line-height: var(--font-heading-xxs-lh); }
+  .news-grid { grid-template-columns: 1fr; gap: var(--spacing-24); }
+  .news-grid--dense { grid-template-columns: 1fr; }
+  .settings-card { padding: var(--spacing-20); }
+  .settings-row { flex-direction: column; gap: var(--spacing-16); }
+  .demo-body { padding: var(--spacing-24); }
+}
