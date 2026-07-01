@@ -534,8 +534,7 @@
     }
     .news-hub__main {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) max-content;
-      column-gap: var(--spacing-32);
+      grid-template-columns: minmax(0, 1fr);
       align-items: start;
       min-width: 0;
     }
@@ -768,7 +767,7 @@
     }
     .news-results__list {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       column-gap: var(--spacing-24);
       row-gap: var(--news-hub-y-gap);
       width: 100%;
@@ -1142,9 +1141,8 @@
       min-width: 0;
     }
     .news-featured-band__row {
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: row;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       column-gap: var(--spacing-24);
       row-gap: var(--news-hub-y-gap);
       width: 100%;
@@ -1285,16 +1283,13 @@
       }
       .site-header--desktop .site-header__nav .site-header__tabs-row::-webkit-scrollbar { display: none; }
 
-      /* First responsive step: drop the right rail but keep the fixed
-         sidebar, letting the feed widen into the space the rail vacated.
-         The full single-column collapse happens lower, at ≤1024px. */
-      .news-hub__main {
-        grid-template-columns: minmax(0, 1fr);
-        row-gap: var(--news-hub-y-gap);
-        column-gap: 0;
-        min-width: 0;
+      /* First responsive step: both the small-card grid and the larger
+         featured cards step from three columns down to two. The full
+         single-column collapse happens lower, at ≤768px. */
+      .news-results__list,
+      .news-featured-band__row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
-      .news-hub__rail { display: none; }
 
       .results-list,
       .banner { max-width: 100%; }
@@ -1349,7 +1344,6 @@
       }
       .news-sidebar__list::-webkit-scrollbar { display: none; }
       .news-sidebar__link { width: auto; white-space: nowrap; }
-      .news-featured-band__row { flex-direction: column; }
 
       .site-header--desktop {
         grid-template-columns:
@@ -1985,6 +1979,12 @@
        ───────────────────────────────────────────── */
     @media (max-width: 768px) {
 
+      /* Final responsive step: both card grids collapse to a single column. */
+      .news-results__list,
+      .news-featured-band__row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
       /* Header: collapse 7-column grid → flex column */
       .site-header--desktop {
         display: flex;
@@ -2469,7 +2469,6 @@
           <div class="news-hub__top-ad" id="newsHubTopAd" hidden aria-label="Advertisement"></div>
           <div class="news-hub__content" id="newsHubContent" aria-label="News content"></div>
         </div>
-        <aside class="news-hub__rail" id="newsHubRail" aria-label="Supplemental content"></aside>
       </div>
     </div>
   </main>
@@ -3747,9 +3746,9 @@
 
     /** Repeating pattern: 2 featured cards, 3×2 grid rows, 2 featured, 3×2 grid rows. */
     const NEWS_FEED_CHUNK_PATTERN = [
-      { kind: 'featured', count: 2 },
+      { kind: 'featured', count: 3 },
       { kind: 'grid', count: 6 },
-      { kind: 'featured', count: 2 },
+      { kind: 'featured', count: 3 },
       { kind: 'grid', count: 6 },
     ];
 
@@ -3898,7 +3897,6 @@
     function renderNewsArticleFooter(article) {
       return `<footer class="news-article__footer">
         ${renderNewsAnonymousViewLink()}
-        ${renderNewsAiSummaryButton(article)}
       </footer>`;
     }
 
@@ -4324,8 +4322,7 @@
             <span class="news-article__time">${formatNewsArticleTime(article.time)}</span>
           </div>
           <a class="news-article__title" href="#">${highlight(article.title, query)}</a>
-          <p class="news-article__snippet">${highlight(article.snippet, query)}</p>
-          ${renderNewsAiSummaryPanel(article, query)}`;
+          <p class="news-article__snippet">${highlight(article.snippet, query)}</p>`;
       const asideBlock = article.hasThumb
         ? `<div class="news-article__aside">
             <div class="news-article__thumb" aria-hidden="true"><img class="news-article__thumb-img" src="${newsArticlePicsumUrl(article, 208, 208)}" width="208" height="208" alt="" loading="lazy" decoding="async" /></div>
@@ -4352,7 +4349,6 @@
             <span class="news-article__time">${formatNewsArticleTime(article.time)}</span>
           </div>
           <a class="news-featured-card__title" href="#">${highlight(article.title, query)}</a>
-          ${renderNewsAiSummaryPanel(article, query)}
           ${renderNewsArticleFooter(article)}
         </div>
       </article>`;
@@ -4645,7 +4641,6 @@
 
     function renderNewsHubRail(query) {
       return `<div class="news-hub__rail-inner">
-        ${renderRelatedSearches(query)}
         ${renderNewsHubDisplayAd('rectangle')}
       </div>`;
     }
@@ -4691,7 +4686,6 @@
         if (isSwiftNewsQuery(query) && !options.preserveNewsCategory) clearNewsCategorySelection();
         if (list) { list.innerHTML = ''; meta.textContent = ''; }
         renderNewsFeed(query);
-        if (newsRail) newsRail.innerHTML = noResults ? '' : renderNewsHubRail(query);
         if (options.scrollToTop) scrollPageToTopAfterRender();
         return;
       }
