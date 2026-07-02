@@ -509,7 +509,9 @@
       --news-publisher-max-chars: 28;
       --news-hub-y-gap: var(--spacing-24);
       --news-sidebar-width: calc(var(--spacing-24) * 7);
-      --news-sidebar-inset-left: calc(var(--spacing-24) + 104px + var(--spacing-24));
+      /* Align the category sidebar with the header logo (24px inset) rather
+         than the search field, giving the feed more horizontal room. */
+      --news-sidebar-inset-left: var(--spacing-24);
       grid-template-columns: var(--news-sidebar-width) minmax(0, 1fr);
       gap: var(--spacing-48);
       align-items: start;
@@ -520,6 +522,10 @@
       grid-template-columns: minmax(0, 1fr);
     }
     .serp-body--news .serp-view { display: none; }
+    .serp-body--news {
+      /* Left edge aligns with the header logo instead of the search field. */
+      padding-inline-start: var(--spacing-24);
+    }
     .news-hub__sidebar {
       position: fixed;
       top: calc(67px + 36px + var(--spacing-32));
@@ -1268,8 +1274,9 @@
       }
       .serp-body--news {
         /* sidebar stays fixed in this band, so keep the left padding
-           aligned to its inset to avoid the feed sliding underneath it */
-        padding-inline-start: calc(var(--spacing-24) + 104px + var(--spacing-24));
+           aligned to its (logo-aligned) inset to avoid the feed sliding
+           underneath it */
+        padding-inline-start: var(--spacing-24);
         padding-inline-end: var(--spacing-32);
       }
 
