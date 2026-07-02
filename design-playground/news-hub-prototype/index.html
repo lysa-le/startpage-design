@@ -2022,11 +2022,15 @@
         -ms-overflow-style: none;
       }
       .site-header--desktop .site-header__nav .site-header__tabs-row::-webkit-scrollbar { display: none; }
-      /* Tabs: tighter gap, same left inset as body */
+      /* Tabs: tighter gap, same left inset as body. The padding-bottom keeps a
+         gap between the tab text and the active-tab underline (which sits on
+         the header's bottom edge) — matching the wide layout, where the 36px
+         nav row provides that breathing room. */
       .site-header--desktop .site-header__tabs {
         gap: var(--spacing-20);
         padding-left: var(--spacing-16);
         height: auto;
+        padding-bottom: var(--spacing-8);
       }
       /* Filter icon not shown on mobile */
       .site-header__filter-btn { display: none; }
