@@ -2725,6 +2725,12 @@
         if (tabsRow) ro.observe(tabsRow);
         tabs.forEach(t => ro.observe(t));
       }
+      // Brute-force safety net: some browsers finish font/layout settling after
+      // fonts.ready resolves or don't emit a ResizeObserver tick. Re-measure a
+      // few times so the underline self-corrects no matter the timing.
+      [80, 250, 700, 1500].forEach(ms => setTimeout(scheduleTabIndicator, ms));
+      // Restore-from-bfcache (back/forward) re-shows a stale layout.
+      window.addEventListener('pageshow', scheduleTabIndicator);
     }());
 
     (function initNewsSidebar() {
