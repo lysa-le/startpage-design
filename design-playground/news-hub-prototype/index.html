@@ -1334,16 +1334,21 @@
       .serp-body--news .news-hub__main { margin-inline-start: 0; }
       .news-related { position: static; top: auto; }
       .news-hub__feed { max-width: none; }
+      /* Collapsed state: the category sidebar becomes an icon-less top subnav
+         that scrolls sideways so every category stays reachable on smaller
+         screens and mobile. */
       .news-sidebar__list {
         flex-direction: row;
-        gap: var(--spacing-8);
+        gap: var(--spacing-4);
         overflow-x: auto;
         scrollbar-width: none;
         -ms-overflow-style: none;
-        padding-bottom: var(--spacing-4);
+        padding-bottom: var(--spacing-8);
+        border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
       }
       .news-sidebar__list::-webkit-scrollbar { display: none; }
       .news-sidebar__link { width: auto; white-space: nowrap; }
+      .news-sidebar__icon { display: none; }
 
       .site-header--desktop {
         grid-template-columns:
@@ -2157,14 +2162,16 @@
       }
       .news-sidebar__list {
         flex-direction: row;
-        gap: var(--spacing-8);
+        gap: var(--spacing-4);
         overflow-x: auto;
         scrollbar-width: none;
         -ms-overflow-style: none;
-        padding-bottom: var(--spacing-4);
+        padding-bottom: var(--spacing-8);
+        border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
       }
       .news-sidebar__list::-webkit-scrollbar { display: none; }
       .news-sidebar__link { width: auto; white-space: nowrap; }
+      .news-sidebar__icon { display: none; }
       .news-results__list { grid-template-columns: minmax(0, 1fr); }
       .news-article--text .news-article__thumb { display: none; }
       .news-article--text-has-thumb .news-article__body {
@@ -2647,6 +2654,16 @@
       indicator.style.width = tr.width + 'px';
     }
 
+    // Reposition on the next frame after layout has settled. Double rAF guards
+    // against reading widths mid-reflow (e.g. right after a font swap/resize).
+    let _tabIndicatorRaf = 0;
+    function scheduleTabIndicator() {
+      if (_tabIndicatorRaf) cancelAnimationFrame(_tabIndicatorRaf);
+      _tabIndicatorRaf = requestAnimationFrame(() => {
+        _tabIndicatorRaf = requestAnimationFrame(positionHeaderTabIndicator);
+      });
+    }
+
     function applySearchTab(tabName, options = {}) {
       const tabChanged = activeSearchTab !== tabName;
       activeSearchTab = tabName;
@@ -2656,7 +2673,7 @@
         header.querySelectorAll('.site-header__tab').forEach(tab => {
           tab.classList.toggle('site-header__tab--active', tab.dataset.text === tabName);
         });
-        requestAnimationFrame(positionHeaderTabIndicator);
+        scheduleTabIndicator();
       }
       syncSearchView();
       const input = document.getElementById('searchInput');
@@ -2688,8 +2705,26 @@
       tabs.forEach(tab => tab.addEventListener('click', () => {
         applySearchTab(tab.dataset.text);
       }));
-      requestAnimationFrame(positionHeaderTabIndicator);
-      window.addEventListener('resize', positionHeaderTabIndicator);
+      scheduleTabIndicator();
+      window.addEventListener('resize', scheduleTabIndicator);
+      // The first measurement can run before the Inter web font finishes
+      // loading, so tab widths are measured with the fallback font and the
+      // indicator lands a few px off. Re-measure once fonts + full load settle.
+      window.addEventListener('load', scheduleTabIndicator);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(scheduleTabIndicator);
+      }
+      // The tabs row becomes a horizontal scroller on narrow widths and the
+      // indicator lives outside it, so keep it in sync when the strip scrolls.
+      const tabsRow = header.querySelector('.site-header__tabs-row');
+      if (tabsRow) tabsRow.addEventListener('scroll', scheduleTabIndicator, { passive: true });
+      // ResizeObserver fires *after* layout, catching any reflow (font swap,
+      // container width change, zoom) that the resize event can miss.
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(scheduleTabIndicator);
+        if (tabsRow) ro.observe(tabsRow);
+        tabs.forEach(t => ro.observe(t));
+      }
     }());
 
     (function initNewsSidebar() {
