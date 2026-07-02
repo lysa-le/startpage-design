@@ -509,6 +509,7 @@
       --news-publisher-max-chars: 28;
       --news-hub-y-gap: var(--spacing-24);
       --news-sidebar-width: calc(var(--spacing-24) * 7);
+      --news-hub-rail-width: 300px;
       /* Align the category sidebar with the header logo (24px inset) rather
          than the search field, giving the feed more horizontal room. */
       --news-sidebar-inset-left: var(--spacing-24);
@@ -540,7 +541,8 @@
     }
     .news-hub__main {
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) var(--news-hub-rail-width);
+      column-gap: var(--spacing-32);
       align-items: start;
       min-width: 0;
     }
@@ -649,6 +651,16 @@
       width: 300px;
       max-width: 100%;
       height: 250px;
+      background: var(--color-background-secondary);
+    }
+    .display-ad--halfpage {
+      width: 100%;
+      max-width: 300px;
+    }
+    .display-ad--halfpage .display-ad__slot {
+      width: 300px;
+      max-width: 100%;
+      height: 600px;
       background: var(--color-background-secondary);
     }
     .news-sidebar__list {
@@ -1290,9 +1302,11 @@
       }
       .site-header--desktop .site-header__nav .site-header__tabs-row::-webkit-scrollbar { display: none; }
 
-      /* First responsive step: both the small-card grid and the larger
-         featured cards step from three columns down to two. The full
-         single-column collapse happens lower, at ≤768px. */
+      /* First responsive step: drop the right ad rail so the feed reclaims
+         the full width, and step the card grids from three columns to two.
+         The single-column collapse happens lower, at ≤768px. */
+      .news-hub__rail { display: none; }
+      .news-hub__main { grid-template-columns: minmax(0, 1fr); }
       .news-results__list,
       .news-featured-band__row {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2487,6 +2501,7 @@
           <div class="news-hub__top-ad" id="newsHubTopAd" hidden aria-label="Advertisement"></div>
           <div class="news-hub__content" id="newsHubContent" aria-label="News content"></div>
         </div>
+        <aside class="news-hub__rail" id="newsHubRail" aria-label="Advertisement"></aside>
       </div>
     </div>
   </main>
@@ -4677,15 +4692,19 @@
       serpRail.innerHTML = isImagesTab() ? renderImagesTabRail(query) : renderAllTabRail();
     }
 
+    const NEWS_DISPLAY_AD_SPECS = {
+      leaderboard: { modifier: 'display-ad--leaderboard', label: '728 × 90' },
+      rectangle:   { modifier: 'display-ad--rectangle',   label: '300 × 250' },
+      halfpage:    { modifier: 'display-ad--halfpage',    label: '300 × 600' },
+    };
+
     function renderNewsHubDisplayAd(variant) {
-      const isLeaderboard = variant === 'leaderboard';
-      const modifier = isLeaderboard ? 'display-ad--leaderboard' : 'display-ad--rectangle';
-      const sizeLabel = isLeaderboard ? '728 × 90' : '300 × 250';
-      const slotHtml = `<div class="display-ad__slot" aria-hidden="true">${sizeLabel}</div>`;
-      const adBody = isLeaderboard
+      const spec = NEWS_DISPLAY_AD_SPECS[variant] || NEWS_DISPLAY_AD_SPECS.rectangle;
+      const slotHtml = `<div class="display-ad__slot" aria-hidden="true">${spec.label}</div>`;
+      const adBody = variant === 'leaderboard'
         ? `<div class="display-ad__stage">${slotHtml}</div>`
         : slotHtml;
-      return `<div class="display-ad ${modifier}" data-display-ad="${variant}">
+      return `<div class="display-ad ${spec.modifier}" data-display-ad="${variant}">
         <span class="display-ad__label">Ad</span>
         ${adBody}
       </div>`;
@@ -4693,7 +4712,7 @@
 
     function renderNewsHubRail(query) {
       return `<div class="news-hub__rail-inner">
-        ${renderNewsHubDisplayAd('rectangle')}
+        ${renderNewsHubDisplayAd('halfpage')}
       </div>`;
     }
 
@@ -4738,6 +4757,7 @@
         if (isSwiftNewsQuery(query) && !options.preserveNewsCategory) clearNewsCategorySelection();
         if (list) { list.innerHTML = ''; meta.textContent = ''; }
         renderNewsFeed(query);
+        if (newsRail) newsRail.innerHTML = noResults ? '' : renderNewsHubRail(query);
         if (options.scrollToTop) scrollPageToTopAfterRender();
         return;
       }
