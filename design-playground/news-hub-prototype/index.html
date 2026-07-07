@@ -1063,6 +1063,14 @@
       width: 100%;
       min-width: 0;
     }
+    /* On very large screens the 3-column layout produces oversized cards,
+       so step up to 4 columns for both the standard and featured grids. */
+    @media (min-width: 1600px) {
+      .news-results__list,
+      .news-featured-band__row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
     .news-featured-card {
       display: flex;
       flex-direction: column;
@@ -3685,13 +3693,23 @@
       return getQueryNewsArticles(query);
     }
 
-    /** Repeating pattern: 2 featured cards, 3×2 grid rows, 2 featured, 3×2 grid rows. */
-    const NEWS_FEED_CHUNK_PATTERN = [
-      { kind: 'featured', count: 3 },
-      { kind: 'grid', count: 6 },
-      { kind: 'featured', count: 3 },
-      { kind: 'grid', count: 6 },
-    ];
+    /* On very large screens the feed steps up to 4 columns, so the chunk
+       counts grow to keep every featured/grid row completely filled. */
+    const NEWS_LARGE_LAYOUT_MQ = window.matchMedia('(min-width: 1600px)');
+    function newsFeedColumnCount() {
+      return NEWS_LARGE_LAYOUT_MQ.matches ? 4 : 3;
+    }
+
+    /** Repeating pattern: one full featured row, two full grid rows, repeated. */
+    function newsFeedChunkPattern() {
+      const cols = newsFeedColumnCount();
+      return [
+        { kind: 'featured', count: cols },
+        { kind: 'grid', count: cols * 2 },
+        { kind: 'featured', count: cols },
+        { kind: 'grid', count: cols * 2 },
+      ];
+    }
 
     function balanceNewsFeedChunkTail(chunks) {
       if (!chunks.length) return chunks;
@@ -3719,11 +3737,12 @@
     }
 
     function buildNewsFeedChunks(articles) {
+      const pattern = newsFeedChunkPattern();
       const chunks = [];
       let i = 0;
       let patternIndex = 0;
       while (i < articles.length) {
-        const step = NEWS_FEED_CHUNK_PATTERN[patternIndex % NEWS_FEED_CHUNK_PATTERN.length];
+        const step = pattern[patternIndex % pattern.length];
         patternIndex += 1;
         if (step.kind === 'featured') {
           const slice = articles.slice(i, i + step.count);
@@ -4712,6 +4731,11 @@
         }, true);
         window.addEventListener('resize', syncAllSerpAllNewsCarousels);
       }
+      // Rebuild the feed when crossing the large-screen breakpoint so the
+      // featured/grid chunk counts match the active column count (3 ↔ 4).
+      NEWS_LARGE_LAYOUT_MQ.addEventListener('change', () => {
+        if (isNewsTab()) renderNewsFeed(searchInput ? searchInput.value : '');
+      });
       const urlParams = new URLSearchParams(location.search);
       const qParam = urlParams.get('q');
       const tabParam = urlParams.get('tab');
