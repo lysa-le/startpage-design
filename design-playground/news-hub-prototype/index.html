@@ -507,7 +507,7 @@
     .news-hub {
       display: none;
       --news-publisher-max-chars: 28;
-      --news-hub-y-gap: var(--spacing-24);
+      --news-hub-y-gap: var(--spacing-32);
       --news-sidebar-width: calc(var(--spacing-24) * 7);
       /* Align the category sidebar with the header logo (24px inset) rather
          than the search field, giving the feed more horizontal room. */
@@ -684,7 +684,7 @@
     .news-results__list {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      column-gap: var(--spacing-24);
+      column-gap: var(--spacing-32);
       row-gap: var(--news-hub-y-gap);
       width: 100%;
       min-width: 0;
@@ -703,7 +703,6 @@
       border-radius: 0;
       background: transparent;
       border: none;
-      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
       animation: fadeIn 0.15s ease both;
     }
     .news-article--text .news-article__body {
@@ -1059,7 +1058,7 @@
     .news-featured-band__row {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      column-gap: var(--spacing-24);
+      column-gap: var(--spacing-32);
       row-gap: var(--news-hub-y-gap);
       width: 100%;
       min-width: 0;
@@ -1076,7 +1075,6 @@
       border-radius: 0;
       background: transparent;
       border: none;
-      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
       animation: fadeIn 0.15s ease both;
     }
     .news-featured-card__thumb {
