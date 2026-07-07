@@ -509,7 +509,6 @@
       --news-publisher-max-chars: 28;
       --news-hub-y-gap: var(--spacing-24);
       --news-sidebar-width: calc(var(--spacing-24) * 7);
-      --news-hub-rail-width: 300px;
       /* Align the category sidebar with the header logo (24px inset) rather
          than the search field, giving the feed more horizontal room. */
       --news-sidebar-inset-left: var(--spacing-24);
@@ -541,8 +540,7 @@
     }
     .news-hub__main {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) var(--news-hub-rail-width);
-      column-gap: var(--spacing-32);
+      grid-template-columns: minmax(0, 1fr);
       align-items: start;
       min-width: 0;
     }
@@ -562,106 +560,6 @@
       min-height: calc(var(--spacing-24) * 8);
       min-width: 0;
       width: 100%;
-    }
-    .news-hub__rail {
-      --news-hub-rail-width: 300px;
-      width: var(--news-hub-rail-width);
-      flex-shrink: 0;
-    }
-    .news-hub__rail-inner {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-24);
-      position: sticky;
-      top: var(--spacing-24);
-    }
-    .news-hub__top-ad {
-      width: 100%;
-    }
-    .news-hub__top-ad[hidden] {
-      display: none;
-    }
-
-    /* Display ad placeholders (News tab) */
-    .display-ad {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--spacing-8);
-      flex-shrink: 0;
-    }
-    .display-ad__label {
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .display-ad__slot {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      border: none;
-      border-radius: var(--radius-sm);
-      background: var(--color-background-tertiary);
-      color: var(--color-text-tertiary);
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-    }
-    .display-ad--leaderboard {
-      --display-ad-leaderboard-width: 728px;
-      --display-ad-leaderboard-height: 90px;
-      width: 100%;
-    }
-    .display-ad--leaderboard .display-ad__stage {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: var(--display-ad-leaderboard-height);
-      background: var(--color-background-tertiary);
-      border-radius: var(--radius-sm);
-    }
-    .display-ad--leaderboard .display-ad__slot {
-      width: var(--display-ad-leaderboard-width);
-      height: var(--display-ad-leaderboard-height);
-      flex-shrink: 0;
-      background: var(--color-background-secondary);
-    }
-    /* Once the feed narrows to the 728px ad width, the surrounding grey
-       stage no longer adds anything, so drop it and let the ad sit as a
-       plain 728px slot. Below 728px there's no room, so it disappears. */
-    @container news-feed (max-width: 728px) {
-      .display-ad--leaderboard .display-ad__stage {
-        background: transparent;
-      }
-    }
-    @container news-feed (max-width: 727px) {
-      .news-hub__top-ad {
-        display: none !important;
-      }
-    }
-    .display-ad--rectangle {
-      width: 100%;
-      max-width: 300px;
-    }
-    .display-ad--rectangle .display-ad__slot {
-      width: 300px;
-      max-width: 100%;
-      height: 250px;
-      background: var(--color-background-secondary);
-    }
-    .display-ad--halfpage {
-      width: 100%;
-      max-width: 300px;
-    }
-    .display-ad--halfpage .display-ad__slot {
-      width: 300px;
-      max-width: 100%;
-      height: 600px;
-      background: var(--color-background-secondary);
     }
     .news-sidebar__list {
       list-style: none;
@@ -1302,11 +1200,8 @@
       }
       .site-header--desktop .site-header__nav .site-header__tabs-row::-webkit-scrollbar { display: none; }
 
-      /* First responsive step: drop the right ad rail so the feed reclaims
-         the full width, and step the card grids from three columns to two.
+      /* First responsive step: step the card grids from three columns to two.
          The single-column collapse happens lower, at ≤768px. */
-      .news-hub__rail { display: none; }
-      .news-hub__main { grid-template-columns: minmax(0, 1fr); }
       .news-results__list,
       .news-featured-band__row {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2222,7 +2117,6 @@
         justify-self: auto;
       }
       .news-article--text-has-thumb .news-article__aside { display: none; }
-      .news-hub__rail { display: none; }
 
       /* Slightly smaller result titles */
       .algo-result__title,
@@ -2485,10 +2379,8 @@
       </aside>
       <div class="news-hub__main">
         <div class="news-hub__feed">
-          <div class="news-hub__top-ad" id="newsHubTopAd" hidden aria-label="Advertisement"></div>
           <div class="news-hub__content" id="newsHubContent" aria-label="News content"></div>
         </div>
-        <aside class="news-hub__rail" id="newsHubRail" aria-label="Advertisement"></aside>
       </div>
     </div>
   </main>
@@ -4676,42 +4568,6 @@
       serpRail.innerHTML = isImagesTab() ? renderImagesTabRail(query) : renderAllTabRail();
     }
 
-    const NEWS_DISPLAY_AD_SPECS = {
-      leaderboard: { modifier: 'display-ad--leaderboard', label: '728 × 90' },
-      rectangle:   { modifier: 'display-ad--rectangle',   label: '300 × 250' },
-      halfpage:    { modifier: 'display-ad--halfpage',    label: '300 × 600' },
-    };
-
-    function renderNewsHubDisplayAd(variant) {
-      const spec = NEWS_DISPLAY_AD_SPECS[variant] || NEWS_DISPLAY_AD_SPECS.rectangle;
-      const slotHtml = `<div class="display-ad__slot" aria-hidden="true">${spec.label}</div>`;
-      const adBody = variant === 'leaderboard'
-        ? `<div class="display-ad__stage">${slotHtml}</div>`
-        : slotHtml;
-      return `<div class="display-ad ${spec.modifier}" data-display-ad="${variant}">
-        <span class="display-ad__label">Ad</span>
-        ${adBody}
-      </div>`;
-    }
-
-    function renderNewsHubRail(query) {
-      return `<div class="news-hub__rail-inner">
-        ${renderNewsHubDisplayAd('halfpage')}
-      </div>`;
-    }
-
-    function syncNewsHubDisplayAds(show) {
-      const topAd = document.getElementById('newsHubTopAd');
-      if (!topAd) return;
-      if (show) {
-        topAd.innerHTML = renderNewsHubDisplayAd('leaderboard');
-        topAd.hidden = false;
-      } else {
-        topAd.innerHTML = '';
-        topAd.hidden = true;
-      }
-    }
-
     function renderRelatedSearches(query) {
       const items = getRelatedSearches(query);
       return `<section class="news-related">
@@ -4732,22 +4588,16 @@
       const list = document.getElementById('resultsList');
       const meta = document.getElementById('serpMeta');
       const newsContent = document.getElementById('newsHubContent');
-      const newsRail = document.getElementById('newsHubRail');
       if (isNewsTab()) {
         if (serpTopAdEl) { serpTopAdEl.innerHTML = ''; serpTopAdEl.hidden = true; }
         syncSerpViewRail('');
-        const noResults = isNoResultsNewsQuery(query);
-        syncNewsHubDisplayAds(!noResults);
         if (isSwiftNewsQuery(query) && !options.preserveNewsCategory) clearNewsCategorySelection();
         if (list) { list.innerHTML = ''; meta.textContent = ''; }
         renderNewsFeed(query);
-        if (newsRail) newsRail.innerHTML = noResults ? '' : renderNewsHubRail(query);
         if (options.scrollToTop) scrollPageToTopAfterRender();
         return;
       }
-      syncNewsHubDisplayAds(false);
       if (newsContent) newsContent.innerHTML = '';
-      if (newsRail) newsRail.innerHTML = '';
       if (!isSerpResultsTab()) {
         if (list) list.innerHTML = '';
         if (meta) meta.textContent = '';
