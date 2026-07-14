@@ -9,9 +9,13 @@
     { "source": "/design-playground/ad-block-banner/", "destination": "/design-playground/ad-block-banner/index.html" },
     { "source": "/design-playground/news-hub-prototype", "destination": "/design-playground/news-hub-prototype/index.html" },
     { "source": "/design-playground/news-hub-prototype/", "destination": "/design-playground/news-hub-prototype/index.html" },
+    { "source": "/design-playground/accounts", "destination": "/design-playground/accounts/index.html" },
+    { "source": "/design-playground/accounts/", "destination": "/design-playground/accounts/index.html" },
     { "source": "/ad-block-banner", "destination": "/design-playground/ad-block-banner/index.html" },
     { "source": "/ad-block-banner/", "destination": "/design-playground/ad-block-banner/index.html" },
     { "source": "/news-hub-prototype", "destination": "/design-playground/news-hub-prototype/index.html" },
-    { "source": "/news-hub-prototype/", "destination": "/design-playground/news-hub-prototype/index.html" }
+    { "source": "/news-hub-prototype/", "destination": "/design-playground/news-hub-prototype/index.html" },
+    { "source": "/accounts", "destination": "/design-playground/accounts/index.html" },
+    { "source": "/accounts/", "destination": "/design-playground/accounts/index.html" }
   ]
 }

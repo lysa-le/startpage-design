@@ -1510,16 +1510,33 @@
     }
 
     @media (max-width: 560px) {
-      .cta-slim { flex-direction: column; align-items: stretch; gap: 16px; padding: 16px; margin: 0 8px 28px; }
-      /* Icon + message left, button right */
-      .cta-slim__item { justify-content: flex-start; align-items: center; padding: 0; }
+      .cta-slim { flex-direction: row; align-items: center; gap: 0; padding: 16px; margin: 0 8px 28px; }
+      /* Mobile: app CTA only — hide Chrome row + divider */
+      .cta-slim > .cta-slim__divider,
+      .cta-slim > .cta-slim__item:last-child { display: none; }
+      .cta-slim__item { justify-content: flex-start; align-items: center; padding: 0; flex: 1; min-width: 0; }
       .cta-slim__text { flex: 1; min-width: 0; text-align: left; }
       .cta-slim__item .btn { margin-left: auto; flex-shrink: 0; }
-      /* Horizontal divider sits between the two CTAs */
-      .cta-slim__divider { display: block; width: 100%; height: 1px; margin: 0; }
-      /* Mobile copy swap for the second CTA */
-      .cta-slim__text--desktop { display: none; }
-      .cta-slim__text--mobile  { display: inline; }
+      /* Get the app — filled brand blue, white label */
+      .cta-slim .btn--product-selected {
+        background-color: var(--color-button-brandblue);
+        color: #FFFFFF;
+        border: none;
+      }
+      .cta-slim .btn--product-selected::before {
+        background: var(--color-button-brandbluehover);
+      }
+      .cta-slim .btn--product-selected:hover {
+        color: #FFFFFF;
+        border-color: transparent;
+      }
+      [data-theme="dark"] .cta-slim .btn--product-selected {
+        background-color: var(--color-button-brandblue);
+        color: #FFFFFF;
+      }
+      [data-theme="dark"] .cta-slim .btn--product-selected:hover {
+        color: #FFFFFF;
+      }
     }
 
     /* ════════════════════════════════════════════════════════════

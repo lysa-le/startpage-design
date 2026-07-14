@@ -1,0 +1,3111 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search — cheese — Accounts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       Dark mode token overrides
+       ───────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+      --color-text-inverted:  var(--color-black-800);
+      --color-text-brandblue: var(--color-brand-blue-100);
+      --color-text-link:      var(--color-brand-blue-100);
+      --color-text-teal:      var(--color-teal-400);
+      --color-text-error:     var(--color-red-400);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-100);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-button-brandblue:          var(--color-brand-blue-100);
+      --color-button-brandbluehover:     var(--color-brand-blue-300);
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-button-inactive:           var(--color-black-600);
+      --color-button-teal:               var(--color-teal-400);
+      --color-button-tealhover:          var(--color-teal-200);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-100);
+
+      --color-accent-gold:     var(--color-gold-200);
+      --color-accent-gold-alt: var(--color-gold-500);
+      --color-accent-teal:     var(--color-teal-200);
+      --color-accent-teal-alt: var(--color-teal-500);
+      --color-button-social:   var(--color-brand-blue-100);
+    }
+
+    /* ─────────────────────────────────────────────
+       Page scaffold
+       ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      transition: background-color 0.2s ease, color 0.2s ease;
+      min-height: 100vh;
+    }
+
+    /* Auth visibility */
+    body[data-auth="signed-in"] .auth-out { display: none !important; }
+    body[data-auth="signed-out"] .auth-in { display: none !important; }
+
+    /* ── Search field (embedded) ── */
+    .search-field {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-full);
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+    .search-field:focus-within { border-color: var(--color-stroke-primary-button); }
+    .search-field--serp { height: 40px; }
+    .search-field__input {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      padding: 0 0 0 var(--spacing-16);
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      caret-color: var(--color-text-tertiary);
+    }
+    .search-field__input::placeholder { color: var(--color-text-secondary); opacity: 0.6; }
+    .search-field__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      padding-right: var(--spacing-20);
+      flex-shrink: 0;
+    }
+    .search-field__clear {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-icon-tertiary);
+      flex-shrink: 0;
+      transition: color 100ms ease;
+    }
+    .search-field__clear:hover { color: var(--color-icon-primary); }
+    .search-field.has-value .search-field__clear { display: flex; }
+    .search-field--serp .search-field__clear { display: flex; }
+    .search-field__divider {
+      display: none;
+      width: 1px;
+      height: 16px;
+      background: var(--color-stroke-primary);
+      flex-shrink: 0;
+    }
+    .search-field.has-value .search-field__divider { display: block; }
+    .search-field--serp .search-field__divider { display: block; }
+    .search-field__submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-icon-secondary);
+      flex-shrink: 0;
+      transition: opacity 100ms ease;
+    }
+    .search-field__submit:hover { opacity: 0.75; }
+
+    /* ── Site header — desktop ── */
+    .site-header {
+      position: relative;
+      width: 100%;
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+    }
+    .site-header__logo {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .site-header__logo-svg {
+      display: block;
+      width: 104px;
+      height: auto;
+      color: var(--color-text-primary);
+    }
+    .site-header__tabs {
+      display: flex;
+      align-items: center;
+    }
+    .site-header__tab {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+    .site-header__tab::after {
+      content: attr(data-text);
+      display: block;
+      font-weight: var(--font-weight-semibold);
+      height: 0;
+      overflow: hidden;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .site-header__tab--active {
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-brandblue);
+    }
+    .site-header__tab:hover:not(.site-header__tab--active) { color: var(--color-text-brandblue); }
+    [data-theme="dark"] .site-header__tab:hover:not(.site-header__tab--active) { color: var(--color-button-brandblue); }
+    .site-header__tab-indicator {
+      position: absolute;
+      bottom: 0;
+      height: 3px;
+      background: var(--color-text-brandblue);
+      border-radius: var(--radius-full);
+      pointer-events: none;
+      transition: left 200ms ease, width 200ms ease;
+    }
+    .site-header--desktop {
+      display: grid;
+      grid-template-columns:
+        var(--spacing-24)
+        104px
+        var(--spacing-24)
+        1fr
+        var(--spacing-24)
+        auto
+        var(--spacing-40);
+      grid-template-rows: 67px 36px;
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .site-header--desktop .site-header__top {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      display: grid;
+      grid-template-columns: subgrid;
+      align-items: center;
+    }
+    .site-header--desktop .site-header__top .site-header__logo { grid-column: 2; }
+    .site-header--desktop .site-header__right { grid-column: 6; }
+    .site-header--desktop .site-header__search-wrap {
+      grid-column: 4;
+      max-width: 628px;
+      min-width: 0;
+    }
+    .site-header--desktop .search-field--serp { box-shadow: var(--shadow-search); }
+    .site-header__right {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      justify-self: end;
+      min-height: calc(var(--spacing-32) + var(--spacing-16));
+    }
+
+    /* Top-right chrome — matches homepage (absolute, outside SERP header grid) */
+    .hp-chrome {
+      position: absolute;
+      top: var(--spacing-24);
+      right: var(--spacing-40);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      min-height: calc(var(--spacing-32) + var(--spacing-16)); /* 48px */
+      padding-right: calc(var(--spacing-20) + var(--spacing-24));
+    }
+
+    .hp-chrome__auth {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--spacing-12);
+      min-height: calc(var(--spacing-32) + var(--spacing-16));
+    }
+
+    .hp-chrome__account-wrap {
+      position: relative;
+    }
+
+    .hp-chrome__account {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: calc(var(--spacing-32) + var(--spacing-16)); /* 48px */
+      height: calc(var(--spacing-32) + var(--spacing-16));
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--color-icon-secondary);
+      border-radius: var(--radius-full);
+      transition: background-color 0.15s ease;
+    }
+    [data-theme="dark"] .hp-chrome__account {
+      color: var(--color-teal-400);
+    }
+    .hp-chrome__account:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hp-chrome__account[aria-expanded="true"] {
+      background: var(--color-background-tertiary);
+    }
+
+    .hp-chrome__account-svg {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      display: block;
+    }
+
+    .hp-chrome__menu {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--color-text-primary);
+      cursor: pointer;
+    }
+    .hp-chrome__menu:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hp-chrome__menu-icon {
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      display: block;
+    }
+
+    .hp-btn,
+    .plan-modal__cta {
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--font-label-xs-lh);
+    }
+
+    .hp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--spacing-32);
+      padding: 0 var(--spacing-24);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, filter 0.15s ease;
+    }
+    .hp-btn--teal {
+      background: var(--color-accent-teal);
+      color: var(--color-text-primary);
+      min-width: calc(var(--spacing-96) + var(--spacing-16) + 2px);
+    }
+    .hp-btn--teal:hover { filter: brightness(0.96); }
+    [data-theme="dark"] .hp-btn--teal {
+      background: var(--color-button-teal);
+      color: var(--color-text-inverted);
+    }
+    .hp-btn--product {
+      background: var(--color-button-productfilled);
+      color: var(--color-text-primary);
+      min-width: calc(var(--spacing-96) + var(--spacing-16) + 1px);
+    }
+    .hp-btn--product:hover {
+      background: var(--color-button-productfilledhover);
+    }
+
+    .account-menu {
+      position: absolute;
+      top: calc(100% + var(--spacing-16));
+      right: 0;
+      width: calc(var(--spacing-24) * 12 - var(--spacing-8));
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-24);
+      padding: var(--spacing-24);
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-dropdown);
+      z-index: 20;
+    }
+    .account-menu.is-open { display: flex; }
+
+    .account-menu__header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+    .account-menu__avatar {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      color: var(--color-icon-secondary);
+    }
+    [data-theme="dark"] .account-menu__avatar {
+      color: var(--color-teal-400);
+    }
+    .account-menu__badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px var(--spacing-12);
+      border-radius: var(--radius-full);
+      background: var(--color-icon-secondary);
+      color: var(--color-text-inverted);
+      font-family: var(--font-family);
+      font-size: var(--font-label-xs);
+      line-height: var(--font-label-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      white-space: nowrap;
+    }
+    .account-menu__badge[data-plan="premium"] {
+      background: var(--color-teal-200);
+      color: var(--color-text-primary);
+    }
+    [data-theme="dark"] .account-menu__badge[data-plan="basic"] {
+      background: var(--color-brand-blue-300);
+      color: var(--color-text-inverted);
+    }
+    [data-theme="dark"] .account-menu__badge[data-plan="premium"] {
+      background: var(--color-teal-400);
+      color: var(--color-text-inverted);
+    }
+    .account-menu__rule {
+      height: 0;
+      border: none;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      margin: 0;
+      width: 100%;
+    }
+    .account-menu__link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      width: 100%;
+      padding: 0;
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--font-family);
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    .account-menu__link:hover .account-menu__link-title {
+      color: var(--color-text-link);
+    }
+    .account-menu__link:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-sm);
+    }
+    .account-menu__link-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      min-width: 0;
+      flex: 1;
+    }
+    .account-menu__link-title {
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+    .account-menu__link-caption {
+      font-size: var(--font-utility-caption);
+      line-height: var(--font-utility-caption-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+      letter-spacing: -0.01em;
+    }
+    .account-menu__chevron {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+      color: var(--color-icon-tertiary);
+    }
+    .account-menu__signout {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-8);
+      width: 100%;
+      height: calc(var(--spacing-40) + 3px);
+      padding: var(--spacing-8) var(--spacing-16);
+      border: none;
+      border-radius: var(--radius-lg);
+      background: var(--color-button-inactive);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-label-xs);
+      line-height: 1.125rem;
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .account-menu__signout:hover { filter: brightness(0.97); }
+    .account-menu__signout:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .account-menu__signout-icon {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+    }
+    .account-menu__footer {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+    .account-menu__upgrade {
+      width: 100%;
+      min-width: 0;
+      height: calc(var(--spacing-40) + 3px);
+      font-family: var(--font-family);
+      font-size: var(--font-label-xs);
+      line-height: 1.125rem;
+      font-weight: var(--font-weight-semibold);
+    }
+    body[data-plan="premium"] .account-menu__upgrade {
+      display: none !important;
+    }
+    .site-header--desktop .site-header__nav {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: grid;
+      grid-template-columns: subgrid;
+      align-items: stretch;
+    }
+    .site-header--desktop .site-header__nav .site-header__tabs-row {
+      grid-column: 4;
+      display: flex;
+      align-items: stretch;
+      max-width: 628px;
+    }
+    .site-header__tabs-scroll {
+      position: relative;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .site-header__tabs-scroll .site-header__tabs {
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      flex-wrap: nowrap;
+    }
+    .site-header__tabs-scroll .site-header__tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .site-header__tabs-scroll::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 48px;
+      height: 100%;
+      background: linear-gradient(to right, transparent, var(--color-background-primary));
+      pointer-events: none;
+    }
+    .site-header--desktop .site-header__tabs {
+      height: 100%;
+      gap: var(--spacing-24);
+      padding-left: var(--spacing-16);
+    }
+    .site-header__filter-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-icon-primary);
+      flex-shrink: 0;
+      transition: color 150ms ease;
+    }
+    .site-header--desktop .site-header__nav .site-header__filter-btn { padding-right: var(--spacing-20); }
+    .site-header__filter-btn:hover { color: var(--color-icon-secondary); }
+    [data-theme="dark"] .site-header__filter-btn:hover { color: var(--color-button-brandblue); }
+
+    /* ── Results body ── */
+    .serp-body {
+      padding: var(--spacing-32) var(--spacing-48) var(--spacing-48)
+        calc(var(--spacing-24) + 104px + var(--spacing-24));
+    }
+
+    .serp-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 598px) minmax(0, calc(var(--spacing-24) * 18)); /* ~432px rail */
+      gap: var(--spacing-80);
+      align-items: start;
+      max-width: calc(598px + var(--spacing-80) + (var(--spacing-24) * 18));
+    }
+
+    .serp-main {
+      min-width: 0;
+    }
+
+    .serp-meta {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--spacing-24);
+      min-height: 18px;
+    }
+
+    /* ── Filter bar — Figma 3895:2856 ── */
+    .serp-filters {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--spacing-20) var(--spacing-24);
+      margin-bottom: var(--spacing-24);
+    }
+
+    .serp-filters__private {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-4);
+      height: calc(var(--spacing-24) + var(--spacing-4)); /* 28px */
+      padding: 0 var(--spacing-8);
+      border: none;
+      border-radius: var(--radius-full);
+      background: var(--color-teal-100);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: 1;
+      font-weight: var(--font-weight-semibold);
+      cursor: default;
+      white-space: nowrap;
+    }
+    [data-theme="dark"] .serp-filters__private {
+      background: var(--color-background-quaternary);
+    }
+
+    .serp-filters__private-icon {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      color: var(--color-teal-400);
+      flex-shrink: 0;
+      display: block;
+    }
+    .serp-filters__private-check {
+      stroke: var(--color-black-900);
+    }
+
+    .serp-filters__dropdowns {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--spacing-24);
+    }
+
+    .serp-filters__dropdown {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-4);
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .serp-filters__dropdown:hover {
+      color: var(--color-text-brandblue);
+    }
+    [data-theme="dark"] .serp-filters__dropdown:hover {
+      color: var(--color-button-brandblue);
+    }
+    .serp-filters__dropdown:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-sm);
+    }
+
+    .serp-filters__chevron {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      color: var(--color-icon-tertiary);
+      flex-shrink: 0;
+      display: block;
+    }
+
+    /* ── Results list ── */
+    .results-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-32);
+      max-width: 598px;
+      overflow: visible;
+    }
+
+    /* ── Right rail — Wikipedia knowledge panel (Figma 3894:2835) ── */
+    .serp-rail {
+      min-width: 0;
+      position: sticky;
+      top: var(--spacing-24);
+      /* Sit under the meta line, slightly closer to results */
+      margin-top: var(--spacing-40);
+    }
+
+    .serp-rail[hidden] {
+      display: none !important;
+    }
+
+    .knowledge-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-24);
+      width: 100%;
+    }
+
+    .knowledge-panel__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+    }
+
+    .knowledge-panel__headings {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding-top: var(--spacing-16);
+    }
+
+    .knowledge-panel__title {
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-text-primary);
+    }
+
+    .knowledge-panel__subtitle {
+      margin: var(--spacing-8) 0 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+    }
+
+    .knowledge-panel__image {
+      flex: 0 0 auto;
+      width: calc(var(--spacing-48) + var(--spacing-96) + var(--spacing-8)); /* ~152 */
+      height: calc(var(--spacing-48) + var(--spacing-40)); /* ~88 */
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+      background: var(--color-background-secondary);
+    }
+
+    .knowledge-panel__rule {
+      display: block;
+      width: 100%;
+      margin: 0;
+      border: none;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+
+    .knowledge-panel__text {
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .knowledge-panel__continue {
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .knowledge-panel__continue:hover {
+      text-decoration: underline;
+    }
+
+    .knowledge-panel__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      flex-wrap: wrap;
+    }
+
+    .knowledge-panel__more,
+    .knowledge-panel__actions {
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+    }
+
+    .knowledge-panel__more {
+      color: var(--color-text-primary);
+    }
+
+    .knowledge-panel__more-link,
+    .knowledge-panel__action {
+      color: var(--color-text-link);
+      text-decoration: none;
+      background: none;
+      border: none;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+    .knowledge-panel__more-link:hover,
+    .knowledge-panel__action:hover {
+      text-decoration: underline;
+    }
+
+    .knowledge-panel__sep {
+      color: var(--color-text-tertiary);
+      margin: 0 var(--spacing-8);
+    }
+
+    .knowledge-panel__actions {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    /* ── Result entry animation ── */
+    .algo-result, .ad-result {
+      animation: fadeIn 0.15s ease both;
+      position: relative;
+      z-index: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── Empty state ── */
+    .serp-empty {
+      max-width: 598px;
+      padding: var(--spacing-48) 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+
+    .serp-empty__title {
+      font-size: var(--font-body-lg);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .serp-empty__sub {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-secondary);
+    }
+
+    /* ── Match highlight ── */
+    mark {
+      background: none;
+      color: inherit;
+      font-weight: var(--font-weight-semibold);
+    }
+
+    /* ─────────────────────────────────────────────
+       Organic result — algo-result
+       ───────────────────────────────────────────── */
+    .algo-result {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+      width: 100%;
+    }
+
+    .algo-result__source {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .algo-result__favicon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-background-secondary);
+      flex-shrink: 0;
+    }
+
+    .algo-result__source-info {
+      display: flex;
+      flex-direction: column;
+      line-height: var(--font-body-sm-lh);
+    }
+
+    .algo-result__site-name {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .algo-result__url {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+    }
+
+    .algo-result__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+
+    .algo-result__title {
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+      display: block;
+    }
+
+    .algo-result__title:hover { text-decoration: underline; }
+
+    .algo-result__description {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .algo-result__av-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .algo-result__av-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: var(--color-icon-secondary);
+    }
+
+    .algo-result__av-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+
+    .algo-result__av-label:hover { text-decoration: underline; }
+
+    /* ── Premium privacy shield (signed-in + premium only) ── */
+    .algo-result--premium {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) var(--spacing-32);
+      column-gap: var(--spacing-12);
+      align-items: start;
+    }
+    .algo-result--premium.is-privacy-open {
+      z-index: 40;
+    }
+
+    .algo-result__main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+
+    .algo-result__privacy {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      padding-top: var(--spacing-4);
+      z-index: 1;
+    }
+
+    .privacy-shield {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      margin: 0;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-icon-secondary);
+      cursor: pointer;
+      overflow: visible;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .privacy-shield:hover {
+      background: var(--color-background-secondary);
+    }
+    .privacy-shield[aria-expanded="true"] {
+      background: var(--color-background-secondary);
+      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-icon-secondary);
+    }
+    [data-theme="dark"] .privacy-shield[aria-expanded="true"] {
+      background: var(--color-background-quaternary);
+      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-icon-secondary);
+    }
+    .privacy-shield:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+
+    .privacy-shield__icon {
+      width: var(--spacing-16);
+      height: calc(var(--spacing-16) + var(--spacing-4));
+      display: block;
+      overflow: visible;
+    }
+
+    .privacy-popover {
+      position: absolute;
+      top: calc(100% + var(--spacing-8));
+      right: 0;
+      z-index: 50;
+      width: calc(var(--spacing-24) * 13); /* 312px */
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-dropdown);
+      isolation: isolate;
+    }
+    .privacy-popover.is-open {
+      display: flex;
+    }
+
+    .privacy-popover__top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+      padding: var(--spacing-16);
+      background: var(--color-teal-100);
+    }
+    [data-theme="dark"] .privacy-popover__top {
+      background: var(--color-background-quaternary);
+    }
+
+    .privacy-popover__eyebrow {
+      margin: 0 0 var(--spacing-4);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+    }
+
+    .privacy-popover__domain {
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      word-break: break-word;
+    }
+
+    .privacy-popover__close {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-24);
+      height: var(--spacing-24);
+      margin: 0;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      cursor: pointer;
+      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-stroke-secondary);
+    }
+    .privacy-popover__close:hover {
+      background: var(--color-background-secondary);
+    }
+    .privacy-popover__close svg {
+      width: var(--spacing-12);
+      height: var(--spacing-12);
+      display: block;
+    }
+
+    .privacy-popover__body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+      padding: var(--spacing-16);
+      background: var(--color-background-primary);
+    }
+
+    .privacy-popover__list {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .privacy-popover__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      min-height: calc(var(--spacing-40) + var(--spacing-4));
+      padding: var(--spacing-12) var(--spacing-16);
+      background: var(--color-background-primary);
+    }
+    .privacy-popover__row + .privacy-popover__row {
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+
+    .privacy-popover__label {
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+    }
+
+    .privacy-popover__value {
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      text-align: right;
+    }
+    .privacy-popover__value--good {
+      color: var(--color-text-teal);
+    }
+    .privacy-popover__value--warn {
+      color: var(--color-accent-gold);
+    }
+    .privacy-popover__value--bad {
+      color: var(--color-text-error);
+    }
+
+    .privacy-popover__grade {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: calc(var(--spacing-24) + var(--spacing-4));
+      height: calc(var(--spacing-24) + var(--spacing-4));
+      padding: 0 var(--spacing-8);
+      border-radius: var(--radius-full);
+      background: var(--color-background-secondary);
+      font-weight: var(--font-weight-bold);
+    }
+    .privacy-popover__grade--good {
+      background: var(--color-teal-100);
+      color: var(--color-text-teal);
+    }
+    [data-theme="dark"] .privacy-popover__grade--good {
+      background: color-mix(in srgb, var(--color-teal-400) 22%, var(--color-background-tertiary));
+      color: var(--color-teal-400);
+    }
+    .privacy-popover__grade--warn {
+      background: var(--color-gold-100);
+      color: var(--color-accent-gold);
+    }
+    .privacy-popover__grade--bad {
+      background: var(--color-red-100);
+      color: var(--color-text-error);
+    }
+
+    .privacy-popover__ai {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+      padding: var(--spacing-12) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      border: var(--border-stroke-sm) solid var(--color-stroke-error);
+      background: var(--color-red-100);
+    }
+    [data-theme="dark"] .privacy-popover__ai {
+      background: color-mix(in srgb, var(--color-red-500) 18%, var(--color-background-tertiary));
+    }
+    .privacy-popover__ai-title {
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-error);
+    }
+    .privacy-popover__ai-body {
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .privacy-popover__block {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-8);
+      width: 100%;
+      height: var(--spacing-40);
+      margin: 0;
+      padding: 0 var(--spacing-16);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-label-xs);
+      line-height: var(--font-label-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .privacy-popover__block:hover {
+      background: var(--color-background-secondary);
+      border-color: var(--color-stroke-primary-button);
+    }
+    .privacy-popover__block:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .privacy-popover__block-icon {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+      display: block;
+    }
+
+    /* ─────────────────────────────────────────────
+       Ad result — ad-result
+       ───────────────────────────────────────────── */
+    .ad-result {
+      --ad-gap: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--ad-gap);
+      width: 100%;
+    }
+
+    .ad-result__sponsored {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+    }
+
+    .ad-result__source {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .ad-result__favicon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-background-secondary);
+      flex-shrink: 0;
+    }
+
+    .ad-result__source-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+    }
+
+    .ad-result__source-info {
+      display: flex;
+      flex-direction: column;
+      line-height: var(--font-body-sm-lh);
+    }
+
+    .ad-result__site-name {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .ad-result__url {
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+    }
+
+    .ad-result__dots-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      padding: var(--spacing-4);
+      cursor: pointer;
+      color: var(--color-text-tertiary);
+      border-radius: var(--radius-sm);
+      transition: color 0.15s ease, background-color 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .ad-result__dots-btn:hover {
+      color: var(--color-text-secondary);
+      background-color: var(--color-background-secondary);
+    }
+
+    .ad-result__body {
+      display: flex;
+      align-items: flex-start;
+      gap: 19px;
+    }
+
+    .ad-result__text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ad-result__title {
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+      display: block;
+    }
+
+    .ad-result__title:hover { text-decoration: underline; }
+
+    .ad-result__description {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .ad-result__image {
+      width: 100px;
+      height: 100px;
+      border-radius: var(--radius-lg);
+      background-color: var(--color-background-secondary);
+      flex-shrink: 0;
+    }
+
+    .ad-result__rating {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .ad-result__stars { display: flex; align-items: center; }
+
+    .star { width: 16px; height: 16px; flex-shrink: 0; }
+    .star--filled { color: var(--color-accent-gold); }
+    .star--empty  { color: var(--color-stroke-primary); }
+
+    .ad-result__rating-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+
+    .ad-result__sitelinks {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      flex-wrap: wrap;
+    }
+
+    .ad-result__sitelink {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+
+    .ad-result__sitelink:hover { text-decoration: underline; }
+
+    .ad-result__sitelink-sep {
+      color: var(--color-text-tertiary);
+      line-height: var(--font-body-sm-lh);
+      user-select: none;
+    }
+
+    /* ── Proto chrome (playground + theme) ── */
+    .proto-chrome {
+      position: fixed;
+      bottom: var(--spacing-24);
+      right: var(--spacing-24);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+
+    .proto-back {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .proto-back:hover { text-decoration: underline; }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-stroke-primary-button);
+    }
+
+    /* ── Go Ad-Free plan modal ── */
+    .plan-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-24);
+      background: color-mix(in srgb, var(--color-midnight-500) 45%, transparent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .plan-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .plan-modal {
+      position: relative;
+      width: 100%;
+      max-width: calc(var(--spacing-24) * 23 + var(--spacing-32));
+      max-height: calc(100vh - var(--spacing-48));
+      overflow: auto;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-dropdown);
+      padding: var(--spacing-32) var(--spacing-40) var(--spacing-24);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+      transform: translateY(var(--spacing-8));
+      transition: transform 0.2s ease;
+    }
+    .plan-overlay.is-open .plan-modal {
+      transform: translateY(0);
+    }
+
+    .plan-modal__close {
+      position: absolute;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      flex-shrink: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      z-index: 1;
+      transition: background-color 0.12s ease, color 0.12s ease;
+    }
+    .plan-modal__close:hover {
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+    }
+    .plan-modal__close svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+    }
+
+    .plan-modal__intro {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-20);
+      text-align: center;
+      padding-top: var(--spacing-8);
+    }
+
+    .plan-modal__logo {
+      position: relative;
+      width: calc(var(--spacing-48) + var(--spacing-40));
+      aspect-ratio: 212 / 47.4792;
+      color: var(--color-text-primary);
+    }
+
+    .hp-logo__mark {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .hp-logo__t {
+      position: absolute;
+      left: calc(100% * 29 / 212);
+      top: calc(100% * 2.1 / 47.4792);
+      width: calc(100% * 12.7038 / 212);
+      height: calc(100% * 31.1732 / 47.4792);
+      display: block;
+      pointer-events: none;
+    }
+
+    .plan-modal__headline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-16);
+      max-width: 100%;
+    }
+
+    .plan-modal__party {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .plan-modal__title {
+      font-size: calc(var(--font-size-16) * 2);
+      line-height: calc(var(--font-size-16) * 2);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-text-primary);
+      text-wrap: balance;
+    }
+
+    .plan-modal__accent {
+      font-weight: var(--font-weight-extrabold);
+      color: var(--color-text-brandblue);
+    }
+
+    .plan-modal__lede {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+
+    .plan-toggle {
+      display: inline-flex;
+      align-self: center;
+      padding: var(--spacing-4);
+      border-radius: var(--radius-full);
+      background: var(--color-background-tertiary);
+      gap: var(--spacing-4);
+    }
+
+    .plan-toggle__btn {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-medium);
+      padding: var(--spacing-8) var(--spacing-20);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .plan-toggle__btn.is-active {
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      box-shadow: var(--shadow-card);
+    }
+    .plan-toggle__save {
+      margin-left: var(--spacing-4);
+      color: var(--color-text-brandblue);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .plan-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-12);
+    }
+
+    .plan-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      padding: var(--spacing-16);
+      border-radius: var(--radius-lg);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      background: var(--color-background-primary);
+      position: relative;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+      color: inherit;
+      transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .plan-card:hover {
+      border-color: var(--color-stroke-primary);
+    }
+    .plan-card.is-selected {
+      border-color: var(--color-stroke-primary-button);
+      border-width: var(--border-stroke-lg);
+      box-shadow: var(--shadow-card);
+    }
+    .plan-card:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+
+    .plan-card__badge {
+      position: absolute;
+      top: calc(var(--spacing-12) * -1);
+      left: 50%;
+      transform: translateX(-50%);
+      padding: var(--spacing-4) var(--spacing-12);
+      border-radius: var(--radius-full);
+      background: var(--color-icon-secondary);
+      color: var(--color-text-inverted);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      white-space: nowrap;
+    }
+
+    .plan-card__name {
+      font-size: var(--font-heading-xxs);
+      line-height: var(--font-heading-xxs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+
+    .plan-card__promise {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+      margin-top: calc(var(--spacing-8) * -1);
+    }
+
+    .plan-card__price {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--spacing-4);
+    }
+
+    .plan-card__amount {
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+
+    .plan-card__period {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+    }
+
+    .plan-card__features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      flex: 1;
+    }
+
+    .plan-card__feature {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-8);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+
+    .plan-card__check {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--color-icon-secondary);
+    }
+
+    .plan-modal__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: calc(var(--spacing-40) + var(--spacing-8));
+      padding: 0 var(--spacing-24);
+      border: none;
+      border-radius: var(--radius-lg);
+      background: var(--color-accent-teal);
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: filter 0.15s ease, background-color 0.15s ease;
+    }
+    .plan-modal__cta:hover { filter: brightness(0.96); }
+    [data-theme="dark"] .plan-modal__cta {
+      background: var(--color-button-teal);
+      color: var(--color-text-inverted);
+    }
+
+    .plan-modal__footer {
+      text-align: center;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+    }
+    .plan-modal__footer button {
+      appearance: none;
+      border: none;
+      background: none;
+      padding: 0;
+      font: inherit;
+      color: var(--color-text-link);
+      cursor: pointer;
+    }
+    .plan-modal__footer button:hover { text-decoration: underline; }
+
+    body.plan-modal-open {
+      overflow: hidden;
+    }
+
+    @media (max-width: 720px) {
+      .hp-chrome {
+        top: var(--spacing-8);
+        right: var(--spacing-24);
+        padding-right: calc(var(--spacing-20) + var(--spacing-8) + var(--spacing-12));
+      }
+      .hp-chrome__auth {
+        gap: var(--spacing-8);
+      }
+      .plan-cards {
+        grid-template-columns: 1fr;
+      }
+      .plan-modal {
+        padding: var(--spacing-24) var(--spacing-16) var(--spacing-16);
+      }
+      .plan-modal__headline {
+        flex-direction: column;
+        gap: var(--spacing-8);
+      }
+      .plan-modal__title {
+        font-size: var(--font-heading-xs);
+        line-height: var(--font-heading-xs-lh);
+      }
+    }
+
+    @media (max-width: 1280px) {
+      .serp-layout {
+        grid-template-columns: minmax(0, 598px);
+        max-width: 598px;
+      }
+      .serp-rail {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body data-auth="signed-out" data-plan="basic">
+
+  <div class="proto-chrome" id="protoChrome">
+    <a class="proto-back" id="playgroundLink" href="../">← Playground</a>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span id="themeIcon" aria-hidden="true">☀️</span>
+      <span id="themeLabel">Light</span>
+    </button>
+  </div>
+
+  <header class="hp-chrome" aria-label="Account and menu">
+    <div class="hp-chrome__auth">
+    <!-- Signed-in chrome -->
+    <div class="hp-chrome__account-wrap auth-in">
+      <button
+        type="button"
+        class="hp-chrome__account"
+        id="accountToggle"
+        aria-label="Account"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        aria-controls="accountMenu"
+      >
+        <svg class="hp-chrome__account-svg" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <circle cx="16" cy="16" r="15" stroke="url(#accountRing)" stroke-width="2"/>
+          <path
+            transform="translate(8 8)"
+            d="M8 8C10.2094 8 12 6.20937 12 4C12 1.79063 10.2094 0 8 0C5.79063 0 4 1.79063 4 4C4 6.20937 5.79063 8 8 8ZM10.8 9H10.2781C9.58437 9.31875 8.8125 9.5 8 9.5C7.1875 9.5 6.41875 9.31875 5.72188 9H5.2C2.88125 9 1 10.8812 1 13.2V14.5C1 15.3281 1.67188 16 2.5 16H13.5C14.3281 16 15 15.3281 15 14.5V13.2C15 10.8812 13.1188 9 10.8 9Z"
+            fill="currentColor"
+          />
+          <defs>
+            <linearGradient id="accountRing" x1="4" y1="6" x2="26" y2="27.5" gradientUnits="userSpaceOnUse">
+              <stop stop-color="var(--color-brand-blue-400)"/>
+              <stop offset="1" stop-color="var(--color-teal-200)"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </button>
+
+      <div class="account-menu" id="accountMenu" role="menu" aria-label="Account" hidden>
+        <div class="account-menu__header">
+          <svg class="account-menu__avatar" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <circle cx="16" cy="16" r="15" stroke="url(#accountRingMenu)" stroke-width="2"/>
+            <path
+              transform="translate(8 8)"
+              d="M8 8C10.2094 8 12 6.20937 12 4C12 1.79063 10.2094 0 8 0C5.79063 0 4 1.79063 4 4C4 6.20937 5.79063 8 8 8ZM10.8 9H10.2781C9.58437 9.31875 8.8125 9.5 8 9.5C7.1875 9.5 6.41875 9.31875 5.72188 9H5.2C2.88125 9 1 10.8812 1 13.2V14.5C1 15.3281 1.67188 16 2.5 16H13.5C14.3281 16 15 15.3281 15 14.5V13.2C15 10.8812 13.1188 9 10.8 9Z"
+              fill="currentColor"
+            />
+            <defs>
+              <linearGradient id="accountRingMenu" x1="4" y1="6" x2="26" y2="27.5" gradientUnits="userSpaceOnUse">
+                <stop stop-color="var(--color-brand-blue-400)"/>
+                <stop offset="1" stop-color="var(--color-teal-200)"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="account-menu__badge" id="accountPlanBadge" data-plan="basic">Basic</span>
+        </div>
+
+        <hr class="account-menu__rule" />
+
+        <button type="button" class="account-menu__link" role="menuitem">
+          <span class="account-menu__link-text">
+            <span class="account-menu__link-title">Account settings</span>
+          </span>
+          <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <button type="button" class="account-menu__link js-go-ad-free" role="menuitem">
+          <span class="account-menu__link-text">
+            <span class="account-menu__link-title">Billing &amp; subscription</span>
+            <span class="account-menu__link-caption">Manage plan, payment &amp; invoices</span>
+          </span>
+          <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <hr class="account-menu__rule" />
+
+        <div class="account-menu__footer">
+          <button type="button" class="account-menu__upgrade hp-btn hp-btn--teal js-go-ad-free" role="menuitem">
+            Upgrade to Premium
+          </button>
+
+          <button type="button" class="account-menu__signout" id="signOutBtn" role="menuitem">
+            <svg class="account-menu__signout-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M10 12.5C10 12.633 9.947 12.76 9.854 12.854C9.76 12.947 9.633 13 9.5 13H1.5C1.367 13 1.24 12.947 1.146 12.854C1.053 12.76 1 12.633 1 12.5V3.5C1 3.367 1.053 3.24 1.146 3.146C1.24 3.053 1.367 3 1.5 3H9.5C9.633 3 9.76 3.053 9.854 3.146C9.947 3.24 10 3.367 10 3.5V5.5C10 5.633 10.053 5.76 10.146 5.854C10.24 5.947 10.367 6 10.5 6C10.633 6 10.76 5.947 10.854 5.854C10.947 5.76 11 5.633 11 5.5V3.5C11 3.102 10.842 2.721 10.561 2.439C10.279 2.158 9.898 2 9.5 2H1.5C1.102 2 0.721 2.158 0.439 2.439C0.158 2.721 0 3.102 0 3.5V12.5C0 12.898 0.158 13.279 0.439 13.561C0.721 13.842 1.102 14 1.5 14H9.5C9.898 14 10.279 13.842 10.561 13.561C10.842 13.279 11 12.898 11 12.5V10.5C11 10.367 10.947 10.24 10.854 10.146C10.76 10.053 10.633 10 10.5 10C10.367 10 10.24 10.053 10.146 10.146C10.053 10.24 10 10.367 10 10.5V12.5Z" fill="currentColor"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M15.854 8.354C15.901 8.307 15.938 8.252 15.963 8.192C15.988 8.131 16.001 8.066 16.001 8C16.001 7.934 15.988 7.869 15.963 7.808C15.938 7.748 15.901 7.692 15.854 7.646L12.854 4.646C12.76 4.552 12.633 4.499 12.5 4.499C12.367 4.499 12.24 4.552 12.146 4.646C12.052 4.74 11.999 4.867 11.999 5C11.999 5.133 12.052 5.26 12.146 5.354L14.293 7.5H5.5C5.367 7.5 5.24 7.553 5.146 7.646C5.053 7.74 5 7.867 5 8C5 8.133 5.053 8.26 5.146 8.353C5.24 8.447 5.367 8.5 5.5 8.5H14.293L12.146 10.646C12.052 10.74 11.999 10.867 11.999 11C11.999 11.133 12.052 11.26 12.146 11.354C12.24 11.448 12.367 11.501 12.5 11.501C12.633 11.501 12.76 11.448 12.854 11.354L15.854 8.354Z" fill="currentColor"/>
+            </svg>
+            Sign out
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signed-out chrome -->
+    <button type="button" class="hp-btn hp-btn--teal auth-out js-go-ad-free">Go Ad-Free</button>
+    <button type="button" class="hp-btn hp-btn--product auth-out" id="logInBtn">Log In</button>
+
+    </div>
+
+    <button type="button" class="hp-chrome__menu" aria-label="Open menu">
+      <svg class="hp-chrome__menu-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M1 4H19"  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M1 10H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M1 16H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Inline SVG sprite (file:// safe) -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-filter" viewBox="0 0 13.5 14" fill="none">
+      <path d="M12.75 2L6.75 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M4.25 2H0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M6.75 0.75L6.75 3.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M12.75 7L5.25 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M2.75 7H0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M2.75 5.75L2.75 8.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M8.25 12H0.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M10.75 12L12.75 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M10.75 13.25L10.75 10.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-star-filled" viewBox="0 0 24 24">
+      <path d="M12 2l2.9 6.26 6.9.94-5 4.86 1.18 6.86L12 17.77l-6 3.15L7.18 14 2.2 9.2l6.9-.94L12 2z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-star-empty" viewBox="0 0 24 24">
+      <path d="M12 2l2.9 6.26 6.9.94-5 4.86 1.18 6.86L12 17.77l-6 3.15L7.18 14 2.2 9.2l6.9-.94L12 2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-dots-vertical" viewBox="0 0 4 16">
+      <circle cx="2" cy="2"  r="1.5" fill="currentColor"/>
+      <circle cx="2" cy="8"  r="1.5" fill="currentColor"/>
+      <circle cx="2" cy="14" r="1.5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-search-serp" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+      <line x1="16.5" y1="16.5" x2="22" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-close-sm" viewBox="0 0 16 16">
+      <line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="13" y1="3" x2="3"  y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-av" viewBox="0 0 16 8" fill="none">
+      <path d="M8.01674 0C-3.04828 0 -0.922528 8 4.05523 8C5.05273 8 5.99198 7.56896 6.59073 6.83625L7.23399 6.04896C7.62549 5.57 8.40824 5.57 8.79974 6.04896L9.44299 6.83625C10.0415 7.56896 10.9807 8 11.9782 8C16.7248 8 19.244 0 8.01674 0ZM4.59998 5.09083C3.57348 5.09083 2.90598 4.55625 2.59798 4.23562C2.46723 4.09958 2.46723 3.90042 2.59798 3.76417C2.90598 3.44333 3.57323 2.90896 4.59998 2.90896C5.62673 2.90896 6.29398 3.44354 6.60198 3.76417C6.73273 3.90021 6.73273 4.09937 6.60198 4.23562C6.29398 4.55646 5.62648 5.09083 4.59998 5.09083ZM11.4 5.09083C10.3735 5.09083 9.70599 4.55625 9.39799 4.23562C9.26724 4.09958 9.26724 3.90042 9.39799 3.76417C9.70599 3.44333 10.3732 2.90896 11.4 2.90896C12.4267 2.90896 13.094 3.44354 13.402 3.76417C13.5327 3.90021 13.5327 4.09937 13.402 4.23562C13.094 4.55646 12.4265 5.09083 11.4 5.09083Z" fill="currentColor"/>
+    </symbol>
+  </svg>
+
+<header class="site-header site-header--desktop" id="header-desktop">
+
+        <!-- Top row -->
+        <div class="site-header__top">
+
+          <!-- Logo — assets/logos/startpage-wordmark.svg inlined; text path uses currentColor for dark mode -->
+          <a href="index.html" class="site-header__logo" aria-label="Startpage home">
+            <svg class="site-header__logo-svg" viewBox="0 0 104 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <g clip-path="url(#logo-clip)">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.468313 20.5874C0.720478 20.23 1.13475 19.9976 1.69311 19.9083C17.4354 17.3527 33.3938 17.3349 49.1361 19.8368C49.5684 19.9083 49.8386 20.0334 49.9827 20.1763C50.1088 20.3014 50.1628 20.4623 50.1268 20.6946C50.0908 20.8912 50.0007 21.0163 49.8566 21.0878C49.6765 21.1771 49.3883 21.2129 48.956 21.1593C33.3578 19.2828 17.6515 19.8904 2.26949 22.9821C2.1254 23 1.9813 23.0178 1.85522 23.0178H1.72914C1.35089 23 1.08071 22.8749 0.918607 22.7676C0.558372 22.5353 0.324219 22.16 0.23416 21.7311C0.180125 21.3022 0.252172 20.8912 0.468313 20.5874Z" fill="url(#logo-gradient)"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.4375 8.43512C10.9692 8.0777 10.3748 7.75602 9.6363 7.47009C8.91583 7.18415 8.05126 6.95183 7.06062 6.73737C6.21406 6.54079 5.54763 6.36208 5.06131 6.1655C4.57499 5.98679 4.23277 5.77234 4.01663 5.54002C3.80048 5.30769 3.71043 5.02176 3.71043 4.68221C3.71043 4.05672 3.9806 3.5742 4.52096 3.21678C5.06131 2.85936 5.78178 2.68065 6.68237 2.68065C7.4929 2.68065 8.2674 2.80575 9.04191 3.07382C9.81642 3.34188 10.5549 3.75291 11.2754 4.28904L12.3921 1.80497C11.9778 1.42968 11.4555 1.09013 10.8611 0.839938C10.2487 0.571873 9.58226 0.375291 8.86179 0.214452C8.14132 0.0714841 7.40284 0 6.64635 0C5.38552 0 4.2868 0.214452 3.33218 0.643357C2.39557 1.07226 1.65708 1.662 1.11673 2.39472C0.594388 3.1453 0.324212 3.96737 0.324212 4.89666C0.324212 5.54002 0.432283 6.11189 0.630412 6.61228C0.846553 7.11267 1.17077 7.54157 1.62106 7.89899C2.07135 8.27428 2.66574 8.59596 3.38621 8.86402C4.10668 9.14996 4.98926 9.38228 6.01593 9.59674C6.82646 9.77545 7.4929 9.95416 7.97922 10.1329C8.46553 10.3116 8.82577 10.5082 9.04191 10.7584C9.25805 10.9907 9.38413 11.2766 9.38413 11.6162C9.38413 12.188 9.11396 12.6348 8.5736 12.9565C8.03325 13.2782 7.25875 13.439 6.25009 13.439C5.31347 13.439 4.4309 13.3139 3.58434 13.0458C2.73779 12.7778 1.92726 12.3667 1.13474 11.8306L0 14.3147C0.486318 14.69 1.06269 15.0295 1.72913 15.2976C2.39557 15.5657 3.11604 15.7801 3.87253 15.9231C4.62903 16.066 5.42154 16.1375 6.21406 16.1375C7.60097 16.1375 8.77173 15.9409 9.76238 15.5478C10.735 15.1546 11.4915 14.6006 12.0139 13.8858C12.5362 13.1709 12.7884 12.3131 12.7884 11.3302C12.7884 10.7047 12.6803 10.1686 12.4461 9.68609C12.248 9.22145 11.9058 8.79254 11.4375 8.43512ZM17.7416 1.01869L17.7235 1.02452V1.01869H17.7416ZM17.7235 1.02452V4.71799H20.6054V7.21993H17.7235V11.5983C17.7235 12.0272 17.8136 12.3847 17.9757 12.6527C18.1378 12.9208 18.354 13.1174 18.6241 13.2246C18.8943 13.3318 19.1825 13.3854 19.4887 13.3854C19.6688 13.3854 19.8489 13.3676 20.011 13.3497C20.1912 13.3139 20.3893 13.2782 20.6054 13.2425V15.798C20.2992 15.9231 19.975 16.0125 19.6688 16.0482C19.3446 16.1018 19.0204 16.1197 18.6602 16.1197C17.2733 16.1197 16.2106 15.7265 15.4721 14.9402C14.7336 14.1539 14.3734 13.0459 14.3734 11.6519V7.2378V4.73586V2.10882L17.7235 1.02452ZM29.2511 5.111C29.7554 5.43268 30.1337 5.82584 30.4039 6.30836H30.4219V4.73571H33.736V15.9587H30.4219V14.2967C30.1517 14.7792 29.7734 15.1903 29.2691 15.4941C28.5666 15.923 27.7561 16.1374 26.8555 16.1374C25.8649 16.1374 25.0003 15.8872 24.2438 15.4226C23.4873 14.9401 22.8929 14.2788 22.4787 13.4032C22.0644 12.5275 21.8483 11.5088 21.8483 10.3472C21.8483 9.16772 22.0464 8.14908 22.4787 7.25552C22.9109 6.36197 23.4873 5.68287 24.2438 5.18249C25.0003 4.69997 25.8649 4.44977 26.8375 4.44977C27.7561 4.44977 28.5486 4.66423 29.2511 5.111ZM27.8102 13.564C28.6387 13.564 29.2691 13.2781 29.7194 12.7241C30.1697 12.1701 30.4039 11.3659 30.4039 10.3293C30.4039 9.25708 30.1697 8.45288 29.7194 7.88101C29.2691 7.30914 28.6207 7.0232 27.8102 7.0232C26.9996 7.0232 26.3512 7.30914 25.8829 7.89888C25.4146 8.48863 25.1804 9.29282 25.1804 10.3472C25.1804 11.3837 25.4146 12.1879 25.8649 12.7419C26.3152 13.2959 26.9636 13.564 27.8102 13.564ZM48.5777 1.01869L48.5597 1.02452V1.01869H48.5777ZM48.5597 1.02452V4.71799H51.4416V7.21993H48.5597V11.5983C48.5597 12.0272 48.6498 12.3847 48.8119 12.6527C48.974 12.9208 49.1901 13.1174 49.4603 13.2246C49.7305 13.3318 50.0187 13.3854 50.3249 13.3854C50.505 13.3854 50.6851 13.3676 50.8472 13.3497C51.0273 13.3139 51.2255 13.2782 51.4416 13.2425V15.798C51.1354 15.9231 50.8112 16.0125 50.505 16.0482C50.1808 16.1018 49.8566 16.1197 49.4963 16.1197C48.1094 16.1197 47.0467 15.7265 46.3083 14.9402C45.5698 14.1539 45.2095 13.0459 45.2095 11.6519V7.2378V4.73586V2.10882L48.5597 1.02452ZM60.0693 4.44977C61.0419 4.44977 61.9065 4.6821 62.663 5.18249C63.4195 5.68287 63.9958 6.36197 64.4281 7.23765C64.8604 8.1312 65.0766 9.16772 65.0766 10.3293C65.0766 11.491 64.8604 12.5096 64.4281 13.3853C63.9958 14.261 63.4195 14.9401 62.663 15.4047C61.9065 15.8872 61.0419 16.1196 60.0693 16.1196C59.1507 16.1196 58.3402 15.9051 57.6557 15.4762C57.1694 15.1724 56.8091 14.7792 56.539 14.2967V20.909H53.1708V7.95249C53.1708 7.41636 53.1528 6.88023 53.1347 6.3441C53.1167 5.80797 53.0627 5.27184 52.9907 4.73571H56.1607L56.3769 6.64791C56.629 6.02242 57.0433 5.50416 57.6557 5.111C58.3402 4.66423 59.1507 4.44977 60.0693 4.44977ZM59.1147 13.564C59.9432 13.564 60.5736 13.2959 61.0239 12.7419C61.4742 12.1879 61.6903 11.3837 61.7084 10.3115C61.7084 9.27495 61.4742 8.45288 61.0239 7.86314C60.5736 7.29127 59.9252 6.98746 59.1147 6.98746C58.2681 6.98746 57.6197 7.2734 57.1694 7.84527C56.7191 8.41714 56.503 9.23921 56.503 10.2936C56.503 11.348 56.7191 12.1701 57.1694 12.7241C57.6197 13.2781 58.2681 13.564 59.1147 13.564ZM74.7488 6.30836C74.4787 5.82584 74.1004 5.43268 73.5961 5.111C72.8936 4.66423 72.1011 4.44977 71.1825 4.44977C70.2099 4.44977 69.3453 4.69997 68.5888 5.18249C67.8323 5.68287 67.2559 6.36197 66.8236 7.25552C66.3914 8.14908 66.1932 9.16772 66.1932 10.3472C66.1932 11.5088 66.4094 12.5275 66.8236 13.4032C67.2379 14.2788 67.8323 14.9401 68.5888 15.4226C69.3453 15.8872 70.2099 16.1374 71.2005 16.1374C72.1011 16.1374 72.9116 15.923 73.6141 15.4941C74.1184 15.1903 74.4967 14.7792 74.7668 14.2967V15.9587H78.081V4.73571H74.7488V6.30836ZM74.0824 12.7241C73.6321 13.2781 73.0017 13.564 72.1731 13.564C71.3266 13.564 70.6782 13.2959 70.2279 12.7419C69.7776 12.1879 69.5434 11.3837 69.5434 10.3472C69.5434 9.31069 69.7776 8.48863 70.2459 7.89888C70.7142 7.30914 71.3626 7.0232 72.1731 7.0232C72.9837 7.0232 73.6321 7.30914 74.0824 7.88101C74.5327 8.45288 74.7668 9.25708 74.7668 10.3293C74.7488 11.3659 74.5327 12.1701 74.0824 12.7241ZM87.1769 5.12887C87.6813 5.45055 88.0775 5.84371 88.3477 6.32623V4.73571H91.6979V15.4226C91.6979 17.2276 91.1756 18.5858 90.1489 19.515C89.1222 20.4443 87.5912 20.909 85.5919 20.909C83.8087 20.909 82.2417 20.5694 80.9089 19.8725L81.4132 17.3884C82.0976 17.7279 82.7641 17.9781 83.4485 18.139C84.133 18.2998 84.8174 18.3892 85.4838 18.3892C86.4565 18.3892 87.1769 18.1747 87.6453 17.7279C88.1316 17.2812 88.3657 16.6021 88.3657 15.6906V13.7248C88.2036 13.9572 88.0235 14.1895 87.8074 14.4039C87.4291 14.7792 86.9788 15.0652 86.4565 15.2975C85.9161 15.5298 85.3578 15.637 84.7454 15.637C83.7547 15.637 82.8901 15.4047 82.1337 14.9401C81.3772 14.4754 80.7828 13.8321 80.3505 12.9921C79.9182 12.1522 79.7021 11.1693 79.7021 10.0434C79.7021 8.91753 79.9182 7.95249 80.3505 7.11256C80.7828 6.29049 81.3772 5.62926 82.1337 5.16462C82.8901 4.6821 83.7727 4.44977 84.7454 4.44977C85.664 4.44977 86.4745 4.6821 87.1769 5.12887ZM85.718 13.0815C86.5285 13.0815 87.1769 12.8134 87.6453 12.2773C88.1136 11.7412 88.3477 10.9906 88.3657 10.0434C88.3657 9.11411 88.1496 8.36353 87.6813 7.8274C87.213 7.2734 86.5645 7.00533 85.736 7.00533C84.9075 7.00533 84.241 7.2734 83.7727 7.80953C83.2864 8.34566 83.0523 9.07837 83.0523 10.0255C83.0523 10.9727 83.2864 11.7233 83.7727 12.2594C84.259 12.8134 84.9075 13.0815 85.718 13.0815ZM40.6526 5.23607C40.1843 5.59349 39.8421 6.07601 39.6079 6.66576L39.3738 4.71781H36.2037C36.2757 5.25395 36.3298 5.79008 36.3478 6.32621L36.3478 6.32655C36.3658 6.86256 36.3838 7.39858 36.3838 7.9346V15.9408H39.752V10.0791C39.752 9.52512 39.8601 9.0426 40.0762 8.63157C40.2924 8.22053 40.5986 7.91673 40.9948 7.6844C41.3911 7.46995 41.8954 7.34485 42.4898 7.34485C42.85 7.34485 43.2103 7.39847 43.5705 7.50569V4.52123C43.3904 4.48549 43.1923 4.46762 42.9581 4.46762C42.0935 4.46762 41.319 4.71781 40.6526 5.23607ZM103.37 7.05902C103.784 7.91683 104 8.9176 104 10.0792L103.964 11.1872H96.5972C96.7052 11.8485 96.9214 12.3667 97.2456 12.742C97.7499 13.296 98.5064 13.5819 99.5331 13.5819C100.127 13.5819 100.722 13.4926 101.298 13.296C101.875 13.0994 102.415 12.8314 102.901 12.4739L103.784 14.7257C103.243 15.1546 102.577 15.4763 101.785 15.7265C101.01 15.9588 100.218 16.0839 99.407 16.0839C98.1462 16.0839 97.0655 15.8337 96.1469 15.369C95.2283 14.8865 94.5258 14.2253 94.0395 13.3496C93.5532 12.4918 93.301 11.4553 93.301 10.2579C93.301 9.09631 93.5532 8.07767 94.0215 7.20199C94.4898 6.30843 95.1382 5.62934 95.9667 5.12895C96.7953 4.64643 97.7499 4.39624 98.8486 4.39624C99.8933 4.39624 100.812 4.62856 101.586 5.0932C102.361 5.55785 102.955 6.20121 103.37 7.05902ZM97.1375 7.57728C96.8853 7.9347 96.7052 8.3636 96.5972 8.9176H101.1C101.028 8.30999 100.866 7.82747 100.578 7.47005C100.2 6.98753 99.6592 6.75521 98.9387 6.75521C98.1642 6.75521 97.5698 7.02328 97.1375 7.57728Z" fill="currentColor"/>
+              </g>
+              <defs>
+                <linearGradient id="logo-gradient" x1="5.34587" y1="18.2083" x2="50.0412" y2="23.1356" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#5668F1"/>
+                  <stop offset="1" stop-color="#5AECDE"/>
+                </linearGradient>
+                <clipPath id="logo-clip">
+                  <rect width="104" height="23" fill="white"/>
+                </clipPath>
+              </defs>
+            </svg>
+          </a>
+
+          <!-- Search -->
+          <div class="site-header__search-wrap">
+            <div class="search-field search-field--serp has-value">
+              <input type="search" class="search-field__input" id="searchInput" value="cheese" autocomplete="off" spellcheck="false" aria-label="Search">
+              <div class="search-field__actions">
+                <button class="search-field__clear" id="clearBtn" aria-label="Clear search" tabindex="-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="search-field__divider" aria-hidden="true"></div>
+                <button class="search-field__submit" aria-label="Submit search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="9.7" y1="9.7" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right column kept for grid spacing; account chrome lives in .hp-chrome -->
+          <div class="site-header__right" aria-hidden="true"></div>
+
+        </div><!-- /top -->
+
+        <!-- Bottom nav row -->
+        <div class="site-header__nav">
+          <div class="site-header__tabs-row">
+            <div class="site-header__tabs-scroll">
+              <nav class="site-header__tabs" aria-label="Search category">
+                <button class="site-header__tab site-header__tab--active" data-text="Web">Web</button>
+                <button class="site-header__tab" data-text="Images">Images</button>
+                <button class="site-header__tab" data-text="Videos">Videos</button>
+                <button class="site-header__tab" data-text="News">News</button>
+                <button class="site-header__tab" data-text="Shopping">Shopping</button>
+                <button class="site-header__tab" data-text="Maps">Maps</button>
+              </nav>
+            </div>
+            <button class="site-header__filter-btn" aria-label="Filters">
+              <svg width="16" height="16" aria-hidden="true">
+                <use href="#icon-filter"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <span class="site-header__tab-indicator" aria-hidden="true"></span>
+
+      </header>
+
+  <!-- ── Results body ── -->
+  <main class="serp-body">
+    <div class="serp-layout">
+      <div class="serp-main">
+        <!-- Filter bar — Figma Startpage-Design-Home 3895:2856 -->
+        <div class="serp-filters" role="toolbar" aria-label="Search filters">
+          <div class="serp-filters__private" aria-label="Private Search on">
+            <svg class="serp-filters__private-icon" viewBox="0 0 13.124 15.969" fill="none" aria-hidden="true">
+              <path d="M6.15527 0.0745424C6.41743 -0.0248475 6.7066 -0.0248475 6.96875 0.0745424L12.3721 2.12337C12.824 2.29473 13.124 2.73203 13.124 3.22005V8.00032C13.124 10.5717 11.4465 12.576 10.0264 13.8324C9.29212 14.4819 8.56352 14.9882 8.02051 15.3314C7.74789 15.5036 7.51886 15.6374 7.35547 15.7288C7.27383 15.7745 7.20782 15.8095 7.16113 15.8343C7.13787 15.8467 7.11908 15.8566 7.10547 15.8636L7.08887 15.8724L7.08105 15.8763H7.08008C6.75025 15.9998 6.49955 16.0001 6.04297 15.8763L6.03516 15.8724L6.01855 15.8636C6.00494 15.8566 5.9862 15.8467 5.96289 15.8343C5.91619 15.8095 5.85024 15.7746 5.76855 15.7288C5.60516 15.6374 5.37618 15.5037 5.10352 15.3314C4.5605 14.9882 3.83193 14.4819 3.09766 13.8324C1.67749 12.576 4.49124e-05 10.5717 0 8.00032V3.22005C0 2.73215 0.299194 2.29481 0.750977 2.12337L6.15527 0.0745424Z" fill="currentColor"/>
+              <path class="serp-filters__private-check" d="M4 8.25024L5.55608 10.0286C5.65767 10.1447 5.83914 10.142 5.93721 10.0229L9.25 6.00024" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Private Search
+          </div>
+
+          <div class="serp-filters__dropdowns">
+            <button type="button" class="serp-filters__dropdown" aria-haspopup="listbox" aria-expanded="false">
+              All regions
+              <svg class="serp-filters__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button type="button" class="serp-filters__dropdown" aria-haspopup="listbox" aria-expanded="false">
+              Safe Search: Off
+              <svg class="serp-filters__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button type="button" class="serp-filters__dropdown" aria-haspopup="listbox" aria-expanded="false">
+              Any time
+              <svg class="serp-filters__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <p class="serp-meta" id="serpMeta" aria-live="polite"></p>
+        <div class="results-list" id="resultsList" aria-label="Search results"></div>
+      </div>
+
+      <aside class="serp-rail" id="serpRail" aria-label="Related information">
+        <!-- Wikipedia knowledge panel — Figma Startpage-Design-Home 3894:2835 -->
+        <section class="knowledge-panel" id="knowledgePanel" aria-label="Cheese">
+          <div class="knowledge-panel__header">
+            <div class="knowledge-panel__headings">
+              <h2 class="knowledge-panel__title">Cheese</h2>
+              <p class="knowledge-panel__subtitle">Curdled milk food product</p>
+            </div>
+            <img
+              class="knowledge-panel__image"
+              src="assets/knowledge-cheese.jpg"
+              width="150"
+              height="90"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+
+          <hr class="knowledge-panel__rule" />
+
+          <p class="knowledge-panel__text">
+            Cheese is a type of dairy product produced in a range of flavors, textures, and forms by coagulation of the milk protein casein.&nbsp;It is composed of proteins and fat from milk, usually of cows, goats or sheep, and sometimes of water buffalo.&nbsp;During production, milk is usually acidified and either the enzymes of rennet or bacterial enzymes with similar activity are added to cause the casein to coagulate ...
+            <a class="knowledge-panel__continue" href="https://en.wikipedia.org/wiki/Cheese" target="_blank" rel="noopener noreferrer">Continue in Wikipedia</a>
+          </p>
+
+          <hr class="knowledge-panel__rule" />
+
+          <div class="knowledge-panel__footer">
+            <p class="knowledge-panel__more">
+              More from <a class="knowledge-panel__more-link" href="https://en.wikipedia.org/wiki/Cheese" target="_blank" rel="noopener noreferrer">Wikipedia</a>
+            </p>
+            <div class="knowledge-panel__actions">
+              <button type="button" class="knowledge-panel__action" id="hideWikipediaBtn">Hide Wikipedia</button>
+              <span class="knowledge-panel__sep" aria-hidden="true">|</span>
+              <a class="knowledge-panel__action" href="#">Feedback</a>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Go Ad-Free subscription modal — Figma 710:9129 -->
+  <div class="plan-overlay" id="planOverlay" hidden>
+    <div
+      class="plan-modal"
+      id="planModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="planModalTitle"
+      aria-describedby="planModalLede"
+    >
+      <button type="button" class="plan-modal__close" id="planModalClose" aria-label="Close">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M12 4L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="plan-modal__intro">
+        <div class="plan-modal__logo" aria-hidden="true">
+          <svg class="hp-logo__mark" viewBox="0 0 212 47.4792" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#logoClipModal)">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M0.512364 42.1432C1.02639 41.4054 1.87087 40.9258 3.00907 40.7413C35.0991 35.4659 67.6298 35.429 99.7199 40.5938C100.601 40.7413 101.152 40.9996 101.446 41.2947C101.703 41.553 101.813 41.885 101.739 42.3646C101.666 42.7704 101.482 43.0286 101.189 43.1762C100.821 43.3606 100.234 43.4344 99.3527 43.3237C67.5564 39.4501 35.5397 40.7045 4.184 47.0867C3.89027 47.1236 3.59653 47.1604 3.33952 47.1604H3.08251C2.31146 47.1236 1.76072 46.8653 1.43027 46.644C0.695946 46.1644 0.218633 45.3897 0.0350518 44.5043C-0.0750972 43.6189 0.0717681 42.7704 0.512364 42.1432Z" fill="url(#logoWaveModal)"/>
+              <path fill="currentColor" d="M122.449 9.18555C124.432 9.18561 126.194 9.66535 127.736 10.6982C129.278 11.7311 130.453 13.133 131.334 14.9404C132.215 16.785 132.656 18.9253 132.656 21.3232C132.656 23.7209 132.215 25.8233 131.334 27.6309C130.453 29.4384 129.278 30.8406 127.736 31.7998C126.194 32.7958 124.432 33.2753 122.449 33.2754C120.577 33.2754 118.924 32.8326 117.529 31.9473C116.538 31.3201 115.804 30.5087 115.253 29.5127V43.1631H108.387V16.416C108.387 15.3094 108.35 14.2023 108.313 13.0957C108.277 11.9893 108.166 10.8828 108.02 9.77637H114.481L114.922 13.7236C115.436 12.4324 116.281 11.3624 117.529 10.5508C118.924 9.62861 120.577 9.18555 122.449 9.18555ZM172.751 9.18555C174.623 9.18562 176.275 9.66568 177.707 10.5879C178.735 11.2519 179.543 12.0635 180.094 13.0596V9.77637H186.923V31.8369C186.923 35.5629 185.858 38.3668 183.766 40.2852C181.673 42.2035 178.552 43.1621 174.477 43.1621C170.842 43.1621 167.647 42.4612 164.93 41.0225L165.958 35.8945C167.353 36.5955 168.712 37.1123 170.107 37.4443C171.502 37.7763 172.898 37.9609 174.256 37.9609C176.239 37.9609 177.707 37.518 178.662 36.5957C179.653 35.6735 180.131 34.2718 180.131 32.3906V28.332C179.8 28.8116 179.433 29.2917 178.992 29.7344C178.221 30.509 177.303 31.0996 176.238 31.5791C175.137 32.0585 173.999 32.2792 172.751 32.2793C170.732 32.2793 168.969 31.8 167.427 30.8408C165.885 29.8816 164.673 28.5532 163.792 26.8193C162.911 25.0855 162.47 23.0565 162.47 20.7324C162.47 18.4084 162.911 16.4164 163.792 14.6826C164.673 12.9856 165.885 11.6203 167.427 10.6611C168.969 9.66512 170.768 9.18555 172.751 9.18555ZM13.5479 0C15.0899 0 16.5958 0.147207 18.0645 0.442383C19.533 0.774448 20.8913 1.18095 22.1396 1.73438C23.3512 2.25092 24.4163 2.95175 25.2607 3.72656L22.9844 8.85547C21.5158 7.74857 20.0104 6.90014 18.4316 6.34668C16.8529 5.79325 15.2742 5.53519 13.6221 5.53516C11.7863 5.53516 10.3173 5.90365 9.21582 6.6416C8.1144 7.37951 7.56354 8.37568 7.56348 9.66699C7.56348 10.368 7.74693 10.9588 8.1875 11.4385C8.6281 11.9181 9.32604 12.3605 10.3174 12.7295C11.3087 13.1353 12.667 13.5043 14.3926 13.9102C16.412 14.3529 18.1749 14.8325 19.6436 15.4229C21.1488 16.0132 22.3599 16.6781 23.3145 17.416C24.2691 18.154 24.9672 19.0397 25.3711 19.999C25.8483 20.9952 26.0684 22.1023 26.0684 23.3936C26.0683 25.4228 25.5549 27.1941 24.4902 28.6699C23.4255 30.1458 21.8831 31.2898 19.9004 32.1016C17.881 32.9133 15.4941 33.3184 12.667 33.3184C11.0515 33.3184 9.4356 33.1712 7.89355 32.876C6.35163 32.5808 4.88279 32.1384 3.52441 31.585C2.16597 31.0315 0.991305 30.3295 0 29.5547L2.31348 24.4268C3.92886 25.5335 5.58113 26.3821 7.30664 26.9355C9.03217 27.489 10.8312 27.747 12.7402 27.7471C14.7961 27.7471 16.3751 27.415 17.4766 26.751C18.5781 26.0868 19.1289 25.1641 19.1289 23.9834C19.1289 23.2825 18.8721 22.6925 18.4316 22.2129C17.9911 21.6964 17.2569 21.2899 16.2656 20.9209C15.2744 20.552 13.9157 20.1834 12.2637 19.8145C10.1708 19.3717 8.371 18.8921 6.90234 18.3018C5.43376 17.7483 4.22257 17.0834 3.30469 16.3086C2.38683 15.5707 1.72575 14.6854 1.28516 13.6523C0.881313 12.6193 0.661172 11.4385 0.661133 10.1104C0.661133 8.19168 1.21161 6.49403 2.27637 4.94434C3.37786 3.43153 4.88372 2.21367 6.79297 1.32812C8.73871 0.442767 10.9781 5.35353e-05 13.5479 0ZM54.707 9.18555C56.5795 9.18555 58.1951 9.6286 59.627 10.5508C60.655 11.2148 61.4268 12.0264 61.9775 13.0225H62.0137V9.77637H68.7695V32.9434H62.0137V29.5127C61.4629 30.5087 60.6921 31.3572 59.6641 31.9844C58.2321 32.8698 56.5799 33.3125 54.7441 33.3125C52.7247 33.3125 50.962 32.7961 49.4199 31.8369C47.878 30.8409 46.6667 29.4755 45.8223 27.668C44.9778 25.8603 44.5371 23.7573 44.5371 21.3594C44.5372 18.9247 44.9411 16.822 45.8223 14.9775C46.7034 13.1331 47.878 11.7312 49.4199 10.6982C50.9619 9.70224 52.7245 9.18561 54.707 9.18555ZM145.103 9.18555C146.975 9.18555 148.591 9.6286 150.022 10.5508C151.051 11.2148 151.822 12.0264 152.373 13.0225V9.77637H159.165V32.9434H152.409V29.5127C151.858 30.5087 151.088 31.3572 150.06 31.9844C148.628 32.8698 146.975 33.3125 145.14 33.3125C143.12 33.3125 141.358 32.7961 139.815 31.8369C138.273 30.8409 137.062 29.4756 136.218 27.668C135.373 25.8603 134.933 23.7573 134.933 21.3594C134.933 18.9247 135.337 16.822 136.218 14.9775C137.099 13.1331 138.273 11.7312 139.815 10.6982C141.357 9.70223 143.12 9.18561 145.103 9.18555ZM98.9873 9.73926H104.861V14.9043H98.9873V23.9424C98.9873 24.8278 99.1705 25.5658 99.501 26.1191C99.8314 26.6725 100.272 27.0785 100.823 27.2998C101.374 27.521 101.961 27.6318 102.585 27.6318C102.952 27.6318 103.32 27.5945 103.65 27.5576C104.017 27.4839 104.421 27.4106 104.861 27.3369V32.6123C104.237 32.8705 103.576 33.0551 102.952 33.1289C102.291 33.2395 101.631 33.2764 100.896 33.2764C98.0693 33.2764 95.9028 32.464 94.3975 30.8408C92.8922 29.2176 92.1582 26.9301 92.1582 24.0527V4.35352L98.9873 2.11426V9.73926ZM201.499 9.0752C203.628 9.0752 205.501 9.55461 207.08 10.5137C208.659 11.4728 209.87 12.8015 210.715 14.5723C211.559 16.343 212 18.4087 212 20.8066L211.927 23.0938H196.91C197.13 24.4587 197.571 25.529 198.231 26.3037C199.259 27.4473 200.802 28.0371 202.895 28.0371C204.106 28.0371 205.318 27.8531 206.493 27.4473C207.668 27.0415 208.769 26.4878 209.761 25.75L211.56 30.3984C210.458 31.2838 209.1 31.9484 207.484 32.4648C205.906 32.9444 204.29 33.2021 202.638 33.2021C200.068 33.2021 197.865 32.6857 195.992 31.7266C194.12 30.7305 192.688 29.3653 191.696 27.5576C190.705 25.7869 190.19 23.6474 190.19 21.1758C190.19 18.7779 190.705 16.6748 191.659 14.8672C192.614 13.0226 193.936 11.6208 195.625 10.5879C197.314 9.59193 199.26 9.07525 201.499 9.0752ZM87.5684 9.22266C88.0455 9.22266 88.4494 9.25929 88.8164 9.33301V15.4941C88.0823 15.2729 87.3483 15.1621 86.6143 15.1621C85.4026 15.1621 84.3742 15.4206 83.5664 15.8633C82.7587 16.3428 82.1349 16.97 81.6943 17.8184C81.2537 18.6669 81.0332 19.663 81.0332 20.8066V32.9072H74.167V16.3799C74.167 15.2732 74.1305 14.1662 74.0938 13.0596C74.057 11.9529 73.9467 10.8459 73.7998 9.73926H80.2617L80.7393 13.7598C81.2166 12.5425 81.9146 11.5463 82.8691 10.8086C84.2275 9.73896 85.8062 9.22269 87.5684 9.22266ZM56.6904 14.498C55.0383 14.498 53.7163 15.0884 52.7617 16.3057C51.8072 17.523 51.3292 19.183 51.3291 21.3594C51.3291 23.4991 51.8067 25.1601 52.7246 26.3037C53.6425 27.4472 54.9649 28 56.6904 28C58.3791 27.9999 59.6642 27.4101 60.582 26.2666C61.4999 25.123 61.9775 23.4628 61.9775 21.3232C61.9775 19.1098 61.4999 17.4491 60.582 16.2686C59.6642 15.0882 58.3424 14.4981 56.6904 14.498ZM120.503 14.4238C118.777 14.4238 117.455 15.0148 116.537 16.1953C115.619 17.3758 115.179 19.0727 115.179 21.249C115.179 23.4256 115.619 25.123 116.537 26.2666C117.455 27.4102 118.777 28 120.503 28C122.192 28 123.477 27.4471 124.395 26.3037C125.312 25.1601 125.753 23.4996 125.79 21.2861C125.79 19.1464 125.312 17.4489 124.395 16.2314C123.477 15.0512 122.155 14.4238 120.503 14.4238ZM147.122 14.498C145.47 14.4981 144.148 15.0883 143.193 16.3057C142.239 17.523 141.762 19.2199 141.762 21.3594C141.762 23.4991 142.239 25.1601 143.157 26.3037C144.075 27.447 145.397 28 147.122 28C148.811 28 150.097 27.4102 151.015 26.2666C151.932 25.123 152.372 23.4627 152.409 21.3232C152.409 19.1098 151.933 17.4491 151.015 16.2686C150.097 15.088 148.774 14.498 147.122 14.498ZM174.77 14.4609C173.081 14.461 171.722 15.0144 170.768 16.1211C169.776 17.2277 169.299 18.7403 169.299 20.6953C169.299 22.6506 169.776 24.2009 170.768 25.3076C171.759 26.4512 173.081 27.0039 174.733 27.0039C176.386 27.0039 177.708 26.4504 178.662 25.3438C179.617 24.237 180.094 22.6875 180.131 20.7324C180.131 18.8142 179.69 17.2649 178.735 16.1582C177.781 15.0146 176.458 14.4609 174.77 14.4609ZM201.683 13.9453C200.104 13.9454 198.893 14.4983 198.012 15.6416C197.498 16.3794 197.13 17.2655 196.91 18.4092H206.089C205.942 17.1551 205.612 16.1587 205.024 15.4209C204.253 14.4248 203.151 13.9453 201.683 13.9453ZM98.9873 2.11426V2.10254H99.0234L98.9873 2.11426Z"/>
+            </g>
+            <defs>
+              <linearGradient id="logoWaveModal" x1="10.4551" y1="37.2321" x2="101.592" y2="47.1534" gradientUnits="userSpaceOnUse">
+                <stop stop-color="var(--color-brand-blue-400)"/>
+                <stop offset="1" stop-color="var(--color-teal-200)"/>
+              </linearGradient>
+              <clipPath id="logoClipModal">
+                <rect width="212" height="47.4792" fill="white"/>
+              </clipPath>
+            </defs>
+          </svg>
+          <svg class="hp-logo__t" viewBox="0 0 12.7038 31.1732" fill="none" aria-hidden="true">
+            <path d="M6.86594 0L0 2.25037V7.6734V12.8382V21.9503C0 24.8279 0.734325 27.1151 2.23969 28.7384C3.74506 30.3616 5.91132 31.1732 8.73847 31.1732C9.4728 31.1732 10.1337 31.1363 10.7946 31.0256C11.4188 30.9518 12.0797 30.7674 12.7038 30.5091V25.2337C12.2632 25.3075 11.8594 25.3812 11.4922 25.455C11.1617 25.4919 10.7946 25.5288 10.4274 25.5288C9.80325 25.5288 9.21579 25.4181 8.66504 25.1968C8.1143 24.9754 7.6737 24.5696 7.34326 24.0163C7.01281 23.4629 6.82923 22.7251 6.82923 21.8397V12.8013H12.7038V7.63651H6.82923V0H6.86594Z" fill="currentColor"/>
+          </svg>
+        </div>
+
+        <div class="plan-modal__headline">
+          <img class="plan-modal__party" src="assets/party.svg" alt="" width="32" height="32" />
+          <h2 class="plan-modal__title" id="planModalTitle">
+            100% <span class="plan-modal__accent">Ad-Free</span> private search
+          </h2>
+        </div>
+
+        <p class="plan-modal__lede" id="planModalLede">
+          Choose your plan to get started.
+        </p>
+      </div>
+
+      <div class="plan-toggle" role="group" aria-label="Billing period">
+        <button type="button" class="plan-toggle__btn is-active" data-period="monthly" id="periodMonthly" aria-pressed="true">
+          Monthly
+        </button>
+        <button type="button" class="plan-toggle__btn" data-period="yearly" id="periodYearly" aria-pressed="false">
+          Yearly <span class="plan-toggle__save">Save 17%</span>
+        </button>
+      </div>
+
+      <div class="plan-cards" role="radiogroup" aria-label="Subscription plan">
+        <div class="plan-card" data-plan="basic" role="radio" aria-checked="false" tabindex="0">
+          <span class="plan-card__name">Basic</span>
+          <span class="plan-card__promise">Search with no ads</span>
+          <span class="plan-card__price">
+            <span class="plan-card__amount" data-price-basic>$2.99</span>
+            <span class="plan-card__period" data-period-label>/ month</span>
+          </span>
+          <ul class="plan-card__features">
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Ad-free search
+            </li>
+          </ul>
+        </div>
+
+        <div class="plan-card is-selected" data-plan="premium" role="radio" aria-checked="true" tabindex="0">
+          <span class="plan-card__badge">Most popular</span>
+          <span class="plan-card__name">Premium</span>
+          <span class="plan-card__promise">Upgrade your search</span>
+          <span class="plan-card__price">
+            <span class="plan-card__amount" data-price-premium>$6.99</span>
+            <span class="plan-card__period" data-period-label>/ month</span>
+          </span>
+          <ul class="plan-card__features">
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Ad-free search
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Tracker detection
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Privacy ratings for websites
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              AI content filter
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Block unwanted websites
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Advanced search tools
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <button type="button" class="plan-modal__cta" id="planModalCta">Get Premium Ad-Free</button>
+
+      <p class="plan-modal__footer">
+        Already a subscriber? <button type="button" id="planModalLogin">Log in.</button>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    /* ─────────────────────────────────────────────
+       Helpers
+       ───────────────────────────────────────────── */
+
+    const AUTH_KEY = 'accounts-auth';
+    const PLAN_KEY = 'accounts-plan';
+
+    /* Restore auth ASAP so the first SERP render can suppress ads */
+    (function restoreAuthEarly() {
+      const savedAuth = sessionStorage.getItem(AUTH_KEY);
+      if (savedAuth === 'signed-in' || savedAuth === 'signed-out') {
+        document.body.dataset.auth = savedAuth;
+      }
+    })();
+
+    function hash(str) {
+      let h = 0;
+      for (const c of str) h = (Math.imul(31, h) + c.charCodeAt(0)) | 0;
+      return Math.abs(h);
+    }
+    function pick(arr, seed) { return arr[hash(seed) % arr.length]; }
+
+    /* ─────────────────────────────────────────────
+       Cheese SERP data — 4 top ads, 10 organic, 2 bottom ads
+       ───────────────────────────────────────────── */
+
+    const TOP_ADS = [
+      {
+        type: 'ad',
+        siteName: 'Cabot Creamery',
+        url: 'http://www.cabotcreamery.com/cheese',
+        title: 'Cabot Cheese — Award-Winning Cheddar Since 1919',
+        description: 'Shop Cabot cheese online. Sharp cheddar, pepper jack, and more from Vermont co-op farmers. Free shipping on orders over $50. Taste the difference in every bite.',
+        hasImage: true,
+        stars: 5,
+        ratingLabel: 'rating for cabotcreamery.com',
+        sitelinks: ['Sharp Cheddar', 'Farmhouse', 'Snack Packs', 'Recipes'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Tillamook',
+        url: 'http://www.tillamook.com/products/cheese',
+        title: 'Tillamook Cheese — Extra Sharp Cheddar & More',
+        description: 'Made with care in Tillamook County, Oregon. Explore our cheese blocks, slices, and shreds. Find stores near you or shop online for delivery.',
+        hasImage: false,
+        stars: 4,
+        ratingLabel: 'rating for tillamook.com',
+        sitelinks: ['Extra Sharp', 'Medium Cheddar', 'Pepper Jack', 'Store Locator'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Cheese.com',
+        url: 'http://www.cheese.com',
+        title: 'Cheese.com — Encyclopedia of Cheese Types & Pairings',
+        description: 'Browse 1,800+ cheeses by country, milk type, and texture. Pairing guides, recipes, and tasting notes for cheddar, brie, gouda, blue cheese, and more.',
+        hasImage: true,
+        stars: 4,
+        ratingLabel: 'rating for cheese.com',
+        sitelinks: ['By Country', 'By Milk', 'Soft Cheese', 'Hard Cheese'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Sargento',
+        url: 'http://www.sargento.com',
+        title: 'Sargento Cheese Snacks — Real Cheese, Real Good',
+        description: 'Natural cheese snacks, slices, and shredded cheese for everyday meals. No artificial flavors. Find Sargento cheese near you.',
+        hasImage: false,
+        stars: 5,
+        ratingLabel: 'rating for sargento.com',
+        sitelinks: ['Snack Cheese', 'Sliced', 'Shredded', 'Recipes'],
+      },
+    ];
+
+    const ORGANIC_RESULTS = [
+      {
+        type: 'organic',
+        siteName: 'Wikipedia',
+        url: 'https://en.wikipedia.org › wiki › Cheese',
+        title: 'Cheese — Wikipedia',
+        description: 'Cheese is a dairy product produced in a range of flavors, textures, and forms by coagulation of the milk protein casein. It comprises proteins and fat from milk, usually the milk of cows, buffalo, goats, or sheep.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Serious Eats',
+        url: 'https://seriouseats.com › cheese',
+        title: 'The Best Cheese Guides & Recipes — Serious Eats',
+        description: 'Learn how to buy, store, and cook with cheese. From grilled cheese technique to cheese board building, Serious Eats has tested guides for cheddar, mozzarella, and soft-ripened cheese.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Bon Appétit',
+        url: 'https://bonappetit.com › recipes › cheese',
+        title: 'Cheese Recipes & Tips from Bon Appétit',
+        description: 'Our favorite cheese recipes — mac and cheese, fondue, baked brie, and more. Plus how to build a cheese plate and which cheeses melt best.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Cheese.com',
+        url: 'https://cheese.com › browse',
+        title: 'Cheese Types A–Z — Browse Cheese.com',
+        description: 'Search cheese by name, country, or milk type. Detailed profiles cover taste, texture, aging, and wine pairings for thousands of varieties worldwide.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Reddit',
+        url: 'https://reddit.com › r › cheese',
+        title: 'r/cheese — Community for Cheese Lovers',
+        description: 'Photos, recommendations, and tasting notes from cheese enthusiasts. Ask about obscure washed-rind cheeses, find the best grocery cheddar, or share your cheese board.',
+      },
+      {
+        type: 'organic',
+        siteName: 'The Kitchn',
+        url: 'https://thekitchn.com › cheese',
+        title: 'Cheese 101 — How to Buy, Store & Serve Cheese',
+        description: 'Practical cheese advice for home cooks: which cheese to buy, how long it lasts in the fridge, and easy recipes that put cheese front and center.',
+      },
+      {
+        type: 'organic',
+        siteName: 'BBC Good Food',
+        url: 'https://bbcgoodfood.com › recipes › collection › cheese-recipes',
+        title: 'Cheese Recipes — BBC Good Food',
+        description: 'Hundreds of cheese recipes from toasted sandwiches to soufflés. Includes cheddar, halloumi, mozzarella, and blue cheese ideas for weeknights and entertaining.',
+      },
+      {
+        type: 'organic',
+        siteName: "Culture: The Word on Cheese",
+        url: 'https://culturecheesemag.com',
+        title: 'Culture Magazine — The Word on Cheese',
+        description: 'Stories from cheese makers, affineurs, and mongers. Discover seasonal cheese, farmstead producers, and expert tasting notes for cheese lovers.',
+      },
+      {
+        type: 'organic',
+        siteName: "Murray's Cheese",
+        url: 'https://murrayscheese.com',
+        title: "Murray's Cheese — Artisanal Cheese & Pairings",
+        description: 'Shop curated cheese boards, gift boxes, and everyday favorites from Murray\'s. Expert picks spanning soft, aged, and blue cheese with crackers and condiments.',
+      },
+      {
+        type: 'organic',
+        siteName: "America's Test Kitchen",
+        url: 'https://americastestkitchen.com › recipes › cheese',
+        title: 'Tested Cheese Recipes — America\'s Test Kitchen',
+        description: 'Scientifically tested mac and cheese, pizza, and cheese sauce recipes. Learn why low-moisture mozzarella melts differently than fresh, and which cheddar works best.',
+      },
+    ];
+
+    const BOTTOM_ADS = [
+      {
+        type: 'ad',
+        siteName: 'Tillamook',
+        url: 'http://www.tillamook.com/products/cheese/medium-cheddar',
+        title: 'Tillamook Medium Cheddar — Creamy, Bold Flavor',
+        description: 'Our medium cheddar is aged for a balanced bite. Perfect for sandwiches, nachos, and cheese boards. Find Tillamook cheese at retailers nationwide.',
+        hasImage: true,
+        stars: 5,
+        ratingLabel: 'rating for tillamook.com',
+        sitelinks: ['Medium Cheddar', 'Slices', 'Shreds', 'Recipes'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Cabot Creamery',
+        url: 'http://www.cabotcreamery.com/products/seriously-sharp',
+        title: 'Cabot Seriously Sharp Cheddar — Bold Vermont Flavor',
+        description: 'Seriously Sharp is Cabot\'s signature aged cheddar. Stock up online with free shipping on select orders. Made by farmer-owners in New England.',
+        hasImage: false,
+        stars: 5,
+        ratingLabel: 'rating for cabotcreamery.com',
+        sitelinks: ['Seriously Sharp', 'Extra Sharp', 'Bars', 'Shop All'],
+      },
+    ];
+
+    function generateResults(rawQuery) {
+      const q = rawQuery.trim();
+      const approx = pick([182000, 241000, 387000, 524000, 671000, 892000], q || 'cheese').toLocaleString();
+      return {
+        approx,
+        topAds: TOP_ADS,
+        organic: ORGANIC_RESULTS,
+        bottomAds: BOTTOM_ADS,
+      };
+    }
+
+    /* ─────────────────────────────────────────────
+       Highlight — bolds matched words in descriptions
+       ───────────────────────────────────────────── */
+    function highlight(text, query) {
+      if (!query.trim()) return text;
+      const words = query.trim().split(/\s+/).filter(Boolean);
+      const pattern = new RegExp(`(${words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi');
+      return text.replace(pattern, '<mark>$1</mark>');
+    }
+
+    /* ─────────────────────────────────────────────
+       Render helpers
+       ───────────────────────────────────────────── */
+
+    function renderStars(count) {
+      let html = '';
+      for (let i = 0; i < 5; i++) {
+        html += i < count
+          ? `<svg class="star star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>`
+          : `<svg class="star star--empty"  aria-hidden="true"><use href="#icon-star-empty"/></svg>`;
+      }
+      return html;
+    }
+
+    function renderSitelinks(links, query) {
+      return links.map((link, i) => {
+        const sep = i < links.length - 1
+          ? `<span class="ad-result__sitelink-sep" aria-hidden="true">·</span>`
+          : '';
+        return `<a class="ad-result__sitelink" href="#">${highlight(link, query)}</a>${sep}`;
+      }).join('');
+    }
+
+    function renderAd(data, query) {
+      const imageHtml = data.hasImage
+        ? `<div class="ad-result__image" aria-hidden="true"></div>`
+        : '';
+
+      const ratingHtml = data.stars != null ? `
+        <div class="ad-result__rating" aria-label="${data.stars} out of 5 stars — ${data.ratingLabel}">
+          <div class="ad-result__stars" aria-hidden="true">${renderStars(data.stars)}</div>
+          <span class="ad-result__rating-label">${data.ratingLabel}</span>
+        </div>` : '';
+
+      const sitelinksHtml = data.sitelinks?.length
+        ? `<div class="ad-result__sitelinks">${renderSitelinks(data.sitelinks, query)}</div>`
+        : '';
+
+      return `
+        <div class="ad-result">
+          <span class="ad-result__sponsored">Sponsored</span>
+          <div class="ad-result__source">
+            <div class="ad-result__favicon" aria-hidden="true"></div>
+            <div class="ad-result__source-meta">
+              <div class="ad-result__source-info">
+                <span class="ad-result__site-name">${highlight(data.siteName, query)}</span>
+                <span class="ad-result__url">${data.url}</span>
+              </div>
+              <button class="ad-result__dots-btn" aria-label="About this ad">
+                <svg width="4" height="16" aria-hidden="true"><use href="#icon-dots-vertical"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="ad-result__body">
+            <div class="ad-result__text">
+              <a class="ad-result__title" href="#">${data.title}</a>
+              <p class="ad-result__description">${highlight(data.description, query)}</p>
+            </div>
+            ${imageHtml}
+          </div>
+          ${ratingHtml}
+          ${sitelinksHtml}
+        </div>`;
+    }
+
+    function isSignedIn() {
+      const fromDom = document.body.getAttribute('data-auth') === 'signed-in';
+      const fromStore = sessionStorage.getItem(AUTH_KEY) === 'signed-in';
+      if (fromStore && !fromDom) document.body.dataset.auth = 'signed-in';
+      return fromDom || fromStore;
+    }
+
+    function isPremium() {
+      const fromDom = document.body.getAttribute('data-plan') === 'premium';
+      const fromStore = sessionStorage.getItem(PLAN_KEY) === 'premium';
+      return isSignedIn() && (fromDom || fromStore);
+    }
+
+    const BLOCKED_KEY = 'accounts-blocked-domains';
+    function getBlockedDomains() {
+      try {
+        const raw = sessionStorage.getItem(BLOCKED_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+    function setBlockedDomains(list) {
+      sessionStorage.setItem(BLOCKED_KEY, JSON.stringify(list));
+    }
+    function blockDomain(domain) {
+      const next = new Set(getBlockedDomains());
+      next.add(domain);
+      setBlockedDomains([...next]);
+    }
+
+    function extractDomain(url, siteName) {
+      const fromUrl = String(url || '').match(/https?:\/\/(?:www\.)?([^/\s›]+)/i);
+      if (fromUrl) return fromUrl[1].toLowerCase();
+      const fromName = String(siteName || '').trim().toLowerCase().replace(/\s+/g, '');
+      return fromName || 'example.com';
+    }
+
+    function privacyInsights(domain) {
+      const h = hash(domain);
+      const grades = ['A', 'B', 'C', 'D', 'F'];
+      const trackers = h % 11;
+      const grade = grades[h % grades.length];
+      const aiHeavy = (h % 5) === 0;
+      return { trackers, grade, aiHeavy };
+    }
+
+    function gradeClass(grade) {
+      if (grade === 'A' || grade === 'B') return 'privacy-popover__grade--good';
+      if (grade === 'C') return 'privacy-popover__grade--warn';
+      return 'privacy-popover__grade--bad';
+    }
+
+    function trackersLabel(count) {
+      if (count === 0) return { text: 'None detected', className: 'privacy-popover__value--good' };
+      if (count <= 3) return { text: `${count} detected`, className: 'privacy-popover__value--warn' };
+      return { text: `${count} detected`, className: 'privacy-popover__value--bad' };
+    }
+
+    const SHIELD_OUTLINE = `
+      <svg class="privacy-shield__icon" viewBox="-1.5 -1.5 16.124 18.969" fill="none" aria-hidden="true" overflow="visible">
+        <path d="M6.15527 0.0745424C6.41743 -0.0248475 6.7066 -0.0248475 6.96875 0.0745424L12.3721 2.12337C12.824 2.29473 13.124 2.73203 13.124 3.22005V8.00032C13.124 10.5717 11.4465 12.576 10.0264 13.8324C9.29212 14.4819 8.56352 14.9882 8.02051 15.3314C7.74789 15.5036 7.51886 15.6374 7.35547 15.7288C7.27383 15.7745 7.20782 15.8095 7.16113 15.8343C7.13787 15.8467 7.11908 15.8566 7.10547 15.8636L7.08887 15.8724L7.08105 15.8763H7.08008C6.75025 15.9998 6.49955 16.0001 6.04297 15.8763L6.03516 15.8724L6.01855 15.8636C6.00494 15.8566 5.9862 15.8467 5.96289 15.8343C5.91619 15.8095 5.85024 15.7746 5.76855 15.7288C5.60516 15.6374 5.37618 15.5037 5.10352 15.3314C4.5605 14.9882 3.83193 14.4819 3.09766 13.8324C1.67749 12.576 4.49124e-05 10.5717 0 8.00032V3.22005C0 2.73215 0.299194 2.29481 0.750977 2.12337L6.15527 0.0745424Z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
+      </svg>`;
+
+    function renderPrivacyPopover(domain) {
+      const insights = privacyInsights(domain);
+      const trackers = trackersLabel(insights.trackers);
+      const aiHtml = insights.aiHeavy
+        ? `<div class="privacy-popover__ai" role="status">
+            <p class="privacy-popover__ai-title">AI content warning</p>
+            <p class="privacy-popover__ai-body">This site appears to publish a high volume of AI-generated content.</p>
+          </div>`
+        : '';
+
+      return `
+        <div class="privacy-popover" role="dialog" aria-label="Privacy insights for ${domain}" hidden>
+          <div class="privacy-popover__top">
+            <div>
+              <p class="privacy-popover__eyebrow">Privacy insights</p>
+              <p class="privacy-popover__domain">${domain}</p>
+            </div>
+            <button type="button" class="privacy-popover__close" aria-label="Close">
+              <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="privacy-popover__body">
+            <ul class="privacy-popover__list">
+              <li class="privacy-popover__row">
+                <span class="privacy-popover__label">Trackers</span>
+                <span class="privacy-popover__value ${trackers.className}">${trackers.text}</span>
+              </li>
+              <li class="privacy-popover__row">
+                <span class="privacy-popover__label">Privacy rating</span>
+                <span class="privacy-popover__grade ${gradeClass(insights.grade)}" aria-label="Grade ${insights.grade}">${insights.grade}</span>
+              </li>
+            </ul>
+            ${aiHtml}
+            <button type="button" class="privacy-popover__block" data-block-domain="${domain}">
+              <svg class="privacy-popover__block-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <circle cx="8" cy="8" r="5.25" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M4.3 4.3L11.7 11.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Block ${domain}
+            </button>
+          </div>
+        </div>`;
+    }
+
+    function renderOrganic(data, query) {
+      const domain = extractDomain(data.url, data.siteName);
+      const premium = isPremium();
+      const core = `
+          <div class="algo-result__source">
+            <div class="algo-result__favicon" aria-hidden="true"></div>
+            <div class="algo-result__source-info">
+              <span class="algo-result__site-name">${highlight(data.siteName, query)}</span>
+              <span class="algo-result__url">${data.url}</span>
+            </div>
+          </div>
+          <div class="algo-result__content">
+            <a class="algo-result__title" href="#">${data.title}</a>
+            <p class="algo-result__description">${highlight(data.description, query)}</p>
+            <div class="algo-result__av-badge">
+              <svg class="algo-result__av-icon" aria-hidden="true">
+                <use href="#icon-av"/>
+              </svg>
+              <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
+            </div>
+          </div>`;
+
+      if (!premium) {
+        return `<div class="algo-result">${core}</div>`;
+      }
+
+      return `
+        <div class="algo-result algo-result--premium" data-domain="${domain}">
+          <div class="algo-result__main">${core}</div>
+          <div class="algo-result__privacy">
+            <button
+              type="button"
+              class="privacy-shield"
+              aria-label="Privacy insights for ${domain}"
+              aria-haspopup="dialog"
+              aria-expanded="false"
+            >
+              ${SHIELD_OUTLINE}
+            </button>
+            ${renderPrivacyPopover(domain)}
+          </div>
+        </div>`;
+    }
+
+    /* ─────────────────────────────────────────────
+       Render the page
+       ───────────────────────────────────────────── */
+    function render(query) {
+      const list = document.getElementById('resultsList');
+      const meta = document.getElementById('serpMeta');
+      const field = document.querySelector('.search-field');
+      const value = query.trim();
+
+      field?.classList.toggle('has-value', value.length > 0);
+
+      if (!value) {
+        list.innerHTML = `
+          <div class="serp-empty">
+            <p class="serp-empty__title">Type a query to see results</p>
+            <p class="serp-empty__sub">Try "cheese", "cheddar", or "brie".</p>
+          </div>`;
+        meta.textContent = '';
+        return;
+      }
+
+      const { approx, organic, topAds, bottomAds } = generateResults(value);
+      const blocked = new Set(getBlockedDomains());
+      const visibleOrganic = organic.filter(item => !blocked.has(extractDomain(item.url, item.siteName)));
+      /* Ad-free when logged in — no sponsored results */
+      const showAds = !isSignedIn();
+      const activeTop = showAds ? topAds : [];
+      const activeBottom = showAds ? bottomAds : [];
+
+      meta.textContent = showAds
+        ? `About ${approx} results`
+        : isPremium()
+          ? `About ${approx} results · Ad-free · Premium insights`
+          : `About ${approx} results · Ad-free`;
+
+      const blocks = showAds
+        ? [
+            ...activeTop.map(item => renderAd(item, value)),
+            ...visibleOrganic.map(item => renderOrganic(item, value)),
+            ...activeBottom.map(item => renderAd(item, value)),
+          ]
+        : visibleOrganic.map(item => renderOrganic(item, value));
+
+      list.innerHTML = blocks.join('');
+    }
+
+    function closeAllPrivacyPopovers(except) {
+      document.querySelectorAll('.privacy-popover.is-open').forEach(pop => {
+        if (except && pop === except) return;
+        pop.classList.remove('is-open');
+        pop.hidden = true;
+        const wrap = pop.closest('.algo-result__privacy');
+        const result = pop.closest('.algo-result--premium');
+        const btn = wrap?.querySelector('.privacy-shield');
+        btn?.setAttribute('aria-expanded', 'false');
+        result?.classList.remove('is-privacy-open');
+      });
+    }
+
+    function bindPrivacyInsights() {
+      const list = document.getElementById('resultsList');
+      if (!list || list.dataset.privacyBound === '1') return;
+      list.dataset.privacyBound = '1';
+
+      list.addEventListener('click', (e) => {
+        const closeBtn = e.target.closest('.privacy-popover__close');
+        if (closeBtn) {
+          const pop = closeBtn.closest('.privacy-popover');
+          const result = pop?.closest('.algo-result--premium');
+          const btn = pop?.closest('.algo-result__privacy')?.querySelector('.privacy-shield');
+          pop?.classList.remove('is-open');
+          if (pop) pop.hidden = true;
+          btn?.setAttribute('aria-expanded', 'false');
+          result?.classList.remove('is-privacy-open');
+          return;
+        }
+
+        const blockBtn = e.target.closest('.privacy-popover__block');
+        if (blockBtn) {
+          const domain = blockBtn.getAttribute('data-block-domain');
+          if (!domain) return;
+          blockDomain(domain);
+          render(document.getElementById('searchInput')?.value || '');
+          return;
+        }
+
+        const shield = e.target.closest('.privacy-shield');
+        if (shield) {
+          e.stopPropagation();
+          const wrap = shield.closest('.algo-result__privacy');
+          const result = shield.closest('.algo-result--premium');
+          const pop = wrap?.querySelector('.privacy-popover');
+          if (!pop) return;
+          const willOpen = !pop.classList.contains('is-open');
+          closeAllPrivacyPopovers(willOpen ? pop : null);
+          pop.classList.toggle('is-open', willOpen);
+          pop.hidden = !willOpen;
+          shield.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+          result?.classList.toggle('is-privacy-open', willOpen);
+          return;
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.algo-result__privacy')) return;
+        closeAllPrivacyPopovers();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeAllPrivacyPopovers();
+      });
+    }
+
+    /* ─────────────────────────────────────────────
+       Auth + plan persistence (sync with homepage)
+       ───────────────────────────────────────────── */
+    const PLAN_BADGE_LABELS = { basic: 'Basic', premium: 'Premium' };
+
+    function setAccountPlanBadge(plan) {
+      const badge = document.getElementById('accountPlanBadge');
+      if (!badge) return;
+      const next = plan === 'premium' ? 'premium' : 'basic';
+      badge.dataset.plan = next;
+      badge.textContent = PLAN_BADGE_LABELS[next];
+      document.body.dataset.plan = next;
+      sessionStorage.setItem(PLAN_KEY, next);
+      const q = document.getElementById('searchInput')?.value?.trim();
+      if (q) render(q);
+    }
+
+    function setAuth(state) {
+      const next = state === 'signed-in' ? 'signed-in' : 'signed-out';
+      document.body.dataset.auth = next;
+      sessionStorage.setItem(AUTH_KEY, next);
+      const menu = document.getElementById('accountMenu');
+      const btn = document.getElementById('accountToggle');
+      if (menu && btn) {
+        menu.classList.remove('is-open');
+        menu.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+      }
+      render(document.getElementById('searchInput')?.value || '');
+    }
+
+    window.__accountsSetAuth = setAuth;
+    window.__accountsSetPlanBadge = setAccountPlanBadge;
+
+    (function restorePlan() {
+      const savedPlan = sessionStorage.getItem(PLAN_KEY);
+      if (savedPlan === 'basic' || savedPlan === 'premium') {
+        setAccountPlanBadge(savedPlan);
+      }
+    })();
+
+    (function accountMenu() {
+      const btn = document.getElementById('accountToggle');
+      const menu = document.getElementById('accountMenu');
+      const signOutBtn = document.getElementById('signOutBtn');
+      const logInBtn = document.getElementById('logInBtn');
+      if (!btn || !menu) return;
+
+      function setOpen(open) {
+        menu.classList.toggle('is-open', open);
+        menu.hidden = !open;
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setOpen(menu.hidden);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (menu.hidden) return;
+        if (btn.contains(e.target) || menu.contains(e.target)) return;
+        setOpen(false);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !menu.hidden) {
+          setOpen(false);
+          btn.focus();
+        }
+      });
+
+      if (signOutBtn) {
+        signOutBtn.addEventListener('click', () => setAuth('signed-out'));
+      }
+      if (logInBtn) {
+        logInBtn.addEventListener('click', () => setAuth('signed-in'));
+      }
+    })();
+
+    (function planModal() {
+      const overlay = document.getElementById('planOverlay');
+      const modal = document.getElementById('planModal');
+      const closeBtn = document.getElementById('planModalClose');
+      const loginLink = document.getElementById('planModalLogin');
+      const periodBtns = document.querySelectorAll('.plan-toggle__btn');
+      const planCards = document.querySelectorAll('.plan-card[data-plan]');
+      const ctaBtn = document.getElementById('planModalCta');
+      const basicPrice = document.querySelector('[data-price-basic]');
+      const premiumPrice = document.querySelector('[data-price-premium]');
+      const periodLabels = document.querySelectorAll('[data-period-label]');
+      if (!overlay || !modal) return;
+
+      const PRICES = {
+        monthly: { basic: '$2.99', premium: '$6.99', label: '/ month' },
+        yearly: { basic: '$29.99', premium: '$69.99', label: '/ year' },
+      };
+      const CTA_LABELS = {
+        basic: 'Get Basic Ad-Free',
+        premium: 'Get Premium Ad-Free',
+      };
+
+      let period = 'monthly';
+      let selectedPlan = 'premium';
+      let lastFocus = null;
+
+      function setPeriod(next) {
+        period = next;
+        periodBtns.forEach(btn => {
+          const active = btn.dataset.period === period;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+        const prices = PRICES[period];
+        if (basicPrice) basicPrice.textContent = prices.basic;
+        if (premiumPrice) premiumPrice.textContent = prices.premium;
+        periodLabels.forEach(el => { el.textContent = prices.label; });
+      }
+
+      function setPlan(plan) {
+        selectedPlan = plan;
+        planCards.forEach(card => {
+          const active = card.dataset.plan === plan;
+          card.classList.toggle('is-selected', active);
+          card.setAttribute('aria-checked', active ? 'true' : 'false');
+        });
+        if (ctaBtn) ctaBtn.textContent = CTA_LABELS[plan];
+      }
+
+      function openModal() {
+        lastFocus = document.activeElement;
+        const accountMenu = document.getElementById('accountMenu');
+        const accountToggle = document.getElementById('accountToggle');
+        if (accountMenu && !accountMenu.hidden) {
+          accountMenu.classList.remove('is-open');
+          accountMenu.hidden = true;
+          accountToggle?.setAttribute('aria-expanded', 'false');
+        }
+        overlay.hidden = false;
+        requestAnimationFrame(() => overlay.classList.add('is-open'));
+        document.body.classList.add('plan-modal-open');
+        closeBtn?.focus();
+      }
+
+      function closeModal() {
+        overlay.classList.remove('is-open');
+        document.body.classList.remove('plan-modal-open');
+        const onEnd = () => {
+          overlay.hidden = true;
+          overlay.removeEventListener('transitionend', onEnd);
+        };
+        overlay.addEventListener('transitionend', onEnd);
+        if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+      }
+
+      document.querySelectorAll('.js-go-ad-free').forEach(btn => {
+        btn.addEventListener('click', openModal);
+      });
+
+      closeBtn?.addEventListener('click', closeModal);
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
+          e.stopPropagation();
+          closeModal();
+        }
+      });
+
+      periodBtns.forEach(btn => {
+        btn.addEventListener('click', () => setPeriod(btn.dataset.period));
+      });
+
+      planCards.forEach(card => {
+        card.addEventListener('click', () => setPlan(card.dataset.plan));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setPlan(card.dataset.plan);
+          }
+        });
+      });
+
+      loginLink?.addEventListener('click', () => {
+        closeModal();
+        setAuth('signed-in');
+      });
+
+      ctaBtn?.addEventListener('click', () => {
+        setAccountPlanBadge(selectedPlan);
+        closeModal();
+        setAuth('signed-in');
+      });
+
+      setPeriod('monthly');
+      setPlan('premium');
+    })();
+
+    /* ─────────────────────────────────────────────
+       Input wiring + ?q= param
+       ───────────────────────────────────────────── */
+    const input = document.getElementById('searchInput');
+    const params = new URLSearchParams(location.search);
+    const initialQuery = (params.get('q') ?? 'cheese').trim() || 'cheese';
+    input.value = initialQuery;
+
+    let debounce;
+
+    input.addEventListener('input', () => {
+      input.closest('.search-field')?.classList.toggle('has-value', input.value.length > 0);
+      clearTimeout(debounce);
+      debounce = setTimeout(() => render(input.value), 180);
+    });
+
+    document.querySelectorAll('.search-field__clear').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const field = btn.closest('.search-field');
+        const fieldInput = field?.querySelector('.search-field__input');
+        if (!fieldInput) return;
+        fieldInput.value = '';
+        field?.classList.remove('has-value');
+        fieldInput.focus();
+        if (fieldInput.id === 'searchInput') render('');
+      });
+    });
+
+    document.querySelector('.search-field__submit')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const q = input.value.trim() || 'cheese';
+      input.value = q;
+      const url = new URL(location.href);
+      url.searchParams.set('q', q);
+      history.replaceState(null, '', url);
+      render(q);
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      const q = input.value.trim() || 'cheese';
+      input.value = q;
+      const url = new URL(location.href);
+      url.searchParams.set('q', q);
+      history.replaceState(null, '', url);
+      render(q);
+    });
+
+    /* Initial render */
+    render(input.value);
+    bindPrivacyInsights();
+
+    (function knowledgePanel() {
+      const rail = document.getElementById('serpRail');
+      const hideBtn = document.getElementById('hideWikipediaBtn');
+      if (!rail || !hideBtn) return;
+      hideBtn.addEventListener('click', () => {
+        rail.hidden = true;
+      });
+    })();
+
+    function initHeader(header) {
+      const tabs = header.querySelectorAll('.site-header__tab');
+      const indicator = header.querySelector('.site-header__tab-indicator');
+
+      function positionIndicator() {
+        if (!indicator) return;
+        const activeTab = Array.from(header.querySelectorAll('.site-header__tab--active'))
+          .find(tab => tab.offsetWidth > 0);
+        if (!activeTab) return;
+        const headerRect = header.getBoundingClientRect();
+        const tabRect = activeTab.getBoundingClientRect();
+        indicator.style.left = `${tabRect.left - headerRect.left}px`;
+        indicator.style.width = `${tabRect.width}px`;
+      }
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const clickedText = tab.dataset.text;
+          tabs.forEach(t => t.classList.toggle('site-header__tab--active', t.dataset.text === clickedText));
+          positionIndicator();
+          tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        });
+      });
+
+      requestAnimationFrame(positionIndicator);
+    }
+
+    document.querySelectorAll('.site-header').forEach(initHeader);
+    window.addEventListener('resize', () => {
+      document.querySelectorAll('.site-header').forEach(header => {
+        const indicator = header.querySelector('.site-header__tab-indicator');
+        if (!indicator) return;
+        const activeTab = Array.from(header.querySelectorAll('.site-header__tab--active'))
+          .find(tab => tab.offsetWidth > 0);
+        if (!activeTab) return;
+        const headerRect = header.getBoundingClientRect();
+        const tabRect = activeTab.getBoundingClientRect();
+        indicator.style.left = `${tabRect.left - headerRect.left}px`;
+        indicator.style.width = `${tabRect.width}px`;
+      });
+    });
+
+    /* ─────────────────────────────────────────────
+       Theme toggle
+       ───────────────────────────────────────────── */
+    const html   = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon   = document.getElementById('themeIcon');
+    const label  = document.getElementById('themeLabel');
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      icon.textContent   = theme === 'dark' ? '🌙' : '☀️';
+      label.textContent  = theme === 'dark' ? 'Dark'  : 'Light';
+    }
+
+    applyTheme(localStorage.getItem('theme') || 'light');
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    (function fixPlaygroundLink() {
+      const link = document.getElementById('playgroundLink');
+      if (!link) return;
+      const marker = '/design-playground';
+      const i = location.pathname.indexOf(marker);
+      link.href = i >= 0
+        ? `${location.pathname.slice(0, i + marker.length)}/`
+        : '../';
+    })();
+  </script>
+</body>
+</html>
