@@ -1,5 +1,15 @@
 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<ellipse cx="7.83998" cy="8" rx="2.8" ry="7.2" stroke="#1E222D" stroke-width="1.2"/>
-<ellipse cx="8.12153" cy="8.11891" rx="2.67013" ry="7.34286" transform="rotate(60 8.12153 8.11891)" stroke="#1E222D" stroke-width="1.2"/>
-<ellipse cx="2.67013" cy="7.34286" rx="2.67013" ry="7.34286" transform="matrix(-0.5 0.866025 0.866025 0.5 2.91013 2.13509)" stroke="#1E222D" stroke-width="1.2"/>
+<g clip-path="url(#clip0_3_12)">
+<mask id="mask0_3_12" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
+<path d="M16 0H0V16H16V0Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_3_12)">
+<path d="M5.72066 6.45762V2.981H5.37037C4.82334 2.981 4.37988 2.53754 4.37988 1.9905C4.37988 1.44346 4.82334 1 5.37037 1H10.6296C11.1766 1 11.6201 1.44346 11.6201 1.9905C11.6201 2.53754 11.1766 2.981 10.6296 2.981H10.3687V6.45762L14.3228 12.4558C15.0421 13.5469 14.2595 15 12.9527 15H3.07397C1.76174 15 0.980286 13.5362 1.71045 12.4458L5.72066 6.45762Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_3_12">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
 </svg>

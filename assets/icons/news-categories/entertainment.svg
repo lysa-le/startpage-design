@@ -1,12 +1,15 @@
-<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="1.29221" y="6.26889" width="13.6722" height="2.73445" stroke="#1E222D" stroke-width="1.2"/>
-<path d="M5.12045 6.26889L2.93289 9.00334" stroke="#1E222D" stroke-width="1.2"/>
-<path d="M9.18756 6L7 8.73445" stroke="#1E222D" stroke-width="1.2"/>
-<path d="M13.3237 6.26889L11.1362 9.00334" stroke="#1E222D" stroke-width="1.2"/>
-<rect width="13.6722" height="2.73445" transform="matrix(-0.984413 0.175872 0.175872 0.984413 14.2591 0.800003)" stroke="#1E222D" stroke-width="1.2"/>
-<path d="M10.4905 1.47328L13.1249 3.78037" stroke="#1E222D" stroke-width="1.2"/>
-<path d="M7.00001 2.38473L9.63438 4.69182" stroke="#1E222D" stroke-width="1.2"/>
-<path d="M2.41502 2.91601L5.04939 5.22311" stroke="#1E222D" stroke-width="1.2"/>
-<path d="M1.29221 9.00334V14.4401C1.29221 15.0619 1.7963 15.566 2.41813 15.566H13.8385C14.4603 15.566 14.9644 15.0619 14.9644 14.4401V9.00334" stroke="#1E222D" stroke-width="1.2"/>
-<path d="M4.02667 11.4643H12.5035" stroke="#1E222D" stroke-width="1.2" stroke-linecap="round"/>
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3_6)">
+<mask id="mask0_3_6" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
+<path d="M16 0H0V16H16V0Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_3_6)">
+<path d="M8.4532 1.57256C8.27376 1.18748 7.72623 1.18748 7.54679 1.57256L5.84594 5.22257C5.77307 5.37893 5.62475 5.48669 5.45353 5.50767L1.45658 5.99736C1.03489 6.04903 0.865699 6.56976 1.17648 6.85942L4.12225 9.60495C4.24844 9.72255 4.30509 9.89695 4.27213 10.0662L3.50273 14.0189C3.42156 14.4359 3.86452 14.7577 4.23604 14.5517L7.75748 12.5985C7.90834 12.5149 8.09168 12.5149 8.24248 12.5985L11.764 14.5517C12.1354 14.7577 12.5785 14.4359 12.4973 14.0189L11.7278 10.0662C11.6949 9.89695 11.7516 9.72255 11.8778 9.60495L14.8235 6.85942C15.1343 6.56976 14.9651 6.04903 14.5434 5.99736L10.5465 5.50767C10.3753 5.48669 10.227 5.37893 10.1541 5.22257L8.4532 1.57256Z" stroke="black" stroke-width="1.5"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_3_6">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
 </svg>
