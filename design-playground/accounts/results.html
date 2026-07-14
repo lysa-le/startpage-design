@@ -1032,13 +1032,13 @@
       top: calc(100% + var(--spacing-8));
       right: 0;
       z-index: 50;
-      width: calc(var(--spacing-24) * 13); /* 312px */
+      width: calc(var(--spacing-24) * 13); /* 312px — Figma 1150:6555 */
       display: none;
       flex-direction: column;
       overflow: hidden;
       background: var(--color-background-primary);
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow-dropdown);
       isolation: isolate;
     }
@@ -1052,27 +1052,28 @@
       justify-content: space-between;
       gap: var(--spacing-12);
       padding: var(--spacing-16);
-      background: var(--color-teal-100);
-    }
-    [data-theme="dark"] .privacy-popover__top {
       background: var(--color-background-quaternary);
     }
+    [data-theme="dark"] .privacy-popover__top {
+      background: var(--color-background-tertiary);
+    }
 
-    .privacy-popover__eyebrow {
-      margin: 0 0 var(--spacing-4);
+    .privacy-popover__title {
+      margin: 0;
       font-family: var(--font-family);
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-tertiary);
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-text-brandblue);
     }
 
     .privacy-popover__domain {
-      margin: 0;
+      margin: var(--spacing-4) 0 0;
       font-family: var(--font-family);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-semibold);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
       word-break: break-word;
     }
@@ -1082,19 +1083,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: var(--spacing-24);
-      height: var(--spacing-24);
+      width: var(--spacing-16);
+      height: var(--spacing-16);
       margin: 0;
       padding: 0;
       border: none;
-      border-radius: var(--radius-full);
-      background: var(--color-background-primary);
+      background: transparent;
       color: var(--color-text-primary);
       cursor: pointer;
-      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-stroke-secondary);
     }
     .privacy-popover__close:hover {
-      background: var(--color-background-secondary);
+      color: var(--color-text-secondary);
     }
     .privacy-popover__close svg {
       width: var(--spacing-12);
@@ -1105,20 +1104,9 @@
     .privacy-popover__body {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-16);
+      gap: var(--spacing-12);
       padding: var(--spacing-16);
       background: var(--color-background-primary);
-    }
-
-    .privacy-popover__list {
-      display: flex;
-      flex-direction: column;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
     }
 
     .privacy-popover__row {
@@ -1126,93 +1114,84 @@
       align-items: center;
       justify-content: space-between;
       gap: var(--spacing-16);
-      min-height: calc(var(--spacing-40) + var(--spacing-4));
-      padding: var(--spacing-12) var(--spacing-16);
-      background: var(--color-background-primary);
+      min-height: calc(var(--spacing-40) + var(--spacing-8) - 2px); /* ~46 */
+      padding: 0 var(--spacing-16);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-tertiary);
     }
-    .privacy-popover__row + .privacy-popover__row {
-      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    [data-theme="dark"] .privacy-popover__row {
+      background: var(--color-background-quaternary);
     }
 
     .privacy-popover__label {
       font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
+      font-size: var(--font-body-md);
+      line-height: 0.875rem;
       font-weight: var(--font-weight-regular);
-      color: var(--color-text-secondary);
+      color: var(--color-text-primary);
     }
 
     .privacy-popover__value {
       font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
+      font-size: var(--font-body-md);
+      line-height: 0.875rem;
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-primary);
       text-align: right;
-    }
-    .privacy-popover__value--good {
-      color: var(--color-text-teal);
-    }
-    .privacy-popover__value--warn {
-      color: var(--color-accent-gold);
-    }
-    .privacy-popover__value--bad {
-      color: var(--color-text-error);
     }
 
     .privacy-popover__grade {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: calc(var(--spacing-24) + var(--spacing-4));
+      width: calc(var(--spacing-24) + var(--spacing-4)); /* 28px */
       height: calc(var(--spacing-24) + var(--spacing-4));
-      padding: 0 var(--spacing-8);
       border-radius: var(--radius-full);
-      background: var(--color-background-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
     }
-    .privacy-popover__grade--good {
-      background: var(--color-teal-100);
-      color: var(--color-text-teal);
+    [data-theme="dark"] .privacy-popover__grade {
+      color: var(--color-text-inverted);
     }
-    [data-theme="dark"] .privacy-popover__grade--good {
-      background: color-mix(in srgb, var(--color-teal-400) 22%, var(--color-background-tertiary));
-      color: var(--color-teal-400);
-    }
-    .privacy-popover__grade--warn {
-      background: var(--color-gold-100);
-      color: var(--color-accent-gold);
-    }
-    .privacy-popover__grade--bad {
-      background: var(--color-red-100);
-      color: var(--color-text-error);
-    }
+    .privacy-popover__grade--a { background: var(--color-teal-400); }
+    .privacy-popover__grade--b { background: var(--color-purple-400); }
+    .privacy-popover__grade--c { background: var(--color-gold-500); }
+    .privacy-popover__grade--d { background: var(--color-accent-gold); }
+    .privacy-popover__grade--f { background: var(--color-red-500); }
+    [data-theme="dark"] .privacy-popover__grade--f { background: var(--color-red-400); }
 
     .privacy-popover__ai {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-4);
-      padding: var(--spacing-12) var(--spacing-16);
+      gap: var(--spacing-8);
+      padding: var(--spacing-16);
       border-radius: var(--radius-lg);
-      border: var(--border-stroke-sm) solid var(--color-stroke-error);
-      background: var(--color-red-100);
-    }
-    [data-theme="dark"] .privacy-popover__ai {
-      background: color-mix(in srgb, var(--color-red-500) 18%, var(--color-background-tertiary));
+      border: var(--border-stroke-sm) solid var(--color-text-error);
+      background: transparent;
     }
     .privacy-popover__ai-title {
       margin: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
       font-family: var(--font-family);
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-body-md);
+      line-height: 1;
+      font-weight: var(--font-weight-bold);
       color: var(--color-text-error);
+    }
+    .privacy-popover__ai-icon {
+      flex-shrink: 0;
+      font-weight: var(--font-weight-semibold);
     }
     .privacy-popover__ai-body {
       margin: 0;
       font-family: var(--font-family);
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
     }
@@ -1223,23 +1202,22 @@
       justify-content: center;
       gap: var(--spacing-8);
       width: 100%;
-      height: var(--spacing-40);
+      min-height: calc(var(--spacing-40) + var(--spacing-8) - 2px); /* ~46 */
       margin: 0;
       padding: 0 var(--spacing-16);
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
       border-radius: var(--radius-lg);
-      background: var(--color-background-primary);
+      background: transparent;
       color: var(--color-text-primary);
       font-family: var(--font-family);
-      font-size: var(--font-label-xs);
-      line-height: var(--font-label-xs-lh);
+      font-size: var(--font-body-md);
+      line-height: 1;
       font-weight: var(--font-weight-semibold);
       cursor: pointer;
-      transition: background-color 0.15s ease, border-color 0.15s ease;
+      transition: background-color 0.15s ease;
     }
     .privacy-popover__block:hover {
       background: var(--color-background-secondary);
-      border-color: var(--color-stroke-primary-button);
     }
     .privacy-popover__block:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
@@ -2552,15 +2530,13 @@
     }
 
     function gradeClass(grade) {
-      if (grade === 'A' || grade === 'B') return 'privacy-popover__grade--good';
-      if (grade === 'C') return 'privacy-popover__grade--warn';
-      return 'privacy-popover__grade--bad';
+      const key = String(grade || 'F').toLowerCase();
+      return `privacy-popover__grade--${key}`;
     }
 
     function trackersLabel(count) {
-      if (count === 0) return { text: 'None detected', className: 'privacy-popover__value--good' };
-      if (count <= 3) return { text: `${count} detected`, className: 'privacy-popover__value--warn' };
-      return { text: `${count} detected`, className: 'privacy-popover__value--bad' };
+      if (count === 0) return 'None detected';
+      return `${count} detected`;
     }
 
     const SHIELD_OUTLINE = `
@@ -2573,7 +2549,7 @@
       const trackers = trackersLabel(insights.trackers);
       const aiHtml = insights.aiHeavy
         ? `<div class="privacy-popover__ai" role="status">
-            <p class="privacy-popover__ai-title">AI content warning</p>
+            <p class="privacy-popover__ai-title"><span class="privacy-popover__ai-icon" aria-hidden="true">⚠</span>AI content warning</p>
             <p class="privacy-popover__ai-body">This site appears to publish a high volume of AI-generated content.</p>
           </div>`
         : '';
@@ -2582,7 +2558,7 @@
         <div class="privacy-popover" role="dialog" aria-label="Privacy insights for ${domain}" hidden>
           <div class="privacy-popover__top">
             <div>
-              <p class="privacy-popover__eyebrow">Privacy insights</p>
+              <h3 class="privacy-popover__title">Privacy insights</h3>
               <p class="privacy-popover__domain">${domain}</p>
             </div>
             <button type="button" class="privacy-popover__close" aria-label="Close">
@@ -2592,16 +2568,14 @@
             </button>
           </div>
           <div class="privacy-popover__body">
-            <ul class="privacy-popover__list">
-              <li class="privacy-popover__row">
-                <span class="privacy-popover__label">Trackers</span>
-                <span class="privacy-popover__value ${trackers.className}">${trackers.text}</span>
-              </li>
-              <li class="privacy-popover__row">
-                <span class="privacy-popover__label">Privacy rating</span>
-                <span class="privacy-popover__grade ${gradeClass(insights.grade)}" aria-label="Grade ${insights.grade}">${insights.grade}</span>
-              </li>
-            </ul>
+            <div class="privacy-popover__row">
+              <span class="privacy-popover__label">Trackers</span>
+              <span class="privacy-popover__value">${trackers}</span>
+            </div>
+            <div class="privacy-popover__row">
+              <span class="privacy-popover__label">Privacy score</span>
+              <span class="privacy-popover__grade ${gradeClass(insights.grade)}" aria-label="Grade ${insights.grade}">${insights.grade}</span>
+            </div>
             ${aiHtml}
             <button type="button" class="privacy-popover__block" data-block-domain="${domain}">
               <svg class="privacy-popover__block-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
