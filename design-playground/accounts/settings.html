@@ -586,13 +586,13 @@
     .settings-row__link {
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-medium);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-link);
-      text-decoration: none;
-    }
-    .settings-row__link:hover {
       text-decoration: underline;
       text-underline-offset: 2px;
+    }
+    .settings-row__link:hover {
+      color: var(--color-text-brandblue);
     }
     .settings-row__control { flex-shrink: 0; }
 
@@ -2163,20 +2163,45 @@
               </div>
             </div>
 
-            <div class="settings-row settings-row--stack">
+            <div class="settings-row">
               <div class="settings-row__copy">
                 <span class="settings-row__label">Font</span>
               </div>
               <div class="settings-row__control">
-                <div class="chip-group" role="group" aria-label="Font" data-pref="font">
-                  <button type="button" class="chip" data-value="inter">Inter (default)</button>
-                  <button type="button" class="chip" data-value="arial">Arial</button>
-                  <button type="button" class="chip" data-value="georgia">Georgia</button>
-                  <button type="button" class="chip" data-value="helvetica">Helvetica</button>
-                  <button type="button" class="chip" data-value="segoe">Segoe UI</button>
-                  <button type="button" class="chip" data-value="verdana">Verdana</button>
-                  <button type="button" class="chip" data-value="serif">Serif</button>
-                  <button type="button" class="chip" data-value="mono">Mono</button>
+                <div class="dropdown dropdown--small dropdown--wide" data-dd="ui-font" data-pref="font">
+                  <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="dropdown__label">Inter (default)</span>
+                    <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="dropdown__panel" hidden>
+                    <hr class="dropdown__divider" />
+                    <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="inter">
+                      <span class="dropdown__item-label">Inter (default)</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="arial">
+                      <span class="dropdown__item-label">Arial</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="georgia">
+                      <span class="dropdown__item-label">Georgia</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="helvetica">
+                      <span class="dropdown__item-label">Helvetica</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="segoe">
+                      <span class="dropdown__item-label">Segoe UI</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="verdana">
+                      <span class="dropdown__item-label">Verdana</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="serif">
+                      <span class="dropdown__item-label">Serif</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="mono">
+                      <span class="dropdown__item-label">Mono</span>
+                    </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2560,7 +2585,8 @@
         dd.querySelectorAll('.dropdown__item').forEach((item) => {
           item.addEventListener('click', (e) => {
             e.stopPropagation();
-            label.textContent = item.dataset.value;
+            const display = item.querySelector('.dropdown__item-label')?.textContent.trim() || item.dataset.value;
+            label.textContent = display;
             dd.querySelectorAll('.dropdown__item').forEach((o) => {
               o.classList.remove('dropdown__item--selected');
               o.setAttribute('aria-selected', 'false');
@@ -2578,6 +2604,18 @@
         document.querySelectorAll('[data-pref]').forEach((group) => {
           const key = group.dataset.pref;
           const val = prefs[key];
+          if (group.classList.contains('dropdown')) {
+            const label = group.querySelector('.dropdown__label');
+            group.querySelectorAll('.dropdown__item').forEach((item) => {
+              const on = item.dataset.value === String(val);
+              item.classList.toggle('dropdown__item--selected', on);
+              item.setAttribute('aria-selected', String(on));
+              if (on && label) {
+                label.textContent = item.querySelector('.dropdown__item-label')?.textContent.trim() || item.dataset.value;
+              }
+            });
+            return;
+          }
           group.querySelectorAll('.chip, .swatch').forEach((el) => {
             el.classList.toggle('is-active', el.dataset.value === String(val));
           });
@@ -2610,12 +2648,23 @@
       }
 
       document.querySelectorAll('[data-pref]').forEach((group) => {
+        if (group.classList.contains('dropdown')) return;
         const key = group.dataset.pref;
         group.addEventListener('click', (e) => {
           if (document.body.dataset.plan !== 'premium') return;
           const btn = e.target.closest('[data-value]');
           if (!btn || !group.contains(btn)) return;
           patch({ [key]: btn.dataset.value });
+        });
+      });
+
+      document.querySelectorAll('.dropdown[data-pref]').forEach((dd) => {
+        const key = dd.dataset.pref;
+        dd.querySelectorAll('.dropdown__item').forEach((item) => {
+          item.addEventListener('click', () => {
+            if (document.body.dataset.plan !== 'premium') return;
+            patch({ [key]: item.dataset.value });
+          });
         });
       });
 
