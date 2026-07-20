@@ -278,8 +278,8 @@
 | `color-button-brandbluehover` | `color-brand-blue-300` — `#6677FB` |
 | `color-button-purple` | `color-purple-500` — `#C161EA` |
 | `color-button-purplehover` | `color-purple-400` — `#D67DFD` |
-| `color-button-teal` | `color-teal-200` — `#5AECDE` |
-| `color-button-tealhover` | `color-teal-400` — `#00E7D0` |
+| `color-button-teal` | `color-teal-400` — `#00E7D0` |
+| `color-button-tealhover` | `color-teal-200` — `#5AECDE` |
 | `color-button-productfilled` | `color-whisper-300` — `#E7E9FB` |
 | `color-button-productfilledhover` | `color-whisper-400` — `#DEE0F7` |
 | `color-button-inactive` | `color-whisper-100` — `#F2F3FF` |

@@ -246,8 +246,8 @@
   --color-button-brandbluehover:     var(--color-brand-blue-300);
   --color-button-purple:             var(--color-purple-500);
   --color-button-purplehover:        var(--color-purple-400);
-  --color-button-teal:               var(--color-teal-200);
-  --color-button-tealhover:          var(--color-teal-400);
+  --color-button-teal:               var(--color-teal-400);
+  --color-button-tealhover:          var(--color-teal-200);
   --color-button-productfilled:      var(--color-whisper-300);
   --color-button-productfilledhover: var(--color-whisper-400);
   --color-button-inactive:           var(--color-whisper-100);

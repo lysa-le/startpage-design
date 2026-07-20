@@ -388,6 +388,14 @@
       display: none !important;
     }
 
+    /* Premium-only account menu item */
+    .account-menu__link--premium {
+      display: none !important;
+    }
+    body[data-plan="premium"] .account-menu__link--premium {
+      display: flex !important;
+    }
+
     /* ── Go Ad-Free plan modal ── */
     .plan-overlay {
       position: fixed;
@@ -892,14 +900,23 @@
 
           <hr class="account-menu__rule" />
 
-          <button type="button" class="account-menu__link" role="menuitem">
+          <a href="settings.html#account" class="account-menu__link" role="menuitem">
             <span class="account-menu__link-text">
-              <span class="account-menu__link-title">Account settings</span>
+              <span class="account-menu__link-title">Account &amp; Subscription</span>
             </span>
             <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-          </button>
+          </a>
+
+          <a href="settings.html#ui-customizations" class="account-menu__link account-menu__link--premium" role="menuitem">
+            <span class="account-menu__link-text">
+              <span class="account-menu__link-title">Customize UI</span>
+            </span>
+            <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
 
           <button type="button" class="account-menu__link js-go-ad-free" role="menuitem">
             <span class="account-menu__link-text">

@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="tokens.css">
+  <script src="ui-prefs.js"></script>
   <style>
     /* ─────────────────────────────────────────────
        Dark mode token overrides
@@ -523,6 +524,15 @@
     body[data-plan="premium"] .account-menu__upgrade {
       display: none !important;
     }
+
+    /* Premium-only account menu item */
+    .account-menu__link--premium {
+      display: none !important;
+    }
+    body[data-plan="premium"] .account-menu__link--premium {
+      display: flex !important;
+    }
+
     .site-header--desktop .site-header__nav {
       grid-column: 1 / -1;
       grid-row: 2;
@@ -925,12 +935,73 @@
       font-size: var(--font-body-lg);
       line-height: var(--font-body-lg-lh);
       font-weight: var(--font-weight-regular);
-      color: var(--color-text-link);
+      font-family: var(--ui-title-font, inherit);
+      color: var(--ui-title-color, var(--color-text-link));
       text-decoration: none;
       display: block;
     }
 
     .algo-result__title:hover { text-decoration: underline; }
+
+    /* ── Premium UI customizations (from settings.html) ── */
+    html[data-ui-font] body {
+      font-family: var(--ui-font-family, var(--font-family));
+    }
+    html[data-ui-font-size="small"] { font-size: 14px; }
+    html[data-ui-font-size="medium"] { font-size: 16px; }
+    html[data-ui-font-size="large"] { font-size: 17px; }
+    html[data-ui-font-size="larger"] { font-size: 18px; }
+    html[data-ui-font-size="largest"] { font-size: 20px; }
+    html[data-ui-width="wide"] .serp-layout {
+      grid-template-columns: minmax(0, 720px) minmax(0, calc(var(--spacing-24) * 18));
+      max-width: calc(720px + var(--spacing-80) + (var(--spacing-24) * 18));
+    }
+    html[data-ui-width="super-wide"] .serp-layout {
+      grid-template-columns: minmax(0, 880px) minmax(0, calc(var(--spacing-24) * 18));
+      max-width: calc(880px + var(--spacing-80) + (var(--spacing-24) * 18));
+    }
+    html[data-ui-align="center"] .serp-body {
+      display: flex;
+      justify-content: center;
+    }
+    html[data-ui-align="center"] .serp-layout {
+      margin-inline: auto;
+    }
+    html[data-ui-bg]:not([data-ui-bg="default"]) body {
+      background: var(--ui-bg-override, var(--color-background-primary));
+    }
+    html[data-ui-site-icons="off"] .algo-result__favicon,
+    html[data-ui-site-icons="off"] .ad-result__favicon {
+      display: none !important;
+    }
+    html[data-ui-scheme="basic"] {
+      --color-text-link: var(--color-text-primary);
+    }
+    html[data-ui-scheme="contrast"] {
+      --color-text-link: var(--color-brand-blue-600);
+    }
+    html[data-ui-scheme="terminal"] body {
+      background: var(--color-black-900);
+      color: var(--color-teal-200);
+    }
+    html[data-ui-scheme="terminal"] {
+      --color-text-link: var(--color-teal-200);
+      --color-text-primary: var(--color-teal-200);
+      --color-text-secondary: var(--color-teal-400);
+      --color-text-tertiary: var(--color-teal-400);
+      --ui-title-color: var(--color-teal-200);
+    }
+    html[data-ui-scheme="gray"] body {
+      background: var(--color-black-800);
+    }
+    html[data-ui-scheme="gray"] {
+      --color-text-link: var(--color-whisper-100);
+      --color-text-primary: var(--color-whisper-200);
+      --ui-title-color: var(--color-whisper-100);
+    }
+    html[data-ui-scheme="dark"] body {
+      background: var(--color-black-900);
+    }
 
     .algo-result__description {
       font-size: var(--font-body-sm);
@@ -1840,14 +1911,23 @@
 
         <hr class="account-menu__rule" />
 
-        <button type="button" class="account-menu__link" role="menuitem">
+        <a href="settings.html#account" class="account-menu__link" role="menuitem">
           <span class="account-menu__link-text">
-            <span class="account-menu__link-title">Account settings</span>
+            <span class="account-menu__link-title">Account &amp; Subscription</span>
           </span>
           <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-        </button>
+        </a>
+
+        <a href="settings.html#ui-customizations" class="account-menu__link account-menu__link--premium" role="menuitem">
+          <span class="account-menu__link-text">
+            <span class="account-menu__link-title">Customize UI</span>
+          </span>
+          <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
 
         <button type="button" class="account-menu__link js-go-ad-free" role="menuitem">
           <span class="account-menu__link-text">
@@ -3070,6 +3150,11 @@
       applyTheme(next);
       localStorage.setItem('theme', next);
     });
+
+    /* Apply premium UI customizations from settings */
+    if (window.AccountsUIPrefs) {
+      AccountsUIPrefs.apply(AccountsUIPrefs.load());
+    }
 
     (function fixPlaygroundLink() {
       const link = document.getElementById('playgroundLink');

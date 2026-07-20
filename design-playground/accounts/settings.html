@@ -1,0 +1,2728 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — Startpage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+  <script src="ui-prefs.js"></script>
+  <script>
+    document.documentElement.dataset.plan = sessionStorage.getItem('accounts-plan') || 'basic';
+    document.documentElement.dataset.auth = sessionStorage.getItem('accounts-auth') || 'signed-out';
+  </script>
+  <style>
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+      --color-text-primary:          var(--color-whisper-100);
+      --color-text-secondary:        var(--color-midnight-200);
+      --color-text-tertiary:         var(--color-midnight-100);
+      --color-text-inverted:         var(--color-black-800);
+      --color-text-brandblue:        var(--color-brand-blue-100);
+      --color-text-link:             var(--color-brand-blue-100);
+      --color-icon-primary:          var(--color-whisper-200);
+      --color-icon-secondary:        var(--color-brand-blue-100);
+      --color-icon-tertiary:         var(--color-midnight-100);
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-100);
+      --color-button-inactive:       var(--color-black-600);
+      --color-button-teal:           var(--color-teal-400);
+      --color-button-tealhover:      var(--color-teal-200);
+      --color-button-productfilled:  var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-accent-teal:           var(--color-teal-200);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+    }
+
+    .proto-chrome {
+      position: fixed;
+      bottom: var(--spacing-24);
+      right: var(--spacing-24);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+    .proto-back {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .proto-back:hover { text-decoration: underline; }
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+    }
+
+    /* ── Header — Figma 1706:11479 ── */
+    .settings-chrome {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: var(--color-background-primary);
+    }
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-24) var(--spacing-40);
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      background: var(--color-background-primary);
+    }
+    .settings-header__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      text-decoration: none;
+      color: inherit;
+    }
+    .settings-header__logo {
+      width: 104px;
+      height: 23px;
+      display: block;
+      color: var(--color-text-primary);
+      flex-shrink: 0;
+      transform: translateY(2px); /* optical align with Settings label */
+    }
+    .settings-header__title {
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+    .settings-header__actions {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      min-height: calc(var(--spacing-32) + var(--spacing-16));
+      /* Match homepage/results: hamburger 20px + gap 24px */
+      padding-right: calc(var(--spacing-20) + var(--spacing-24));
+      z-index: 30;
+    }
+
+    body[data-auth="signed-in"] .auth-out { display: none !important; }
+    body[data-auth="signed-out"] .auth-in { display: none !important; }
+
+    .hp-chrome__auth {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--spacing-12);
+      min-height: calc(var(--spacing-32) + var(--spacing-16));
+    }
+    .hp-chrome__account-wrap { position: relative; }
+    .hp-chrome__account {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: calc(var(--spacing-32) + var(--spacing-16));
+      height: calc(var(--spacing-32) + var(--spacing-16));
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--color-icon-secondary);
+      border-radius: var(--radius-full);
+      transition: background-color 0.15s ease;
+    }
+    [data-theme="dark"] .hp-chrome__account { color: var(--color-teal-400); }
+    .hp-chrome__account:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hp-chrome__account[aria-expanded="true"] {
+      background: var(--color-background-tertiary);
+    }
+    .hp-chrome__account-svg {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      display: block;
+    }
+    .hp-chrome__menu {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--color-text-primary);
+      cursor: pointer;
+    }
+    .hp-chrome__menu:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hp-chrome__menu-icon {
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      display: block;
+    }
+    .hp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--spacing-32);
+      padding: 0 var(--spacing-24);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--font-label-xs-lh);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .hp-btn--teal {
+      background: var(--color-button-teal);
+      color: var(--color-text-primary);
+    }
+    [data-theme="dark"] .hp-btn--teal { color: var(--color-text-inverted); }
+    .hp-btn--product {
+      background: var(--color-button-productfilled);
+      color: var(--color-text-primary);
+    }
+
+    .account-menu {
+      position: absolute;
+      top: calc(100% + var(--spacing-16));
+      right: 0;
+      width: calc(var(--spacing-24) * 12 - var(--spacing-8));
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-24);
+      padding: var(--spacing-24);
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-dropdown);
+      z-index: 40;
+    }
+    .account-menu.is-open { display: flex; }
+    .account-menu__header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+    .account-menu__avatar {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      color: var(--color-icon-secondary);
+    }
+    [data-theme="dark"] .account-menu__avatar { color: var(--color-teal-400); }
+    .account-menu__badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px var(--spacing-12);
+      border-radius: var(--radius-full);
+      background: var(--color-icon-secondary);
+      color: var(--color-text-inverted);
+      font-family: var(--font-family);
+      font-size: var(--font-label-xs);
+      line-height: var(--font-label-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      white-space: nowrap;
+    }
+    .account-menu__badge[data-plan="premium"] {
+      background: var(--color-teal-200);
+      color: var(--color-text-primary);
+    }
+    [data-theme="dark"] .account-menu__badge[data-plan="basic"] {
+      background: var(--color-brand-blue-300);
+      color: var(--color-text-inverted);
+    }
+    [data-theme="dark"] .account-menu__badge[data-plan="premium"] {
+      background: var(--color-teal-400);
+      color: var(--color-text-inverted);
+    }
+    .account-menu__rule {
+      height: 0;
+      border: none;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      margin: 0;
+      width: 100%;
+    }
+    .account-menu__link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      width: 100%;
+      padding: 0;
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--font-family);
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    .account-menu__link:hover .account-menu__link-title { color: var(--color-text-link); }
+    .account-menu__link:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-sm);
+    }
+    .account-menu__link-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 0;
+      flex: 1;
+    }
+    .account-menu__link-title {
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+    .account-menu__link-caption {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .account-menu__chevron {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+      color: var(--color-icon-tertiary);
+    }
+    .account-menu__footer {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+    .account-menu__upgrade {
+      width: 100%;
+      min-width: 0;
+      height: calc(var(--spacing-40) + 3px);
+      border: none;
+      border-radius: var(--radius-lg);
+      background: var(--color-button-teal);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-label-xs);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    [data-theme="dark"] .account-menu__upgrade { color: var(--color-text-inverted); }
+    body[data-plan="premium"] .account-menu__upgrade { display: none !important; }
+    .account-menu__link--premium { display: flex !important; }
+    .account-menu__signout {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-8);
+      width: 100%;
+      height: calc(var(--spacing-40) + 3px);
+      padding: var(--spacing-8) var(--spacing-16);
+      border: none;
+      border-radius: var(--radius-lg);
+      background: var(--color-button-inactive);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-label-xs);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+    }
+    .account-menu__signout:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .account-menu__signout-icon {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+    }
+
+    /* Tabs */
+    .settings-tabs {
+      display: flex;
+      gap: var(--spacing-32);
+      padding: 0 var(--spacing-40);
+      max-width: 1440px;
+      margin: 0 auto;
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      overflow-x: auto;
+      background: var(--color-background-primary);
+    }
+    .settings-tabs__link {
+      position: relative;
+      padding: var(--spacing-16) 0;
+      border: none;
+      background: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-tertiary);
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .settings-tabs__link:hover { color: var(--color-text-secondary); }
+    .settings-tabs__link.is-active {
+      color: var(--color-text-brandblue);
+      font-weight: var(--font-weight-semibold);
+    }
+    .settings-tabs__link.is-active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      background: var(--color-button-brandblue);
+      border-radius: var(--radius-full) var(--radius-full) 0 0;
+    }
+
+    /* ── Layout ── */
+    .settings-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 610px) minmax(240px, 330px);
+      gap: var(--spacing-48);
+      align-items: start;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: var(--spacing-40) var(--spacing-40) var(--spacing-80);
+      width: 100%;
+    }
+    @media (max-width: 900px) {
+      .settings-shell {
+        grid-template-columns: 1fr;
+        padding: var(--spacing-24);
+      }
+      .settings-header { padding: var(--spacing-16) var(--spacing-24); }
+      .settings-tabs { padding: 0 var(--spacing-24); gap: var(--spacing-20); }
+    }
+
+    .settings-section {
+      display: none;
+      scroll-margin-top: calc(var(--spacing-96) + var(--spacing-48));
+      margin-bottom: var(--spacing-48);
+    }
+    .settings-section.is-active {
+      display: block;
+    }
+    .settings-section__head--spaced {
+      margin-top: var(--spacing-64);
+    }
+    .settings-section__head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      margin-bottom: var(--spacing-12);
+    }
+    .settings-section__head:has(+ .settings-card),
+    .settings-section__head:has(+ .account-card) {
+      margin-bottom: var(--spacing-24);
+    }
+    /* Match UI Customizations gap: 48px above subsection headers */
+    .settings-card:has(+ .settings-section__head--spaced),
+    .account-card:has(+ .settings-section__head--spaced),
+    .settings-card:has(+ .appearance-premium),
+    .settings-section__reset:has(+ .appearance-premium) {
+      margin-bottom: 0;
+    }
+    .settings-card:has(+ .settings-section__reset) {
+      margin-bottom: var(--spacing-32);
+    }
+    .settings-section__title,
+    .account-panel__title,
+    .appearance-premium__title {
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .settings-section__title--sub {
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+    }
+    .settings-section__lede {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-tertiary);
+      margin: 0 0 var(--spacing-24);
+      max-width: 36rem;
+    }
+    .appearance-premium__lede {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-tertiary);
+      margin: 0 0 var(--spacing-24);
+      max-width: 36rem;
+    }
+    .account-panel__title {
+      margin-bottom: var(--spacing-24);
+    }
+    .settings-section__reset {
+      display: block;
+      border: none;
+      background: none;
+      padding: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-align: left;
+    }
+
+    .settings-card {
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-quaternary);
+      overflow: visible;
+      margin-bottom: var(--spacing-24);
+    }
+    .settings-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-24);
+      padding: var(--spacing-24);
+      background: var(--color-background-quaternary);
+      border-bottom: none;
+    }
+    .settings-row:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: var(--spacing-24);
+      right: var(--spacing-24);
+      bottom: 0;
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      pointer-events: none;
+    }
+    .settings-row:first-child {
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .settings-row:last-child {
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+    .settings-row:only-child {
+      border-radius: var(--radius-lg);
+    }
+    .settings-row__copy { min-width: 0; flex: 1; }
+    .settings-row__heading {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      flex-wrap: wrap;
+    }
+    .settings-row__label {
+      display: block;
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      margin-bottom: 0;
+    }
+    .settings-row__desc {
+      display: none;
+    }
+    .settings-row__meta,
+    .settings-row__hint {
+      display: block;
+      margin: var(--spacing-4) 0 0;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .settings-row__hint a,
+    .settings-row__meta a {
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .settings-row__hint a:hover,
+    .settings-row__meta a:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .settings-row__link {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .settings-row__link:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .settings-row__control { flex-shrink: 0; }
+
+    /* Toggle — components/toggle */
+    .toggle {
+      --toggle-width:      var(--spacing-40);
+      --toggle-height:     var(--spacing-24);
+      --toggle-thumb-gap:  3px;
+      --toggle-thumb-size: calc(var(--toggle-height) - var(--toggle-thumb-gap) * 2);
+      --toggle-travel:     calc(var(--toggle-width) - var(--toggle-height));
+      display: inline-flex;
+      align-items: center;
+      width: var(--toggle-width);
+      height: var(--toggle-height);
+      border-radius: var(--radius-full);
+      border: none;
+      padding: 0;
+      background-color: var(--color-stroke-primary);
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      flex-shrink: 0;
+    }
+    .toggle[aria-checked="true"] {
+      background-color: var(--color-icon-secondary);
+    }
+    .toggle:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+    .toggle__thumb {
+      width: var(--toggle-thumb-size);
+      height: var(--toggle-thumb-size);
+      border-radius: var(--radius-full);
+      background-color: var(--color-toggle-thumb);
+      box-shadow: var(--shadow-card);
+      margin-left: var(--toggle-thumb-gap);
+      flex-shrink: 0;
+      transform: translateX(0);
+      transition: transform 0.2s ease;
+    }
+    .toggle[aria-checked="true"] .toggle__thumb {
+      transform: translateX(var(--toggle-travel));
+    }
+
+    /* Dropdown — components/dropdown (small) */
+    .dropdown {
+      position: relative;
+      width: 248px;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+    }
+    .dropdown--open {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      box-shadow: var(--shadow-dropdown);
+    }
+    .dropdown__trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: var(--spacing-12) var(--spacing-16);
+      background: none;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      text-align: left;
+    }
+    .dropdown__label {
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: visible;
+    }
+    .dropdown--small .dropdown__trigger {
+      padding: var(--spacing-8) var(--spacing-12);
+    }
+    .dropdown__trigger:hover {
+      background: var(--color-background-secondary);
+    }
+    .dropdown--open .dropdown__trigger {
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      background: none;
+    }
+    .dropdown__trigger:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+    .dropdown__chevron {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      color: var(--color-icon-primary);
+      transition: transform 0.2s ease;
+    }
+    .dropdown--open .dropdown__chevron {
+      transform: rotate(180deg);
+    }
+    .dropdown__panel[hidden] { display: none; }
+    .dropdown__panel {
+      position: absolute;
+      top: 100%;
+      left: calc(-1 * var(--border-stroke-sm));
+      right: calc(-1 * var(--border-stroke-sm));
+      z-index: 20;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-top: none;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      max-height: calc(var(--spacing-40) * 6);
+      overflow: auto;
+    }
+    .dropdown[data-dd="region-filter"] .dropdown__panel {
+      max-height: calc(var(--spacing-40) * 9);
+    }
+    .dropdown__divider {
+      height: var(--border-stroke-sm);
+      background: var(--color-stroke-primary);
+      border: none;
+      margin: 0;
+    }
+    .dropdown__list {
+      list-style: none;
+      padding: var(--spacing-8) 0;
+      margin: 0;
+    }
+    .dropdown__item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-8) var(--spacing-16);
+      gap: var(--spacing-8);
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font-family);
+    }
+    .dropdown__item::before {
+      content: '';
+      position: absolute;
+      inset: 0 var(--spacing-8);
+      border-radius: var(--radius-lg);
+      background: transparent;
+    }
+    .dropdown__item:hover:not(.dropdown__item--disabled)::before {
+      background: var(--color-background-tertiary);
+    }
+    .dropdown__item--selected::before {
+      background: var(--color-background-secondary);
+    }
+    .dropdown__item > * { position: relative; z-index: 1; }
+    .dropdown__item-label {
+      flex: 1;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      white-space: nowrap;
+    }
+    .dropdown__item--selected .dropdown__item-label {
+      font-weight: var(--font-weight-semibold);
+    }
+    .settings-row__control .dropdown {
+      width: min(248px, 100%);
+    }
+    .settings-row__control .dropdown--wide {
+      width: calc(var(--spacing-96) + var(--spacing-104) + var(--spacing-4)); /* 204 */
+      min-width: calc(var(--spacing-96) + var(--spacing-104) + var(--spacing-4));
+    }
+    .settings-row__control .dropdown--md {
+      width: calc(var(--spacing-96) + var(--spacing-24)); /* 120 */
+      min-width: calc(var(--spacing-96) + var(--spacing-24));
+    }
+
+    /* Segmented / chip controls (DDG-style) */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+      justify-content: flex-end;
+      max-width: 320px;
+    }
+    .chip {
+      padding: var(--spacing-8) var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-sm);
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+    }
+    .chip.is-active {
+      border-color: var(--color-stroke-primary-button);
+      background: var(--color-background-tertiary);
+      color: var(--color-text-brandblue);
+      box-shadow: inset 0 0 0 1px var(--color-stroke-primary-button);
+    }
+    .chip:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    .swatch-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+      justify-content: flex-end;
+      max-width: 280px;
+    }
+    .swatch {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      border-radius: var(--radius-sm);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      cursor: pointer;
+      padding: 0;
+      background: var(--swatch-color);
+    }
+    .swatch.is-active {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+    .swatch--default {
+      background:
+        linear-gradient(135deg, var(--color-background-primary) 50%, var(--color-stroke-primary) 50%);
+    }
+
+    .settings-row--stack {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .settings-row--stack .settings-row__control {
+      margin-top: var(--spacing-12);
+      align-self: flex-end;
+    }
+    .settings-row--support {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-16);
+    }
+    .settings-row__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-24);
+      width: 100%;
+    }
+    .settings-row--support .account-id-row {
+      align-self: flex-start;
+    }
+
+    /* Live preview */
+    .ui-preview {
+      margin-top: var(--spacing-16);
+      padding: var(--spacing-20);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-md);
+      background: var(--ui-preview-bg, var(--color-background-primary));
+      font-family: var(--ui-font-family, var(--font-family));
+    }
+    .ui-preview__label {
+      font-size: var(--font-body-xs);
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--spacing-12);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .ui-preview__result {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+      max-width: 100%;
+    }
+    .ui-preview__source {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+    .ui-preview__favicon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background: var(--color-background-secondary);
+      flex-shrink: 0;
+    }
+    html[data-ui-site-icons="off"] .ui-preview__favicon { display: none; }
+    .ui-preview__site {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-primary);
+    }
+    .ui-preview__url {
+      font-size: var(--font-body-sm);
+      color: var(--color-text-tertiary);
+    }
+    .ui-preview__title {
+      font-family: var(--ui-title-font, var(--font-family));
+      font-size: var(--font-body-lg);
+      color: var(--ui-title-color, var(--color-text-link));
+      text-decoration: none;
+    }
+    .ui-preview__desc {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+
+    /* Font-size preview scale on settings preview only */
+    html[data-ui-font-size="small"] .ui-preview { font-size: 0.875rem; }
+    html[data-ui-font-size="medium"] .ui-preview { font-size: 1rem; }
+    html[data-ui-font-size="large"] .ui-preview { font-size: 1.0625rem; }
+    html[data-ui-font-size="larger"] .ui-preview { font-size: 1.125rem; }
+    html[data-ui-font-size="largest"] .ui-preview { font-size: 1.25rem; }
+
+    /* Schemes (preview + page feel) */
+    html[data-ui-scheme="basic"] {
+      --color-text-link: var(--color-text-primary);
+      --color-button-brandblue: var(--color-text-primary);
+    }
+    html[data-ui-scheme="contrast"] {
+      --color-text-primary: var(--color-black-900);
+      --color-background-primary: var(--color-whisper-0);
+      --color-text-link: var(--color-brand-blue-600);
+    }
+    html[data-ui-scheme="terminal"] {
+      --color-background-primary: var(--color-black-900);
+      --color-text-primary: var(--color-teal-200);
+      --color-text-secondary: var(--color-teal-400);
+      --color-text-link: var(--color-teal-200);
+      --color-stroke-primary: var(--color-black-400);
+    }
+    html[data-ui-scheme="gray"] {
+      --color-background-primary: var(--color-black-800);
+      --color-text-primary: var(--color-whisper-200);
+      --color-text-link: var(--color-whisper-100);
+    }
+
+    /* Sidebar */
+    .settings-aside {
+      position: relative;
+      min-height: 1px;
+      margin-top: var(--spacing-24);
+      margin-left: var(--spacing-16);
+    }
+    .settings-aside__fixed {
+      position: fixed;
+      top: calc(var(--spacing-96) + var(--spacing-64) + var(--spacing-24));
+      width: min(330px, calc(100vw - var(--spacing-80)));
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      z-index: 30;
+    }
+    .settings-aside__fixed > .settings-save {
+      margin-bottom: var(--spacing-8);
+    }
+    @media (max-width: 900px) {
+      .settings-aside {
+        margin-left: 0;
+        margin-top: var(--spacing-16);
+      }
+      .settings-aside__fixed {
+        position: static;
+        width: auto;
+        top: auto;
+      }
+    }
+    /* settings-save uses .btn.btn--product-brand-blue */
+    .settings-aside__note {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-secondary);
+    }
+    .settings-aside__fixed > .settings-aside__note {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .settings-aside__note a { color: var(--color-text-link); }
+    .settings-aside__box {
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      padding-top: var(--spacing-12);
+    }
+    .settings-aside__box-intro {
+      margin-bottom: var(--spacing-8);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .settings-aside__box-intro strong {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .settings-aside__url-row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+    .settings-aside__url-field {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-8) var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      transition: border-color 150ms ease;
+    }
+    .settings-aside__url-field:focus-within {
+      border-color: var(--color-stroke-primary-button);
+    }
+    .settings-aside__url {
+      width: 100%;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      color: var(--color-text-secondary);
+      outline: none;
+    }
+
+    /* ── Account settings — Figma 958:13101 ── */
+    .account-card {
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-quaternary);
+      overflow: hidden;
+      margin-bottom: var(--spacing-24);
+    }
+    .account-card__row {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-24);
+      padding: var(--spacing-24);
+      background: var(--color-background-quaternary);
+      border-bottom: none;
+    }
+    .account-card__row:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: var(--spacing-24);
+      right: var(--spacing-24);
+      bottom: 0;
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      pointer-events: none;
+    }
+    .account-card__row:last-child { border-bottom: none; }
+    .account-card__row--stack {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-12);
+    }
+    .account-card__row-main {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-24);
+    }
+    .account-card__copy { min-width: 0; flex: 1; }
+    .account-card__heading {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      margin-bottom: var(--spacing-8);
+    }
+    .account-card__label {
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .account-card__body {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-tertiary);
+      max-width: 340px;
+    }
+    .account-card__body--full {
+      max-width: none;
+    }
+    .account-card__body a,
+    .account-card__note a {
+      color: var(--color-text-link);
+    }
+    .account-card__stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+    }
+    .account-card__stack .account-card__heading {
+      margin-bottom: 0;
+    }
+    .account-id-row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      flex-wrap: wrap;
+    }
+    .account-id-row .form-field {
+      width: calc(var(--spacing-96) + var(--spacing-104) + var(--spacing-4)); /* 204 */
+    }
+    .account-card__note {
+      margin-top: 0;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+    .account-card__btn {
+      width: calc(var(--spacing-96) + var(--spacing-48)); /* 144 */
+      box-sizing: border-box;
+      justify-content: center;
+      padding: var(--spacing-16) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-semibold);
+    }
+    /* Buttons — components/button */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-8);
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-weight: var(--font-weight-bold);
+      white-space: nowrap;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: color 0.45s ease, border-color 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -10%;
+      width: 120%;
+      height: 200%;
+      border-radius: 50% 50% 0 0 / 30px 30px 0 0;
+      transform: translateY(105%);
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+      background: var(--btn-wave-color);
+    }
+    .btn:hover::before { transform: translateY(0%); }
+    .btn__label { position: relative; z-index: 1; }
+    .btn--sm {
+      padding: var(--spacing-20) var(--spacing-24);
+      border-radius: var(--radius-xl);
+      font-size: var(--font-button-sm);
+      line-height: var(--font-button-sm-lh);
+    }
+    .btn--teal {
+      --btn-wave-color: var(--color-button-tealhover);
+      background-color: var(--color-button-teal);
+      color: var(--color-text-primary);
+    }
+    [data-theme="dark"] .btn--teal { color: var(--color-text-inverted); }
+    .btn--inactive,
+    .btn:disabled {
+      --btn-wave-color: transparent;
+      background-color: var(--color-button-inactive);
+      color: var(--color-text-secondary);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .btn--inactive::before,
+    .btn:disabled::before { display: none; }
+    .btn--product-brand-blue {
+      padding: var(--spacing-12) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-bold);
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+      transition: background-color 0.15s ease;
+    }
+    .btn--product-brand-blue.btn--sm {
+      padding: var(--spacing-20) var(--spacing-24);
+      border-radius: var(--radius-xl);
+      font-size: var(--font-button-sm);
+      line-height: var(--font-button-sm-lh);
+      font-weight: var(--font-weight-semibold);
+    }
+    .btn--product-brand-blue::before { display: none; }
+    .btn--product-brand-blue:hover {
+      background-color: var(--color-button-brandbluehover);
+    }
+    [data-theme="dark"] .btn--product-brand-blue {
+      background-color: var(--color-brand-blue-100);
+      color: var(--color-black-900);
+    }
+    .btn:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+    .btn.account-card__btn,
+    .btn.account-card__btn:disabled {
+      font-weight: var(--font-weight-semibold);
+    }
+    .settings-save.is-saved {
+      background-color: var(--color-button-teal);
+      color: var(--color-text-primary);
+    }
+    [data-theme="dark"] .settings-save.is-saved {
+      color: var(--color-text-inverted);
+    }
+
+    /* Tags — components/tags */
+    .tag {
+      --tag-gap: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--tag-gap);
+      padding: 0 var(--spacing-12);
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: var(--color-button-productfilled);
+      border: none;
+      font-family: var(--font-family);
+      font-size: var(--font-label-xs);
+      line-height: var(--font-label-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      white-space: nowrap;
+    }
+    .tag--sm {
+      height: 28px;
+      padding: 0 var(--spacing-8);
+    }
+    /* Status chip used for Active subscription */
+    .tag--status {
+      background: var(--color-icon-secondary);
+      color: var(--color-text-inverted);
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      height: var(--spacing-24);
+      padding: 0 var(--spacing-12);
+      pointer-events: none;
+    }
+    .tag--muted {
+      background: var(--color-button-inactive);
+      color: var(--color-text-secondary);
+      pointer-events: none;
+    }
+
+    /* Form field — components/form-field */
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+      max-width: 100%;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-8) var(--spacing-12);
+      transition: border-color 150ms ease;
+    }
+    .form-field:focus-within {
+      border-color: var(--color-stroke-primary-button);
+    }
+    .form-field__input {
+      width: 100%;
+      background: none;
+      border: none;
+      outline: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+    /* icn-copy — components/icn-copy */
+    .icn-copy {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      isolation: isolate;
+      border: none;
+      padding: 0;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      color: var(--color-icon-primary);
+      background-color: var(--color-background-secondary);
+      transition: background-color 0.2s ease, color 0.2s ease;
+      flex-shrink: 0;
+    }
+    .icn-copy--lg {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+    }
+    .icn-copy:not(.icn-copy--bare):hover {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+    }
+    .icn-copy[data-state="check"]:not(.icn-copy--bare) {
+      background-color: var(--color-icon-secondary);
+      color: var(--color-text-inverted);
+    }
+    .icn-copy[data-state="check"]:not(.icn-copy--bare):hover {
+      background-color: var(--color-button-brandbluehover);
+    }
+    .icn-copy--lg .icn-copy__svg { width: 12px; height: 12px; }
+    .icn-copy__svg {
+      position: absolute;
+      flex-shrink: 0;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+    .icn-copy__svg--copy  { opacity: 1; transform: scale(1); }
+    .icn-copy__svg--check { opacity: 0; transform: scale(0.5); }
+    .icn-copy[data-state="check"] .icn-copy__svg--copy  { opacity: 0; transform: scale(0.5); }
+    .icn-copy[data-state="check"] .icn-copy__svg--check { opacity: 1; transform: scale(1); }
+    .icn-copy:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    /* UI customizations — always visible; locked (greyed) for non-premium */
+    .appearance-premium {
+      display: block;
+      margin-top: var(--spacing-64);
+    }
+    .appearance-premium__subhead {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      margin-bottom: var(--spacing-12);
+    }
+    .appearance-premium__title .tag {
+      margin-left: var(--spacing-8);
+      vertical-align: middle;
+    }
+    .appearance-premium__body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+    }
+    html:not([data-plan="premium"]) .appearance-premium__body,
+    body:not([data-plan="premium"]) .appearance-premium__body {
+      opacity: 0.45;
+      pointer-events: none;
+      user-select: none;
+    }
+    .appearance-premium__upgrade {
+      display: none;
+      border: none;
+      background: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      padding: 0;
+    }
+    .appearance-premium__upgrade:hover { color: var(--color-text-brandblue); }
+    html:not([data-plan="premium"]) .appearance-premium__upgrade,
+    body:not([data-plan="premium"]) .appearance-premium__upgrade {
+      display: inline;
+    }
+    html:not([data-plan="premium"]) .appearance-premium > .settings-section__reset,
+    body:not([data-plan="premium"]) .appearance-premium > .settings-section__reset {
+      display: none;
+    }
+    html[data-plan="premium"] .appearance-premium > .settings-section__reset,
+    body[data-plan="premium"] .appearance-premium > .settings-section__reset {
+      display: block;
+      margin-top: var(--spacing-32);
+    }
+  </style>
+</head>
+<body data-auth="signed-out" data-plan="basic">
+  <div class="settings-chrome">
+  <header class="settings-header">
+    <a class="settings-header__brand" href="index.html">
+      <svg class="settings-header__logo" viewBox="0 0 104 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g clip-path="url(#settings-logo-clip)">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M0.468313 20.5874C0.720478 20.23 1.13475 19.9976 1.69311 19.9083C17.4354 17.3527 33.3938 17.3349 49.1361 19.8368C49.5684 19.9083 49.8386 20.0334 49.9827 20.1763C50.1088 20.3014 50.1628 20.4623 50.1268 20.6946C50.0908 20.8912 50.0007 21.0163 49.8566 21.0878C49.6765 21.1771 49.3883 21.2129 48.956 21.1593C33.3578 19.2828 17.6515 19.8904 2.26949 22.9821C2.1254 23 1.9813 23.0178 1.85522 23.0178H1.72914C1.35089 23 1.08071 22.8749 0.918607 22.7676C0.558372 22.5353 0.324219 22.16 0.23416 21.7311C0.180125 21.3022 0.252172 20.8912 0.468313 20.5874Z" fill="url(#settings-logo-gradient)"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M11.4375 8.43512C10.9692 8.0777 10.3748 7.75602 9.6363 7.47009C8.91583 7.18415 8.05126 6.95183 7.06062 6.73737C6.21406 6.54079 5.54763 6.36208 5.06131 6.1655C4.57499 5.98679 4.23277 5.77234 4.01663 5.54002C3.80048 5.30769 3.71043 5.02176 3.71043 4.68221C3.71043 4.05672 3.9806 3.5742 4.52096 3.21678C5.06131 2.85936 5.78178 2.68065 6.68237 2.68065C7.4929 2.68065 8.2674 2.80575 9.04191 3.07382C9.81642 3.34188 10.5549 3.75291 11.2754 4.28904L12.3921 1.80497C11.9778 1.42968 11.4555 1.09013 10.8611 0.839938C10.2487 0.571873 9.58226 0.375291 8.86179 0.214452C8.14132 0.0714841 7.40284 0 6.64635 0C5.38552 0 4.2868 0.214452 3.33218 0.643357C2.39557 1.07226 1.65708 1.662 1.11673 2.39472C0.594388 3.1453 0.324212 3.96737 0.324212 4.89666C0.324212 5.54002 0.432283 6.11189 0.630412 6.61228C0.846553 7.11267 1.17077 7.54157 1.62106 7.89899C2.07135 8.27428 2.66574 8.59596 3.38621 8.86402C4.10668 9.14996 4.98926 9.38228 6.01593 9.59674C6.82646 9.77545 7.4929 9.95416 7.97922 10.1329C8.46553 10.3116 8.82577 10.5082 9.04191 10.7584C9.25805 10.9907 9.38413 11.2766 9.38413 11.6162C9.38413 12.188 9.11396 12.6348 8.5736 12.9565C8.03325 13.2782 7.25875 13.439 6.25009 13.439C5.31347 13.439 4.4309 13.3139 3.58434 13.0458C2.73779 12.7778 1.92726 12.3667 1.13474 11.8306L0 14.3147C0.486318 14.69 1.06269 15.0295 1.72913 15.2976C2.39557 15.5657 3.11604 15.7801 3.87253 15.9231C4.62903 16.066 5.42154 16.1375 6.21406 16.1375C7.60097 16.1375 8.77173 15.9409 9.76238 15.5478C10.735 15.1546 11.4915 14.6006 12.0139 13.8858C12.5362 13.1709 12.7884 12.3131 12.7884 11.3302C12.7884 10.7047 12.6803 10.1686 12.4461 9.68609C12.248 9.22145 11.9058 8.79254 11.4375 8.43512ZM17.7416 1.01869L17.7235 1.02452V1.01869H17.7416ZM17.7235 1.02452V4.71799H20.6054V7.21993H17.7235V11.5983C17.7235 12.0272 17.8136 12.3847 17.9757 12.6527C18.1378 12.9208 18.354 13.1174 18.6241 13.2246C18.8943 13.3318 19.1825 13.3854 19.4887 13.3854C19.6688 13.3854 19.8489 13.3676 20.011 13.3497C20.1912 13.3139 20.3893 13.2782 20.6054 13.2425V15.798C20.2992 15.9231 19.975 16.0125 19.6688 16.0482C19.3446 16.1018 19.0204 16.1197 18.6602 16.1197C17.2733 16.1197 16.2106 15.7265 15.4721 14.9402C14.7336 14.1539 14.3734 13.0459 14.3734 11.6519V7.2378V4.73586V2.10882L17.7235 1.02452ZM29.2511 5.111C29.7554 5.43268 30.1337 5.82584 30.4039 6.30836H30.4219V4.73571H33.736V15.9587H30.4219V14.2967C30.1517 14.7792 29.7734 15.1903 29.2691 15.4941C28.5666 15.923 27.7561 16.1374 26.8555 16.1374C25.8649 16.1374 25.0003 15.8872 24.2438 15.4226C23.4873 14.9401 22.8929 14.2788 22.4787 13.4032C22.0644 12.5275 21.8483 11.5088 21.8483 10.3472C21.8483 9.16772 22.0464 8.14908 22.4787 7.25552C22.9109 6.36197 23.4873 5.68287 24.2438 5.18249C25.0003 4.69997 25.8649 4.44977 26.8375 4.44977C27.7561 4.44977 28.5486 4.66423 29.2511 5.111ZM27.8102 13.564C28.6387 13.564 29.2691 13.2781 29.7194 12.7241C30.1697 12.1701 30.4039 11.3659 30.4039 10.3293C30.4039 9.25708 30.1697 8.45288 29.7194 7.88101C29.2691 7.30914 28.6207 7.0232 27.8102 7.0232C26.9996 7.0232 26.3512 7.30914 25.8829 7.89888C25.4146 8.48863 25.1804 9.29282 25.1804 10.3472C25.1804 11.3837 25.4146 12.1879 25.8649 12.7419C26.3152 13.2959 26.9636 13.564 27.8102 13.564ZM48.5777 1.01869L48.5597 1.02452V1.01869H48.5777ZM48.5597 1.02452V4.71799H51.4416V7.21993H48.5597V11.5983C48.5597 12.0272 48.6498 12.3847 48.8119 12.6527C48.974 12.9208 49.1901 13.1174 49.4603 13.2246C49.7305 13.3318 50.0187 13.3854 50.3249 13.3854C50.505 13.3854 50.6851 13.3676 50.8472 13.3497C51.0273 13.3139 51.2255 13.2782 51.4416 13.2425V15.798C51.1354 15.9231 50.8112 16.0125 50.505 16.0482C50.1808 16.1018 49.8566 16.1197 49.4963 16.1197C48.1094 16.1197 47.0467 15.7265 46.3083 14.9402C45.5698 14.1539 45.2095 13.0459 45.2095 11.6519V7.2378V4.73586V2.10882L48.5597 1.02452ZM60.0693 4.44977C61.0419 4.44977 61.9065 4.6821 62.663 5.18249C63.4195 5.68287 63.9958 6.36197 64.4281 7.23765C64.8604 8.1312 65.0766 9.16772 65.0766 10.3293C65.0766 11.491 64.8604 12.5096 64.4281 13.3853C63.9958 14.261 63.4195 14.9401 62.663 15.4047C61.9065 15.8872 61.0419 16.1196 60.0693 16.1196C59.1507 16.1196 58.3402 15.9051 57.6557 15.4762C57.1694 15.1724 56.8091 14.7792 56.539 14.2967V20.909H53.1708V7.95249C53.1708 7.41636 53.1528 6.88023 53.1347 6.3441C53.1167 5.80797 53.0627 5.27184 52.9907 4.73571H56.1607L56.3769 6.64791C56.629 6.02242 57.0433 5.50416 57.6557 5.111C58.3402 4.66423 59.1507 4.44977 60.0693 4.44977ZM59.1147 13.564C59.9432 13.564 60.5736 13.2959 61.0239 12.7419C61.4742 12.1879 61.6903 11.3837 61.7084 10.3115C61.7084 9.27495 61.4742 8.45288 61.0239 7.86314C60.5736 7.29127 59.9252 6.98746 59.1147 6.98746C58.2681 6.98746 57.6197 7.2734 57.1694 7.84527C56.7191 8.41714 56.503 9.23921 56.503 10.2936C56.503 11.348 56.7191 12.1701 57.1694 12.7241C57.6197 13.2781 58.2681 13.564 59.1147 13.564ZM74.7488 6.30836C74.4787 5.82584 74.1004 5.43268 73.5961 5.111C72.8936 4.66423 72.1011 4.44977 71.1825 4.44977C70.2099 4.44977 69.3453 4.69997 68.5888 5.18249C67.8323 5.68287 67.2559 6.36197 66.8236 7.25552C66.3914 8.14908 66.1932 9.16772 66.1932 10.3472C66.1932 11.5088 66.4094 12.5275 66.8236 13.4032C67.2379 14.2788 67.8323 14.9401 68.5888 15.4226C69.3453 15.8872 70.2099 16.1374 71.2005 16.1374C72.1011 16.1374 72.9116 15.923 73.6141 15.4941C74.1184 15.1903 74.4967 14.7792 74.7668 14.2967V15.9587H78.081V4.73571H74.7488V6.30836ZM74.0824 12.7241C73.6321 13.2781 73.0017 13.564 72.1731 13.564C71.3266 13.564 70.6782 13.2959 70.2279 12.7419C69.7776 12.1879 69.5434 11.3837 69.5434 10.3472C69.5434 9.31069 69.7776 8.48863 70.2459 7.89888C70.7142 7.30914 71.3626 7.0232 72.1731 7.0232C72.9837 7.0232 73.6321 7.30914 74.0824 7.88101C74.5327 8.45288 74.7668 9.25708 74.7668 10.3293C74.7488 11.3659 74.5327 12.1701 74.0824 12.7241ZM87.1769 5.12887C87.6813 5.45055 88.0775 5.84371 88.3477 6.32623V4.73571H91.6979V15.4226C91.6979 17.2276 91.1756 18.5858 90.1489 19.515C89.1222 20.4443 87.5912 20.909 85.5919 20.909C83.8087 20.909 82.2417 20.5694 80.9089 19.8725L81.4132 17.3884C82.0976 17.7279 82.7641 17.9781 83.4485 18.139C84.133 18.2998 84.8174 18.3892 85.4838 18.3892C86.4565 18.3892 87.1769 18.1747 87.6453 17.7279C88.1316 17.2812 88.3657 16.6021 88.3657 15.6906V13.7248C88.2036 13.9572 88.0235 14.1895 87.8074 14.4039C87.4291 14.7792 86.9788 15.0652 86.4565 15.2975C85.9161 15.5298 85.3578 15.637 84.7454 15.637C83.7547 15.637 82.8901 15.4047 82.1337 14.9401C81.3772 14.4754 80.7828 13.8321 80.3505 12.9921C79.9182 12.1522 79.7021 11.1693 79.7021 10.0434C79.7021 8.91753 79.9182 7.95249 80.3505 7.11256C80.7828 6.29049 81.3772 5.62926 82.1337 5.16462C82.8901 4.6821 83.7727 4.44977 84.7454 4.44977C85.664 4.44977 86.4745 4.6821 87.1769 5.12887ZM85.718 13.0815C86.5285 13.0815 87.1769 12.8134 87.6453 12.2773C88.1136 11.7412 88.3477 10.9906 88.3657 10.0434C88.3657 9.11411 88.1496 8.36353 87.6813 7.8274C87.213 7.2734 86.5645 7.00533 85.736 7.00533C84.9075 7.00533 84.241 7.2734 83.7727 7.80953C83.2864 8.34566 83.0523 9.07837 83.0523 10.0255C83.0523 10.9727 83.2864 11.7233 83.7727 12.2594C84.259 12.8134 84.9075 13.0815 85.718 13.0815ZM40.6526 5.23607C40.1843 5.59349 39.8421 6.07601 39.6079 6.66576L39.3738 4.71781H36.2037C36.2757 5.25395 36.3298 5.79008 36.3478 6.32621L36.3478 6.32655C36.3658 6.86256 36.3838 7.39858 36.3838 7.9346V15.9408H39.752V10.0791C39.752 9.52512 39.8601 9.0426 40.0762 8.63157C40.2924 8.22053 40.5986 7.91673 40.9948 7.6844C41.3911 7.46995 41.8954 7.34485 42.4898 7.34485C42.85 7.34485 43.2103 7.39847 43.5705 7.50569V4.52123C43.3904 4.48549 43.1923 4.46762 42.9581 4.46762C42.0935 4.46762 41.319 4.71781 40.6526 5.23607ZM103.37 7.05902C103.784 7.91683 104 8.9176 104 10.0792L103.964 11.1872H96.5972C96.7052 11.8485 96.9214 12.3667 97.2456 12.742C97.7499 13.296 98.5064 13.5819 99.5331 13.5819C100.127 13.5819 100.722 13.4926 101.298 13.296C101.875 13.0994 102.415 12.8314 102.901 12.4739L103.784 14.7257C103.243 15.1546 102.577 15.4763 101.785 15.7265C101.01 15.9588 100.218 16.0839 99.407 16.0839C98.1462 16.0839 97.0655 15.8337 96.1469 15.369C95.2283 14.8865 94.5258 14.2253 94.0395 13.3496C93.5532 12.4918 93.301 11.4553 93.301 10.2579C93.301 9.09631 93.5532 8.07767 94.0215 7.20199C94.4898 6.30843 95.1382 5.62934 95.9667 5.12895C96.7953 4.64643 97.7499 4.39624 98.8486 4.39624C99.8933 4.39624 100.812 4.62856 101.586 5.0932C102.361 5.55785 102.955 6.20121 103.37 7.05902ZM97.1375 7.57728C96.8853 7.9347 96.7052 8.3636 96.5972 8.9176H101.1C101.028 8.30999 100.866 7.82747 100.578 7.47005C100.2 6.98753 99.6592 6.75521 98.9387 6.75521C98.1642 6.75521 97.5698 7.02328 97.1375 7.57728Z" fill="currentColor"/>
+        </g>
+        <defs>
+          <linearGradient id="settings-logo-gradient" x1="5.34587" y1="18.2083" x2="50.0412" y2="23.1356" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#5668F1"/>
+            <stop offset="1" stop-color="#5AECDE"/>
+          </linearGradient>
+          <clipPath id="settings-logo-clip">
+            <rect width="104" height="23" fill="white"/>
+          </clipPath>
+        </defs>
+      </svg>
+      <span class="settings-header__title">Settings</span>
+    </a>
+    <div class="settings-header__actions" aria-label="Account and menu">
+      <div class="hp-chrome__auth">
+        <div class="hp-chrome__account-wrap auth-in">
+          <button
+            type="button"
+            class="hp-chrome__account"
+            id="accountToggle"
+            aria-label="Account"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-controls="accountMenu"
+          >
+            <svg class="hp-chrome__account-svg" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <circle cx="16" cy="16" r="15" stroke="url(#settingsAccountRing)" stroke-width="2"/>
+              <path
+                transform="translate(8 8)"
+                d="M8 8C10.2094 8 12 6.20937 12 4C12 1.79063 10.2094 0 8 0C5.79063 0 4 1.79063 4 4C4 6.20937 5.79063 8 8 8ZM10.8 9H10.2781C9.58437 9.31875 8.8125 9.5 8 9.5C7.1875 9.5 6.41875 9.31875 5.72188 9H5.2C2.88125 9 1 10.8812 1 13.2V14.5C1 15.3281 1.67188 16 2.5 16H13.5C14.3281 16 15 15.3281 15 14.5V13.2C15 10.8812 13.1188 9 10.8 9Z"
+                fill="currentColor"
+              />
+              <defs>
+                <linearGradient id="settingsAccountRing" x1="4" y1="6" x2="26" y2="27.5" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="var(--color-brand-blue-400)"/>
+                  <stop offset="1" stop-color="var(--color-teal-200)"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </button>
+
+          <div class="account-menu" id="accountMenu" role="menu" aria-label="Account" hidden>
+            <div class="account-menu__header">
+              <svg class="account-menu__avatar" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                <circle cx="16" cy="16" r="15" stroke="url(#settingsAccountRingMenu)" stroke-width="2"/>
+                <path
+                  transform="translate(8 8)"
+                  d="M8 8C10.2094 8 12 6.20937 12 4C12 1.79063 10.2094 0 8 0C5.79063 0 4 1.79063 4 4C4 6.20937 5.79063 8 8 8ZM10.8 9H10.2781C9.58437 9.31875 8.8125 9.5 8 9.5C7.1875 9.5 6.41875 9.31875 5.72188 9H5.2C2.88125 9 1 10.8812 1 13.2V14.5C1 15.3281 1.67188 16 2.5 16H13.5C14.3281 16 15 15.3281 15 14.5V13.2C15 10.8812 13.1188 9 10.8 9Z"
+                  fill="currentColor"
+                />
+                <defs>
+                  <linearGradient id="settingsAccountRingMenu" x1="4" y1="6" x2="26" y2="27.5" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="var(--color-brand-blue-400)"/>
+                    <stop offset="1" stop-color="var(--color-teal-200)"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span class="account-menu__badge" id="accountPlanBadge" data-plan="basic">Basic</span>
+            </div>
+
+            <hr class="account-menu__rule" />
+
+            <a href="#account" class="account-menu__link js-tab-account" role="menuitem">
+              <span class="account-menu__link-text">
+                <span class="account-menu__link-title">Account &amp; Subscription</span>
+              </span>
+              <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+
+            <a href="#ui-customizations" class="account-menu__link account-menu__link--premium js-tab-ui" role="menuitem">
+              <span class="account-menu__link-text">
+                <span class="account-menu__link-title">Customize UI</span>
+              </span>
+              <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+
+            <a href="index.html#go-ad-free" class="account-menu__link" role="menuitem">
+              <span class="account-menu__link-text">
+                <span class="account-menu__link-title">Billing &amp; subscription</span>
+                <span class="account-menu__link-caption">Manage plan, payment &amp; invoices</span>
+              </span>
+              <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+
+            <hr class="account-menu__rule" />
+
+            <div class="account-menu__footer">
+              <a href="index.html#go-ad-free" class="account-menu__upgrade" role="menuitem">Upgrade to Premium</a>
+              <button type="button" class="account-menu__signout" id="signOutBtn" role="menuitem">
+                <svg class="account-menu__signout-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M10 12.5C10 12.633 9.947 12.76 9.854 12.854C9.76 12.947 9.633 13 9.5 13H1.5C1.367 13 1.24 12.947 1.146 12.854C1.053 12.76 1 12.633 1 12.5V3.5C1 3.367 1.053 3.24 1.146 3.146C1.24 3.053 1.367 3 1.5 3H9.5C9.633 3 9.76 3.053 9.854 3.146C9.947 3.24 10 3.367 10 3.5V5.5C10 5.633 10.053 5.76 10.146 5.854C10.24 5.947 10.367 6 10.5 6C10.633 6 10.76 5.947 10.854 5.854C10.947 5.76 11 5.633 11 5.5V3.5C11 3.102 10.842 2.721 10.561 2.439C10.279 2.158 9.898 2 9.5 2H1.5C1.102 2 0.721 2.158 0.439 2.439C0.158 2.721 0 3.102 0 3.5V12.5C0 12.898 0.158 13.279 0.439 13.561C0.721 13.842 1.102 14 1.5 14H9.5C9.898 14 10.279 13.842 10.561 13.561C10.842 13.279 11 12.898 11 12.5V10.5C11 10.367 10.947 10.24 10.854 10.146C10.76 10.053 10.633 10 10.5 10C10.367 10 10.24 10.053 10.146 10.146C10.053 10.24 10 10.367 10 10.5V12.5Z" fill="currentColor"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M15.854 8.354C15.901 8.307 15.938 8.252 15.963 8.192C15.988 8.131 16.001 8.066 16.001 8C16.001 7.934 15.988 7.869 15.963 7.808C15.938 7.748 15.901 7.692 15.854 7.646L12.854 4.646C12.76 4.552 12.633 4.499 12.5 4.499C12.367 4.499 12.24 4.552 12.146 4.646C12.052 4.74 11.999 4.867 11.999 5C11.999 5.133 12.052 5.26 12.146 5.354L14.293 7.5H5.5C5.367 7.5 5.24 7.553 5.146 7.646C5.053 7.74 5 7.867 5 8C5 8.133 5.053 8.26 5.146 8.353C5.24 8.447 5.367 8.5 5.5 8.5H14.293L12.146 10.646C12.052 10.74 11.999 10.867 11.999 11C11.999 11.133 12.052 11.26 12.146 11.354C12.24 11.448 12.367 11.501 12.5 11.501C12.633 11.501 12.76 11.448 12.854 11.354L15.854 8.354Z" fill="currentColor"/>
+                </svg>
+                Sign out
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <a href="index.html#go-ad-free" class="hp-btn hp-btn--teal auth-out">Go Ad-Free</a>
+        <a href="index.html" class="hp-btn hp-btn--product auth-out" id="logInBtn">Log In</a>
+      </div>
+
+      <button type="button" class="hp-chrome__menu" aria-label="Open menu">
+        <svg class="hp-chrome__menu-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M1 4H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M1 10H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M1 16H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <nav class="settings-tabs" aria-label="Settings sections">
+    <a class="settings-tabs__link" href="#general" data-tab="general">General</a>
+    <a class="settings-tabs__link" href="#privacy" data-tab="privacy">Privacy &amp; Safety</a>
+    <a class="settings-tabs__link" href="#appearance" data-tab="appearance">Appearance</a>
+    <a class="settings-tabs__link" href="#account" data-tab="account">Account &amp; Subscription</a>
+  </nav>
+  </div>
+
+  <div class="settings-shell">
+    <div class="settings-main">
+      <!-- Account settings -->
+      <section class="settings-section" id="account">
+        <div class="settings-section__head">
+          <h2 class="settings-section__title">Account &amp; Subscription</h2>
+        </div>
+        <p class="settings-section__lede">Plan, billing, account deletion, and how to get help.</p>
+
+        <div class="settings-card">
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <div class="settings-row__heading">
+                <span class="settings-row__label">Subscription</span>
+                <span class="tag tag--sm tag--status" id="accountSubBadge">Active</span>
+              </div>
+              <span class="settings-row__meta" id="accountSubCopy">Basic · Monthly</span>
+            </div>
+            <div class="settings-row__control">
+              <a class="btn btn--teal account-card__btn" href="#account" id="goToBilling"><span class="btn__label">Go to Billing</span></a>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Delete account</span>
+              <p class="settings-row__hint" id="accountDeleteNote" hidden>
+                Account cannot be deleted while subscription is active.<br />
+                Manage your subscription in <a href="#account">Billing</a>.
+              </p>
+            </div>
+            <div class="settings-row__control">
+              <button type="button" class="btn btn--inactive account-card__btn" id="deleteAccountBtn" disabled>
+                <span class="btn__label">Delete Account</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section__head settings-section__head--spaced">
+          <h3 class="settings-section__title settings-section__title--sub">Support</h3>
+        </div>
+        <div class="settings-card">
+          <div class="settings-row settings-row--support">
+            <div class="settings-row__top">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Subscription support</span>
+                <span class="settings-row__meta">Need help? Email us and include your WorkOS ID.</span>
+              </div>
+              <div class="settings-row__control">
+                <a class="settings-row__link" href="mailto:subscription@startpage.com">subscription@startpage.com</a>
+              </div>
+            </div>
+            <div class="account-id-row">
+              <div class="form-field">
+                <input class="form-field__input" id="workosIdField" type="text" readonly value="XXXXXXXXX" aria-label="WorkOS ID" />
+              </div>
+              <button type="button" class="icn-copy icn-copy--lg" id="copyWorkosId" data-state="copy" aria-label="Copy WorkOS ID">
+                <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
+                  <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
+                </svg>
+                <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 4L4.5 7.5L11 1"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Data requests</span>
+            </div>
+            <div class="settings-row__control">
+              <a class="settings-row__link" href="mailto:subscription@startpage.com">Request access</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- General — Figma template -->
+      <section class="settings-section" id="general">
+        <div class="settings-section__head">
+          <h2 class="settings-section__title">General</h2>
+        </div>
+        <p class="settings-section__lede">Language, region, location, search behavior, and suggestions for the Startpage experience.</p>
+        <div class="settings-card">
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Site language</span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--wide" data-dd="site-language">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">English</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="English">
+                    <span class="dropdown__item-label">English</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Deutsch">
+                    <span class="dropdown__item-label">Deutsch</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Nederlands">
+                    <span class="dropdown__item-label">Nederlands</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Español">
+                    <span class="dropdown__item-label">Español</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Français">
+                    <span class="dropdown__item-label">Français</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Italiano">
+                    <span class="dropdown__item-label">Italiano</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Português">
+                    <span class="dropdown__item-label">Português</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Svenska">
+                    <span class="dropdown__item-label">Svenska</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Dansk">
+                    <span class="dropdown__item-label">Dansk</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Norsk">
+                    <span class="dropdown__item-label">Norsk</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Search results language</span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--wide" data-dd="results-language">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">English</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="English">
+                    <span class="dropdown__item-label">English</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Deutsch">
+                    <span class="dropdown__item-label">Deutsch</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Nederlands">
+                    <span class="dropdown__item-label">Nederlands</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Español">
+                    <span class="dropdown__item-label">Español</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Français">
+                    <span class="dropdown__item-label">Français</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Italiano">
+                    <span class="dropdown__item-label">Italiano</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Português">
+                    <span class="dropdown__item-label">Português</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Svenska">
+                    <span class="dropdown__item-label">Svenska</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Dansk">
+                    <span class="dropdown__item-label">Dansk</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Norsk">
+                    <span class="dropdown__item-label">Norsk</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Region filter</span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--wide" data-dd="region-filter">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">All regions</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="All regions">
+                    <span class="dropdown__item-label">All regions</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Argentina">
+                    <span class="dropdown__item-label">Argentina</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Australia">
+                    <span class="dropdown__item-label">Australia</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Austria">
+                    <span class="dropdown__item-label">Austria</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Belarus">
+                    <span class="dropdown__item-label">Belarus</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Belgium (FR)">
+                    <span class="dropdown__item-label">Belgium (FR)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Belgium (NL)">
+                    <span class="dropdown__item-label">Belgium (NL)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Brazil">
+                    <span class="dropdown__item-label">Brazil</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Bulgaria">
+                    <span class="dropdown__item-label">Bulgaria</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Canada (EN)">
+                    <span class="dropdown__item-label">Canada (EN)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Canada (FR)">
+                    <span class="dropdown__item-label">Canada (FR)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Chile">
+                    <span class="dropdown__item-label">Chile</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="China">
+                    <span class="dropdown__item-label">China</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Colombia">
+                    <span class="dropdown__item-label">Colombia</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Czech Republic">
+                    <span class="dropdown__item-label">Czech Republic</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Denmark">
+                    <span class="dropdown__item-label">Denmark</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Egypt">
+                    <span class="dropdown__item-label">Egypt</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Estonia">
+                    <span class="dropdown__item-label">Estonia</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Finland">
+                    <span class="dropdown__item-label">Finland</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="France">
+                    <span class="dropdown__item-label">France</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Germany">
+                    <span class="dropdown__item-label">Germany</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Greece">
+                    <span class="dropdown__item-label">Greece</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Hong Kong">
+                    <span class="dropdown__item-label">Hong Kong</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Hungary">
+                    <span class="dropdown__item-label">Hungary</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="India (EN)">
+                    <span class="dropdown__item-label">India (EN)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="India (HI)">
+                    <span class="dropdown__item-label">India (HI)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Indonesia (EN)">
+                    <span class="dropdown__item-label">Indonesia (EN)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Indonesia (ID)">
+                    <span class="dropdown__item-label">Indonesia (ID)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Ireland">
+                    <span class="dropdown__item-label">Ireland</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Italy">
+                    <span class="dropdown__item-label">Italy</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Japan">
+                    <span class="dropdown__item-label">Japan</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Korea">
+                    <span class="dropdown__item-label">Korea</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Malaysia (EN)">
+                    <span class="dropdown__item-label">Malaysia (EN)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Malaysia (MS)">
+                    <span class="dropdown__item-label">Malaysia (MS)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Mexico">
+                    <span class="dropdown__item-label">Mexico</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Netherlands">
+                    <span class="dropdown__item-label">Netherlands</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="New Zealand">
+                    <span class="dropdown__item-label">New Zealand</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Norway">
+                    <span class="dropdown__item-label">Norway</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Peru">
+                    <span class="dropdown__item-label">Peru</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Philippines (EN)">
+                    <span class="dropdown__item-label">Philippines (EN)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Philippines (FIL)">
+                    <span class="dropdown__item-label">Philippines (FIL)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Poland">
+                    <span class="dropdown__item-label">Poland</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Portugal">
+                    <span class="dropdown__item-label">Portugal</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Romania">
+                    <span class="dropdown__item-label">Romania</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Russia">
+                    <span class="dropdown__item-label">Russia</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Singapore (EN)">
+                    <span class="dropdown__item-label">Singapore (EN)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Singapore (MS)">
+                    <span class="dropdown__item-label">Singapore (MS)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="South Africa">
+                    <span class="dropdown__item-label">South Africa</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Spain (CA)">
+                    <span class="dropdown__item-label">Spain (CA)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Spain (ES)">
+                    <span class="dropdown__item-label">Spain (ES)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Sweden">
+                    <span class="dropdown__item-label">Sweden</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Switzerland (DE)">
+                    <span class="dropdown__item-label">Switzerland (DE)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Switzerland (FR)">
+                    <span class="dropdown__item-label">Switzerland (FR)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Switzerland (IT)">
+                    <span class="dropdown__item-label">Switzerland (IT)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Taiwan">
+                    <span class="dropdown__item-label">Taiwan</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Turkey">
+                    <span class="dropdown__item-label">Turkey</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Ukraine">
+                    <span class="dropdown__item-label">Ukraine</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="United Kingdom">
+                    <span class="dropdown__item-label">United Kingdom</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Uruguay">
+                    <span class="dropdown__item-label">Uruguay</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="US (EN)">
+                    <span class="dropdown__item-label">US (EN)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="US (ES)">
+                    <span class="dropdown__item-label">US (ES)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Venezuela">
+                    <span class="dropdown__item-label">Venezuela</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Vietnam (EN)">
+                    <span class="dropdown__item-label">Vietnam (EN)</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Vietnam (VI)">
+                    <span class="dropdown__item-label">Vietnam (VI)</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Search location</span>
+              <span class="settings-row__meta">Set your search location. Your data is never stored or shared. <a href="#">Learn more</a></span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--wide" data-dd="search-location">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">None selected</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="None selected">
+                    <span class="dropdown__item-label">None selected</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Device location">
+                    <span class="dropdown__item-label">Device location</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Enter city or postal code">
+                    <span class="dropdown__item-label">Enter city or postal code</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Open results in a new tab</span>
+            </div>
+            <div class="settings-row__control">
+              <button type="button" class="toggle" role="switch" aria-checked="false" aria-label="Open results in a new tab"><span class="toggle__thumb"></span></button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Search suggestions</span>
+            </div>
+            <div class="settings-row__control">
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Search suggestions"><span class="toggle__thumb"></span></button>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="settings-section__reset" data-reset="general">Reset settings</button>
+      </section>
+
+      <!-- Privacy & Safety -->
+      <section class="settings-section" id="privacy">
+        <div class="settings-section__head">
+          <h2 class="settings-section__title">Privacy &amp; Safety</h2>
+        </div>
+        <p class="settings-section__lede">Filtering, request method, and which server processes your search.</p>
+        <div class="settings-card">
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Warn if a site may contain malware.</span>
+              <span class="settings-row__meta">Anonymous View Only. <a href="#">Learn More</a></span>
+            </div>
+            <div class="settings-row__control">
+              <button type="button" class="toggle" role="switch" aria-checked="false" aria-label="Warn if a site may contain malware"><span class="toggle__thumb"></span></button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Explicit content filter</span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--wide" data-dd="safe-search">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">Moderate</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="Moderate">
+                    <span class="dropdown__item-label">Moderate</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Strict">
+                    <span class="dropdown__item-label">Strict</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Off">
+                    <span class="dropdown__item-label">Off</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">HTTP request method</span>
+              <span class="settings-row__meta">POST hides your query from the URL and browser tab. GET includes them.</span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--wide" data-dd="http-method">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">POST</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="POST">
+                    <span class="dropdown__item-label">POST</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="GET">
+                    <span class="dropdown__item-label">GET</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Server region</span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--wide" data-dd="region">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">Closest / fastest</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="Closest / fastest">
+                    <span class="dropdown__item-label">Closest / fastest</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="EU servers">
+                    <span class="dropdown__item-label">EU servers</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="US servers">
+                    <span class="dropdown__item-label">US servers</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="settings-section__reset" data-reset="privacy">Reset settings</button>
+      </section>
+
+      <!-- Appearance — existing Startpage settings -->
+      <section class="settings-section" id="appearance">
+        <div class="settings-section__head">
+          <h2 class="settings-section__title">Appearance</h2>
+        </div>
+        <p class="settings-section__lede">Theme, Instant Answers, and how results are displayed.</p>
+        <div class="settings-card">
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Instant Answers</span>
+            </div>
+            <div class="settings-row__control">
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Instant Answers"><span class="toggle__thumb"></span></button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Theme</span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--md" data-dd="theme">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">Default</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="Default">
+                    <span class="dropdown__item-label">Default</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Light">
+                    <span class="dropdown__item-label">Light</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Dark">
+                    <span class="dropdown__item-label">Dark</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Results per page</span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--md" data-dd="rpp">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">10</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="10">
+                    <span class="dropdown__item-label">10</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="20">
+                    <span class="dropdown__item-label">20</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="50">
+                    <span class="dropdown__item-label">50</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="settings-section__reset" data-reset="appearance">Reset settings</button>
+
+        <!-- UI customizations (DDG-inspired) — locked preview for Basic -->
+        <div class="appearance-premium" id="ui-customizations">
+          <div class="appearance-premium__subhead">
+            <h3 class="appearance-premium__title settings-section__title--sub">
+              UI Customizations
+              <span class="tag tag--sm tag--status">Premium</span>
+            </h3>
+            <a href="index.html#go-ad-free" class="appearance-premium__upgrade" id="upgradeUiPrefs">Upgrade to Premium</a>
+          </div>
+          <p class="appearance-premium__lede">Personalize fonts, colors, and layout on the results page.</p>
+          <div class="appearance-premium__body" id="uiPrefsLocked">
+          <div class="settings-card" id="uiPrefsCard">
+            <div class="settings-row settings-row--stack">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Color scheme</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="chip-group" role="group" aria-label="Color scheme" data-pref="scheme">
+                  <button type="button" class="chip" data-value="default">Default</button>
+                  <button type="button" class="chip" data-value="basic">Basic</button>
+                  <button type="button" class="chip" data-value="contrast">Contrast</button>
+                  <button type="button" class="chip" data-value="dark">Dark</button>
+                  <button type="button" class="chip" data-value="gray">Gray</button>
+                  <button type="button" class="chip" data-value="terminal">Terminal</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row settings-row--stack">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Font</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="chip-group" role="group" aria-label="Font" data-pref="font">
+                  <button type="button" class="chip" data-value="inter">Inter (default)</button>
+                  <button type="button" class="chip" data-value="arial">Arial</button>
+                  <button type="button" class="chip" data-value="georgia">Georgia</button>
+                  <button type="button" class="chip" data-value="helvetica">Helvetica</button>
+                  <button type="button" class="chip" data-value="segoe">Segoe UI</button>
+                  <button type="button" class="chip" data-value="verdana">Verdana</button>
+                  <button type="button" class="chip" data-value="serif">Serif</button>
+                  <button type="button" class="chip" data-value="mono">Mono</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row settings-row--stack">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Font size</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="chip-group" role="group" aria-label="Font size" data-pref="fontSize">
+                  <button type="button" class="chip" data-value="largest">Largest</button>
+                  <button type="button" class="chip" data-value="larger">Larger</button>
+                  <button type="button" class="chip" data-value="large">Large</button>
+                  <button type="button" class="chip" data-value="medium">Medium</button>
+                  <button type="button" class="chip" data-value="small">Small</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row settings-row--stack">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Page width</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="chip-group" role="group" aria-label="Page width" data-pref="width">
+                  <button type="button" class="chip" data-value="super-wide">Super Wide</button>
+                  <button type="button" class="chip" data-value="wide">Wide</button>
+                  <button type="button" class="chip" data-value="normal">Normal</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Center alignment</span>
+              </div>
+              <div class="settings-row__control">
+                <button type="button" class="toggle" id="alignToggle" role="switch" aria-checked="false" aria-label="Center alignment"><span class="toggle__thumb"></span></button>
+              </div>
+            </div>
+
+            <div class="settings-row settings-row--stack">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Background color</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="swatch-group" role="group" aria-label="Background color" data-pref="bg">
+                  <button type="button" class="swatch swatch--default" data-value="default" aria-label="Default" title="Default"></button>
+                  <button type="button" class="swatch" data-value="quaternary" style="--swatch-color: var(--color-whisper-50)" aria-label="Whisper" title="Whisper"></button>
+                  <button type="button" class="swatch" data-value="secondary" style="--swatch-color: var(--color-whisper-300)" aria-label="Lavender" title="Lavender"></button>
+                  <button type="button" class="swatch" data-value="tertiary" style="--swatch-color: var(--color-brand-blue-50)" aria-label="Blue wash" title="Blue wash"></button>
+                  <button type="button" class="swatch" data-value="whisper" style="--swatch-color: var(--color-whisper-100)" aria-label="Soft blue" title="Soft blue"></button>
+                  <button type="button" class="swatch" data-value="midnight" style="--swatch-color: var(--color-midnight-50)" aria-label="Midnight wash" title="Midnight wash"></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row settings-row--stack">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Title font</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="chip-group" role="group" aria-label="Title font" data-pref="titleFont">
+                  <button type="button" class="chip" data-value="inter">Inter</button>
+                  <button type="button" class="chip" data-value="arial">Arial</button>
+                  <button type="button" class="chip" data-value="georgia">Georgia</button>
+                  <button type="button" class="chip" data-value="helvetica">Helvetica</button>
+                  <button type="button" class="chip" data-value="serif">Serif</button>
+                  <button type="button" class="chip" data-value="mono">Mono</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row settings-row--stack">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Title color</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="swatch-group" role="group" aria-label="Title color" data-pref="titleColor">
+                  <button type="button" class="swatch" data-value="link" style="--swatch-color: var(--color-brand-blue-600)" aria-label="Link blue" title="Link"></button>
+                  <button type="button" class="swatch" data-value="brand" style="--swatch-color: var(--color-brand-blue-400)" aria-label="Brand blue" title="Brand"></button>
+                  <button type="button" class="swatch" data-value="primary" style="--swatch-color: var(--color-black-800)" aria-label="Primary text" title="Primary"></button>
+                  <button type="button" class="swatch" data-value="teal" style="--swatch-color: var(--color-teal-400)" aria-label="Teal" title="Teal"></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Site icons</span>
+              </div>
+              <div class="settings-row__control">
+                <button type="button" class="toggle" id="siteIconsToggle" role="switch" aria-checked="true" aria-label="Site icons"><span class="toggle__thumb"></span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui-preview" id="uiPreview" aria-live="polite">
+            <p class="ui-preview__label">Live preview</p>
+            <div class="ui-preview__result">
+              <div class="ui-preview__source">
+                <div class="ui-preview__favicon" aria-hidden="true"></div>
+                <div>
+                  <div class="ui-preview__site">Wikipedia</div>
+                  <div class="ui-preview__url">https://en.wikipedia.org › wiki › Cheese</div>
+                </div>
+              </div>
+              <a class="ui-preview__title" href="#">Cheese — Wikipedia</a>
+              <p class="ui-preview__desc">Cheese is a dairy product produced in wide ranges of flavors, textures, and forms by coagulation of the milk protein casein.</p>
+            </div>
+          </div>
+          </div>
+          <button type="button" class="settings-section__reset" id="resetUiPrefs">Reset settings</button>
+        </div>
+
+      </section>
+
+    </div>
+
+    <aside class="settings-aside">
+      <div class="settings-aside__fixed">
+      <button type="button" class="btn btn--product-brand-blue btn--sm settings-save" id="saveSettings"><span class="btn__label">Save your settings</span></button>
+      <p class="settings-aside__note">
+        Settings are saved in a cookie. Clear your cookies to reset them, or
+        <a href="#appearance">bookmark your settings URL</a>
+        instead.
+      </p>
+      <div class="settings-aside__box">
+        <p class="settings-aside__box-intro">
+          <strong>Don't want a cookie?</strong> Copy this URL and bookmark it to save your settings:
+        </p>
+        <div class="settings-aside__url-row">
+          <div class="settings-aside__url-field">
+            <input class="settings-aside__url" id="settingsUrl" readonly value="" aria-label="Settings URL" />
+          </div>
+          <button type="button" class="icn-copy icn-copy--lg" id="copySettingsUrl" data-state="copy" aria-label="Copy settings URL">
+            <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
+              <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
+            </svg>
+            <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M1 4L4.5 7.5L11 1"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="proto-chrome">
+    <a class="proto-back" href="results.html?q=cheese">← Back to results</a>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span id="themeToggleLabel">Dark</span>
+    </button>
+  </div>
+
+  <script>
+    (function () {
+      let prefs = AccountsUIPrefs.load();
+
+      const AUTH_KEY = 'accounts-auth';
+      const PLAN_KEY = 'accounts-plan';
+
+      /* ── Auth + account menu (matches homepage/results) ── */
+      (function accountChrome() {
+        const btn = document.getElementById('accountToggle');
+        const menu = document.getElementById('accountMenu');
+        const signOutBtn = document.getElementById('signOutBtn');
+        const badge = document.getElementById('accountPlanBadge');
+        if (!btn || !menu) return;
+
+        function setOpen(open) {
+          menu.classList.toggle('is-open', open);
+          menu.hidden = !open;
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        function setAuth(state) {
+          const next = state === 'signed-in' ? 'signed-in' : 'signed-out';
+          document.body.dataset.auth = next;
+          sessionStorage.setItem(AUTH_KEY, next);
+          setOpen(false);
+          if (next === 'signed-out') {
+            location.href = 'index.html';
+          }
+        }
+
+        function setPlanBadge(plan) {
+          const next = plan === 'premium' ? 'premium' : 'basic';
+          if (badge) {
+            badge.dataset.plan = next;
+            badge.textContent = next === 'premium' ? 'Premium' : 'Basic';
+          }
+          document.body.dataset.plan = next;
+          document.documentElement.dataset.plan = next;
+          sessionStorage.setItem(PLAN_KEY, next);
+
+          const locked = document.getElementById('uiPrefsLocked');
+          const resetBtn = document.getElementById('resetUiPrefs');
+          const isPremium = next === 'premium';
+          if (locked) {
+            if (isPremium) locked.removeAttribute('inert');
+            else locked.setAttribute('inert', '');
+          }
+          if (resetBtn) resetBtn.disabled = !isPremium;
+        }
+
+        const savedAuth = sessionStorage.getItem(AUTH_KEY);
+        document.body.dataset.auth = savedAuth === 'signed-in' ? 'signed-in' : 'signed-out';
+
+        const savedPlan = sessionStorage.getItem(PLAN_KEY);
+        setPlanBadge(savedPlan === 'premium' ? 'premium' : 'basic');
+
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setOpen(menu.hidden);
+        });
+        document.addEventListener('click', (e) => {
+          if (menu.hidden) return;
+          if (btn.contains(e.target) || menu.contains(e.target)) return;
+          setOpen(false);
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !menu.hidden) {
+            setOpen(false);
+            btn.focus();
+          }
+        });
+        signOutBtn?.addEventListener('click', () => setAuth('signed-out'));
+
+        document.querySelector('.js-tab-account')?.addEventListener('click', (e) => {
+          e.preventDefault();
+          setOpen(false);
+          if (typeof window.__settingsGoToTab === 'function') window.__settingsGoToTab('account');
+        });
+        document.querySelector('.js-tab-ui')?.addEventListener('click', (e) => {
+          e.preventDefault();
+          setOpen(false);
+          if (typeof window.__settingsGoToTab === 'function') {
+            window.__settingsGoToTab('ui-customizations');
+          }
+        });
+      })();
+
+      /* ── Tabs / hash — one panel at a time ── */
+      const tabLinks = [...document.querySelectorAll('.settings-tabs__link')];
+      const sections = [...document.querySelectorAll('.settings-section')];
+      const valid = ['account', 'general', 'privacy', 'appearance'];
+
+      /* Plan already synced by accountChrome */
+      const plan = sessionStorage.getItem(PLAN_KEY) || 'basic';
+      document.documentElement.dataset.plan = plan;
+      document.body.dataset.plan = plan;
+
+      function normalizeTab(id) {
+        if (id === 'ui' || id === 'ui-customizations') return 'appearance';
+        return valid.includes(id) ? id : 'general';
+      }
+
+      function setActiveTab(id) {
+        id = normalizeTab(id);
+        tabLinks.forEach((link) => {
+          link.classList.toggle('is-active', link.dataset.tab === id);
+        });
+        sections.forEach((section) => {
+          const on = section.id === id;
+          section.classList.toggle('is-active', on);
+          section.hidden = !on;
+        });
+      }
+      function goToTab(id) {
+        const raw = id;
+        id = normalizeTab(id);
+        setActiveTab(id);
+        history.replaceState(null, '', '#' + (raw === 'ui-customizations' ? 'ui-customizations' : id));
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        if (raw === 'ui' || raw === 'ui-customizations') {
+          requestAnimationFrame(() => {
+            document.getElementById('ui-customizations')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+      }
+      window.__settingsGoToTab = goToTab;
+      tabLinks.forEach((link) => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          goToTab(link.dataset.tab);
+        });
+      });
+      window.addEventListener('hashchange', () => {
+        goToTab((location.hash || '#general').replace('#', ''));
+      });
+      const rawHash = (location.hash || '#general').replace('#', '');
+      const start = normalizeTab(rawHash);
+      setActiveTab(start);
+      if (rawHash === 'ui' || rawHash === 'ui-customizations') {
+        history.replaceState(null, '', '#appearance');
+        requestAnimationFrame(() => {
+          document.getElementById('ui-customizations')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+
+      /* ── Account settings (plan-aware) ── */
+      (function syncAccountPanel() {
+        const plan = sessionStorage.getItem('accounts-plan') || 'basic';
+        const period = sessionStorage.getItem('accounts-period') === 'yearly' ? 'yearly' : 'monthly';
+        const badge = document.getElementById('accountSubBadge');
+        const copy = document.getElementById('accountSubCopy');
+        const note = document.getElementById('accountDeleteNote');
+        const deleteBtn = document.getElementById('deleteAccountBtn');
+        const isPremium = plan === 'premium';
+        const planLabel = isPremium ? 'premium' : 'basic';
+
+        if (copy) {
+          copy.textContent = `${planLabel.charAt(0).toUpperCase()}${planLabel.slice(1)} · ${period.charAt(0).toUpperCase()}${period.slice(1)}`;
+        }
+
+        badge.textContent = 'Active';
+        badge.classList.add('tag--status');
+        badge.classList.remove('tag--muted');
+
+        if (isPremium) {
+          note.hidden = false;
+          deleteBtn.disabled = true;
+        } else {
+          note.hidden = true;
+          deleteBtn.disabled = false;
+        }
+      })();
+
+      document.getElementById('copyWorkosId')?.addEventListener('click', async () => {
+        const field = document.getElementById('workosIdField');
+        const raw = (field?.value || field?.textContent || '').trim();
+        const btn = document.getElementById('copyWorkosId');
+        if (!btn || btn.dataset.state === 'check') return;
+        try {
+          await navigator.clipboard.writeText(raw.replace(/^WorkOS ID:\s*/, ''));
+        } catch { /* ignore */ }
+        btn.dataset.state = 'check';
+        btn.setAttribute('aria-label', 'Copied');
+        setTimeout(() => {
+          btn.dataset.state = 'copy';
+          btn.setAttribute('aria-label', 'Copy WorkOS ID');
+        }, 1500);
+      });
+
+      /* ── Toggles (generic) ── */
+      document.querySelectorAll('.toggle').forEach((btn) => {
+        if (btn.id === 'alignToggle' || btn.id === 'siteIconsToggle') return;
+        btn.addEventListener('click', () => {
+          const on = btn.getAttribute('aria-checked') !== 'true';
+          btn.setAttribute('aria-checked', String(on));
+        });
+      });
+
+      /* ── Dropdowns (components/dropdown) ── */
+      function closeAllDropdowns() {
+        document.querySelectorAll('.dropdown').forEach((dd) => {
+          dd.classList.remove('dropdown--open');
+          const panel = dd.querySelector('.dropdown__panel');
+          const btn = dd.querySelector('.dropdown__trigger');
+          if (panel) panel.hidden = true;
+          if (btn) btn.setAttribute('aria-expanded', 'false');
+        });
+      }
+      document.querySelectorAll('.dropdown').forEach((dd) => {
+        const btn = dd.querySelector('.dropdown__trigger');
+        const panel = dd.querySelector('.dropdown__panel');
+        const label = dd.querySelector('.dropdown__label');
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const willOpen = panel.hidden;
+          closeAllDropdowns();
+          if (willOpen) {
+            panel.hidden = false;
+            dd.classList.add('dropdown--open');
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        });
+        dd.querySelectorAll('.dropdown__item').forEach((item) => {
+          item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            label.textContent = item.dataset.value;
+            dd.querySelectorAll('.dropdown__item').forEach((o) => {
+              o.classList.remove('dropdown__item--selected');
+              o.setAttribute('aria-selected', 'false');
+            });
+            item.classList.add('dropdown__item--selected');
+            item.setAttribute('aria-selected', 'true');
+            closeAllDropdowns();
+          });
+        });
+      });
+      document.addEventListener('click', closeAllDropdowns);
+
+      /* ── UI prefs sync ── */
+      function syncControls() {
+        document.querySelectorAll('[data-pref]').forEach((group) => {
+          const key = group.dataset.pref;
+          const val = prefs[key];
+          group.querySelectorAll('.chip, .swatch').forEach((el) => {
+            el.classList.toggle('is-active', el.dataset.value === String(val));
+          });
+        });
+        const alignOn = prefs.align === 'center';
+        document.getElementById('alignToggle').setAttribute('aria-checked', String(alignOn));
+        document.getElementById('siteIconsToggle').setAttribute('aria-checked', String(!!prefs.siteIcons));
+      }
+
+      function updatePreviewBg() {
+        const preview = document.getElementById('uiPreview');
+        const bg = AccountsUIPrefs.BG_COLORS[prefs.bg];
+        preview.style.setProperty('--ui-preview-bg', bg || 'var(--color-background-primary)');
+      }
+
+      function applyLive() {
+        AccountsUIPrefs.apply(prefs);
+        syncControls();
+        updatePreviewBg();
+        updateSettingsUrl();
+      }
+
+      function patch(partial) {
+        prefs = { ...prefs, ...partial };
+        applyLive();
+        const saveBtn = document.getElementById('saveSettings');
+        const saveLabel = saveBtn.querySelector('.btn__label') || saveBtn;
+        saveBtn.classList.remove('is-saved');
+        saveLabel.textContent = 'Save your settings';
+      }
+
+      document.querySelectorAll('[data-pref]').forEach((group) => {
+        const key = group.dataset.pref;
+        group.addEventListener('click', (e) => {
+          if (document.body.dataset.plan !== 'premium') return;
+          const btn = e.target.closest('[data-value]');
+          if (!btn || !group.contains(btn)) return;
+          patch({ [key]: btn.dataset.value });
+        });
+      });
+
+      document.getElementById('alignToggle').addEventListener('click', () => {
+        if (document.body.dataset.plan !== 'premium') return;
+        const next = prefs.align === 'center' ? 'left' : 'center';
+        patch({ align: next });
+      });
+      document.getElementById('siteIconsToggle').addEventListener('click', () => {
+        if (document.body.dataset.plan !== 'premium') return;
+        patch({ siteIcons: !prefs.siteIcons });
+      });
+
+      document.getElementById('resetUiPrefs').addEventListener('click', () => {
+        if (document.body.dataset.plan !== 'premium') return;
+        prefs = AccountsUIPrefs.reset();
+        applyLive();
+      });
+
+      function updateSettingsUrl() {
+        const url = new URL(location.href);
+        url.hash = 'appearance';
+        Object.entries(prefs).forEach(([k, v]) => {
+          url.searchParams.set(k, String(v));
+        });
+        document.getElementById('settingsUrl').value = url.toString();
+      }
+
+      document.getElementById('saveSettings').addEventListener('click', () => {
+        prefs = AccountsUIPrefs.save(prefs);
+        applyLive();
+        const btn = document.getElementById('saveSettings');
+        const label = btn.querySelector('.btn__label') || btn;
+        btn.classList.add('is-saved');
+        label.textContent = 'Settings saved';
+        setTimeout(() => {
+          btn.classList.remove('is-saved');
+          label.textContent = 'Save your settings';
+        }, 1800);
+      });
+
+      document.getElementById('copySettingsUrl').addEventListener('click', async () => {
+        const input = document.getElementById('settingsUrl');
+        const btn = document.getElementById('copySettingsUrl');
+        if (!btn || btn.dataset.state === 'check') return;
+        try {
+          await navigator.clipboard.writeText(input.value);
+        } catch {
+          input.select();
+        }
+        btn.dataset.state = 'check';
+        btn.setAttribute('aria-label', 'Copied');
+        setTimeout(() => {
+          btn.dataset.state = 'copy';
+          btn.setAttribute('aria-label', 'Copy settings URL');
+        }, 1500);
+      });
+
+      /* Hydrate from URL query if present */
+      const params = new URLSearchParams(location.search);
+      if (params.has('scheme') || params.has('font')) {
+        const fromUrl = { ...prefs };
+        Object.keys(AccountsUIPrefs.DEFAULTS).forEach((k) => {
+          if (!params.has(k)) return;
+          let v = params.get(k);
+          if (k === 'siteIcons') v = v === 'true';
+          fromUrl[k] = v;
+        });
+        prefs = fromUrl;
+      }
+
+      applyLive();
+
+      /* Keep save panel pinned to the grid column while scrolling */
+      (function pinSaveAside() {
+        const slot = document.querySelector('.settings-aside');
+        const fixed = document.querySelector('.settings-aside__fixed');
+        if (!slot || !fixed) return;
+        const mq = window.matchMedia('(max-width: 900px)');
+        function sync() {
+          if (mq.matches) {
+            fixed.style.left = '';
+            fixed.style.width = '';
+            return;
+          }
+          const r = slot.getBoundingClientRect();
+          fixed.style.left = `${Math.round(r.left)}px`;
+          fixed.style.width = `${Math.round(r.width)}px`;
+        }
+        sync();
+        window.addEventListener('resize', sync);
+      })();
+
+      /* Theme toggle */
+      const toggle = document.getElementById('themeToggle');
+      const label = document.getElementById('themeToggleLabel');
+      function applyTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+        label.textContent = theme === 'dark' ? 'Light' : 'Dark';
+        localStorage.setItem('accounts-theme', theme);
+      }
+      const savedTheme = localStorage.getItem('accounts-theme');
+      if (savedTheme) applyTheme(savedTheme);
+      toggle.addEventListener('click', () => {
+        applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+      });
+    })();
+  </script>
+</body>
+</html>
