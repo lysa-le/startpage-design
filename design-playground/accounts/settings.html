@@ -59,11 +59,11 @@
     }
     .proto-back {
       font-size: var(--font-body-xs);
-      font-weight: var(--font-weight-medium);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-link);
       text-decoration: none;
     }
-    .proto-back:hover { text-decoration: underline; }
+    .proto-back:hover { color: var(--color-text-brandblue); }
     .theme-toggle {
       display: inline-flex;
       align-items: center;
@@ -85,6 +85,7 @@
       top: 0;
       z-index: 40;
       background: var(--color-background-primary);
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
     }
     .settings-header {
       display: flex;
@@ -376,50 +377,50 @@
       flex-shrink: 0;
     }
 
-    /* Tabs */
+    /* Settings nav — vertical sidebar */
     .settings-tabs {
+      position: sticky;
+      top: calc(var(--spacing-96) + var(--spacing-16));
       display: flex;
-      gap: var(--spacing-32);
-      padding: 0 var(--spacing-40);
-      max-width: 1440px;
-      margin: 0 auto;
-      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      overflow-x: auto;
-      background: var(--color-background-primary);
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-4);
+      align-self: start;
     }
     .settings-tabs__link {
-      position: relative;
-      padding: var(--spacing-16) 0;
+      padding: var(--spacing-8) var(--spacing-12);
       border: none;
-      background: none;
+      border-radius: var(--radius-lg);
+      background: transparent;
       font-family: var(--font-family);
-      font-size: var(--font-body-md);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-regular);
       color: var(--color-text-tertiary);
       cursor: pointer;
       white-space: nowrap;
       text-decoration: none;
+      text-align: left;
+      transition: color 0.15s ease, background-color 0.15s ease;
     }
-    .settings-tabs__link:hover { color: var(--color-text-secondary); }
+    .settings-tabs__link:hover {
+      color: var(--color-text-secondary);
+      background: var(--color-background-quaternary);
+    }
     .settings-tabs__link.is-active {
-      color: var(--color-text-brandblue);
+      color: var(--color-text-primary);
       font-weight: var(--font-weight-semibold);
+      background: var(--color-background-secondary);
     }
-    .settings-tabs__link.is-active::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 3px;
-      background: var(--color-button-brandblue);
-      border-radius: var(--radius-full) var(--radius-full) 0 0;
+    .settings-tabs__link:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 2px;
     }
 
     /* ── Layout ── */
     .settings-shell {
       display: grid;
-      grid-template-columns: minmax(0, 610px) minmax(240px, 330px);
+      grid-template-columns: minmax(160px, 200px) minmax(0, 610px) minmax(240px, 330px);
       gap: var(--spacing-48);
       align-items: start;
       max-width: 1440px;
@@ -433,7 +434,13 @@
         padding: var(--spacing-24);
       }
       .settings-header { padding: var(--spacing-16) var(--spacing-24); }
-      .settings-tabs { padding: 0 var(--spacing-24); gap: var(--spacing-20); }
+      .settings-tabs {
+        position: static;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: var(--spacing-8);
+        padding-bottom: var(--spacing-8);
+      }
     }
 
     .settings-section {
@@ -504,13 +511,13 @@
       padding: 0;
       font-family: var(--font-family);
       font-size: var(--font-body-sm);
-      font-weight: var(--font-weight-medium);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-link);
       cursor: pointer;
-      text-decoration: underline;
-      text-underline-offset: 2px;
+      text-decoration: none;
       text-align: left;
     }
+    .settings-section__reset:hover { color: var(--color-text-brandblue); }
 
     .settings-card {
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
@@ -580,16 +587,14 @@
     }
     .settings-row__hint a:hover,
     .settings-row__meta a:hover {
-      text-decoration: underline;
-      text-underline-offset: 2px;
+      color: var(--color-text-brandblue);
     }
     .settings-row__link {
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-regular);
       color: var(--color-text-link);
-      text-decoration: underline;
-      text-underline-offset: 2px;
+      text-decoration: none;
     }
     .settings-row__link:hover {
       color: var(--color-text-brandblue);
@@ -775,6 +780,152 @@
       width: calc(var(--spacing-96) + var(--spacing-24)); /* 120 */
       min-width: calc(var(--spacing-96) + var(--spacing-24));
     }
+    /* Search location popover — Figma Startpage Local 3226:12 */
+    .dropdown--popover.dropdown--open {
+      border-radius: var(--radius-lg);
+      box-shadow: none;
+    }
+    .dropdown--popover.dropdown--open .dropdown__trigger {
+      border-radius: var(--radius-lg);
+    }
+    .dropdown--popover .dropdown__panel {
+      top: calc(100% + var(--spacing-4));
+      left: auto;
+      right: 0;
+      width: 304px;
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-dropdown);
+      background: var(--color-background-primary);
+      max-height: none;
+      overflow: visible;
+    }
+    .location-pop__clear {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--color-icon-primary);
+      border-radius: var(--radius-sm);
+    }
+    .location-pop__clear:hover {
+      background: var(--color-background-secondary);
+    }
+    .location-pop__clear svg {
+      width: 10px;
+      height: 10px;
+    }
+    .location-pop__body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      padding: var(--spacing-12);
+    }
+    .location-pop__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+    .location-pop__option {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-12);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      cursor: pointer;
+    }
+    .location-pop__option:hover {
+      background: var(--color-background-tertiary);
+    }
+    .location-pop__option.is-selected {
+      background: var(--color-background-secondary);
+      font-weight: var(--font-weight-semibold);
+    }
+    .location-pop__option-label {
+      flex: 1;
+      min-width: 0;
+    }
+    .location-pop__input {
+      display: none;
+      flex: 1;
+      min-width: 0;
+      padding: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+    .location-pop__input::placeholder {
+      color: var(--color-text-secondary);
+      opacity: 1;
+    }
+    .location-pop__clear {
+      display: none;
+    }
+    .location-pop__option--custom[data-mode="input"] {
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary-button);
+      padding: calc(var(--spacing-12) - var(--border-stroke-sm)) var(--spacing-12);
+      cursor: text;
+      font-weight: var(--font-weight-regular);
+    }
+    .location-pop__option--custom[data-mode="input"]:hover {
+      background: var(--color-background-primary);
+    }
+    .location-pop__option--custom[data-mode="input"] .location-pop__option-label {
+      display: none;
+    }
+    .location-pop__option--custom[data-mode="input"] .location-pop__input {
+      display: block;
+    }
+    .location-pop__option--custom[data-mode="input"] .location-pop__clear,
+    .location-pop__option--custom[data-mode="value"] .location-pop__clear {
+      display: inline-flex;
+    }
+    .location-pop__hint[hidden] {
+      display: none;
+    }
+    .location-pop__hint {
+      margin: 0;
+      padding: var(--spacing-8) var(--spacing-12);
+      border-radius: var(--radius-lg);
+      background: var(--color-gold-100);
+      color: var(--color-black-700);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+    }
+    .location-pop__done {
+      width: 100%;
+      justify-content: center;
+    }
+    .location-pop__foot {
+      margin: 0;
+      padding: var(--spacing-12) var(--spacing-16);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .location-pop__foot a {
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .location-pop__foot a:hover { color: var(--color-text-brandblue); }
 
     /* Segmented / chip controls (DDG-style) */
     .chip-group {
@@ -949,7 +1100,7 @@
     }
     .settings-aside__fixed {
       position: fixed;
-      top: calc(var(--spacing-96) + var(--spacing-64) + var(--spacing-24));
+      top: calc(var(--spacing-96) + var(--spacing-40));
       width: min(330px, calc(100vw - var(--spacing-80)));
       display: flex;
       flex-direction: column;
@@ -981,7 +1132,7 @@
       line-height: var(--font-body-xs-lh);
       color: var(--color-text-tertiary);
     }
-    .settings-aside__note a { color: var(--color-text-link); }
+    .settings-aside__note a { color: var(--color-text-link); text-decoration: none; }
     .settings-aside__box {
       border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
       padding-top: var(--spacing-12);
@@ -1090,6 +1241,7 @@
     .account-card__body a,
     .account-card__note a {
       color: var(--color-text-link);
+      text-decoration: none;
     }
     .account-card__stack {
       display: flex;
@@ -1370,8 +1522,7 @@
       font-weight: var(--font-weight-medium);
       color: var(--color-text-link);
       cursor: pointer;
-      text-decoration: underline;
-      text-underline-offset: 2px;
+      text-decoration: none;
       padding: 0;
     }
     .appearance-premium__upgrade:hover { color: var(--color-text-brandblue); }
@@ -1517,15 +1668,15 @@
     </div>
   </header>
 
-  <nav class="settings-tabs" aria-label="Settings sections">
-    <a class="settings-tabs__link" href="#general" data-tab="general">General</a>
-    <a class="settings-tabs__link" href="#privacy" data-tab="privacy">Privacy &amp; Safety</a>
-    <a class="settings-tabs__link" href="#appearance" data-tab="appearance">Appearance</a>
-    <a class="settings-tabs__link" href="#account" data-tab="account">Account &amp; Subscription</a>
-  </nav>
   </div>
 
   <div class="settings-shell">
+    <nav class="settings-tabs" aria-label="Settings sections">
+      <a class="settings-tabs__link" href="#general" data-tab="general">General</a>
+      <a class="settings-tabs__link" href="#privacy" data-tab="privacy">Privacy &amp; Safety</a>
+      <a class="settings-tabs__link" href="#appearance" data-tab="appearance">Appearance</a>
+      <a class="settings-tabs__link" href="#account" data-tab="account">Account &amp; Subscription</a>
+    </nav>
     <div class="settings-main">
       <!-- Account settings -->
       <section class="settings-section" id="account">
@@ -1922,24 +2073,35 @@
               <span class="settings-row__meta">Set your search location. Your data is never stored or shared. <a href="#">Learn more</a></span>
             </div>
             <div class="settings-row__control">
-              <div class="dropdown dropdown--small dropdown--wide" data-dd="search-location">
-                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+              <div class="dropdown dropdown--small dropdown--wide dropdown--popover" data-dd="search-location">
+                <button type="button" class="dropdown__trigger" aria-haspopup="dialog" aria-expanded="false">
                   <span class="dropdown__label">None selected</span>
                   <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
-                <div class="dropdown__panel" hidden>
+                <div class="dropdown__panel location-pop" role="dialog" aria-label="Select a location" hidden>
+                  <div class="location-pop__body">
+                    <ul class="location-pop__list" role="listbox" aria-label="Search location options">
+                      <li class="location-pop__option is-selected" role="option" aria-selected="true" data-loc="none">
+                        <span class="location-pop__option-label">None selected</span>
+                      </li>
+                      <li class="location-pop__option" role="option" aria-selected="false" data-loc="device">
+                        <span class="location-pop__option-label">Use device location</span>
+                      </li>
+                      <li class="location-pop__option location-pop__option--custom" role="option" aria-selected="false" data-loc="custom" data-mode="option">
+                        <span class="location-pop__option-label">Enter city or postal code</span>
+                        <input class="location-pop__input" id="locCustomInput" type="text" placeholder="Enter city or postal code" aria-label="Enter city or postal code" autocomplete="postal-code" />
+                        <button type="button" class="location-pop__clear" id="locClear" aria-label="Clear location">
+                          <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg>
+                        </button>
+                      </li>
+                    </ul>
+                    <p class="location-pop__hint" id="locHint" hidden>*Location must have region, state or country code. Example: 90210 CA</p>
+                    <button type="button" class="btn btn--product-brand-blue location-pop__done" id="locDone">
+                      <span class="btn__label">Done</span>
+                    </button>
+                  </div>
                   <hr class="dropdown__divider" />
-                  <ul class="dropdown__list" role="listbox">
-                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="None selected">
-                    <span class="dropdown__item-label">None selected</span>
-                  </li>
-                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Device location">
-                    <span class="dropdown__item-label">Device location</span>
-                  </li>
-                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Enter city or postal code">
-                    <span class="dropdown__item-label">Enter city or postal code</span>
-                  </li>
-                  </ul>
+                  <p class="location-pop__foot">Your location stays private. <a href="#">Learn How</a></p>
                 </div>
               </div>
             </div>
@@ -2598,6 +2760,101 @@
         });
       });
       document.addEventListener('click', closeAllDropdowns);
+
+      /* ── Search location popover ── */
+      (function initSearchLocation() {
+        const dd = document.querySelector('[data-dd="search-location"]');
+        if (!dd) return;
+        const panel = dd.querySelector('.dropdown__panel');
+        const triggerLabel = dd.querySelector('.dropdown__label');
+        const options = [...dd.querySelectorAll('.location-pop__option')];
+        const customRow = dd.querySelector('.location-pop__option--custom');
+        const customLabel = customRow.querySelector('.location-pop__option-label');
+        const input = document.getElementById('locCustomInput');
+        const hint = document.getElementById('locHint');
+
+        let selected = 'none';   // 'none' | 'device' | 'custom'
+        let customValue = '';
+
+        function render() {
+          options.forEach((opt) => {
+            const on = opt.dataset.loc === selected;
+            opt.classList.toggle('is-selected', on);
+            opt.setAttribute('aria-selected', String(on));
+          });
+          if (customRow.dataset.mode !== 'input') {
+            customRow.dataset.mode = customValue ? 'value' : 'option';
+            customLabel.textContent = customValue || 'Enter city or postal code';
+          }
+          hint.hidden = customRow.dataset.mode !== 'input';
+          triggerLabel.textContent =
+            selected === 'custom' ? customValue :
+            selected === 'device' ? 'Use device location' : 'None selected';
+        }
+
+        function startEditing() {
+          customRow.dataset.mode = 'input';
+          input.value = customValue;
+          hint.hidden = false;
+          requestAnimationFrame(() => input.focus());
+        }
+
+        function stopEditing() {
+          if (customRow.dataset.mode !== 'input') return;
+          const value = input.value.trim();
+          if (value) {
+            customValue = value;
+            selected = 'custom';
+          } else if (selected === 'custom') {
+            customValue = '';
+            selected = 'none';
+          }
+          customRow.dataset.mode = customValue ? 'value' : 'option';
+          render();
+        }
+
+        function closePanel() {
+          stopEditing();
+          closeAllDropdowns();
+        }
+
+        /* Keep the panel open on interior clicks; generic document handler closes it otherwise */
+        panel.addEventListener('click', (e) => e.stopPropagation());
+
+        options.forEach((opt) => {
+          opt.addEventListener('click', (e) => {
+            if (e.target.closest('.location-pop__clear')) return;
+            const loc = opt.dataset.loc;
+            if (loc === 'custom') {
+              if (customRow.dataset.mode === 'input') return;
+              startEditing();
+              return;
+            }
+            stopEditing();
+            selected = loc;
+            render();
+          });
+        });
+
+        document.getElementById('locClear').addEventListener('click', () => {
+          if (customRow.dataset.mode === 'input') {
+            input.value = '';
+            input.focus();
+            return;
+          }
+          customValue = '';
+          if (selected === 'custom') selected = 'none';
+          render();
+        });
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') closePanel();
+        });
+
+        document.getElementById('locDone').addEventListener('click', closePanel);
+
+        render();
+      })();
 
       /* ── UI prefs sync ── */
       function syncControls() {
