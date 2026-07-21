@@ -1132,10 +1132,10 @@
     .privacy-popover__title {
       margin: 0;
       font-family: var(--font-family);
-      font-size: var(--font-heading-xs);
-      line-height: var(--font-heading-xs-lh);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-bold);
-      letter-spacing: -0.02em;
+      letter-spacing: 0.2px;
       color: var(--color-text-brandblue);
     }
 
@@ -1196,16 +1196,16 @@
 
     .privacy-popover__label {
       font-family: var(--font-family);
-      font-size: var(--font-body-md);
-      line-height: 0.875rem;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
     }
 
     .privacy-popover__value {
       font-family: var(--font-family);
-      font-size: var(--font-body-md);
-      line-height: 0.875rem;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-primary);
       text-align: right;
@@ -1219,7 +1219,7 @@
       height: calc(var(--spacing-24) + var(--spacing-4));
       border-radius: var(--radius-full);
       font-family: var(--font-family);
-      font-size: var(--font-body-md);
+      font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-bold);
       color: var(--color-text-primary);
@@ -1249,7 +1249,7 @@
       align-items: center;
       gap: var(--spacing-8);
       font-family: var(--font-family);
-      font-size: var(--font-body-md);
+      font-size: var(--font-body-sm);
       line-height: 1;
       font-weight: var(--font-weight-bold);
       color: var(--color-text-error);
@@ -1281,7 +1281,7 @@
       background: transparent;
       color: var(--color-text-primary);
       font-family: var(--font-family);
-      font-size: var(--font-body-md);
+      font-size: var(--font-body-sm);
       line-height: 1;
       font-weight: var(--font-weight-semibold);
       cursor: pointer;
@@ -2638,7 +2638,7 @@
         <div class="privacy-popover" role="dialog" aria-label="Privacy insights for ${domain}" hidden>
           <div class="privacy-popover__top">
             <div>
-              <h3 class="privacy-popover__title">Privacy insights</h3>
+              <h3 class="privacy-popover__title">Privacy Insights</h3>
               <p class="privacy-popover__domain">${domain}</p>
             </div>
             <button type="button" class="privacy-popover__close" aria-label="Close">
