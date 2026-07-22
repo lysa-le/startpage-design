@@ -927,35 +927,52 @@
     }
     .location-pop__foot a:hover { color: var(--color-text-brandblue); }
 
-    /* Segmented / chip controls (DDG-style) */
+    /* Segmented option groups — product buttons from components/button */
     .chip-group {
       display: flex;
       flex-wrap: wrap;
       gap: var(--spacing-8);
       justify-content: flex-end;
-      max-width: 320px;
+      max-width: 360px;
     }
-    .chip {
-      padding: var(--spacing-8) var(--spacing-12);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      border-radius: var(--radius-sm);
-      background: var(--color-background-primary);
-      color: var(--color-text-primary);
-      font-family: var(--font-family);
-      font-size: var(--font-body-xs);
-      font-weight: var(--font-weight-medium);
-      cursor: pointer;
-    }
-    .chip.is-active {
-      border-color: var(--color-stroke-primary-button);
-      background: var(--color-background-tertiary);
-      color: var(--color-text-brandblue);
-      box-shadow: inset 0 0 0 1px var(--color-stroke-primary-button);
-    }
-    .chip:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: 3px;
-    }
+    .dropdown[data-pref="fontSize"] .dropdown__item[data-value="small"] .dropdown__item-label,
+    .dropdown[data-pref="fontSize"] .dropdown__label[data-size="small"] { font-size: 0.75rem; } /* 12 */
+    .dropdown[data-pref="fontSize"] .dropdown__item[data-value="medium"] .dropdown__item-label,
+    .dropdown[data-pref="fontSize"] .dropdown__label[data-size="medium"] { font-size: 0.875rem; } /* 14 */
+    .dropdown[data-pref="fontSize"] .dropdown__item[data-value="large"] .dropdown__item-label,
+    .dropdown[data-pref="fontSize"] .dropdown__label[data-size="large"] { font-size: 0.9375rem; } /* 15 */
+    .dropdown[data-pref="fontSize"] .dropdown__item[data-value="larger"] .dropdown__item-label,
+    .dropdown[data-pref="fontSize"] .dropdown__label[data-size="larger"] { font-size: 1rem; } /* 16 */
+    .dropdown[data-pref="fontSize"] .dropdown__item[data-value="largest"] .dropdown__item-label,
+    .dropdown[data-pref="fontSize"] .dropdown__label[data-size="largest"] { font-size: 1.125rem; } /* 18 */
+    .dropdown[data-pref="font"] .dropdown__item[data-value="inter"] .dropdown__item-label,
+    .dropdown[data-pref="font"] .dropdown__label[data-font="inter"],
+    .dropdown[data-pref="titleFont"] .dropdown__item[data-value="inter"] .dropdown__item-label,
+    .dropdown[data-pref="titleFont"] .dropdown__label[data-font="inter"] { font-family: 'Inter', sans-serif; }
+    .dropdown[data-pref="font"] .dropdown__item[data-value="arial"] .dropdown__item-label,
+    .dropdown[data-pref="font"] .dropdown__label[data-font="arial"],
+    .dropdown[data-pref="titleFont"] .dropdown__item[data-value="arial"] .dropdown__item-label,
+    .dropdown[data-pref="titleFont"] .dropdown__label[data-font="arial"] { font-family: Arial, Helvetica, sans-serif; }
+    .dropdown[data-pref="font"] .dropdown__item[data-value="georgia"] .dropdown__item-label,
+    .dropdown[data-pref="font"] .dropdown__label[data-font="georgia"],
+    .dropdown[data-pref="titleFont"] .dropdown__item[data-value="georgia"] .dropdown__item-label,
+    .dropdown[data-pref="titleFont"] .dropdown__label[data-font="georgia"] { font-family: Georgia, 'Times New Roman', serif; }
+    .dropdown[data-pref="font"] .dropdown__item[data-value="helvetica"] .dropdown__item-label,
+    .dropdown[data-pref="font"] .dropdown__label[data-font="helvetica"],
+    .dropdown[data-pref="titleFont"] .dropdown__item[data-value="helvetica"] .dropdown__item-label,
+    .dropdown[data-pref="titleFont"] .dropdown__label[data-font="helvetica"] { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+    .dropdown[data-pref="font"] .dropdown__item[data-value="segoe"] .dropdown__item-label,
+    .dropdown[data-pref="font"] .dropdown__label[data-font="segoe"] { font-family: 'Segoe UI', Tahoma, sans-serif; }
+    .dropdown[data-pref="font"] .dropdown__item[data-value="verdana"] .dropdown__item-label,
+    .dropdown[data-pref="font"] .dropdown__label[data-font="verdana"] { font-family: Verdana, Geneva, sans-serif; }
+    .dropdown[data-pref="font"] .dropdown__item[data-value="serif"] .dropdown__item-label,
+    .dropdown[data-pref="font"] .dropdown__label[data-font="serif"],
+    .dropdown[data-pref="titleFont"] .dropdown__item[data-value="serif"] .dropdown__item-label,
+    .dropdown[data-pref="titleFont"] .dropdown__label[data-font="serif"] { font-family: Georgia, 'Times New Roman', Times, serif; }
+    .dropdown[data-pref="font"] .dropdown__item[data-value="mono"] .dropdown__item-label,
+    .dropdown[data-pref="font"] .dropdown__label[data-font="mono"],
+    .dropdown[data-pref="titleFont"] .dropdown__item[data-value="mono"] .dropdown__item-label,
+    .dropdown[data-pref="titleFont"] .dropdown__label[data-font="mono"] { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 
     .swatch-group {
       display: flex;
@@ -967,7 +984,7 @@
     .swatch {
       width: var(--spacing-32);
       height: var(--spacing-32);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-md);
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
       cursor: pointer;
       padding: 0;
@@ -1027,6 +1044,8 @@
       flex-direction: column;
       gap: var(--spacing-4);
       max-width: 100%;
+      /* Base size for em-scaled children — medium = 14px */
+      font-size: 0.875rem;
     }
     .ui-preview__source {
       display: flex;
@@ -1042,31 +1061,31 @@
     }
     html[data-ui-site-icons="off"] .ui-preview__favicon { display: none; }
     .ui-preview__site {
-      font-size: var(--font-body-sm);
+      font-size: 1em;
       color: var(--color-text-primary);
     }
     .ui-preview__url {
-      font-size: var(--font-body-sm);
+      font-size: 1em;
       color: var(--color-text-tertiary);
     }
     .ui-preview__title {
       font-family: var(--ui-title-font, var(--font-family));
-      font-size: var(--font-body-lg);
+      font-size: 1.2857em; /* ~body-lg relative to body */
       color: var(--ui-title-color, var(--color-text-link));
       text-decoration: none;
     }
     .ui-preview__desc {
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
+      font-size: 1em;
+      line-height: 1.45;
       color: var(--color-text-primary);
     }
 
-    /* Font-size preview scale on settings preview only */
-    html[data-ui-font-size="small"] .ui-preview { font-size: 0.875rem; }
-    html[data-ui-font-size="medium"] .ui-preview { font-size: 1rem; }
-    html[data-ui-font-size="large"] .ui-preview { font-size: 1.0625rem; }
-    html[data-ui-font-size="larger"] .ui-preview { font-size: 1.125rem; }
-    html[data-ui-font-size="largest"] .ui-preview { font-size: 1.25rem; }
+    /* Font-size preview — scales result text via em */
+    html[data-ui-font-size="small"] .ui-preview__result { font-size: 0.75rem; } /* 12 */
+    html[data-ui-font-size="medium"] .ui-preview__result { font-size: 0.875rem; } /* 14 */
+    html[data-ui-font-size="large"] .ui-preview__result { font-size: 0.9375rem; } /* 15 */
+    html[data-ui-font-size="larger"] .ui-preview__result { font-size: 1rem; } /* 16 */
+    html[data-ui-font-size="largest"] .ui-preview__result { font-size: 1.125rem; } /* 18 */
 
     /* Schemes (preview + page feel) */
     html[data-ui-scheme="basic"] {
@@ -1356,6 +1375,41 @@
     [data-theme="dark"] .btn--product-brand-blue {
       background-color: var(--color-brand-blue-100);
       color: var(--color-black-900);
+    }
+    .btn--product-filled,
+    .btn--product-selected {
+      padding: var(--spacing-12) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+    }
+    .btn--product-filled::before,
+    .btn--product-selected::before {
+      display: none;
+    }
+    .btn--product-filled {
+      background-color: var(--color-button-productfilled);
+      color: var(--color-text-primary);
+      border: var(--border-stroke-md) solid transparent;
+      transition: background-color 0.15s ease;
+    }
+    .btn--product-filled:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+    .btn--product-selected {
+      background-color: transparent;
+      color: var(--color-text-primary);
+      border: var(--border-stroke-md) solid var(--color-stroke-primary-button);
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .btn--product-selected:hover {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-whisper-50);
+    }
+    [data-theme="dark"] .btn--product-selected:hover {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
     }
     .btn:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
@@ -2315,12 +2369,12 @@
               </div>
               <div class="settings-row__control">
                 <div class="chip-group" role="group" aria-label="Color scheme" data-pref="scheme">
-                  <button type="button" class="chip" data-value="default">Default</button>
-                  <button type="button" class="chip" data-value="basic">Basic</button>
-                  <button type="button" class="chip" data-value="contrast">Contrast</button>
-                  <button type="button" class="chip" data-value="dark">Dark</button>
-                  <button type="button" class="chip" data-value="gray">Gray</button>
-                  <button type="button" class="chip" data-value="terminal">Terminal</button>
+                  <button type="button" class="btn btn--product-filled" data-value="default"><span class="btn__label">Default</span></button>
+                  <button type="button" class="btn btn--product-filled" data-value="basic"><span class="btn__label">Basic</span></button>
+                  <button type="button" class="btn btn--product-filled" data-value="contrast"><span class="btn__label">Contrast</span></button>
+                  <button type="button" class="btn btn--product-filled" data-value="dark"><span class="btn__label">Dark</span></button>
+                  <button type="button" class="btn btn--product-filled" data-value="gray"><span class="btn__label">Gray</span></button>
+                  <button type="button" class="btn btn--product-filled" data-value="terminal"><span class="btn__label">Terminal</span></button>
                 </div>
               </div>
             </div>
@@ -2332,14 +2386,14 @@
               <div class="settings-row__control">
                 <div class="dropdown dropdown--small dropdown--wide" data-dd="ui-font" data-pref="font">
                   <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
-                    <span class="dropdown__label">Inter (default)</span>
+                    <span class="dropdown__label" data-font="inter">Inter</span>
                     <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </button>
                   <div class="dropdown__panel" hidden>
                     <hr class="dropdown__divider" />
                     <ul class="dropdown__list" role="listbox">
                     <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="inter">
-                      <span class="dropdown__item-label">Inter (default)</span>
+                      <span class="dropdown__item-label">Inter</span>
                     </li>
                     <li class="dropdown__item" role="option" aria-selected="false" data-value="arial">
                       <span class="dropdown__item-label">Arial</span>
@@ -2368,17 +2422,73 @@
               </div>
             </div>
 
-            <div class="settings-row settings-row--stack">
+            <div class="settings-row">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Title font</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="dropdown dropdown--small dropdown--wide" data-dd="ui-title-font" data-pref="titleFont">
+                  <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="dropdown__label" data-font="inter">Inter</span>
+                    <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="dropdown__panel" hidden>
+                    <hr class="dropdown__divider" />
+                    <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="inter">
+                      <span class="dropdown__item-label">Inter</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="arial">
+                      <span class="dropdown__item-label">Arial</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="georgia">
+                      <span class="dropdown__item-label">Georgia</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="helvetica">
+                      <span class="dropdown__item-label">Helvetica</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="serif">
+                      <span class="dropdown__item-label">Serif</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="mono">
+                      <span class="dropdown__item-label">Mono</span>
+                    </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row">
               <div class="settings-row__copy">
                 <span class="settings-row__label">Font size</span>
               </div>
               <div class="settings-row__control">
-                <div class="chip-group" role="group" aria-label="Font size" data-pref="fontSize">
-                  <button type="button" class="chip" data-value="largest">Largest</button>
-                  <button type="button" class="chip" data-value="larger">Larger</button>
-                  <button type="button" class="chip" data-value="large">Large</button>
-                  <button type="button" class="chip" data-value="medium">Medium</button>
-                  <button type="button" class="chip" data-value="small">Small</button>
+                <div class="dropdown dropdown--small dropdown--wide" data-dd="ui-font-size" data-pref="fontSize">
+                  <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="dropdown__label" data-size="medium">Medium</span>
+                    <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="dropdown__panel" hidden>
+                    <hr class="dropdown__divider" />
+                    <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="small">
+                      <span class="dropdown__item-label">Small</span>
+                    </li>
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="medium">
+                      <span class="dropdown__item-label">Medium</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="large">
+                      <span class="dropdown__item-label">Large</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="larger">
+                      <span class="dropdown__item-label">Larger</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="largest">
+                      <span class="dropdown__item-label">Largest</span>
+                    </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2389,9 +2499,9 @@
               </div>
               <div class="settings-row__control">
                 <div class="chip-group" role="group" aria-label="Page width" data-pref="width">
-                  <button type="button" class="chip" data-value="super-wide">Super Wide</button>
-                  <button type="button" class="chip" data-value="wide">Wide</button>
-                  <button type="button" class="chip" data-value="normal">Normal</button>
+                  <button type="button" class="btn btn--product-filled" data-value="super-wide"><span class="btn__label">Super Wide</span></button>
+                  <button type="button" class="btn btn--product-filled" data-value="wide"><span class="btn__label">Wide</span></button>
+                  <button type="button" class="btn btn--product-filled" data-value="normal"><span class="btn__label">Normal</span></button>
                 </div>
               </div>
             </div>
@@ -2405,7 +2515,7 @@
               </div>
             </div>
 
-            <div class="settings-row settings-row--stack">
+            <div class="settings-row">
               <div class="settings-row__copy">
                 <span class="settings-row__label">Background color</span>
               </div>
@@ -2421,23 +2531,7 @@
               </div>
             </div>
 
-            <div class="settings-row settings-row--stack">
-              <div class="settings-row__copy">
-                <span class="settings-row__label">Title font</span>
-              </div>
-              <div class="settings-row__control">
-                <div class="chip-group" role="group" aria-label="Title font" data-pref="titleFont">
-                  <button type="button" class="chip" data-value="inter">Inter</button>
-                  <button type="button" class="chip" data-value="arial">Arial</button>
-                  <button type="button" class="chip" data-value="georgia">Georgia</button>
-                  <button type="button" class="chip" data-value="helvetica">Helvetica</button>
-                  <button type="button" class="chip" data-value="serif">Serif</button>
-                  <button type="button" class="chip" data-value="mono">Mono</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="settings-row settings-row--stack">
+            <div class="settings-row">
               <div class="settings-row__copy">
                 <span class="settings-row__label">Title color</span>
               </div>
@@ -2453,10 +2547,10 @@
 
             <div class="settings-row">
               <div class="settings-row__copy">
-                <span class="settings-row__label">Site icons</span>
+                <span class="settings-row__label">Display site icons</span>
               </div>
               <div class="settings-row__control">
-                <button type="button" class="toggle" id="siteIconsToggle" role="switch" aria-checked="true" aria-label="Site icons"><span class="toggle__thumb"></span></button>
+                <button type="button" class="toggle" id="siteIconsToggle" role="switch" aria-checked="true" aria-label="Display site icons"><span class="toggle__thumb"></span></button>
               </div>
             </div>
           </div>
@@ -2869,12 +2963,21 @@
               item.setAttribute('aria-selected', String(on));
               if (on && label) {
                 label.textContent = item.querySelector('.dropdown__item-label')?.textContent.trim() || item.dataset.value;
+                if (key === 'font' || key === 'titleFont') label.dataset.font = item.dataset.value;
+                if (key === 'fontSize') label.dataset.size = item.dataset.value;
               }
             });
             return;
           }
-          group.querySelectorAll('.chip, .swatch').forEach((el) => {
-            el.classList.toggle('is-active', el.dataset.value === String(val));
+          group.querySelectorAll('.btn[data-value], .swatch').forEach((el) => {
+            const on = el.dataset.value === String(val);
+            if (el.classList.contains('swatch')) {
+              el.classList.toggle('is-active', on);
+              return;
+            }
+            el.classList.toggle('btn--product-selected', on);
+            el.classList.toggle('btn--product-filled', !on);
+            el.setAttribute('aria-pressed', String(on));
           });
         });
         const alignOn = prefs.align === 'center';
