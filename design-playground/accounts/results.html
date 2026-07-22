@@ -1098,12 +1098,16 @@
       overflow: visible;
     }
 
+    /* Privacy Insights popover — Figma CQNXZno7… 17:229 */
     .privacy-popover {
+      --privacy-panel-width: 310px;
+      --privacy-header-min: 70px;
+      --privacy-title-gap: 2px;
       position: absolute;
       top: calc(100% + var(--spacing-8));
       right: 0;
       z-index: 50;
-      width: calc(var(--spacing-24) * 13); /* 312px — Figma 1150:6555 */
+      width: var(--privacy-panel-width);
       display: none;
       flex-direction: column;
       overflow: hidden;
@@ -1122,25 +1126,31 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: var(--spacing-12);
+      min-height: var(--privacy-header-min);
       padding: var(--spacing-16);
+      box-sizing: border-box;
       background: var(--color-background-quaternary);
     }
-    [data-theme="dark"] .privacy-popover__top {
-      background: var(--color-background-tertiary);
+
+    .privacy-popover__heading {
+      display: flex;
+      flex-direction: column;
+      gap: var(--privacy-title-gap);
+      min-width: 0;
     }
 
     .privacy-popover__title {
       margin: 0;
       font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
       font-weight: var(--font-weight-bold);
       letter-spacing: 0.2px;
       color: var(--color-text-brandblue);
     }
 
     .privacy-popover__domain {
-      margin: var(--spacing-4) 0 0;
+      margin: 0;
       font-family: var(--font-family);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
@@ -1185,13 +1195,10 @@
       align-items: center;
       justify-content: space-between;
       gap: var(--spacing-16);
-      min-height: calc(var(--spacing-40) + var(--spacing-8) - 2px); /* ~46 */
+      min-height: calc(var(--spacing-40) + var(--spacing-8) - 2px); /* 46 */
       padding: 0 var(--spacing-16);
       border-radius: var(--radius-lg);
       background: var(--color-background-tertiary);
-    }
-    [data-theme="dark"] .privacy-popover__row {
-      background: var(--color-background-quaternary);
     }
 
     .privacy-popover__label {
@@ -1209,6 +1216,7 @@
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-primary);
       text-align: right;
+      padding-right: var(--spacing-8);
     }
 
     .privacy-popover__grade {
@@ -1221,17 +1229,17 @@
       font-family: var(--font-family);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-bold);
-      color: var(--color-text-primary);
-    }
-    [data-theme="dark"] .privacy-popover__grade {
-      color: var(--color-text-inverted);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-black-900);
     }
     .privacy-popover__grade--a { background: var(--color-teal-400); }
     .privacy-popover__grade--b { background: var(--color-purple-400); }
     .privacy-popover__grade--c { background: var(--color-gold-500); }
-    .privacy-popover__grade--d { background: var(--color-accent-gold); }
-    .privacy-popover__grade--f { background: var(--color-red-500); }
+    .privacy-popover__grade--d { background: #FF844F; }
+    .privacy-popover__grade--f {
+      background: var(--color-red-500);
+      color: var(--color-whisper-0);
+    }
     [data-theme="dark"] .privacy-popover__grade--f { background: var(--color-red-400); }
 
     .privacy-popover__ai {
@@ -1240,7 +1248,7 @@
       gap: var(--spacing-8);
       padding: var(--spacing-16);
       border-radius: var(--radius-lg);
-      border: var(--border-stroke-sm) solid var(--color-text-error);
+      border: var(--border-stroke-sm) solid var(--color-stroke-error);
       background: transparent;
     }
     .privacy-popover__ai-title {
@@ -1250,9 +1258,9 @@
       gap: var(--spacing-8);
       font-family: var(--font-family);
       font-size: var(--font-body-sm);
-      line-height: 1;
+      line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-bold);
-      color: var(--color-text-error);
+      color: var(--color-stroke-error);
     }
     .privacy-popover__ai-icon {
       flex-shrink: 0;
@@ -1273,16 +1281,16 @@
       justify-content: center;
       gap: var(--spacing-8);
       width: 100%;
-      min-height: calc(var(--spacing-40) + var(--spacing-8) - 2px); /* ~46 */
+      min-height: calc(var(--spacing-40) + var(--spacing-8) - 2px); /* 46 */
       margin: 0;
       padding: 0 var(--spacing-16);
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
       border-radius: var(--radius-lg);
-      background: transparent;
+      background: var(--color-background-primary);
       color: var(--color-text-primary);
       font-family: var(--font-family);
       font-size: var(--font-body-sm);
-      line-height: 1;
+      line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-semibold);
       cursor: pointer;
       transition: background-color 0.15s ease;
@@ -2614,11 +2622,6 @@
       return `privacy-popover__grade--${key}`;
     }
 
-    function trackersLabel(count) {
-      if (count === 0) return 'None detected';
-      return `${count} detected`;
-    }
-
     const SHIELD_OUTLINE = `
       <svg class="privacy-shield__icon" viewBox="-1.5 -1.5 16.124 18.969" fill="none" aria-hidden="true" overflow="visible">
         <path d="M6.15527 0.0745424C6.41743 -0.0248475 6.7066 -0.0248475 6.96875 0.0745424L12.3721 2.12337C12.824 2.29473 13.124 2.73203 13.124 3.22005V8.00032C13.124 10.5717 11.4465 12.576 10.0264 13.8324C9.29212 14.4819 8.56352 14.9882 8.02051 15.3314C7.74789 15.5036 7.51886 15.6374 7.35547 15.7288C7.27383 15.7745 7.20782 15.8095 7.16113 15.8343C7.13787 15.8467 7.11908 15.8566 7.10547 15.8636L7.08887 15.8724L7.08105 15.8763H7.08008C6.75025 15.9998 6.49955 16.0001 6.04297 15.8763L6.03516 15.8724L6.01855 15.8636C6.00494 15.8566 5.9862 15.8467 5.96289 15.8343C5.91619 15.8095 5.85024 15.7746 5.76855 15.7288C5.60516 15.6374 5.37618 15.5037 5.10352 15.3314C4.5605 14.9882 3.83193 14.4819 3.09766 13.8324C1.67749 12.576 4.49124e-05 10.5717 0 8.00032V3.22005C0 2.73215 0.299194 2.29481 0.750977 2.12337L6.15527 0.0745424Z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
@@ -2626,18 +2629,17 @@
 
     function renderPrivacyPopover(domain) {
       const insights = privacyInsights(domain);
-      const trackers = trackersLabel(insights.trackers);
       const aiHtml = insights.aiHeavy
         ? `<div class="privacy-popover__ai" role="status">
-            <p class="privacy-popover__ai-title"><span class="privacy-popover__ai-icon" aria-hidden="true">⚠</span>AI content warning</p>
+            <p class="privacy-popover__ai-title"><span class="privacy-popover__ai-icon" aria-hidden="true">⚠</span>AI Content Notice</p>
             <p class="privacy-popover__ai-body">This site appears to publish a high volume of AI-generated content.</p>
           </div>`
         : '';
 
       return `
-        <div class="privacy-popover" role="dialog" aria-label="Privacy insights for ${domain}" hidden>
+        <div class="privacy-popover" role="dialog" aria-label="Privacy Insights for ${domain}" hidden>
           <div class="privacy-popover__top">
-            <div>
+            <div class="privacy-popover__heading">
               <h3 class="privacy-popover__title">Privacy Insights</h3>
               <p class="privacy-popover__domain">${domain}</p>
             </div>
@@ -2648,21 +2650,21 @@
             </button>
           </div>
           <div class="privacy-popover__body">
-            <div class="privacy-popover__row">
-              <span class="privacy-popover__label">Trackers</span>
-              <span class="privacy-popover__value">${trackers}</span>
-            </div>
+            ${aiHtml}
             <div class="privacy-popover__row">
               <span class="privacy-popover__label">Privacy score</span>
               <span class="privacy-popover__grade ${gradeClass(insights.grade)}" aria-label="Grade ${insights.grade}">${insights.grade}</span>
             </div>
-            ${aiHtml}
+            <div class="privacy-popover__row">
+              <span class="privacy-popover__label">Trackers detected</span>
+              <span class="privacy-popover__value">${insights.trackers}</span>
+            </div>
             <button type="button" class="privacy-popover__block" data-block-domain="${domain}">
               <svg class="privacy-popover__block-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <circle cx="8" cy="8" r="5.25" stroke="currentColor" stroke-width="1.5"/>
                 <path d="M4.3 4.3L11.7 11.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
-              Block ${domain}
+              Block this website
             </button>
           </div>
         </div>`;
