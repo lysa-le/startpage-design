@@ -472,8 +472,10 @@
     .settings-section__reset:has(+ .appearance-premium) {
       margin-bottom: 0;
     }
-    .settings-card:has(+ .settings-section__reset) {
-      margin-bottom: var(--spacing-32);
+    /* Consistent gap from card → reset across all sections */
+    .settings-card:has(+ .settings-section__reset),
+    .appearance-premium__body:has(+ .settings-section__reset) .settings-card {
+      margin-bottom: 0;
     }
     .settings-section__title,
     .account-panel__title,
@@ -506,6 +508,7 @@
     }
     .settings-section__reset {
       display: block;
+      margin-top: var(--spacing-16);
       border: none;
       background: none;
       padding: 0;
@@ -2315,6 +2318,62 @@
             </div>
             <div class="settings-row__control">
               <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Search suggestions"><span class="toggle__thumb"></span></button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Promotional messaging</span>
+            </div>
+            <div class="settings-row__control">
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Promotional messaging"><span class="toggle__thumb"></span></button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Unit of temperature</span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--wide" data-dd="temperature-unit">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">Fahrenheit</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Celsius">
+                    <span class="dropdown__item-label">Celsius</span>
+                  </li>
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="Fahrenheit">
+                    <span class="dropdown__item-label">Fahrenheit</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Date and time format</span>
+            </div>
+            <div class="settings-row__control">
+              <div class="dropdown dropdown--small dropdown--wide" data-dd="datetime-format">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">M/D/Y 12:00</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <hr class="dropdown__divider" />
+                  <ul class="dropdown__list" role="listbox">
+                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="M/D/Y 12:00">
+                    <span class="dropdown__item-label">M/D/Y 12:00</span>
+                  </li>
+                  <li class="dropdown__item" role="option" aria-selected="false" data-value="D/M/Y 24:00">
+                    <span class="dropdown__item-label">D/M/Y 24:00</span>
+                  </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
