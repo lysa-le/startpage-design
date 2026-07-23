@@ -927,6 +927,141 @@
     }
     .location-pop__foot a:hover { color: var(--color-text-brandblue); }
 
+    /* Color scheme preview tiles */
+    .scheme-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-12);
+      justify-content: flex-start;
+      width: 100%;
+    }
+    .settings-row--stack .settings-row__control:has(.scheme-group) {
+      align-self: stretch;
+    }
+    .scheme-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--font-family);
+      min-width: calc(var(--spacing-64) + var(--spacing-8)); /* ~72 */
+    }
+    .scheme-tile__preview {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--spacing-8);
+      width: calc(var(--spacing-64) + var(--spacing-16)); /* 80 */
+      height: calc(var(--spacing-64) + var(--spacing-8)); /* 72 */
+      padding: var(--spacing-12);
+      box-sizing: border-box;
+      border-radius: var(--radius-lg);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background: var(--scheme-bg, var(--color-background-primary));
+    }
+    .scheme-tile__bar {
+      display: block;
+      height: var(--spacing-8);
+      width: 100%;
+      border-radius: var(--radius-full);
+      background: var(--scheme-bar-1, var(--color-text-link));
+    }
+    .scheme-tile__bar--mid {
+      width: 62%;
+      background: var(--scheme-bar-2, var(--color-text-primary));
+    }
+    .scheme-tile__bar--bot {
+      width: 88%;
+      background: var(--scheme-bar-3, var(--color-text-tertiary));
+    }
+    .scheme-tile__check {
+      position: absolute;
+      right: calc(var(--spacing-4) * -1);
+      bottom: calc(var(--spacing-4) * -1);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      border-radius: var(--radius-full);
+      background: var(--color-button-brandblue);
+      color: var(--color-whisper-0);
+      box-shadow: 0 0 0 var(--border-stroke-sm) var(--color-background-primary);
+    }
+    .scheme-tile__check svg {
+      width: var(--spacing-12);
+      height: var(--spacing-12);
+      display: block;
+    }
+    .scheme-tile.is-active .scheme-tile__check {
+      display: inline-flex;
+    }
+    .scheme-tile__label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      text-align: center;
+    }
+    .scheme-tile.is-active .scheme-tile__label {
+      font-weight: var(--font-weight-semibold);
+    }
+    .scheme-tile:focus-visible .scheme-tile__preview {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+    .scheme-tile:hover .scheme-tile__preview {
+      border-color: var(--color-stroke-primary-button);
+    }
+    /* Per-scheme preview colors */
+    .scheme-tile[data-value="default"] {
+      --scheme-bg: var(--color-whisper-0);
+      --scheme-bar-1: var(--color-brand-blue-400);
+      --scheme-bar-2: var(--color-black-800);
+      --scheme-bar-3: var(--color-black-400);
+    }
+    .scheme-tile[data-value="basic"] {
+      --scheme-bg: var(--color-whisper-0);
+      --scheme-bar-1: var(--color-brand-blue-600);
+      --scheme-bar-2: var(--color-teal-550);
+      --scheme-bar-3: var(--color-black-400);
+    }
+    .scheme-tile[data-value="contrast"] {
+      --scheme-bg: var(--color-whisper-0);
+      --scheme-bar-1: var(--color-brand-blue-600);
+      --scheme-bar-2: var(--color-red-500);
+      --scheme-bar-3: var(--color-black-900);
+    }
+    .scheme-tile[data-value="dark"] {
+      --scheme-bg: var(--color-black-900);
+      --scheme-bar-1: var(--color-brand-blue-100);
+      --scheme-bar-2: var(--color-whisper-300);
+      --scheme-bar-3: var(--color-whisper-0);
+    }
+    .scheme-tile[data-value="dark"] .scheme-tile__preview {
+      border-color: var(--color-black-700);
+    }
+    .scheme-tile[data-value="gray"] {
+      --scheme-bg: var(--color-whisper-0);
+      --scheme-bar-1: var(--color-black-700);
+      --scheme-bar-2: var(--color-black-550);
+      --scheme-bar-3: var(--color-black-400);
+    }
+    .scheme-tile[data-value="terminal"] {
+      --scheme-bg: var(--color-black-900);
+      --scheme-bar-1: var(--color-teal-400);
+      --scheme-bar-2: var(--color-teal-500);
+      --scheme-bar-3: var(--color-whisper-100);
+    }
+    .scheme-tile[data-value="terminal"] .scheme-tile__preview {
+      border-color: var(--color-black-700);
+    }
+
     /* Segmented option groups — product buttons from components/button */
     .chip-group {
       display: flex;
@@ -2368,13 +2503,73 @@
                 <span class="settings-row__label">Color scheme</span>
               </div>
               <div class="settings-row__control">
-                <div class="chip-group" role="group" aria-label="Color scheme" data-pref="scheme">
-                  <button type="button" class="btn btn--product-filled" data-value="default"><span class="btn__label">Default</span></button>
-                  <button type="button" class="btn btn--product-filled" data-value="basic"><span class="btn__label">Basic</span></button>
-                  <button type="button" class="btn btn--product-filled" data-value="contrast"><span class="btn__label">Contrast</span></button>
-                  <button type="button" class="btn btn--product-filled" data-value="dark"><span class="btn__label">Dark</span></button>
-                  <button type="button" class="btn btn--product-filled" data-value="gray"><span class="btn__label">Gray</span></button>
-                  <button type="button" class="btn btn--product-filled" data-value="terminal"><span class="btn__label">Terminal</span></button>
+                <div class="scheme-group" role="group" aria-label="Color scheme" data-pref="scheme">
+                  <button type="button" class="scheme-tile is-active" data-value="default" aria-pressed="true" aria-label="Default">
+                    <span class="scheme-tile__preview" aria-hidden="true">
+                      <span class="scheme-tile__bar"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--mid"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--bot"></span>
+                      <span class="scheme-tile__check">
+                        <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2L4.8 8.5L9.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </span>
+                    <span class="scheme-tile__label">Default</span>
+                  </button>
+                  <button type="button" class="scheme-tile" data-value="basic" aria-pressed="false" aria-label="Basic">
+                    <span class="scheme-tile__preview" aria-hidden="true">
+                      <span class="scheme-tile__bar"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--mid"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--bot"></span>
+                      <span class="scheme-tile__check">
+                        <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2L4.8 8.5L9.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </span>
+                    <span class="scheme-tile__label">Basic</span>
+                  </button>
+                  <button type="button" class="scheme-tile" data-value="contrast" aria-pressed="false" aria-label="Contrast">
+                    <span class="scheme-tile__preview" aria-hidden="true">
+                      <span class="scheme-tile__bar"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--mid"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--bot"></span>
+                      <span class="scheme-tile__check">
+                        <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2L4.8 8.5L9.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </span>
+                    <span class="scheme-tile__label">Contrast</span>
+                  </button>
+                  <button type="button" class="scheme-tile" data-value="dark" aria-pressed="false" aria-label="Dark">
+                    <span class="scheme-tile__preview" aria-hidden="true">
+                      <span class="scheme-tile__bar"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--mid"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--bot"></span>
+                      <span class="scheme-tile__check">
+                        <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2L4.8 8.5L9.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </span>
+                    <span class="scheme-tile__label">Dark</span>
+                  </button>
+                  <button type="button" class="scheme-tile" data-value="gray" aria-pressed="false" aria-label="Gray">
+                    <span class="scheme-tile__preview" aria-hidden="true">
+                      <span class="scheme-tile__bar"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--mid"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--bot"></span>
+                      <span class="scheme-tile__check">
+                        <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2L4.8 8.5L9.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </span>
+                    <span class="scheme-tile__label">Gray</span>
+                  </button>
+                  <button type="button" class="scheme-tile" data-value="terminal" aria-pressed="false" aria-label="Terminal">
+                    <span class="scheme-tile__preview" aria-hidden="true">
+                      <span class="scheme-tile__bar"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--mid"></span>
+                      <span class="scheme-tile__bar scheme-tile__bar--bot"></span>
+                      <span class="scheme-tile__check">
+                        <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2L4.8 8.5L9.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </span>
+                    <span class="scheme-tile__label">Terminal</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -2461,6 +2656,20 @@
 
             <div class="settings-row">
               <div class="settings-row__copy">
+                <span class="settings-row__label">Title color</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="swatch-group" role="group" aria-label="Title color" data-pref="titleColor">
+                  <button type="button" class="swatch" data-value="link" style="--swatch-color: var(--color-brand-blue-600)" aria-label="Link blue" title="Link"></button>
+                  <button type="button" class="swatch" data-value="brand" style="--swatch-color: var(--color-brand-blue-400)" aria-label="Brand blue" title="Brand"></button>
+                  <button type="button" class="swatch" data-value="primary" style="--swatch-color: var(--color-black-800)" aria-label="Primary text" title="Primary"></button>
+                  <button type="button" class="swatch" data-value="teal" style="--swatch-color: var(--color-teal-400)" aria-label="Teal" title="Teal"></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row__copy">
                 <span class="settings-row__label">Font size</span>
               </div>
               <div class="settings-row__control">
@@ -2493,15 +2702,30 @@
               </div>
             </div>
 
-            <div class="settings-row settings-row--stack">
+            <div class="settings-row">
               <div class="settings-row__copy">
                 <span class="settings-row__label">Page width</span>
               </div>
               <div class="settings-row__control">
-                <div class="chip-group" role="group" aria-label="Page width" data-pref="width">
-                  <button type="button" class="btn btn--product-filled" data-value="super-wide"><span class="btn__label">Super Wide</span></button>
-                  <button type="button" class="btn btn--product-filled" data-value="wide"><span class="btn__label">Wide</span></button>
-                  <button type="button" class="btn btn--product-filled" data-value="normal"><span class="btn__label">Normal</span></button>
+                <div class="dropdown dropdown--small dropdown--wide" data-dd="ui-page-width" data-pref="width">
+                  <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="dropdown__label">Normal</span>
+                    <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="dropdown__panel" hidden>
+                    <hr class="dropdown__divider" />
+                    <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="normal">
+                      <span class="dropdown__item-label">Normal</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="wide">
+                      <span class="dropdown__item-label">Wide</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="super-wide">
+                      <span class="dropdown__item-label">Super Wide</span>
+                    </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2533,24 +2757,10 @@
 
             <div class="settings-row">
               <div class="settings-row__copy">
-                <span class="settings-row__label">Title color</span>
+                <span class="settings-row__label">Site icons</span>
               </div>
               <div class="settings-row__control">
-                <div class="swatch-group" role="group" aria-label="Title color" data-pref="titleColor">
-                  <button type="button" class="swatch" data-value="link" style="--swatch-color: var(--color-brand-blue-600)" aria-label="Link blue" title="Link"></button>
-                  <button type="button" class="swatch" data-value="brand" style="--swatch-color: var(--color-brand-blue-400)" aria-label="Brand blue" title="Brand"></button>
-                  <button type="button" class="swatch" data-value="primary" style="--swatch-color: var(--color-black-800)" aria-label="Primary text" title="Primary"></button>
-                  <button type="button" class="swatch" data-value="teal" style="--swatch-color: var(--color-teal-400)" aria-label="Teal" title="Teal"></button>
-                </div>
-              </div>
-            </div>
-
-            <div class="settings-row">
-              <div class="settings-row__copy">
-                <span class="settings-row__label">Display site icons</span>
-              </div>
-              <div class="settings-row__control">
-                <button type="button" class="toggle" id="siteIconsToggle" role="switch" aria-checked="true" aria-label="Display site icons"><span class="toggle__thumb"></span></button>
+                <button type="button" class="toggle" id="siteIconsToggle" role="switch" aria-checked="true" aria-label="Site icons"><span class="toggle__thumb"></span></button>
               </div>
             </div>
           </div>
@@ -2969,10 +3179,11 @@
             });
             return;
           }
-          group.querySelectorAll('.btn[data-value], .swatch').forEach((el) => {
+          group.querySelectorAll('.scheme-tile, .btn[data-value], .swatch').forEach((el) => {
             const on = el.dataset.value === String(val);
-            if (el.classList.contains('swatch')) {
+            if (el.classList.contains('scheme-tile') || el.classList.contains('swatch')) {
               el.classList.toggle('is-active', on);
+              if (el.classList.contains('scheme-tile')) el.setAttribute('aria-pressed', String(on));
               return;
             }
             el.classList.toggle('btn--product-selected', on);
