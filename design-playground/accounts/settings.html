@@ -1158,21 +1158,27 @@
       align-self: flex-start;
     }
 
-    /* Live preview */
-    .ui-preview {
-      margin-top: var(--spacing-16);
-      padding: var(--spacing-20);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      border-radius: var(--radius-md);
-      background: var(--ui-preview-bg, var(--color-background-primary));
-      font-family: var(--ui-font-family, var(--font-family));
+    /* Live preview — sits inside the UI customizations card */
+    .ui-preview-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      margin: var(--spacing-24);
     }
     .ui-preview__label {
-      font-size: var(--font-body-xs);
-      color: var(--color-text-tertiary);
-      margin-bottom: var(--spacing-12);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      margin: 0;
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .ui-preview {
+      margin: 0;
+      padding: var(--spacing-20);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--ui-preview-bg, var(--color-background-primary));
+      font-family: var(--ui-font-family, var(--font-family));
     }
     .ui-preview__result {
       display: flex;
@@ -2763,20 +2769,22 @@
                 <button type="button" class="toggle" id="siteIconsToggle" role="switch" aria-checked="true" aria-label="Site icons"><span class="toggle__thumb"></span></button>
               </div>
             </div>
-          </div>
 
-          <div class="ui-preview" id="uiPreview" aria-live="polite">
-            <p class="ui-preview__label">Live preview</p>
-            <div class="ui-preview__result">
-              <div class="ui-preview__source">
-                <div class="ui-preview__favicon" aria-hidden="true"></div>
-                <div>
-                  <div class="ui-preview__site">Wikipedia</div>
-                  <div class="ui-preview__url">https://en.wikipedia.org › wiki › Cheese</div>
+            <div class="ui-preview-wrap">
+              <h4 class="ui-preview__label">Live preview</h4>
+              <div class="ui-preview" id="uiPreview" aria-live="polite">
+                <div class="ui-preview__result">
+                  <div class="ui-preview__source">
+                    <div class="ui-preview__favicon" aria-hidden="true"></div>
+                    <div>
+                      <div class="ui-preview__site">Wikipedia</div>
+                      <div class="ui-preview__url">https://en.wikipedia.org › wiki › Cheese</div>
+                    </div>
+                  </div>
+                  <a class="ui-preview__title" href="#">Cheese — Wikipedia</a>
+                  <p class="ui-preview__desc">Cheese is a dairy product produced in wide ranges of flavors, textures, and forms by coagulation of the milk protein casein.</p>
                 </div>
               </div>
-              <a class="ui-preview__title" href="#">Cheese — Wikipedia</a>
-              <p class="ui-preview__desc">Cheese is a dairy product produced in wide ranges of flavors, textures, and forms by coagulation of the milk protein casein.</p>
             </div>
           </div>
           </div>
