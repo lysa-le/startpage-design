@@ -1517,9 +1517,11 @@
       inset: 0;
       z-index: 200;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       padding: var(--spacing-24);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       background: color-mix(in srgb, var(--color-midnight-500) 45%, transparent);
       opacity: 0;
       pointer-events: none;
@@ -1534,8 +1536,9 @@
       position: relative;
       width: 100%;
       max-width: calc(var(--spacing-24) * 23 + var(--spacing-32));
-      max-height: calc(100vh - var(--spacing-48));
-      overflow: auto;
+      margin-block: auto;
+      max-height: none;
+      overflow: visible;
       background: var(--color-background-primary);
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
       border-radius: var(--radius-2xl);
@@ -1546,6 +1549,8 @@
       gap: var(--spacing-24);
       transform: translateY(var(--spacing-8));
       transition: transform 0.2s ease;
+      container-type: inline-size;
+      container-name: plan-modal;
     }
     .plan-overlay.is-open .plan-modal {
       transform: translateY(0);
@@ -1646,7 +1651,10 @@
 
     .plan-toggle {
       display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
       align-self: center;
+      max-width: 100%;
       padding: var(--spacing-4);
       border-radius: var(--radius-full);
       background: var(--color-background-tertiary);
@@ -1680,17 +1688,23 @@
 
     .plan-cards {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--spacing-12);
+      align-items: stretch;
+      padding-top: var(--spacing-12); /* room for “Most popular” badge */
     }
 
     .plan-card {
       display: flex;
       flex-direction: column;
       gap: var(--spacing-12);
+      height: 100%;
+      min-width: 0;
+      box-sizing: border-box;
       padding: var(--spacing-16);
       border-radius: var(--radius-lg);
-      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      /* Same width always so selection doesn’t shift card height */
+      border: var(--border-stroke-lg) solid var(--color-stroke-secondary);
       background: var(--color-background-primary);
       position: relative;
       cursor: pointer;
@@ -1704,7 +1718,6 @@
     }
     .plan-card.is-selected {
       border-color: var(--color-stroke-primary-button);
-      border-width: var(--border-stroke-lg);
       box-shadow: var(--shadow-card);
     }
     .plan-card:focus-visible {
@@ -1827,6 +1840,16 @@
       overflow: hidden;
     }
 
+    /* Stack plan cards when the modal itself is too narrow for two columns */
+    @container plan-modal (max-width: 480px) {
+      .plan-cards {
+        grid-template-columns: 1fr;
+      }
+      .plan-card {
+        height: auto;
+      }
+    }
+
     @media (max-width: 720px) {
       .hp-chrome {
         top: var(--spacing-8);
@@ -1836,11 +1859,18 @@
       .hp-chrome__auth {
         gap: var(--spacing-8);
       }
+      .plan-overlay {
+        padding: var(--spacing-16);
+      }
       .plan-cards {
         grid-template-columns: 1fr;
       }
+      .plan-card {
+        height: auto;
+      }
       .plan-modal {
         padding: var(--spacing-24) var(--spacing-16) var(--spacing-16);
+        gap: var(--spacing-20);
       }
       .plan-modal__headline {
         flex-direction: column;
@@ -1849,6 +1879,23 @@
       .plan-modal__title {
         font-size: var(--font-heading-xs);
         line-height: var(--font-heading-xs-lh);
+      }
+      .plan-toggle__btn {
+        padding: var(--spacing-8) var(--spacing-16);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .plan-overlay {
+        padding: var(--spacing-12);
+      }
+      .plan-modal {
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-20) var(--spacing-12) var(--spacing-12);
+      }
+      .plan-modal__close {
+        top: var(--spacing-12);
+        right: var(--spacing-12);
       }
     }
 
