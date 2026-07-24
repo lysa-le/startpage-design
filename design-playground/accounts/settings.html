@@ -46,6 +46,8 @@
       background: var(--color-background-primary);
       color: var(--color-text-primary);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     .proto-chrome {
@@ -484,6 +486,7 @@
       line-height: var(--font-heading-xs-lh);
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-primary);
+      text-wrap: balance;
     }
     .settings-section__title--sub {
       font-size: var(--font-heading-xs);
@@ -495,6 +498,7 @@
       color: var(--color-text-tertiary);
       margin: 0 0 var(--spacing-24);
       max-width: 36rem;
+      text-wrap: pretty;
     }
     .appearance-premium__lede {
       font-size: var(--font-body-sm);
@@ -502,6 +506,7 @@
       color: var(--color-text-tertiary);
       margin: 0 0 var(--spacing-24);
       max-width: 36rem;
+      text-wrap: pretty;
     }
     .account-panel__title {
       margin-bottom: var(--spacing-24);
@@ -582,6 +587,7 @@
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
       color: var(--color-text-tertiary);
+      text-wrap: pretty;
     }
     .settings-row__hint a,
     .settings-row__meta a {
@@ -986,7 +992,7 @@
       position: absolute;
       right: calc(var(--spacing-4) * -1);
       bottom: calc(var(--spacing-4) * -1);
-      display: none;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       width: var(--spacing-20);
@@ -995,6 +1001,10 @@
       background: var(--color-button-brandblue);
       color: var(--color-whisper-0);
       box-shadow: 0 0 0 var(--border-stroke-sm) var(--color-background-primary);
+      opacity: 0;
+      transform: scale(0.5);
+      pointer-events: none;
+      transition: opacity 0.15s ease, transform 0.15s ease;
     }
     .scheme-tile__check svg {
       width: var(--spacing-12);
@@ -1002,7 +1012,8 @@
       display: block;
     }
     .scheme-tile.is-active .scheme-tile__check {
-      display: inline-flex;
+      opacity: 1;
+      transform: scale(1);
     }
     .scheme-tile__label {
       font-size: var(--font-body-xs);
@@ -1176,10 +1187,12 @@
       color: var(--color-text-primary);
     }
     .ui-preview {
+      /* Nested in card (--radius-lg): step down so corners read concentric with the inset */
+      --ui-preview-radius: var(--radius-md);
       margin: 0;
       padding: var(--spacing-20);
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      border-radius: var(--radius-lg);
+      border-radius: var(--ui-preview-radius);
       background: var(--ui-preview-bg, var(--color-background-primary));
       font-family: var(--ui-font-family, var(--font-family));
     }
@@ -1202,6 +1215,8 @@
       border-radius: var(--radius-full);
       background: var(--color-background-secondary);
       flex-shrink: 0;
+      outline: var(--border-stroke-sm) solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+      outline-offset: calc(-1 * var(--border-stroke-sm));
     }
     html[data-ui-site-icons="off"] .ui-preview__favicon { display: none; }
     .ui-preview__site {
@@ -1217,11 +1232,13 @@
       font-size: 1.2857em; /* ~body-lg relative to body */
       color: var(--ui-title-color, var(--color-text-link));
       text-decoration: none;
+      text-wrap: balance;
     }
     .ui-preview__desc {
       font-size: 1em;
       line-height: 1.45;
       color: var(--color-text-primary);
+      text-wrap: pretty;
     }
 
     /* Font-size preview — scales result text via em */
@@ -1338,6 +1355,7 @@
       font-size: var(--font-body-xs);
       color: var(--color-text-secondary);
       outline: none;
+      font-variant-numeric: tabular-nums;
     }
 
     /* ── Account settings — Figma 958:13101 ── */
@@ -1637,6 +1655,9 @@
       font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
     }
+    .form-field__input--tabular {
+      font-variant-numeric: tabular-nums;
+    }
     /* icn-copy — components/icn-copy */
     .icn-copy {
       position: relative;
@@ -1673,12 +1694,12 @@
     .icn-copy__svg {
       position: absolute;
       flex-shrink: 0;
-      transition: opacity 0.15s ease, transform 0.15s ease;
+      transition: opacity 0.15s ease, transform 0.15s ease, filter 0.15s ease;
     }
-    .icn-copy__svg--copy  { opacity: 1; transform: scale(1); }
-    .icn-copy__svg--check { opacity: 0; transform: scale(0.5); }
-    .icn-copy[data-state="check"] .icn-copy__svg--copy  { opacity: 0; transform: scale(0.5); }
-    .icn-copy[data-state="check"] .icn-copy__svg--check { opacity: 1; transform: scale(1); }
+    .icn-copy__svg--copy  { opacity: 1; transform: scale(1); filter: blur(0); }
+    .icn-copy__svg--check { opacity: 0; transform: scale(0.5); filter: blur(2px); }
+    .icn-copy[data-state="check"] .icn-copy__svg--copy  { opacity: 0; transform: scale(0.5); filter: blur(2px); }
+    .icn-copy[data-state="check"] .icn-copy__svg--check { opacity: 1; transform: scale(1); filter: blur(0); }
     .icn-copy:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: 3px;
@@ -1928,7 +1949,7 @@
             </div>
             <div class="account-id-row">
               <div class="form-field">
-                <input class="form-field__input" id="workosIdField" type="text" readonly value="XXXXXXXXX" aria-label="WorkOS ID" />
+                <input class="form-field__input form-field__input--tabular" id="workosIdField" type="text" readonly value="XXXXXXXXX" aria-label="WorkOS ID" />
               </div>
               <button type="button" class="icn-copy icn-copy--lg" id="copyWorkosId" data-state="copy" aria-label="Copy WorkOS ID">
                 <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -2389,7 +2410,7 @@
         <div class="settings-card">
           <div class="settings-row">
             <div class="settings-row__copy">
-              <span class="settings-row__label">Warn if a site may contain malware.</span>
+              <span class="settings-row__label">Warn if a site may contain malware</span>
               <span class="settings-row__meta">Anonymous View Only. <a href="#">Learn More</a></span>
             </div>
             <div class="settings-row__control">
