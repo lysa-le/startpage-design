@@ -77,7 +77,7 @@
       color: var(--color-text-secondary);
       font-family: var(--font-family);
       font-size: var(--font-body-xs);
-      font-weight: var(--font-weight-medium);
+      font-weight: var(--font-weight-bold);
       cursor: pointer;
     }
 
@@ -195,6 +195,140 @@
       height: var(--spacing-20);
       display: block;
     }
+
+    /* ── Site nav drawer (hamburger) ── */
+    .site-nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: flex;
+      justify-content: flex-end;
+      background: color-mix(in srgb, var(--color-midnight-500) 40%, transparent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .site-nav-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .site-nav {
+      position: relative;
+      width: min(100%, calc(var(--spacing-24) * 13)); /* 312px */
+      height: 100%;
+      margin: 0;
+      padding: var(--spacing-24) var(--spacing-32) var(--spacing-48);
+      box-sizing: border-box;
+      overflow-y: auto;
+      background: var(--color-background-primary);
+      border-left: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      box-shadow: var(--shadow-dropdown);
+      transform: translateX(100%);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .site-nav-overlay.is-open .site-nav {
+      transform: translateX(0);
+    }
+    .site-nav__close {
+      position: absolute;
+      top: var(--spacing-20);
+      right: var(--spacing-20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      margin: 0;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: background-color 0.12s ease, color 0.12s ease;
+    }
+    .site-nav__close:hover {
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+    }
+    .site-nav__close:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .site-nav__close svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      display: block;
+    }
+    .site-nav__sections {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: var(--spacing-8);
+    }
+    .site-nav__section {
+      padding: var(--spacing-16) 0;
+    }
+    .site-nav__section:first-child {
+      padding-top: var(--spacing-8);
+    }
+    .site-nav__section + .site-nav__section {
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+    }
+    .site-nav__heading {
+      margin: 0 0 var(--spacing-12);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+    .site-nav__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+    .site-nav__link {
+      display: block;
+      padding: var(--spacing-8) 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      text-decoration: none;
+      text-wrap: pretty;
+      transition: color 0.15s ease;
+    }
+    .site-nav__link--with-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+    }
+    .site-nav__link-icon {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+      display: block;
+    }
+    .site-nav__link:hover {
+      color: var(--color-text-brandblue);
+      text-decoration: none;
+    }
+    .site-nav__link:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-sm);
+    }
+    body.site-nav-open {
+      overflow: hidden;
+    }
+
     .hp-btn {
       display: inline-flex;
       align-items: center;
@@ -213,16 +347,25 @@
     .hp-btn--teal {
       background: var(--color-button-teal);
       color: var(--color-text-primary);
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .hp-btn--teal:hover {
+      background: var(--color-button-tealhover);
     }
     [data-theme="dark"] .hp-btn--teal { color: var(--color-text-inverted); }
     .hp-btn--product {
       background: var(--color-button-productfilled);
       color: var(--color-text-primary);
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .hp-btn--product:hover {
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
     }
 
     .account-menu {
       position: absolute;
-      top: calc(100% + var(--spacing-16));
+      top: 0;
       right: 0;
       width: calc(var(--spacing-24) * 12 - var(--spacing-8));
       display: none;
@@ -237,6 +380,37 @@
       z-index: 40;
     }
     .account-menu.is-open { display: flex; }
+    .account-menu__close {
+      position: absolute;
+      top: var(--spacing-16);
+      right: var(--spacing-16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      z-index: 1;
+      transition: background-color 0.12s ease, color 0.12s ease;
+    }
+    .account-menu__close:hover {
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+    }
+    .account-menu__close:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .account-menu__close svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      display: block;
+    }
     .account-menu__header {
       display: flex;
       flex-direction: column;
@@ -282,51 +456,6 @@
       margin: 0;
       width: 100%;
     }
-    .account-menu__link {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--spacing-16);
-      width: 100%;
-      padding: 0;
-      border: none;
-      background: transparent;
-      text-align: left;
-      cursor: pointer;
-      font-family: var(--font-family);
-      color: var(--color-text-primary);
-      text-decoration: none;
-    }
-    .account-menu__link:hover .account-menu__link-title { color: var(--color-text-link); }
-    .account-menu__link:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: var(--spacing-4);
-      border-radius: var(--radius-sm);
-    }
-    .account-menu__link-text {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      min-width: 0;
-      flex: 1;
-    }
-    .account-menu__link-title {
-      font-size: var(--font-body-md);
-      line-height: var(--font-body-md-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-primary);
-    }
-    .account-menu__link-caption {
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      color: var(--color-text-tertiary);
-    }
-    .account-menu__chevron {
-      width: var(--spacing-16);
-      height: var(--spacing-16);
-      flex-shrink: 0;
-      color: var(--color-icon-tertiary);
-    }
     .account-menu__footer {
       display: flex;
       flex-direction: column;
@@ -342,17 +471,22 @@
       color: var(--color-text-primary);
       font-family: var(--font-family);
       font-size: var(--font-label-xs);
-      font-weight: var(--font-weight-semibold);
+      font-weight: var(--font-weight-bold);
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      transition: background-color 0.15s ease, color 0.15s ease;
     }
-    [data-theme="dark"] .account-menu__upgrade { color: var(--color-text-inverted); }
+    .account-menu__upgrade:hover {
+      background: var(--color-button-tealhover);
+    }
+    [data-theme="dark"] .account-menu__upgrade {
+      color: var(--color-text-inverted);
+    }
     body[data-plan="premium"] .account-menu__upgrade { display: none !important; }
-    .account-menu__link--premium { display: flex !important; }
-    .account-menu__signout {
+    .account-menu__action {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -366,10 +500,17 @@
       color: var(--color-text-primary);
       font-family: var(--font-family);
       font-size: var(--font-label-xs);
-      font-weight: var(--font-weight-semibold);
+      font-weight: var(--font-weight-bold);
       cursor: pointer;
+      text-decoration: none;
+      box-sizing: border-box;
+      transition: background-color 0.15s ease, color 0.15s ease;
     }
-    .account-menu__signout:focus-visible {
+    .account-menu__action:hover {
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+    }
+    .account-menu__action:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: var(--spacing-4);
     }
@@ -379,15 +520,23 @@
       flex-shrink: 0;
     }
 
-    /* Settings nav — vertical sidebar */
+    /* Settings nav — vertical sidebar (pinned like the save aside) */
     .settings-tabs {
-      position: sticky;
-      top: calc(var(--spacing-96) + var(--spacing-16));
+      position: relative;
+      align-self: start;
+      min-width: 0;
+      max-width: 100%;
+      min-height: 1px;
+    }
+    .settings-tabs__fixed {
+      position: fixed;
+      top: calc(var(--spacing-96) + var(--spacing-40));
       display: flex;
       flex-direction: column;
       align-items: stretch;
       gap: var(--spacing-4);
-      align-self: start;
+      z-index: 30;
+      width: min(220px, calc(100vw - var(--spacing-80)));
     }
     .settings-tabs__link {
       padding: var(--spacing-8) var(--spacing-12);
@@ -404,6 +553,7 @@
       text-decoration: none;
       text-align: left;
       transition: color 0.15s ease, background-color 0.15s ease;
+      overflow-wrap: anywhere;
     }
     .settings-tabs__link:hover {
       color: var(--color-text-secondary);
@@ -422,7 +572,8 @@
     /* ── Layout ── */
     .settings-shell {
       display: grid;
-      grid-template-columns: minmax(160px, 200px) minmax(0, 610px) minmax(240px, 330px);
+      /* Nav wide enough for “Account & Subscription”; aside yields first */
+      grid-template-columns: minmax(200px, 220px) minmax(0, 1fr) minmax(0, 240px);
       gap: var(--spacing-48);
       align-items: start;
       max-width: 1440px;
@@ -430,18 +581,41 @@
       padding: var(--spacing-40) var(--spacing-40) var(--spacing-80);
       width: 100%;
     }
-    @media (max-width: 900px) {
+    .settings-main {
+      min-width: 0;
+    }
+    @media (max-width: 1200px) {
+      .settings-shell {
+        grid-template-columns: minmax(160px, 180px) minmax(0, 1fr) minmax(0, 180px);
+        gap: var(--spacing-24);
+      }
+      .settings-tabs__fixed {
+        width: min(180px, calc(100vw - var(--spacing-64)));
+      }
+      .settings-tabs__link {
+        white-space: normal;
+      }
+    }
+    @media (max-width: 1024px) {
       .settings-shell {
         grid-template-columns: 1fr;
         padding: var(--spacing-24);
       }
       .settings-header { padding: var(--spacing-16) var(--spacing-24); }
-      .settings-tabs {
+      .settings-tabs__fixed {
         position: static;
+        width: auto;
+        top: auto;
         flex-direction: row;
+        flex-wrap: nowrap;
         overflow-x: auto;
         gap: var(--spacing-8);
         padding-bottom: var(--spacing-8);
+        -webkit-overflow-scrolling: touch;
+      }
+      .settings-tabs__link {
+        white-space: nowrap;
+        flex-shrink: 0;
       }
     }
 
@@ -588,6 +762,9 @@
       line-height: var(--font-body-xs-lh);
       color: var(--color-text-tertiary);
       text-wrap: pretty;
+    }
+    .settings-row__heading + .settings-row__meta {
+      margin-top: var(--spacing-8);
     }
     .settings-row__hint a,
     .settings-row__meta a {
@@ -1276,12 +1453,13 @@
       position: relative;
       min-height: 1px;
       margin-top: var(--spacing-24);
-      margin-left: var(--spacing-16);
+      margin-left: 0;
+      min-width: 0;
     }
     .settings-aside__fixed {
       position: fixed;
       top: calc(var(--spacing-96) + var(--spacing-40));
-      width: min(330px, calc(100vw - var(--spacing-80)));
+      width: min(240px, calc(100vw - var(--spacing-80)));
       display: flex;
       flex-direction: column;
       gap: var(--spacing-12);
@@ -1289,8 +1467,20 @@
     }
     .settings-aside__fixed > .settings-save {
       margin-bottom: var(--spacing-8);
+      width: 100%;
+      white-space: normal;
+      height: auto;
+      min-height: var(--spacing-40);
+      padding-block: var(--spacing-8);
+      text-align: center;
+      line-height: var(--font-label-xs-lh);
     }
-    @media (max-width: 900px) {
+    @media (max-width: 1200px) {
+      .settings-aside__fixed {
+        width: min(180px, calc(100vw - var(--spacing-64)));
+      }
+    }
+    @media (max-width: 1024px) {
       .settings-aside {
         margin-left: 0;
         margin-top: var(--spacing-16);
@@ -1455,8 +1645,8 @@
       padding: var(--spacing-16) var(--spacing-16);
       border-radius: var(--radius-lg);
       font-size: var(--font-button-xs);
-      line-height: var(--font-button-xs-lh);
-      font-weight: var(--font-weight-semibold);
+      line-height: var(--font-label-xs-lh);
+      font-weight: var(--font-weight-bold);
     }
     /* Buttons — components/button */
     .btn {
@@ -1468,6 +1658,7 @@
       cursor: pointer;
       font-family: var(--font-family);
       font-weight: var(--font-weight-bold);
+      line-height: var(--font-label-xs-lh);
       white-space: nowrap;
       text-decoration: none;
       position: relative;
@@ -1495,12 +1686,17 @@
       padding: var(--spacing-20) var(--spacing-24);
       border-radius: var(--radius-xl);
       font-size: var(--font-button-sm);
-      line-height: var(--font-button-sm-lh);
+      line-height: var(--font-label-xs-lh);
     }
     .btn--teal {
-      --btn-wave-color: var(--color-button-tealhover);
+      --btn-wave-color: transparent;
       background-color: var(--color-button-teal);
       color: var(--color-text-primary);
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .btn--teal::before { display: none; }
+    .btn--teal:hover {
+      background-color: var(--color-button-tealhover);
     }
     [data-theme="dark"] .btn--teal { color: var(--color-text-inverted); }
     .btn--inactive,
@@ -1517,7 +1713,7 @@
       padding: var(--spacing-12) var(--spacing-16);
       border-radius: var(--radius-lg);
       font-size: var(--font-button-xs);
-      line-height: var(--font-button-xs-lh);
+      line-height: var(--font-label-xs-lh);
       font-weight: var(--font-weight-bold);
       background-color: var(--color-button-brandblue);
       color: var(--color-text-inverted);
@@ -1527,8 +1723,7 @@
       padding: var(--spacing-20) var(--spacing-24);
       border-radius: var(--radius-xl);
       font-size: var(--font-button-sm);
-      line-height: var(--font-button-sm-lh);
-      font-weight: var(--font-weight-semibold);
+      line-height: var(--font-label-xs-lh);
     }
     .btn--product-brand-blue::before { display: none; }
     .btn--product-brand-blue:hover {
@@ -1543,8 +1738,8 @@
       padding: var(--spacing-12) var(--spacing-16);
       border-radius: var(--radius-lg);
       font-size: var(--font-button-xs);
-      line-height: var(--font-button-xs-lh);
-      font-weight: var(--font-weight-regular);
+      line-height: var(--font-label-xs-lh);
+      font-weight: var(--font-weight-bold);
     }
     .btn--product-filled::before,
     .btn--product-selected::before {
@@ -1576,10 +1771,6 @@
     .btn:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: 3px;
-    }
-    .btn.account-card__btn,
-    .btn.account-card__btn:disabled {
-      font-weight: var(--font-weight-semibold);
     }
     .settings-save.is-saved {
       background-color: var(--color-button-teal);
@@ -1617,10 +1808,21 @@
       background: var(--color-icon-secondary);
       color: var(--color-text-inverted);
       font-weight: var(--font-weight-semibold);
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      height: var(--spacing-24);
-      padding: 0 var(--spacing-12);
+      font-size: var(--font-utility-caption, var(--font-body-xs));
+      line-height: 1;
+      height: var(--spacing-20);
+      padding: 0 var(--spacing-8);
+      pointer-events: none;
+    }
+    /* Not Active — signed-out subscription */
+    .tag--inactive {
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-utility-caption, var(--font-body-xs));
+      line-height: 1;
+      height: var(--spacing-20);
+      padding: 0 var(--spacing-8);
       pointer-events: none;
     }
     .tag--muted {
@@ -1705,7 +1907,7 @@
       outline-offset: 3px;
     }
 
-    /* UI customizations — always visible; locked (greyed) for non-premium */
+    /* UI customizations — available on all plans */
     .appearance-premium {
       display: block;
       margin-top: var(--spacing-64);
@@ -1717,47 +1919,529 @@
       gap: var(--spacing-16);
       margin-bottom: var(--spacing-12);
     }
-    .appearance-premium__title .tag {
-      margin-left: var(--spacing-8);
-      vertical-align: middle;
-    }
     .appearance-premium__body {
       display: flex;
       flex-direction: column;
       gap: var(--spacing-16);
     }
-    html:not([data-plan="premium"]) .appearance-premium__body,
-    body:not([data-plan="premium"]) .appearance-premium__body {
-      opacity: 0.45;
-      pointer-events: none;
-      user-select: none;
-    }
-    .appearance-premium__upgrade {
-      display: none;
-      border: none;
-      background: none;
-      font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-link);
-      cursor: pointer;
-      text-decoration: none;
-      padding: 0;
-    }
-    .appearance-premium__upgrade:hover { color: var(--color-text-brandblue); }
-    html:not([data-plan="premium"]) .appearance-premium__upgrade,
-    body:not([data-plan="premium"]) .appearance-premium__upgrade {
-      display: inline;
-    }
-    html:not([data-plan="premium"]) .appearance-premium > .settings-section__reset,
-    body:not([data-plan="premium"]) .appearance-premium > .settings-section__reset {
-      display: none;
-    }
-    html[data-plan="premium"] .appearance-premium > .settings-section__reset,
-    body[data-plan="premium"] .appearance-premium > .settings-section__reset {
+    .appearance-premium > .settings-section__reset {
       display: block;
       margin-top: var(--spacing-24);
     }
+    /* ── Go Ad-Free plan modal ── */
+    .plan-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: var(--spacing-24);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: color-mix(in srgb, var(--color-midnight-500) 45%, transparent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .plan-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .plan-modal {
+      position: relative;
+      width: 100%;
+      max-width: calc(var(--spacing-24) * 28); /* 672px */
+      margin-block: auto;
+      max-height: none;
+      overflow: visible;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-dropdown);
+      padding: var(--spacing-32) var(--spacing-48) var(--spacing-24);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+      transform: translateY(var(--spacing-8));
+      transition: transform 0.2s ease;
+      container-type: inline-size;
+      container-name: plan-modal;
+    }
+    .plan-overlay.is-open .plan-modal {
+      transform: translateY(0);
+    }
+    .plan-modal:focus {
+      outline: none;
+    }
+
+    .plan-modal__close {
+      position: absolute;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      flex-shrink: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      z-index: 1;
+      transition: background-color 0.12s ease, color 0.12s ease;
+    }
+    .plan-modal__close:focus {
+      outline: none;
+    }
+    .plan-modal__close:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .plan-modal__close:hover {
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+    }
+    .plan-modal__close svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+    }
+
+    /* Figma modal intro 710:9173 — logo + headline + lede */
+    .plan-modal__intro {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-20);
+      text-align: center;
+      padding-top: var(--spacing-8);
+    }
+
+    .plan-modal__logo {
+      position: relative;
+      width: calc(var(--spacing-48) + var(--spacing-40)); /* ~88px ≈ Figma 89 */
+      aspect-ratio: 212 / 47.4792;
+      color: var(--color-text-primary);
+    }
+
+    .plan-modal__headline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-16);
+      max-width: 100%;
+    }
+
+    .plan-modal__party {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .plan-modal__title {
+      font-size: calc(var(--font-size-16) * 2); /* 32px — Figma paywall title */
+      line-height: calc(var(--font-size-16) * 2);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-text-primary);
+      text-wrap: balance;
+    }
+
+    .plan-modal__accent {
+      font-weight: var(--font-weight-extrabold);
+      color: var(--color-text-brandblue);
+    }
+
+    .plan-modal__lede {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .plan-toggle {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-self: center;
+      max-width: 100%;
+      padding: var(--spacing-4);
+      border-radius: var(--radius-full);
+      background: var(--color-background-tertiary);
+      gap: var(--spacing-4);
+    }
+
+    .plan-toggle__btn {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-bold);
+      padding: var(--spacing-8) var(--spacing-20);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .plan-toggle__btn.is-active {
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      box-shadow: var(--shadow-card);
+    }
+    .plan-toggle__save {
+      margin-left: var(--spacing-4);
+      color: var(--color-text-brandblue);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .plan-cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-16);
+      align-items: stretch;
+      padding-top: var(--spacing-12); /* room for “Most popular” badge */
+    }
+
+    .plan-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      height: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      padding: var(--spacing-20);
+      border-radius: var(--radius-lg);
+      /* Same width always so selection doesn’t shift card height */
+      border: var(--border-stroke-lg) solid var(--color-stroke-secondary);
+      background: var(--color-background-primary);
+      position: relative;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+      color: inherit;
+      transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .plan-card:hover {
+      border-color: var(--color-stroke-primary);
+    }
+    .plan-card.is-selected {
+      border-color: var(--color-stroke-primary-button);
+      box-shadow: var(--shadow-card);
+    }
+    .plan-card:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+
+    .plan-card__badge {
+      position: absolute;
+      top: calc(var(--spacing-12) * -1);
+      left: 50%;
+      transform: translateX(-50%);
+      padding: var(--spacing-4) var(--spacing-12);
+      border-radius: var(--radius-full);
+      background: var(--color-icon-secondary);
+      color: var(--color-text-inverted);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      white-space: nowrap;
+    }
+
+    .plan-card__name {
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-text-primary);
+    }
+
+    .plan-card__promise {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+      margin-top: calc(var(--spacing-8) * -1);
+    }
+
+    .plan-card__price {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--spacing-4);
+    }
+
+    .plan-card__amount {
+      font-size: var(--font-heading-xxs);
+      line-height: var(--font-heading-xxs-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-text-brandblue);
+    }
+
+    .plan-card__period {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+    }
+
+    .plan-card__features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      flex: 1;
+    }
+
+    .plan-card__feature {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-8);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    .plan-card__check {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--color-icon-secondary);
+    }
+
+    .plan-modal__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: calc(var(--spacing-40) + var(--spacing-8)); /* 48px */
+      padding: 0 var(--spacing-24);
+      border: none;
+      border-radius: var(--radius-lg);
+      background: var(--color-button-teal);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-button-sm); /* 16px — Figma CTA */
+      font-weight: var(--font-weight-bold);
+      line-height: var(--font-body-md-lh); /* 24px */
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .plan-modal__cta:hover {
+      filter: none;
+      background: var(--color-button-tealhover);
+    }
+    [data-theme="dark"] .plan-modal__cta {
+      color: var(--color-text-inverted);
+    }
+
+    .plan-modal__footer {
+      text-align: center;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+    }
+    .plan-modal__footer button {
+      appearance: none;
+      border: none;
+      background: none;
+      padding: 0;
+      font: inherit;
+      color: var(--color-text-link);
+      cursor: pointer;
+    }
+    .plan-modal__footer button:hover { text-decoration: underline; }
+
+    body.plan-modal-open {
+      overflow: hidden;
+    }
+
+    /* Centered homepage stack */
+    .hp-main {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: calc(var(--spacing-48) + var(--spacing-96) + var(--spacing-32)); /* ~176px */
+      padding-inline: var(--spacing-24);
+      padding-bottom: var(--spacing-96);
+    }
+
+    .hp-logo {
+      position: relative;
+      width: calc(var(--spacing-24) * 8 + var(--spacing-20)); /* 212px */
+      /* Figma logo frame 212 × 47.479 */
+      aspect-ratio: 212 / 47.4792;
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-24);
+    }
+    .hp-logo__mark {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    /* Figma node 522:3669 — letter "t" exported as separate Vector over the logo */
+    .hp-logo__t {
+      position: absolute;
+      left: calc(100% * 29 / 212);
+      top: calc(100% * 2.1 / 47.4792);
+      width: calc(100% * 12.7038 / 212);
+      height: calc(100% * 31.1732 / 47.4792);
+      display: block;
+      pointer-events: none;
+    }
+
+    .hp-tagline {
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      text-align: center;
+      margin-bottom: var(--spacing-24);
+    }
+
+    /* Search — homepage desktop, Figma stroke-primary border */
+    .search-field {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: calc(var(--spacing-24) * 28 + var(--spacing-16) + var(--spacing-4)); /* 686px */
+      height: calc(var(--spacing-48) + var(--spacing-8)); /* 56px */
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-search);
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+    .search-field:focus-within {
+      border-color: var(--color-stroke-primary-button);
+    }
+
+    .search-field__input {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      padding: 0 0 0 var(--spacing-24);
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      caret-color: var(--color-text-tertiary);
+    }
+    .search-field__input::placeholder {
+      color: var(--color-text-secondary);
+      opacity: 0.6;
+    }
+
+    .search-field__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      padding-right: var(--spacing-24);
+      flex-shrink: 0;
+    }
+
+    .search-field__submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-icon-secondary);
+      flex-shrink: 0;
+    }
+    .search-field__submit:hover { opacity: 0.75; }
+    .search-field__submit svg {
+      width: calc(var(--spacing-16) + 3px);
+      height: calc(var(--spacing-16) + 3px);
+      display: block;
+    }
+
+    /* Stack plan cards only when the modal is truly too narrow for two columns */
+    @container plan-modal (max-width: 400px) {
+      .plan-cards {
+        grid-template-columns: 1fr;
+      }
+      .plan-card {
+        height: auto;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hp-main {
+        padding-top: calc(var(--spacing-96) + var(--spacing-24));
+      }
+      .hp-logo {
+        width: calc(var(--spacing-24) * 6 + var(--spacing-8)); /* ~152px */
+      }
+      .hp-chrome {
+        top: var(--spacing-8);
+        right: var(--spacing-24);
+        padding-right: calc(var(--spacing-20) + var(--spacing-8) + var(--spacing-12));
+      }
+      .hp-chrome__auth {
+        gap: var(--spacing-8);
+      }
+      .proto-chrome { display: none; }
+      .plan-overlay {
+        padding: var(--spacing-16);
+      }
+      .plan-modal {
+        padding: var(--spacing-24) var(--spacing-16) var(--spacing-16);
+        gap: var(--spacing-20);
+      }
+      .plan-modal__headline {
+        flex-direction: column;
+        gap: var(--spacing-8);
+      }
+      .plan-modal__title {
+        font-size: var(--font-heading-xs);
+        line-height: var(--font-heading-xs-lh);
+      }
+      .plan-toggle__btn {
+        padding: var(--spacing-8) var(--spacing-16);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .plan-overlay {
+        padding: var(--spacing-12);
+      }
+      .plan-cards {
+        grid-template-columns: 1fr;
+      }
+      .plan-card {
+        height: auto;
+      }
+      .plan-modal {
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-20) var(--spacing-12) var(--spacing-12);
+      }
+      .plan-modal__close {
+        top: var(--spacing-12);
+        right: var(--spacing-12);
+      }
+    }
+
   </style>
 </head>
 <body data-auth="signed-out" data-plan="basic">
@@ -1810,6 +2494,12 @@
           </button>
 
           <div class="account-menu" id="accountMenu" role="menu" aria-label="Account" hidden>
+            <button type="button" class="account-menu__close" id="accountMenuClose" aria-label="Close">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M12 4L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
             <div class="account-menu__header">
               <svg class="account-menu__avatar" viewBox="0 0 32 32" fill="none" aria-hidden="true">
                 <circle cx="16" cy="16" r="15" stroke="url(#settingsAccountRingMenu)" stroke-width="2"/>
@@ -1830,39 +2520,10 @@
 
             <hr class="account-menu__rule" />
 
-            <a href="#account" class="account-menu__link js-tab-account" role="menuitem">
-              <span class="account-menu__link-text">
-                <span class="account-menu__link-title">Account &amp; Subscription</span>
-              </span>
-              <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
-
-            <a href="#ui-customizations" class="account-menu__link account-menu__link--premium js-tab-ui" role="menuitem">
-              <span class="account-menu__link-text">
-                <span class="account-menu__link-title">Customize UI</span>
-              </span>
-              <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
-
-            <a href="index.html#go-ad-free" class="account-menu__link" role="menuitem">
-              <span class="account-menu__link-text">
-                <span class="account-menu__link-title">Billing &amp; subscription</span>
-                <span class="account-menu__link-caption">Manage plan, payment &amp; invoices</span>
-              </span>
-              <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
-
-            <hr class="account-menu__rule" />
-
             <div class="account-menu__footer">
-              <a href="index.html#go-ad-free" class="account-menu__upgrade" role="menuitem">Upgrade to Premium</a>
-              <button type="button" class="account-menu__signout" id="signOutBtn" role="menuitem">
+              <button type="button" class="account-menu__upgrade js-go-ad-free" role="menuitem">Upgrade to Premium</button>
+              <a href="#account" class="account-menu__action" role="menuitem">Manage Account</a>
+              <button type="button" class="account-menu__action" id="signOutBtn" role="menuitem">
                 <svg class="account-menu__signout-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M10 12.5C10 12.633 9.947 12.76 9.854 12.854C9.76 12.947 9.633 13 9.5 13H1.5C1.367 13 1.24 12.947 1.146 12.854C1.053 12.76 1 12.633 1 12.5V3.5C1 3.367 1.053 3.24 1.146 3.146C1.24 3.053 1.367 3 1.5 3H9.5C9.633 3 9.76 3.053 9.854 3.146C9.947 3.24 10 3.367 10 3.5V5.5C10 5.633 10.053 5.76 10.146 5.854C10.24 5.947 10.367 6 10.5 6C10.633 6 10.76 5.947 10.854 5.854C10.947 5.76 11 5.633 11 5.5V3.5C11 3.102 10.842 2.721 10.561 2.439C10.279 2.158 9.898 2 9.5 2H1.5C1.102 2 0.721 2.158 0.439 2.439C0.158 2.721 0 3.102 0 3.5V12.5C0 12.898 0.158 13.279 0.439 13.561C0.721 13.842 1.102 14 1.5 14H9.5C9.898 14 10.279 13.842 10.561 13.561C10.842 13.279 11 12.898 11 12.5V10.5C11 10.367 10.947 10.24 10.854 10.146C10.76 10.053 10.633 10 10.5 10C10.367 10 10.24 10.053 10.146 10.146C10.053 10.24 10 10.367 10 10.5V12.5Z" fill="currentColor"/>
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M15.854 8.354C15.901 8.307 15.938 8.252 15.963 8.192C15.988 8.131 16.001 8.066 16.001 8C16.001 7.934 15.988 7.869 15.963 7.808C15.938 7.748 15.901 7.692 15.854 7.646L12.854 4.646C12.76 4.552 12.633 4.499 12.5 4.499C12.367 4.499 12.24 4.552 12.146 4.646C12.052 4.74 11.999 4.867 11.999 5C11.999 5.133 12.052 5.26 12.146 5.354L14.293 7.5H5.5C5.367 7.5 5.24 7.553 5.146 7.646C5.053 7.74 5 7.867 5 8C5 8.133 5.053 8.26 5.146 8.353C5.24 8.447 5.367 8.5 5.5 8.5H14.293L12.146 10.646C12.052 10.74 11.999 10.867 11.999 11C11.999 11.133 12.052 11.26 12.146 11.354C12.24 11.448 12.367 11.501 12.5 11.501C12.633 11.501 12.76 11.448 12.854 11.354L15.854 8.354Z" fill="currentColor"/>
@@ -1873,11 +2534,11 @@
           </div>
         </div>
 
-        <a href="index.html#go-ad-free" class="hp-btn hp-btn--teal auth-out">Go Ad-Free</a>
+        <button type="button" class="hp-btn hp-btn--teal auth-out js-go-ad-free">Go Ad-Free</button>
         <a href="index.html" class="hp-btn hp-btn--product auth-out" id="logInBtn">Log In</a>
       </div>
 
-      <button type="button" class="hp-chrome__menu" aria-label="Open menu">
+      <button type="button" class="hp-chrome__menu" id="siteNavToggle" aria-label="Open menu" aria-haspopup="dialog" aria-expanded="false" aria-controls="siteNav">
         <svg class="hp-chrome__menu-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
           <path d="M1 4H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           <path d="M1 10H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -1889,12 +2550,62 @@
 
   </div>
 
+  <div class="site-nav-overlay" id="siteNavOverlay" hidden>
+    <nav class="site-nav" id="siteNav" role="dialog" aria-modal="true" aria-label="Site menu">
+      <button type="button" class="site-nav__close" id="siteNavClose" aria-label="Close menu">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="site-nav__sections">
+        <section class="site-nav__section">
+          <h2 class="site-nav__heading">Search</h2>
+          <ul class="site-nav__list">
+            <li>
+              <a class="site-nav__link site-nav__link--with-icon" href="#general">
+                <svg class="site-nav__link-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M13.0167 10.0833C12.9279 10.2844 12.9015 10.5075 12.9407 10.7237C12.9799 10.94 13.083 11.1395 13.2367 11.2967L13.2767 11.3367C13.4006 11.4605 13.499 11.6075 13.5661 11.7694C13.6332 11.9313 13.6677 12.1048 13.6677 12.28C13.6677 12.4552 13.6332 12.6287 13.5661 12.7906C13.499 12.9525 13.4006 13.0995 13.2767 13.2233C13.1528 13.3473 13.0058 13.4456 12.8439 13.5127C12.6821 13.5798 12.5086 13.6144 12.3333 13.6144C12.1581 13.6144 11.9846 13.5798 11.8227 13.5127C11.6609 13.4456 11.5138 13.3473 11.39 13.2233L11.35 13.1833C11.1929 13.0296 10.9933 12.9265 10.7771 12.8873C10.5608 12.8481 10.3377 12.8746 10.1367 12.9633C9.93949 13.0478 9.77132 13.1882 9.65287 13.367C9.53442 13.5459 9.47086 13.7555 9.47 13.97V14.0833C9.47 14.437 9.32952 14.7761 9.07948 15.0261C8.82943 15.2762 8.49029 15.4167 8.13667 15.4167C7.78305 15.4167 7.44391 15.2762 7.19386 15.0261C6.94381 14.7761 6.80333 14.437 6.80333 14.0833V14.0233C6.79817 13.8027 6.72675 13.5887 6.59834 13.4091C6.46994 13.2296 6.29049 13.0929 6.08333 13.0167C5.88226 12.9279 5.65921 12.9015 5.44294 12.9407C5.22668 12.9799 5.02712 13.083 4.87 13.2367L4.83 13.2767C4.70617 13.4006 4.55912 13.499 4.39725 13.5661C4.23539 13.6332 4.06189 13.6677 3.88667 13.6677C3.71145 13.6677 3.53794 13.6332 3.37608 13.5661C3.21422 13.499 3.06716 13.4006 2.94333 13.2767C2.81936 13.1528 2.72102 13.0058 2.65392 12.8439C2.58682 12.6821 2.55228 12.5086 2.55228 12.3333C2.55228 12.1581 2.58682 11.9846 2.65392 11.8227C2.72102 11.6609 2.81936 11.5138 2.94333 11.39L2.98333 11.35C3.13702 11.1929 3.24012 10.9933 3.27934 10.7771C3.31855 10.5608 3.29208 10.3377 3.20333 10.1367C3.11882 9.93949 2.9785 9.77132 2.79964 9.65287C2.62078 9.53442 2.41119 9.47086 2.19667 9.47H2.08333C1.72971 9.47 1.39057 9.32952 1.14052 9.07947C0.890476 8.82943 0.75 8.49029 0.75 8.13667C0.75 7.78304 0.890476 7.44391 1.14052 7.19386C1.39057 6.94381 1.72971 6.80333 2.08333 6.80333H2.14333C2.364 6.79817 2.578 6.72675 2.75753 6.59834C2.93706 6.46993 3.07381 6.29049 3.15 6.08333C3.23874 5.88226 3.26522 5.6592 3.226 5.44294C3.18679 5.22668 3.08369 5.02712 2.93 4.87L2.89 4.83C2.76603 4.70617 2.66769 4.55912 2.60059 4.39725C2.53349 4.23539 2.49895 4.06189 2.49895 3.88667C2.49895 3.71145 2.53349 3.53794 2.60059 3.37608C2.66769 3.21422 2.76603 3.06716 2.89 2.94333C3.01383 2.81936 3.16088 2.72102 3.32275 2.65392C3.48461 2.58682 3.65811 2.55228 3.83333 2.55228C4.00855 2.55228 4.18206 2.58682 4.34392 2.65392C4.50578 2.72102 4.65284 2.81936 4.77667 2.94333L4.81667 2.98333C4.97379 3.13702 5.17334 3.24012 5.38961 3.27934C5.60587 3.31855 5.82892 3.29208 6.03 3.20333H6.08333C6.28051 3.11882 6.44868 2.9785 6.56713 2.79964C6.68558 2.62078 6.74915 2.41119 6.75 2.19667V2.08333C6.75 1.72971 6.89048 1.39057 7.14053 1.14052C7.39057 0.890476 7.72971 0.75 8.08333 0.75C8.43696 0.75 8.77609 0.890476 9.02614 1.14052C9.27619 1.39057 9.41667 1.72971 9.41667 2.08333V2.14333C9.41752 2.35786 9.48109 2.56745 9.59954 2.74631C9.71799 2.92517 9.88615 3.06549 10.0833 3.15C10.2844 3.23874 10.5075 3.26522 10.7237 3.226C10.94 3.18679 11.1395 3.08369 11.2967 2.93L11.3367 2.89C11.4605 2.76603 11.6076 2.66769 11.7694 2.60059C11.9313 2.53349 12.1048 2.49895 12.28 2.49895C12.4552 2.49895 12.6287 2.53349 12.7906 2.60059C12.9525 2.66769 13.0995 2.76603 13.2233 2.89C13.3473 3.01383 13.4456 3.16088 13.5127 3.32275C13.5798 3.48461 13.6144 3.65811 13.6144 3.83333C13.6144 4.00855 13.5798 4.18206 13.5127 4.34392C13.4456 4.50578 13.3473 4.65284 13.2233 4.77667L13.1833 4.81667C13.0296 4.97379 12.9265 5.17334 12.8873 5.38961C12.8481 5.60587 12.8746 5.82892 12.9633 6.03V6.08333C13.0478 6.28051 13.1882 6.44868 13.367 6.56713C13.5459 6.68558 13.7555 6.74914 13.97 6.75H14.0833C14.437 6.75 14.7761 6.89048 15.0261 7.14052C15.2762 7.39057 15.4167 7.72971 15.4167 8.08333C15.4167 8.43695 15.2762 8.77609 15.0261 9.02614C14.7761 9.27619 14.437 9.41667 14.0833 9.41667H14.0233C13.8088 9.41752 13.5992 9.48109 13.4204 9.59954C13.2415 9.71799 13.1012 9.88615 13.0167 10.0833Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <g transform="translate(5.856 5.856) scale(0.810)">
+                    <path d="M2.75 4.75C3.85457 4.75 4.75 3.85457 4.75 2.75C4.75 1.64543 3.85457 0.75 2.75 0.75C1.64543 0.75 0.75 1.64543 0.75 2.75C0.75 3.85457 1.64543 4.75 2.75 4.75Z" stroke="currentColor" stroke-width="1.852" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                </svg>
+                Settings
+              </a>
+            </li>
+            <li><a class="site-nav__link" href="#ui-customizations">Customize UI</a></li>
+            <li><a class="site-nav__link" href="#account">Billing &amp; Subscription</a></li>
+          </ul>
+        </section>
+        <section class="site-nav__section">
+          <h2 class="site-nav__heading">Products</h2>
+          <ul class="site-nav__list">
+            <li><a class="site-nav__link" href="index.html">Startpage Search</a></li>
+            <li><a class="site-nav__link" href="#">Mobile Browser</a></li>
+            <li><a class="site-nav__link" href="#">Browser Extension</a></li>
+          </ul>
+        </section>
+        <section class="site-nav__section">
+          <h2 class="site-nav__heading">Resources</h2>
+          <ul class="site-nav__list">
+            <li><a class="site-nav__link" href="#">About Us</a></li>
+            <li><a class="site-nav__link" href="#">Privacy Policy</a></li>
+            <li><a class="site-nav__link" href="#">Press</a></li>
+            <li><a class="site-nav__link" href="#">Support</a></li>
+            <li><a class="site-nav__link" href="#">Imprint</a></li>
+          </ul>
+        </section>
+      </div>
+    </nav>
+  </div>
+
   <div class="settings-shell">
     <nav class="settings-tabs" aria-label="Settings sections">
-      <a class="settings-tabs__link" href="#general" data-tab="general">General</a>
-      <a class="settings-tabs__link" href="#privacy" data-tab="privacy">Privacy &amp; Safety</a>
-      <a class="settings-tabs__link" href="#appearance" data-tab="appearance">Appearance</a>
-      <a class="settings-tabs__link" href="#account" data-tab="account">Account &amp; Subscription</a>
+      <div class="settings-tabs__fixed">
+        <a class="settings-tabs__link" href="#general" data-tab="general">General</a>
+        <a class="settings-tabs__link" href="#privacy" data-tab="privacy">Privacy &amp; Safety</a>
+        <a class="settings-tabs__link" href="#appearance" data-tab="appearance">Appearance</a>
+        <a class="settings-tabs__link" href="#account" data-tab="account">Account &amp; Subscription</a>
+      </div>
     </nav>
     <div class="settings-main">
       <!-- Account settings -->
@@ -1909,20 +2620,19 @@
             <div class="settings-row__copy">
               <div class="settings-row__heading">
                 <span class="settings-row__label">Subscription</span>
-                <span class="tag tag--sm tag--status" id="accountSubBadge">Active</span>
+                <span class="tag tag--sm tag--inactive" id="accountSubBadge">Not Active</span>
               </div>
-              <span class="settings-row__meta" id="accountSubCopy">Basic · Monthly</span>
+              <span class="settings-row__meta" id="accountSubCopy">Already have a subscription? <a href="index.html" id="accountSubLoginLink">Log In here</a></span>
             </div>
             <div class="settings-row__control">
-              <a class="btn btn--teal account-card__btn" href="#account" id="goToBilling"><span class="btn__label">Go to Billing</span></a>
+              <button type="button" class="btn btn--teal account-card__btn" id="goToBilling"><span class="btn__label">Go Ad-Free</span></button>
             </div>
           </div>
           <div class="settings-row">
             <div class="settings-row__copy">
               <span class="settings-row__label">Delete account</span>
-              <p class="settings-row__hint" id="accountDeleteNote" hidden>
-                Account cannot be deleted while subscription is active.<br />
-                Manage your subscription in <a href="#account">Billing</a>.
+              <p class="settings-row__hint" id="accountDeleteNote">
+                Sign in to manage your account.
               </p>
             </div>
             <div class="settings-row__control">
@@ -2572,14 +3282,12 @@
         </div>
         <button type="button" class="settings-section__reset" data-reset="appearance">Reset settings</button>
 
-        <!-- UI customizations (DDG-inspired) — locked preview for Basic -->
+        <!-- UI customizations — free for all plans -->
         <div class="appearance-premium" id="ui-customizations">
           <div class="appearance-premium__subhead">
             <h3 class="appearance-premium__title settings-section__title--sub">
               UI Customizations
-              <span class="tag tag--sm tag--status">Premium</span>
             </h3>
-            <a href="index.html#go-ad-free" class="appearance-premium__upgrade" id="upgradeUiPrefs">Upgrade to Premium</a>
           </div>
           <p class="appearance-premium__lede">Personalize fonts, colors, and layout on the results page.</p>
           <div class="appearance-premium__body" id="uiPrefsLocked">
@@ -2906,6 +3614,155 @@
     </aside>
   </div>
 
+    <!-- Go Ad-Free subscription modal — Figma 710:9129 -->
+  <div class="plan-overlay" id="planOverlay" hidden>
+    <div
+      class="plan-modal"
+      id="planModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="planModalTitle"
+      aria-describedby="planModalLede"
+      tabindex="-1"
+    >
+      <button type="button" class="plan-modal__close" id="planModalClose" aria-label="Close">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M12 4L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="plan-modal__intro">
+        <div class="plan-modal__logo" aria-hidden="true">
+          <svg class="hp-logo__mark" viewBox="0 0 212 47.4792" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#logoClipModal)">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M0.512364 42.1432C1.02639 41.4054 1.87087 40.9258 3.00907 40.7413C35.0991 35.4659 67.6298 35.429 99.7199 40.5938C100.601 40.7413 101.152 40.9996 101.446 41.2947C101.703 41.553 101.813 41.885 101.739 42.3646C101.666 42.7704 101.482 43.0286 101.189 43.1762C100.821 43.3606 100.234 43.4344 99.3527 43.3237C67.5564 39.4501 35.5397 40.7045 4.184 47.0867C3.89027 47.1236 3.59653 47.1604 3.33952 47.1604H3.08251C2.31146 47.1236 1.76072 46.8653 1.43027 46.644C0.695946 46.1644 0.218633 45.3897 0.0350518 44.5043C-0.0750972 43.6189 0.0717681 42.7704 0.512364 42.1432Z" fill="url(#logoWaveModal)"/>
+              <path fill="currentColor" d="M122.449 9.18555C124.432 9.18561 126.194 9.66535 127.736 10.6982C129.278 11.7311 130.453 13.133 131.334 14.9404C132.215 16.785 132.656 18.9253 132.656 21.3232C132.656 23.7209 132.215 25.8233 131.334 27.6309C130.453 29.4384 129.278 30.8406 127.736 31.7998C126.194 32.7958 124.432 33.2753 122.449 33.2754C120.577 33.2754 118.924 32.8326 117.529 31.9473C116.538 31.3201 115.804 30.5087 115.253 29.5127V43.1631H108.387V16.416C108.387 15.3094 108.35 14.2023 108.313 13.0957C108.277 11.9893 108.166 10.8828 108.02 9.77637H114.481L114.922 13.7236C115.436 12.4324 116.281 11.3624 117.529 10.5508C118.924 9.62861 120.577 9.18555 122.449 9.18555ZM172.751 9.18555C174.623 9.18562 176.275 9.66568 177.707 10.5879C178.735 11.2519 179.543 12.0635 180.094 13.0596V9.77637H186.923V31.8369C186.923 35.5629 185.858 38.3668 183.766 40.2852C181.673 42.2035 178.552 43.1621 174.477 43.1621C170.842 43.1621 167.647 42.4612 164.93 41.0225L165.958 35.8945C167.353 36.5955 168.712 37.1123 170.107 37.4443C171.502 37.7763 172.898 37.9609 174.256 37.9609C176.239 37.9609 177.707 37.518 178.662 36.5957C179.653 35.6735 180.131 34.2718 180.131 32.3906V28.332C179.8 28.8116 179.433 29.2917 178.992 29.7344C178.221 30.509 177.303 31.0996 176.238 31.5791C175.137 32.0585 173.999 32.2792 172.751 32.2793C170.732 32.2793 168.969 31.8 167.427 30.8408C165.885 29.8816 164.673 28.5532 163.792 26.8193C162.911 25.0855 162.47 23.0565 162.47 20.7324C162.47 18.4084 162.911 16.4164 163.792 14.6826C164.673 12.9856 165.885 11.6203 167.427 10.6611C168.969 9.66512 170.768 9.18555 172.751 9.18555ZM13.5479 0C15.0899 0 16.5958 0.147207 18.0645 0.442383C19.533 0.774448 20.8913 1.18095 22.1396 1.73438C23.3512 2.25092 24.4163 2.95175 25.2607 3.72656L22.9844 8.85547C21.5158 7.74857 20.0104 6.90014 18.4316 6.34668C16.8529 5.79325 15.2742 5.53519 13.6221 5.53516C11.7863 5.53516 10.3173 5.90365 9.21582 6.6416C8.1144 7.37951 7.56354 8.37568 7.56348 9.66699C7.56348 10.368 7.74693 10.9588 8.1875 11.4385C8.6281 11.9181 9.32604 12.3605 10.3174 12.7295C11.3087 13.1353 12.667 13.5043 14.3926 13.9102C16.412 14.3529 18.1749 14.8325 19.6436 15.4229C21.1488 16.0132 22.3599 16.6781 23.3145 17.416C24.2691 18.154 24.9672 19.0397 25.3711 19.999C25.8483 20.9952 26.0684 22.1023 26.0684 23.3936C26.0683 25.4228 25.5549 27.1941 24.4902 28.6699C23.4255 30.1458 21.8831 31.2898 19.9004 32.1016C17.881 32.9133 15.4941 33.3184 12.667 33.3184C11.0515 33.3184 9.4356 33.1712 7.89355 32.876C6.35163 32.5808 4.88279 32.1384 3.52441 31.585C2.16597 31.0315 0.991305 30.3295 0 29.5547L2.31348 24.4268C3.92886 25.5335 5.58113 26.3821 7.30664 26.9355C9.03217 27.489 10.8312 27.747 12.7402 27.7471C14.7961 27.7471 16.3751 27.415 17.4766 26.751C18.5781 26.0868 19.1289 25.1641 19.1289 23.9834C19.1289 23.2825 18.8721 22.6925 18.4316 22.2129C17.9911 21.6964 17.2569 21.2899 16.2656 20.9209C15.2744 20.552 13.9157 20.1834 12.2637 19.8145C10.1708 19.3717 8.371 18.8921 6.90234 18.3018C5.43376 17.7483 4.22257 17.0834 3.30469 16.3086C2.38683 15.5707 1.72575 14.6854 1.28516 13.6523C0.881313 12.6193 0.661172 11.4385 0.661133 10.1104C0.661133 8.19168 1.21161 6.49403 2.27637 4.94434C3.37786 3.43153 4.88372 2.21367 6.79297 1.32812C8.73871 0.442767 10.9781 5.35353e-05 13.5479 0ZM54.707 9.18555C56.5795 9.18555 58.1951 9.6286 59.627 10.5508C60.655 11.2148 61.4268 12.0264 61.9775 13.0225H62.0137V9.77637H68.7695V32.9434H62.0137V29.5127C61.4629 30.5087 60.6921 31.3572 59.6641 31.9844C58.2321 32.8698 56.5799 33.3125 54.7441 33.3125C52.7247 33.3125 50.962 32.7961 49.4199 31.8369C47.878 30.8409 46.6667 29.4755 45.8223 27.668C44.9778 25.8603 44.5371 23.7573 44.5371 21.3594C44.5372 18.9247 44.9411 16.822 45.8223 14.9775C46.7034 13.1331 47.878 11.7312 49.4199 10.6982C50.9619 9.70224 52.7245 9.18561 54.707 9.18555ZM145.103 9.18555C146.975 9.18555 148.591 9.6286 150.022 10.5508C151.051 11.2148 151.822 12.0264 152.373 13.0225V9.77637H159.165V32.9434H152.409V29.5127C151.858 30.5087 151.088 31.3572 150.06 31.9844C148.628 32.8698 146.975 33.3125 145.14 33.3125C143.12 33.3125 141.358 32.7961 139.815 31.8369C138.273 30.8409 137.062 29.4756 136.218 27.668C135.373 25.8603 134.933 23.7573 134.933 21.3594C134.933 18.9247 135.337 16.822 136.218 14.9775C137.099 13.1331 138.273 11.7312 139.815 10.6982C141.357 9.70223 143.12 9.18561 145.103 9.18555ZM98.9873 9.73926H104.861V14.9043H98.9873V23.9424C98.9873 24.8278 99.1705 25.5658 99.501 26.1191C99.8314 26.6725 100.272 27.0785 100.823 27.2998C101.374 27.521 101.961 27.6318 102.585 27.6318C102.952 27.6318 103.32 27.5945 103.65 27.5576C104.017 27.4839 104.421 27.4106 104.861 27.3369V32.6123C104.237 32.8705 103.576 33.0551 102.952 33.1289C102.291 33.2395 101.631 33.2764 100.896 33.2764C98.0693 33.2764 95.9028 32.464 94.3975 30.8408C92.8922 29.2176 92.1582 26.9301 92.1582 24.0527V4.35352L98.9873 2.11426V9.73926ZM201.499 9.0752C203.628 9.0752 205.501 9.55461 207.08 10.5137C208.659 11.4728 209.87 12.8015 210.715 14.5723C211.559 16.343 212 18.4087 212 20.8066L211.927 23.0938H196.91C197.13 24.4587 197.571 25.529 198.231 26.3037C199.259 27.4473 200.802 28.0371 202.895 28.0371C204.106 28.0371 205.318 27.8531 206.493 27.4473C207.668 27.0415 208.769 26.4878 209.761 25.75L211.56 30.3984C210.458 31.2838 209.1 31.9484 207.484 32.4648C205.906 32.9444 204.29 33.2021 202.638 33.2021C200.068 33.2021 197.865 32.6857 195.992 31.7266C194.12 30.7305 192.688 29.3653 191.696 27.5576C190.705 25.7869 190.19 23.6474 190.19 21.1758C190.19 18.7779 190.705 16.6748 191.659 14.8672C192.614 13.0226 193.936 11.6208 195.625 10.5879C197.314 9.59193 199.26 9.07525 201.499 9.0752ZM87.5684 9.22266C88.0455 9.22266 88.4494 9.25929 88.8164 9.33301V15.4941C88.0823 15.2729 87.3483 15.1621 86.6143 15.1621C85.4026 15.1621 84.3742 15.4206 83.5664 15.8633C82.7587 16.3428 82.1349 16.97 81.6943 17.8184C81.2537 18.6669 81.0332 19.663 81.0332 20.8066V32.9072H74.167V16.3799C74.167 15.2732 74.1305 14.1662 74.0938 13.0596C74.057 11.9529 73.9467 10.8459 73.7998 9.73926H80.2617L80.7393 13.7598C81.2166 12.5425 81.9146 11.5463 82.8691 10.8086C84.2275 9.73896 85.8062 9.22269 87.5684 9.22266ZM56.6904 14.498C55.0383 14.498 53.7163 15.0884 52.7617 16.3057C51.8072 17.523 51.3292 19.183 51.3291 21.3594C51.3291 23.4991 51.8067 25.1601 52.7246 26.3037C53.6425 27.4472 54.9649 28 56.6904 28C58.3791 27.9999 59.6642 27.4101 60.582 26.2666C61.4999 25.123 61.9775 23.4628 61.9775 21.3232C61.9775 19.1098 61.4999 17.4491 60.582 16.2686C59.6642 15.0882 58.3424 14.4981 56.6904 14.498ZM120.503 14.4238C118.777 14.4238 117.455 15.0148 116.537 16.1953C115.619 17.3758 115.179 19.0727 115.179 21.249C115.179 23.4256 115.619 25.123 116.537 26.2666C117.455 27.4102 118.777 28 120.503 28C122.192 28 123.477 27.4471 124.395 26.3037C125.312 25.1601 125.753 23.4996 125.79 21.2861C125.79 19.1464 125.312 17.4489 124.395 16.2314C123.477 15.0512 122.155 14.4238 120.503 14.4238ZM147.122 14.498C145.47 14.4981 144.148 15.0883 143.193 16.3057C142.239 17.523 141.762 19.2199 141.762 21.3594C141.762 23.4991 142.239 25.1601 143.157 26.3037C144.075 27.447 145.397 28 147.122 28C148.811 28 150.097 27.4102 151.015 26.2666C151.932 25.123 152.372 23.4627 152.409 21.3232C152.409 19.1098 151.933 17.4491 151.015 16.2686C150.097 15.088 148.774 14.498 147.122 14.498ZM174.77 14.4609C173.081 14.461 171.722 15.0144 170.768 16.1211C169.776 17.2277 169.299 18.7403 169.299 20.6953C169.299 22.6506 169.776 24.2009 170.768 25.3076C171.759 26.4512 173.081 27.0039 174.733 27.0039C176.386 27.0039 177.708 26.4504 178.662 25.3438C179.617 24.237 180.094 22.6875 180.131 20.7324C180.131 18.8142 179.69 17.2649 178.735 16.1582C177.781 15.0146 176.458 14.4609 174.77 14.4609ZM201.683 13.9453C200.104 13.9454 198.893 14.4983 198.012 15.6416C197.498 16.3794 197.13 17.2655 196.91 18.4092H206.089C205.942 17.1551 205.612 16.1587 205.024 15.4209C204.253 14.4248 203.151 13.9453 201.683 13.9453ZM98.9873 2.11426V2.10254H99.0234L98.9873 2.11426Z"/>
+            </g>
+            <defs>
+              <linearGradient id="logoWaveModal" x1="10.4551" y1="37.2321" x2="101.592" y2="47.1534" gradientUnits="userSpaceOnUse">
+                <stop stop-color="var(--color-brand-blue-400)"/>
+                <stop offset="1" stop-color="var(--color-teal-200)"/>
+              </linearGradient>
+              <clipPath id="logoClipModal">
+                <rect width="212" height="47.4792" fill="white"/>
+              </clipPath>
+            </defs>
+          </svg>
+          <svg class="hp-logo__t" viewBox="0 0 12.7038 31.1732" fill="none" aria-hidden="true">
+            <path d="M6.86594 0L0 2.25037V7.6734V12.8382V21.9503C0 24.8279 0.734325 27.1151 2.23969 28.7384C3.74506 30.3616 5.91132 31.1732 8.73847 31.1732C9.4728 31.1732 10.1337 31.1363 10.7946 31.0256C11.4188 30.9518 12.0797 30.7674 12.7038 30.5091V25.2337C12.2632 25.3075 11.8594 25.3812 11.4922 25.455C11.1617 25.4919 10.7946 25.5288 10.4274 25.5288C9.80325 25.5288 9.21579 25.4181 8.66504 25.1968C8.1143 24.9754 7.6737 24.5696 7.34326 24.0163C7.01281 23.4629 6.82923 22.7251 6.82923 21.8397V12.8013H12.7038V7.63651H6.82923V0H6.86594Z" fill="currentColor"/>
+          </svg>
+        </div>
+
+        <div class="plan-modal__headline">
+          <img class="plan-modal__party" src="assets/party.svg" alt="" width="32" height="32" />
+          <h2 class="plan-modal__title" id="planModalTitle">
+            100% <span class="plan-modal__accent">Ad-Free</span> private search
+          </h2>
+        </div>
+
+        <p class="plan-modal__lede" id="planModalLede">
+          Choose your plan to get started.
+        </p>
+      </div>
+
+      <div class="plan-toggle" role="group" aria-label="Billing period">
+        <button type="button" class="plan-toggle__btn is-active" data-period="monthly" id="periodMonthly" aria-pressed="true">
+          Monthly
+        </button>
+        <button type="button" class="plan-toggle__btn" data-period="yearly" id="periodYearly" aria-pressed="false">
+          Yearly <span class="plan-toggle__save">Save 17%</span>
+        </button>
+      </div>
+
+      <div class="plan-cards" role="radiogroup" aria-label="Subscription plan">
+        <div class="plan-card" data-plan="basic" role="radio" aria-checked="false" tabindex="0">
+          <span class="plan-card__name">Basic</span>
+          <span class="plan-card__promise">Search with no ads</span>
+          <span class="plan-card__price">
+            <span class="plan-card__amount" data-price-basic>$2.99</span>
+            <span class="plan-card__period" data-period-label>/ month</span>
+          </span>
+          <ul class="plan-card__features">
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Ad-free search
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Cross-device sync
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Enhanced tracker protections
+            </li>
+          </ul>
+        </div>
+
+        <div class="plan-card is-selected" data-plan="premium" role="radio" aria-checked="true" tabindex="0">
+          <span class="plan-card__badge">Most popular</span>
+          <span class="plan-card__name">Premium</span>
+          <span class="plan-card__promise">Upgrade your search</span>
+          <span class="plan-card__price">
+            <span class="plan-card__amount" data-price-premium>$6.99</span>
+            <span class="plan-card__period" data-period-label>/ month</span>
+          </span>
+          <ul class="plan-card__features">
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Everything included in basic
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Enhanced Anonymous View
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              AI content filtering
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Block unwanted websites
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Tracker blocking
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Private media player
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <button type="button" class="plan-modal__cta" id="planModalCta">Get Premium Ad-Free</button>
+
+      <p class="plan-modal__footer">
+        Already a subscriber? <button type="button" id="planModalLogin">Log in.</button>
+      </p>
+    </div>
+  </div>
+
+
   <div class="proto-chrome">
     <a class="proto-back" href="results.html?q=cheese">← Back to results</a>
     <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -2939,10 +3796,15 @@
           document.body.dataset.auth = next;
           sessionStorage.setItem(AUTH_KEY, next);
           setOpen(false);
+          if (typeof window.__syncAccountPanel === 'function') {
+            window.__syncAccountPanel();
+          }
           if (next === 'signed-out') {
             location.href = 'index.html';
           }
         }
+
+        window.__accountsSetAuth = setAuth;
 
         function setPlanBadge(plan) {
           const next = plan === 'premium' ? 'premium' : 'basic';
@@ -2953,15 +3815,6 @@
           document.body.dataset.plan = next;
           document.documentElement.dataset.plan = next;
           sessionStorage.setItem(PLAN_KEY, next);
-
-          const locked = document.getElementById('uiPrefsLocked');
-          const resetBtn = document.getElementById('resetUiPrefs');
-          const isPremium = next === 'premium';
-          if (locked) {
-            if (isPremium) locked.removeAttribute('inert');
-            else locked.setAttribute('inert', '');
-          }
-          if (resetBtn) resetBtn.disabled = !isPremium;
         }
 
         const savedAuth = sessionStorage.getItem(AUTH_KEY);
@@ -2973,6 +3826,11 @@
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           setOpen(menu.hidden);
+        });
+        document.getElementById('accountMenuClose')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setOpen(false);
+          btn.focus();
         });
         document.addEventListener('click', (e) => {
           if (menu.hidden) return;
@@ -2986,18 +3844,62 @@
           }
         });
         signOutBtn?.addEventListener('click', () => setAuth('signed-out'));
+      })();
 
-        document.querySelector('.js-tab-account')?.addEventListener('click', (e) => {
-          e.preventDefault();
-          setOpen(false);
-          if (typeof window.__settingsGoToTab === 'function') window.__settingsGoToTab('account');
+      (function siteNav() {
+        const toggle = document.getElementById('siteNavToggle');
+        const overlay = document.getElementById('siteNavOverlay');
+        const panel = document.getElementById('siteNav');
+        const closeBtn = document.getElementById('siteNavClose');
+        if (!toggle || !overlay || !panel) return;
+
+        function openNav() {
+          overlay.hidden = false;
+          document.body.classList.add('site-nav-open');
+          toggle.setAttribute('aria-expanded', 'true');
+          requestAnimationFrame(() => {
+            overlay.classList.add('is-open');
+            closeBtn?.focus();
+          });
+        }
+
+        function closeNav() {
+          overlay.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('site-nav-open');
+          const finish = (e) => {
+            if (e && e.target !== overlay) return;
+            overlay.hidden = true;
+            overlay.removeEventListener('transitionend', finish);
+            toggle.focus();
+          };
+          overlay.addEventListener('transitionend', finish);
+        }
+
+        toggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (overlay.classList.contains('is-open')) closeNav();
+          else openNav();
         });
-        document.querySelector('.js-tab-ui')?.addEventListener('click', (e) => {
-          e.preventDefault();
-          setOpen(false);
-          if (typeof window.__settingsGoToTab === 'function') {
-            window.__settingsGoToTab('ui-customizations');
-          }
+        closeBtn?.addEventListener('click', closeNav);
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) closeNav();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeNav();
+        });
+
+        /* In-drawer settings links should switch tabs when already on settings */
+        panel.querySelectorAll('.site-nav__link[href^="#"]').forEach(link => {
+          link.addEventListener('click', (e) => {
+            const hash = link.getAttribute('href') || '';
+            if (!hash.startsWith('#')) return;
+            e.preventDefault();
+            closeNav();
+            if (typeof window.__settingsGoToTab === 'function') {
+              window.__settingsGoToTab(hash.slice(1));
+            }
+          });
         });
       })();
 
@@ -3059,33 +3961,73 @@
         });
       }
 
-      /* ── Account settings (plan-aware) ── */
-      (function syncAccountPanel() {
+      /* ── Account settings (auth + plan aware) ── */
+      function syncAccountPanel() {
+        const auth = sessionStorage.getItem('accounts-auth') || document.body.dataset.auth || 'signed-out';
         const plan = sessionStorage.getItem('accounts-plan') || 'basic';
         const period = sessionStorage.getItem('accounts-period') === 'yearly' ? 'yearly' : 'monthly';
         const badge = document.getElementById('accountSubBadge');
         const copy = document.getElementById('accountSubCopy');
         const note = document.getElementById('accountDeleteNote');
         const deleteBtn = document.getElementById('deleteAccountBtn');
+        const billingBtn = document.getElementById('goToBilling');
+        const billingLabel = billingBtn?.querySelector('.btn__label');
+        const isSignedIn = auth === 'signed-in';
         const isPremium = plan === 'premium';
-        const planLabel = isPremium ? 'premium' : 'basic';
 
-        if (copy) {
-          copy.textContent = `${planLabel.charAt(0).toUpperCase()}${planLabel.slice(1)} · ${period.charAt(0).toUpperCase()}${period.slice(1)}`;
+        if (!isSignedIn) {
+          if (badge) {
+            badge.textContent = 'Not Active';
+            badge.classList.add('tag--inactive');
+            badge.classList.remove('tag--status', 'tag--muted');
+          }
+          if (copy) {
+            copy.innerHTML = 'Already have a subscription? <a href="index.html" id="accountSubLoginLink">Log In here</a>';
+          }
+          if (billingLabel) billingLabel.textContent = 'Go Ad-Free';
+          if (note) {
+            note.hidden = false;
+            note.textContent = 'Sign in to manage your account.';
+          }
+          if (deleteBtn) {
+            deleteBtn.disabled = true;
+            deleteBtn.classList.add('btn--inactive');
+          }
+          return;
         }
 
-        badge.textContent = 'Active';
-        badge.classList.add('tag--status');
-        badge.classList.remove('tag--muted');
+        const planLabel = isPremium ? 'Premium' : 'Basic';
+        const periodLabel = period.charAt(0).toUpperCase() + period.slice(1);
+
+        if (copy) copy.textContent = `${planLabel} · ${periodLabel}`;
+        if (badge) {
+          badge.textContent = 'Active';
+          badge.classList.add('tag--status');
+          badge.classList.remove('tag--inactive', 'tag--muted');
+        }
+        if (billingLabel) billingLabel.textContent = 'Go to Billing';
 
         if (isPremium) {
-          note.hidden = false;
-          deleteBtn.disabled = true;
+          if (note) {
+            note.hidden = false;
+            note.innerHTML = 'Account cannot be deleted while subscription is active.<br />Manage your subscription in <a href="#account">Billing</a>.';
+          }
+          if (deleteBtn) deleteBtn.disabled = true;
         } else {
-          note.hidden = true;
-          deleteBtn.disabled = false;
+          if (note) note.hidden = true;
+          if (deleteBtn) deleteBtn.disabled = false;
         }
-      })();
+      }
+      window.__syncAccountPanel = syncAccountPanel;
+      syncAccountPanel();
+
+      document.getElementById('goToBilling')?.addEventListener('click', () => {
+        const auth = sessionStorage.getItem('accounts-auth') || document.body.dataset.auth || 'signed-out';
+        if (auth === 'signed-in') return;
+        if (typeof window.__openPlanModal === 'function') {
+          window.__openPlanModal();
+        }
+      });
 
       document.getElementById('copyWorkosId')?.addEventListener('click', async () => {
         const field = document.getElementById('workosIdField');
@@ -3397,25 +4339,190 @@
 
       applyLive();
 
-      /* Keep save panel pinned to the grid column while scrolling */
-      (function pinSaveAside() {
-        const slot = document.querySelector('.settings-aside');
-        const fixed = document.querySelector('.settings-aside__fixed');
-        if (!slot || !fixed) return;
-        const mq = window.matchMedia('(max-width: 900px)');
+      /* Keep left nav + save panel pinned to their grid columns while scrolling */
+      (function pinSideColumns() {
+        const mq = window.matchMedia('(max-width: 1024px)');
+        const pairs = [
+          ['.settings-tabs', '.settings-tabs__fixed'],
+          ['.settings-aside', '.settings-aside__fixed'],
+        ].map(([slotSel, fixedSel]) => ({
+          slot: document.querySelector(slotSel),
+          fixed: document.querySelector(fixedSel),
+        })).filter(({ slot, fixed }) => slot && fixed);
+
         function sync() {
-          if (mq.matches) {
-            fixed.style.left = '';
-            fixed.style.width = '';
-            return;
-          }
-          const r = slot.getBoundingClientRect();
-          fixed.style.left = `${Math.round(r.left)}px`;
-          fixed.style.width = `${Math.round(r.width)}px`;
+          pairs.forEach(({ slot, fixed }) => {
+            if (mq.matches) {
+              fixed.style.left = '';
+              fixed.style.width = '';
+              return;
+            }
+            const r = slot.getBoundingClientRect();
+            fixed.style.left = `${Math.round(r.left)}px`;
+            fixed.style.width = `${Math.round(r.width)}px`;
+          });
         }
         sync();
         window.addEventListener('resize', sync);
       })();
+
+    (function planModal() {
+      const overlay = document.getElementById('planOverlay');
+      const modal = document.getElementById('planModal');
+      const closeBtn = document.getElementById('planModalClose');
+      const loginLink = document.getElementById('planModalLogin');
+      const periodBtns = document.querySelectorAll('.plan-toggle__btn');
+      const planCards = document.querySelectorAll('.plan-card[data-plan]');
+      const ctaBtn = document.getElementById('planModalCta');
+      const basicPrice = document.querySelector('[data-price-basic]');
+      const premiumPrice = document.querySelector('[data-price-premium]');
+      const periodLabels = document.querySelectorAll('[data-period-label]');
+      if (!overlay || !modal) return;
+
+      const PRICES = {
+        monthly: { basic: '$2.99', premium: '$6.99', label: '/ month' },
+        yearly: { basic: '$29.99', premium: '$69.99', label: '/ year' },
+      };
+      const CTA_LABELS = {
+        basic: 'Get Basic Ad-Free',
+        premium: 'Get Premium Ad-Free',
+      };
+
+      let period = 'monthly';
+      let selectedPlan = 'premium';
+      let lastFocus = null;
+
+      function setPeriod(next) {
+        period = next;
+        periodBtns.forEach(btn => {
+          const active = btn.dataset.period === period;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+        const prices = PRICES[period];
+        if (basicPrice) basicPrice.textContent = prices.basic;
+        if (premiumPrice) premiumPrice.textContent = prices.premium;
+        periodLabels.forEach(el => { el.textContent = prices.label; });
+      }
+
+      function setPlan(plan) {
+        selectedPlan = plan;
+        planCards.forEach(card => {
+          const active = card.dataset.plan === plan;
+          card.classList.toggle('is-selected', active);
+          card.setAttribute('aria-checked', active ? 'true' : 'false');
+        });
+        if (ctaBtn) ctaBtn.textContent = CTA_LABELS[plan];
+      }
+
+      function openModal() {
+        lastFocus = document.activeElement;
+        const accountMenu = document.getElementById('accountMenu');
+        const accountToggle = document.getElementById('accountToggle');
+        if (accountMenu && !accountMenu.hidden) {
+          accountMenu.classList.remove('is-open');
+          accountMenu.hidden = true;
+          accountToggle?.setAttribute('aria-expanded', 'false');
+        }
+        overlay.hidden = false;
+        requestAnimationFrame(() => overlay.classList.add('is-open'));
+        document.body.classList.add('plan-modal-open');
+        modal.focus({ preventScroll: true });
+      }
+
+      function closeModal() {
+        overlay.classList.remove('is-open');
+        document.body.classList.remove('plan-modal-open');
+        const onEnd = () => {
+          overlay.hidden = true;
+          overlay.removeEventListener('transitionend', onEnd);
+        };
+        overlay.addEventListener('transitionend', onEnd);
+        if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+      }
+
+      document.querySelectorAll('.js-go-ad-free').forEach(btn => {
+        btn.addEventListener('click', openModal);
+      });
+
+      closeBtn?.addEventListener('click', closeModal);
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
+          e.stopPropagation();
+          closeModal();
+        }
+      });
+
+      periodBtns.forEach(btn => {
+        btn.addEventListener('click', () => setPeriod(btn.dataset.period));
+      });
+
+      planCards.forEach(card => {
+        card.addEventListener('click', () => setPlan(card.dataset.plan));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setPlan(card.dataset.plan);
+          }
+        });
+      });
+
+      loginLink?.addEventListener('click', () => {
+        closeModal();
+        if (typeof window.__accountsSetAuth === 'function') {
+          window.__accountsSetAuth('signed-in');
+        }
+      });
+
+      const PLAN_BADGE_LABELS = {
+        basic: 'Basic',
+        premium: 'Premium',
+      };
+
+      function setAccountPlanBadge(plan) {
+        const badge = document.getElementById('accountPlanBadge');
+        if (!badge) return;
+        const next = plan === 'premium' ? 'premium' : 'basic';
+        badge.dataset.plan = next;
+        badge.textContent = PLAN_BADGE_LABELS[next] || PLAN_BADGE_LABELS.basic;
+        document.body.dataset.plan = next;
+        sessionStorage.setItem(PLAN_KEY, next);
+      }
+
+      window.__accountsSetPlanBadge = setAccountPlanBadge;
+
+      const savedPlan = sessionStorage.getItem(PLAN_KEY);
+      if (savedPlan === 'basic' || savedPlan === 'premium') {
+        setAccountPlanBadge(savedPlan);
+      }
+
+      ctaBtn?.addEventListener('click', () => {
+        setAccountPlanBadge(selectedPlan);
+        sessionStorage.setItem('accounts-period', period);
+        closeModal();
+        if (typeof window.__accountsSetAuth === 'function') {
+          window.__accountsSetAuth('signed-in');
+        }
+        if (typeof window.__syncAccountPanel === 'function') {
+          window.__syncAccountPanel();
+        }
+      });
+
+      window.__openPlanModal = openModal;
+
+      setPeriod('monthly');
+      setPlan('premium');
+
+      if (location.hash === '#go-ad-free') {
+        openModal();
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+    })();
 
       /* Theme toggle */
       const toggle = document.getElementById('themeToggle');

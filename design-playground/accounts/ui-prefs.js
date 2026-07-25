@@ -1,6 +1,6 @@
 /**
- * Premium UI customization prefs — shared by settings.html + results.html
- * Persisted in localStorage so they survive session auth/plan changes.
+ * UI customization prefs — shared by settings.html + results.html
+ * Available on all plans. Persisted in localStorage so they survive session auth/plan changes.
  */
 (function (global) {
   const KEY = 'accounts-ui-prefs';

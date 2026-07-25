@@ -208,14 +208,22 @@
       transition: left 200ms ease, width 200ms ease;
     }
     .site-header--desktop {
+      /* Reserve room for Go Ad-Free + Log In + menu so search never runs under chrome */
+      --serp-chrome-reserve: calc(
+        var(--spacing-96) + var(--spacing-16) +
+        var(--spacing-12) +
+        var(--spacing-96) + var(--spacing-16) +
+        var(--spacing-12) +
+        var(--spacing-20)
+      ); /* ~268px */
       display: grid;
       grid-template-columns:
         var(--spacing-24)
         104px
         var(--spacing-24)
-        1fr
+        minmax(0, 628px)
         var(--spacing-24)
-        auto
+        var(--serp-chrome-reserve)
         var(--spacing-40);
       grid-template-rows: 67px 36px;
       border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
@@ -231,10 +239,14 @@
     .site-header--desktop .site-header__right { grid-column: 6; }
     .site-header--desktop .site-header__search-wrap {
       grid-column: 4;
+      width: 100%;
       max-width: 628px;
       min-width: 0;
     }
-    .site-header--desktop .search-field--serp { box-shadow: var(--shadow-search); }
+    .site-header--desktop .search-field--serp {
+      width: 100%;
+      box-shadow: var(--shadow-search);
+    }
     .site-header__right {
       display: flex;
       align-items: center;
@@ -326,12 +338,137 @@
       display: block;
     }
 
-    .hp-btn,
-    .plan-modal__cta {
+    /* ── Site nav drawer (hamburger) ── */
+    .site-nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: flex;
+      justify-content: flex-end;
+      background: color-mix(in srgb, var(--color-midnight-500) 40%, transparent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .site-nav-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .site-nav {
+      position: relative;
+      width: min(100%, calc(var(--spacing-24) * 13)); /* 312px */
+      height: 100%;
+      margin: 0;
+      padding: var(--spacing-24) var(--spacing-32) var(--spacing-48);
+      box-sizing: border-box;
+      overflow-y: auto;
+      background: var(--color-background-primary);
+      border-left: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      box-shadow: var(--shadow-dropdown);
+      transform: translateX(100%);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .site-nav-overlay.is-open .site-nav {
+      transform: translateX(0);
+    }
+    .site-nav__close {
+      position: absolute;
+      top: var(--spacing-20);
+      right: var(--spacing-20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      margin: 0;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: background-color 0.12s ease, color 0.12s ease;
+    }
+    .site-nav__close:hover {
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+    }
+    .site-nav__close:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .site-nav__close svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      display: block;
+    }
+    .site-nav__sections {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: var(--spacing-8);
+    }
+    .site-nav__section {
+      padding: var(--spacing-16) 0;
+    }
+    .site-nav__section:first-child {
+      padding-top: var(--spacing-8);
+    }
+    .site-nav__section + .site-nav__section {
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+    }
+    .site-nav__heading {
+      margin: 0 0 var(--spacing-12);
       font-family: var(--font-family);
-      font-size: var(--font-button-xs);
-      font-weight: var(--font-weight-bold);
-      line-height: var(--font-label-xs-lh);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+    .site-nav__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+    .site-nav__link {
+      display: block;
+      padding: var(--spacing-8) 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      text-decoration: none;
+      text-wrap: pretty;
+      transition: color 0.15s ease;
+    }
+    .site-nav__link--with-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+    }
+    .site-nav__link-icon {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+      display: block;
+    }
+    .site-nav__link:hover {
+      color: var(--color-text-brandblue);
+      text-decoration: none;
+    }
+    .site-nav__link:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-sm);
+    }
+    body.site-nav-open {
+      overflow: hidden;
     }
 
     .hp-btn {
@@ -342,32 +479,41 @@
       padding: 0 var(--spacing-24);
       border: none;
       border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--font-label-xs-lh);
       cursor: pointer;
       white-space: nowrap;
       transition: background-color 0.15s ease, filter 0.15s ease;
     }
     .hp-btn--teal {
-      background: var(--color-accent-teal);
+      background: var(--color-button-teal);
       color: var(--color-text-primary);
       min-width: calc(var(--spacing-96) + var(--spacing-16) + 2px);
+      transition: background-color 0.15s ease, color 0.15s ease;
     }
-    .hp-btn--teal:hover { filter: brightness(0.96); }
+    .hp-btn--teal:hover {
+      filter: none;
+      background: var(--color-button-tealhover);
+    }
     [data-theme="dark"] .hp-btn--teal {
-      background: var(--color-button-teal);
       color: var(--color-text-inverted);
     }
     .hp-btn--product {
       background: var(--color-button-productfilled);
       color: var(--color-text-primary);
       min-width: calc(var(--spacing-96) + var(--spacing-16) + 1px);
+      transition: background-color 0.15s ease, color 0.15s ease;
     }
     .hp-btn--product:hover {
-      background: var(--color-button-productfilledhover);
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
     }
 
     .account-menu {
       position: absolute;
-      top: calc(100% + var(--spacing-16));
+      top: 0;
       right: 0;
       width: calc(var(--spacing-24) * 12 - var(--spacing-8));
       display: none;
@@ -382,6 +528,38 @@
       z-index: 20;
     }
     .account-menu.is-open { display: flex; }
+
+    .account-menu__close {
+      position: absolute;
+      top: var(--spacing-16);
+      right: var(--spacing-16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      z-index: 1;
+      transition: background-color 0.12s ease, color 0.12s ease;
+    }
+    .account-menu__close:hover {
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+    }
+    .account-menu__close:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .account-menu__close svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      display: block;
+    }
 
     .account-menu__header {
       display: flex;
@@ -430,57 +608,7 @@
       margin: 0;
       width: 100%;
     }
-    .account-menu__link {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--spacing-16);
-      width: 100%;
-      padding: 0;
-      border: none;
-      background: transparent;
-      text-align: left;
-      cursor: pointer;
-      font-family: var(--font-family);
-      color: var(--color-text-primary);
-      text-decoration: none;
-    }
-    .account-menu__link:hover .account-menu__link-title {
-      color: var(--color-text-link);
-    }
-    .account-menu__link:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: var(--spacing-4);
-      border-radius: var(--radius-sm);
-    }
-    .account-menu__link-text {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0;
-      min-width: 0;
-      flex: 1;
-    }
-    .account-menu__link-title {
-      font-size: var(--font-body-md);
-      line-height: var(--font-body-md-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-primary);
-    }
-    .account-menu__link-caption {
-      font-size: var(--font-utility-caption);
-      line-height: var(--font-utility-caption-lh);
-      font-weight: var(--font-weight-regular);
-      color: var(--color-text-tertiary);
-      letter-spacing: -0.01em;
-    }
-    .account-menu__chevron {
-      width: var(--spacing-16);
-      height: var(--spacing-16);
-      flex-shrink: 0;
-      color: var(--color-icon-tertiary);
-    }
-    .account-menu__signout {
+    .account-menu__action {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -495,12 +623,17 @@
       font-family: var(--font-family);
       font-size: var(--font-label-xs);
       line-height: 1.125rem;
-      font-weight: var(--font-weight-semibold);
+      font-weight: var(--font-weight-bold);
       cursor: pointer;
+      text-decoration: none;
+      box-sizing: border-box;
       transition: background-color 0.15s ease;
     }
-    .account-menu__signout:hover { filter: brightness(0.97); }
-    .account-menu__signout:focus-visible {
+    .account-menu__action:hover {
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+    }
+    .account-menu__action:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: var(--spacing-4);
     }
@@ -521,18 +654,22 @@
       font-family: var(--font-family);
       font-size: var(--font-label-xs);
       line-height: 1.125rem;
-      font-weight: var(--font-weight-semibold);
+      font-weight: var(--font-weight-bold);
+      background: var(--color-button-teal);
+      color: var(--color-text-primary);
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .account-menu__upgrade:hover,
+    .account-menu__upgrade.hp-btn--teal:hover {
+      filter: none;
+      background: var(--color-button-tealhover);
+    }
+    [data-theme="dark"] .account-menu__upgrade,
+    [data-theme="dark"] .account-menu__upgrade.hp-btn--teal {
+      color: var(--color-text-inverted);
     }
     body[data-plan="premium"] .account-menu__upgrade {
       display: none !important;
-    }
-
-    /* Premium-only account menu item */
-    .account-menu__link--premium {
-      display: none !important;
-    }
-    body[data-plan="premium"] .account-menu__link--premium {
-      display: flex !important;
     }
 
     .site-header--desktop .site-header__nav {
@@ -546,7 +683,9 @@
       grid-column: 4;
       display: flex;
       align-items: stretch;
+      width: 100%;
       max-width: 628px;
+      min-width: 0;
     }
     .site-header__tabs-scroll {
       position: relative;
@@ -945,7 +1084,7 @@
 
     .algo-result__title:hover { text-decoration: underline; }
 
-    /* ── Premium UI customizations (from settings.html) ── */
+    /* ── UI customizations (from settings.html) ── */
     html[data-ui-font] body {
       font-family: var(--ui-font-family, var(--font-family));
     }
@@ -1035,7 +1174,7 @@
 
     .algo-result__av-label:hover { text-decoration: underline; }
 
-    /* ── Premium privacy shield (signed-in + premium only) ── */
+    /* ── Privacy insights shield (all plans) ── */
     .algo-result--premium {
       display: grid;
       grid-template-columns: minmax(0, 1fr) var(--spacing-32);
@@ -1075,18 +1214,20 @@
       color: var(--color-icon-secondary);
       cursor: pointer;
       overflow: visible;
-      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
     }
     .privacy-shield:hover {
       background: var(--color-background-secondary);
     }
     .privacy-shield[aria-expanded="true"] {
       background: var(--color-background-secondary);
-      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-icon-secondary);
+      color: var(--color-button-brandblue);
+      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-button-brandblue);
     }
     [data-theme="dark"] .privacy-shield[aria-expanded="true"] {
       background: var(--color-background-quaternary);
-      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-icon-secondary);
+      color: var(--color-button-brandblue);
+      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-button-brandblue);
     }
     .privacy-shield:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
@@ -1098,6 +1239,13 @@
       height: calc(var(--spacing-16) + var(--spacing-4));
       display: block;
       overflow: visible;
+    }
+    .privacy-shield__icon path {
+      fill: transparent;
+      transition: fill 0.15s ease;
+    }
+    .privacy-shield[aria-expanded="true"] .privacy-shield__icon path {
+      fill: currentColor;
     }
 
     /* Privacy Insights popover — Figma CQNXZno7… 17:229 */
@@ -1295,7 +1443,7 @@
       font-family: var(--font-family);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-semibold);
+      font-weight: var(--font-weight-bold);
       cursor: pointer;
       transition: background-color 0.15s ease;
     }
@@ -1501,7 +1649,7 @@
       color: var(--color-text-secondary);
       font-family: var(--font-family);
       font-size: var(--font-body-xs);
-      font-weight: var(--font-weight-medium);
+      font-weight: var(--font-weight-bold);
       cursor: pointer;
       transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
     }
@@ -1535,7 +1683,7 @@
     .plan-modal {
       position: relative;
       width: 100%;
-      max-width: calc(var(--spacing-24) * 23 + var(--spacing-32));
+      max-width: calc(var(--spacing-24) * 28); /* 672px */
       margin-block: auto;
       max-height: none;
       overflow: visible;
@@ -1543,7 +1691,7 @@
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
       border-radius: var(--radius-2xl);
       box-shadow: var(--shadow-dropdown);
-      padding: var(--spacing-32) var(--spacing-40) var(--spacing-24);
+      padding: var(--spacing-32) var(--spacing-48) var(--spacing-24);
       display: flex;
       flex-direction: column;
       gap: var(--spacing-24);
@@ -1554,6 +1702,9 @@
     }
     .plan-overlay.is-open .plan-modal {
       transform: translateY(0);
+    }
+    .plan-modal:focus {
+      outline: none;
     }
 
     .plan-modal__close {
@@ -1573,6 +1724,13 @@
       cursor: pointer;
       z-index: 1;
       transition: background-color 0.12s ease, color 0.12s ease;
+    }
+    .plan-modal__close:focus {
+      outline: none;
+    }
+    .plan-modal__close:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
     }
     .plan-modal__close:hover {
       background: var(--color-background-secondary);
@@ -1646,6 +1804,7 @@
     .plan-modal__lede {
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
     }
 
@@ -1669,7 +1828,7 @@
       font-family: var(--font-family);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-medium);
+      font-weight: var(--font-weight-bold);
       padding: var(--spacing-8) var(--spacing-20);
       border-radius: var(--radius-full);
       cursor: pointer;
@@ -1683,13 +1842,13 @@
     .plan-toggle__save {
       margin-left: var(--spacing-4);
       color: var(--color-text-brandblue);
-      font-weight: var(--font-weight-semibold);
+      font-weight: var(--font-weight-bold);
     }
 
     .plan-cards {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--spacing-12);
+      gap: var(--spacing-16);
       align-items: stretch;
       padding-top: var(--spacing-12); /* room for “Most popular” badge */
     }
@@ -1701,7 +1860,7 @@
       height: 100%;
       min-width: 0;
       box-sizing: border-box;
-      padding: var(--spacing-16);
+      padding: var(--spacing-20);
       border-radius: var(--radius-lg);
       /* Same width always so selection doesn’t shift card height */
       border: var(--border-stroke-lg) solid var(--color-stroke-secondary);
@@ -1741,15 +1900,17 @@
     }
 
     .plan-card__name {
-      font-size: var(--font-heading-xxs);
-      line-height: var(--font-heading-xxs-lh);
-      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
       color: var(--color-text-primary);
     }
 
     .plan-card__promise {
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-secondary);
       margin-top: calc(var(--spacing-8) * -1);
     }
@@ -1762,15 +1923,17 @@
     }
 
     .plan-card__amount {
-      font-size: var(--font-heading-xs);
-      line-height: var(--font-heading-xs-lh);
+      font-size: var(--font-heading-xxs);
+      line-height: var(--font-heading-xxs-lh);
       font-weight: var(--font-weight-bold);
-      color: var(--color-text-primary);
+      letter-spacing: -0.02em;
+      color: var(--color-text-brandblue);
     }
 
     .plan-card__period {
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-secondary);
     }
 
@@ -1788,6 +1951,7 @@
       gap: var(--spacing-8);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
     }
 
@@ -1808,21 +1972,28 @@
       padding: 0 var(--spacing-24);
       border: none;
       border-radius: var(--radius-lg);
-      background: var(--color-accent-teal);
-      color: var(--color-text-primary);
-      cursor: pointer;
-      transition: filter 0.15s ease, background-color 0.15s ease;
-    }
-    .plan-modal__cta:hover { filter: brightness(0.96); }
-    [data-theme="dark"] .plan-modal__cta {
       background: var(--color-button-teal);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-button-sm); /* 16px — Figma CTA */
+      font-weight: var(--font-weight-bold);
+      line-height: var(--font-body-md-lh); /* 24px */
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .plan-modal__cta:hover {
+      filter: none;
+      background: var(--color-button-tealhover);
+    }
+    [data-theme="dark"] .plan-modal__cta {
       color: var(--color-text-inverted);
     }
 
     .plan-modal__footer {
       text-align: center;
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-secondary);
     }
     .plan-modal__footer button {
@@ -1840,13 +2011,51 @@
       overflow: hidden;
     }
 
-    /* Stack plan cards when the modal itself is too narrow for two columns */
-    @container plan-modal (max-width: 480px) {
+    /* Stack plan cards only when the modal is truly too narrow for two columns */
+    @container plan-modal (max-width: 400px) {
       .plan-cards {
         grid-template-columns: 1fr;
       }
       .plan-card {
         height: auto;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .site-header--desktop {
+        /* Slightly tighter chrome reserve; search column shrinks with the viewport */
+        --serp-chrome-reserve: calc(
+          var(--spacing-96) + var(--spacing-8) +
+          var(--spacing-8) +
+          var(--spacing-80) + var(--spacing-8) +
+          var(--spacing-8) +
+          var(--spacing-20)
+        ); /* ~228px */
+      }
+      .hp-btn {
+        padding: 0 var(--spacing-16);
+      }
+      .hp-btn--teal,
+      .hp-btn--product {
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .site-header--desktop {
+        --serp-chrome-reserve: calc(var(--spacing-24) * 8); /* 192px */
+        grid-template-columns:
+          var(--spacing-16)
+          104px
+          var(--spacing-16)
+          minmax(0, 1fr)
+          var(--spacing-16)
+          var(--serp-chrome-reserve)
+          var(--spacing-24);
+      }
+      .site-header--desktop .site-header__search-wrap,
+      .site-header--desktop .site-header__nav .site-header__tabs-row {
+        max-width: none;
       }
     }
 
@@ -1859,14 +2068,22 @@
       .hp-chrome__auth {
         gap: var(--spacing-8);
       }
+      .site-header--desktop {
+        --serp-chrome-reserve: calc(var(--spacing-24) * 7); /* 168px */
+        grid-template-columns:
+          var(--spacing-12)
+          88px
+          var(--spacing-12)
+          minmax(0, 1fr)
+          var(--spacing-12)
+          var(--serp-chrome-reserve)
+          var(--spacing-16);
+      }
+      .site-header__logo-svg {
+        width: 88px;
+      }
       .plan-overlay {
         padding: var(--spacing-16);
-      }
-      .plan-cards {
-        grid-template-columns: 1fr;
-      }
-      .plan-card {
-        height: auto;
       }
       .plan-modal {
         padding: var(--spacing-24) var(--spacing-16) var(--spacing-16);
@@ -1888,6 +2105,12 @@
     @media (max-width: 480px) {
       .plan-overlay {
         padding: var(--spacing-12);
+      }
+      .plan-cards {
+        grid-template-columns: 1fr;
+      }
+      .plan-card {
+        height: auto;
       }
       .plan-modal {
         border-radius: var(--radius-xl);
@@ -1950,6 +2173,12 @@
       </button>
 
       <div class="account-menu" id="accountMenu" role="menu" aria-label="Account" hidden>
+        <button type="button" class="account-menu__close" id="accountMenuClose" aria-label="Close">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M12 4L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
         <div class="account-menu__header">
           <svg class="account-menu__avatar" viewBox="0 0 32 32" fill="none" aria-hidden="true">
             <circle cx="16" cy="16" r="15" stroke="url(#accountRingMenu)" stroke-width="2"/>
@@ -1970,42 +2199,14 @@
 
         <hr class="account-menu__rule" />
 
-        <a href="settings.html#account" class="account-menu__link" role="menuitem">
-          <span class="account-menu__link-text">
-            <span class="account-menu__link-title">Account &amp; Subscription</span>
-          </span>
-          <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-
-        <a href="settings.html#ui-customizations" class="account-menu__link account-menu__link--premium" role="menuitem">
-          <span class="account-menu__link-text">
-            <span class="account-menu__link-title">Customize UI</span>
-          </span>
-          <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-
-        <button type="button" class="account-menu__link js-go-ad-free" role="menuitem">
-          <span class="account-menu__link-text">
-            <span class="account-menu__link-title">Billing &amp; subscription</span>
-            <span class="account-menu__link-caption">Manage plan, payment &amp; invoices</span>
-          </span>
-          <svg class="account-menu__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M6 3.333L10.667 8 6 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
-        <hr class="account-menu__rule" />
-
         <div class="account-menu__footer">
           <button type="button" class="account-menu__upgrade hp-btn hp-btn--teal js-go-ad-free" role="menuitem">
             Upgrade to Premium
           </button>
 
-          <button type="button" class="account-menu__signout" id="signOutBtn" role="menuitem">
+          <a href="settings.html#account" class="account-menu__action" role="menuitem">Manage Account</a>
+
+          <button type="button" class="account-menu__action" id="signOutBtn" role="menuitem">
             <svg class="account-menu__signout-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M10 12.5C10 12.633 9.947 12.76 9.854 12.854C9.76 12.947 9.633 13 9.5 13H1.5C1.367 13 1.24 12.947 1.146 12.854C1.053 12.76 1 12.633 1 12.5V3.5C1 3.367 1.053 3.24 1.146 3.146C1.24 3.053 1.367 3 1.5 3H9.5C9.633 3 9.76 3.053 9.854 3.146C9.947 3.24 10 3.367 10 3.5V5.5C10 5.633 10.053 5.76 10.146 5.854C10.24 5.947 10.367 6 10.5 6C10.633 6 10.76 5.947 10.854 5.854C10.947 5.76 11 5.633 11 5.5V3.5C11 3.102 10.842 2.721 10.561 2.439C10.279 2.158 9.898 2 9.5 2H1.5C1.102 2 0.721 2.158 0.439 2.439C0.158 2.721 0 3.102 0 3.5V12.5C0 12.898 0.158 13.279 0.439 13.561C0.721 13.842 1.102 14 1.5 14H9.5C9.898 14 10.279 13.842 10.561 13.561C10.842 13.279 11 12.898 11 12.5V10.5C11 10.367 10.947 10.24 10.854 10.146C10.76 10.053 10.633 10 10.5 10C10.367 10 10.24 10.053 10.146 10.146C10.053 10.24 10 10.367 10 10.5V12.5Z" fill="currentColor"/>
               <path fill-rule="evenodd" clip-rule="evenodd" d="M15.854 8.354C15.901 8.307 15.938 8.252 15.963 8.192C15.988 8.131 16.001 8.066 16.001 8C16.001 7.934 15.988 7.869 15.963 7.808C15.938 7.748 15.901 7.692 15.854 7.646L12.854 4.646C12.76 4.552 12.633 4.499 12.5 4.499C12.367 4.499 12.24 4.552 12.146 4.646C12.052 4.74 11.999 4.867 11.999 5C11.999 5.133 12.052 5.26 12.146 5.354L14.293 7.5H5.5C5.367 7.5 5.24 7.553 5.146 7.646C5.053 7.74 5 7.867 5 8C5 8.133 5.053 8.26 5.146 8.353C5.24 8.447 5.367 8.5 5.5 8.5H14.293L12.146 10.646C12.052 10.74 11.999 10.867 11.999 11C11.999 11.133 12.052 11.26 12.146 11.354C12.24 11.448 12.367 11.501 12.5 11.501C12.633 11.501 12.76 11.448 12.854 11.354L15.854 8.354Z" fill="currentColor"/>
@@ -2022,7 +2223,7 @@
 
     </div>
 
-    <button type="button" class="hp-chrome__menu" aria-label="Open menu">
+    <button type="button" class="hp-chrome__menu" id="siteNavToggle" aria-label="Open menu" aria-haspopup="dialog" aria-expanded="false" aria-controls="siteNav">
       <svg class="hp-chrome__menu-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
         <path d="M1 4H19"  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         <path d="M1 10H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -2030,6 +2231,54 @@
       </svg>
     </button>
   </header>
+
+  <div class="site-nav-overlay" id="siteNavOverlay" hidden>
+    <nav class="site-nav" id="siteNav" role="dialog" aria-modal="true" aria-label="Site menu">
+      <button type="button" class="site-nav__close" id="siteNavClose" aria-label="Close menu">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="site-nav__sections">
+        <section class="site-nav__section">
+          <h2 class="site-nav__heading">Search</h2>
+          <ul class="site-nav__list">
+            <li>
+              <a class="site-nav__link site-nav__link--with-icon" href="settings.html">
+                <svg class="site-nav__link-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M13.0167 10.0833C12.9279 10.2844 12.9015 10.5075 12.9407 10.7237C12.9799 10.94 13.083 11.1395 13.2367 11.2967L13.2767 11.3367C13.4006 11.4605 13.499 11.6075 13.5661 11.7694C13.6332 11.9313 13.6677 12.1048 13.6677 12.28C13.6677 12.4552 13.6332 12.6287 13.5661 12.7906C13.499 12.9525 13.4006 13.0995 13.2767 13.2233C13.1528 13.3473 13.0058 13.4456 12.8439 13.5127C12.6821 13.5798 12.5086 13.6144 12.3333 13.6144C12.1581 13.6144 11.9846 13.5798 11.8227 13.5127C11.6609 13.4456 11.5138 13.3473 11.39 13.2233L11.35 13.1833C11.1929 13.0296 10.9933 12.9265 10.7771 12.8873C10.5608 12.8481 10.3377 12.8746 10.1367 12.9633C9.93949 13.0478 9.77132 13.1882 9.65287 13.367C9.53442 13.5459 9.47086 13.7555 9.47 13.97V14.0833C9.47 14.437 9.32952 14.7761 9.07948 15.0261C8.82943 15.2762 8.49029 15.4167 8.13667 15.4167C7.78305 15.4167 7.44391 15.2762 7.19386 15.0261C6.94381 14.7761 6.80333 14.437 6.80333 14.0833V14.0233C6.79817 13.8027 6.72675 13.5887 6.59834 13.4091C6.46994 13.2296 6.29049 13.0929 6.08333 13.0167C5.88226 12.9279 5.65921 12.9015 5.44294 12.9407C5.22668 12.9799 5.02712 13.083 4.87 13.2367L4.83 13.2767C4.70617 13.4006 4.55912 13.499 4.39725 13.5661C4.23539 13.6332 4.06189 13.6677 3.88667 13.6677C3.71145 13.6677 3.53794 13.6332 3.37608 13.5661C3.21422 13.499 3.06716 13.4006 2.94333 13.2767C2.81936 13.1528 2.72102 13.0058 2.65392 12.8439C2.58682 12.6821 2.55228 12.5086 2.55228 12.3333C2.55228 12.1581 2.58682 11.9846 2.65392 11.8227C2.72102 11.6609 2.81936 11.5138 2.94333 11.39L2.98333 11.35C3.13702 11.1929 3.24012 10.9933 3.27934 10.7771C3.31855 10.5608 3.29208 10.3377 3.20333 10.1367C3.11882 9.93949 2.9785 9.77132 2.79964 9.65287C2.62078 9.53442 2.41119 9.47086 2.19667 9.47H2.08333C1.72971 9.47 1.39057 9.32952 1.14052 9.07947C0.890476 8.82943 0.75 8.49029 0.75 8.13667C0.75 7.78304 0.890476 7.44391 1.14052 7.19386C1.39057 6.94381 1.72971 6.80333 2.08333 6.80333H2.14333C2.364 6.79817 2.578 6.72675 2.75753 6.59834C2.93706 6.46993 3.07381 6.29049 3.15 6.08333C3.23874 5.88226 3.26522 5.6592 3.226 5.44294C3.18679 5.22668 3.08369 5.02712 2.93 4.87L2.89 4.83C2.76603 4.70617 2.66769 4.55912 2.60059 4.39725C2.53349 4.23539 2.49895 4.06189 2.49895 3.88667C2.49895 3.71145 2.53349 3.53794 2.60059 3.37608C2.66769 3.21422 2.76603 3.06716 2.89 2.94333C3.01383 2.81936 3.16088 2.72102 3.32275 2.65392C3.48461 2.58682 3.65811 2.55228 3.83333 2.55228C4.00855 2.55228 4.18206 2.58682 4.34392 2.65392C4.50578 2.72102 4.65284 2.81936 4.77667 2.94333L4.81667 2.98333C4.97379 3.13702 5.17334 3.24012 5.38961 3.27934C5.60587 3.31855 5.82892 3.29208 6.03 3.20333H6.08333C6.28051 3.11882 6.44868 2.9785 6.56713 2.79964C6.68558 2.62078 6.74915 2.41119 6.75 2.19667V2.08333C6.75 1.72971 6.89048 1.39057 7.14053 1.14052C7.39057 0.890476 7.72971 0.75 8.08333 0.75C8.43696 0.75 8.77609 0.890476 9.02614 1.14052C9.27619 1.39057 9.41667 1.72971 9.41667 2.08333V2.14333C9.41752 2.35786 9.48109 2.56745 9.59954 2.74631C9.71799 2.92517 9.88615 3.06549 10.0833 3.15C10.2844 3.23874 10.5075 3.26522 10.7237 3.226C10.94 3.18679 11.1395 3.08369 11.2967 2.93L11.3367 2.89C11.4605 2.76603 11.6076 2.66769 11.7694 2.60059C11.9313 2.53349 12.1048 2.49895 12.28 2.49895C12.4552 2.49895 12.6287 2.53349 12.7906 2.60059C12.9525 2.66769 13.0995 2.76603 13.2233 2.89C13.3473 3.01383 13.4456 3.16088 13.5127 3.32275C13.5798 3.48461 13.6144 3.65811 13.6144 3.83333C13.6144 4.00855 13.5798 4.18206 13.5127 4.34392C13.4456 4.50578 13.3473 4.65284 13.2233 4.77667L13.1833 4.81667C13.0296 4.97379 12.9265 5.17334 12.8873 5.38961C12.8481 5.60587 12.8746 5.82892 12.9633 6.03V6.08333C13.0478 6.28051 13.1882 6.44868 13.367 6.56713C13.5459 6.68558 13.7555 6.74914 13.97 6.75H14.0833C14.437 6.75 14.7761 6.89048 15.0261 7.14052C15.2762 7.39057 15.4167 7.72971 15.4167 8.08333C15.4167 8.43695 15.2762 8.77609 15.0261 9.02614C14.7761 9.27619 14.437 9.41667 14.0833 9.41667H14.0233C13.8088 9.41752 13.5992 9.48109 13.4204 9.59954C13.2415 9.71799 13.1012 9.88615 13.0167 10.0833Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <g transform="translate(5.856 5.856) scale(0.810)">
+                    <path d="M2.75 4.75C3.85457 4.75 4.75 3.85457 4.75 2.75C4.75 1.64543 3.85457 0.75 2.75 0.75C1.64543 0.75 0.75 1.64543 0.75 2.75C0.75 3.85457 1.64543 4.75 2.75 4.75Z" stroke="currentColor" stroke-width="1.852" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                </svg>
+                Settings
+              </a>
+            </li>
+            <li><a class="site-nav__link" href="settings.html#ui-customizations">Customize UI</a></li>
+            <li><a class="site-nav__link" href="settings.html#account">Billing &amp; Subscription</a></li>
+          </ul>
+        </section>
+        <section class="site-nav__section">
+          <h2 class="site-nav__heading">Products</h2>
+          <ul class="site-nav__list">
+            <li><a class="site-nav__link" href="index.html">Startpage Search</a></li>
+            <li><a class="site-nav__link" href="#">Mobile Browser</a></li>
+            <li><a class="site-nav__link" href="#">Browser Extension</a></li>
+          </ul>
+        </section>
+        <section class="site-nav__section">
+          <h2 class="site-nav__heading">Resources</h2>
+          <ul class="site-nav__list">
+            <li><a class="site-nav__link" href="#">About Us</a></li>
+            <li><a class="site-nav__link" href="#">Privacy Policy</a></li>
+            <li><a class="site-nav__link" href="#">Press</a></li>
+            <li><a class="site-nav__link" href="#">Support</a></li>
+            <li><a class="site-nav__link" href="#">Imprint</a></li>
+          </ul>
+        </section>
+      </div>
+    </nav>
+  </div>
 
   <!-- Inline SVG sprite (file:// safe) -->
   <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -2236,6 +2485,7 @@
       aria-modal="true"
       aria-labelledby="planModalTitle"
       aria-describedby="planModalLede"
+      tabindex="-1"
     >
       <button type="button" class="plan-modal__close" id="planModalClose" aria-label="Close">
         <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -2302,6 +2552,18 @@
               </svg>
               Ad-free search
             </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Cross-device sync
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Enhanced tracker protections
+            </li>
           </ul>
         </div>
 
@@ -2318,25 +2580,19 @@
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Ad-free search
+              Everything included in basic
             </li>
             <li class="plan-card__feature">
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Tracker detection
+              Enhanced Anonymous View
             </li>
             <li class="plan-card__feature">
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Privacy ratings for websites
-            </li>
-            <li class="plan-card__feature">
-              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              AI content filter
+              AI content filtering
             </li>
             <li class="plan-card__feature">
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -2348,7 +2604,13 @@
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Advanced search tools
+              Tracker blocking
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Private media player
             </li>
           </ul>
         </div>
@@ -2675,12 +2937,12 @@
 
     const SHIELD_OUTLINE = `
       <svg class="privacy-shield__icon" viewBox="-1.5 -1.5 16.124 18.969" fill="none" aria-hidden="true" overflow="visible">
-        <path d="M6.15527 0.0745424C6.41743 -0.0248475 6.7066 -0.0248475 6.96875 0.0745424L12.3721 2.12337C12.824 2.29473 13.124 2.73203 13.124 3.22005V8.00032C13.124 10.5717 11.4465 12.576 10.0264 13.8324C9.29212 14.4819 8.56352 14.9882 8.02051 15.3314C7.74789 15.5036 7.51886 15.6374 7.35547 15.7288C7.27383 15.7745 7.20782 15.8095 7.16113 15.8343C7.13787 15.8467 7.11908 15.8566 7.10547 15.8636L7.08887 15.8724L7.08105 15.8763H7.08008C6.75025 15.9998 6.49955 16.0001 6.04297 15.8763L6.03516 15.8724L6.01855 15.8636C6.00494 15.8566 5.9862 15.8467 5.96289 15.8343C5.91619 15.8095 5.85024 15.7746 5.76855 15.7288C5.60516 15.6374 5.37618 15.5037 5.10352 15.3314C4.5605 14.9882 3.83193 14.4819 3.09766 13.8324C1.67749 12.576 4.49124e-05 10.5717 0 8.00032V3.22005C0 2.73215 0.299194 2.29481 0.750977 2.12337L6.15527 0.0745424Z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
+        <path d="M6.15527 0.0745424C6.41743 -0.0248475 6.7066 -0.0248475 6.96875 0.0745424L12.3721 2.12337C12.824 2.29473 13.124 2.73203 13.124 3.22005V8.00032C13.124 10.5717 11.4465 12.576 10.0264 13.8324C9.29212 14.4819 8.56352 14.9882 8.02051 15.3314C7.74789 15.5036 7.51886 15.6374 7.35547 15.7288C7.27383 15.7745 7.20782 15.8095 7.16113 15.8343C7.13787 15.8467 7.11908 15.8566 7.10547 15.8636L7.08887 15.8724L7.08105 15.8763H7.08008C6.75025 15.9998 6.49955 16.0001 6.04297 15.8763L6.03516 15.8724L6.01855 15.8636C6.00494 15.8566 5.9862 15.8467 5.96289 15.8343C5.91619 15.8095 5.85024 15.7746 5.76855 15.7288C5.60516 15.6374 5.37618 15.5037 5.10352 15.3314C4.5605 14.9882 3.83193 14.4819 3.09766 13.8324C1.67749 12.576 4.49124e-05 10.5717 0 8.00032V3.22005C0 2.73215 0.299194 2.29481 0.750977 2.12337L6.15527 0.0745424Z" fill="transparent" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
       </svg>`;
 
     function renderPrivacyPopover(domain) {
       const insights = privacyInsights(domain);
-      const aiHtml = insights.aiHeavy
+      const aiHtml = isPremium() && insights.aiHeavy
         ? `<div class="privacy-popover__ai" role="status">
             <p class="privacy-popover__ai-title"><span class="privacy-popover__ai-icon" aria-hidden="true">⚠</span>AI Content Notice</p>
             <p class="privacy-popover__ai-body">This site appears to publish a high volume of AI-generated content.</p>
@@ -2723,7 +2985,6 @@
 
     function renderOrganic(data, query) {
       const domain = extractDomain(data.url, data.siteName);
-      const premium = isPremium();
       const core = `
           <div class="algo-result__source">
             <div class="algo-result__favicon" aria-hidden="true"></div>
@@ -2742,10 +3003,6 @@
               <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
             </div>
           </div>`;
-
-      if (!premium) {
-        return `<div class="algo-result">${core}</div>`;
-      }
 
       return `
         <div class="algo-result algo-result--premium" data-domain="${domain}">
@@ -2796,9 +3053,7 @@
 
       meta.textContent = showAds
         ? `About ${approx} results`
-        : isPremium()
-          ? `About ${approx} results · Ad-free · Premium insights`
-          : `About ${approx} results · Ad-free`;
+        : `About ${approx} results · Ad-free`;
 
       const blocks = showAds
         ? [
@@ -2937,6 +3192,12 @@
         setOpen(menu.hidden);
       });
 
+      document.getElementById('accountMenuClose')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setOpen(false);
+        btn.focus();
+      });
+
       document.addEventListener('click', (e) => {
         if (menu.hidden) return;
         if (btn.contains(e.target) || menu.contains(e.target)) return;
@@ -2956,6 +3217,50 @@
       if (logInBtn) {
         logInBtn.addEventListener('click', () => setAuth('signed-in'));
       }
+    })();
+
+    (function siteNav() {
+      const toggle = document.getElementById('siteNavToggle');
+      const overlay = document.getElementById('siteNavOverlay');
+      const panel = document.getElementById('siteNav');
+      const closeBtn = document.getElementById('siteNavClose');
+      if (!toggle || !overlay || !panel) return;
+
+      function openNav() {
+        overlay.hidden = false;
+        document.body.classList.add('site-nav-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        requestAnimationFrame(() => {
+          overlay.classList.add('is-open');
+          closeBtn?.focus();
+        });
+      }
+
+      function closeNav() {
+        overlay.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('site-nav-open');
+        const finish = (e) => {
+          if (e && e.target !== overlay) return;
+          overlay.hidden = true;
+          overlay.removeEventListener('transitionend', finish);
+          toggle.focus();
+        };
+        overlay.addEventListener('transitionend', finish);
+      }
+
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (overlay.classList.contains('is-open')) closeNav();
+        else openNav();
+      });
+      closeBtn?.addEventListener('click', closeNav);
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeNav();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeNav();
+      });
     })();
 
     (function planModal() {
@@ -3019,7 +3324,7 @@
         overlay.hidden = false;
         requestAnimationFrame(() => overlay.classList.add('is-open'));
         document.body.classList.add('plan-modal-open');
-        closeBtn?.focus();
+        modal.focus({ preventScroll: true });
       }
 
       function closeModal() {
