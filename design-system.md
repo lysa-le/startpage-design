@@ -256,7 +256,7 @@
 | `color-text-primary` | `color-black-700` — `#1E222D` |
 | `color-text-secondary` | `color-midnight-300` — `#7F869E` |
 | `color-text-tertiary` | `color-midnight-400` — `#5B627A` |
-| `color-text-inverted` | `color-whisper-100` — `#F2F3FF` |
+| `color-text-inverted` | `color-whisper-0` — `#FFFFFF` |
 | `color-text-brandblue` | `color-brand-blue-400` — `#5668F1` |
 | `color-text-link` | `color-brand-blue-600` — `#2E39B3` |
 | `color-text-teal` | `color-teal-550` — `#009F91` |

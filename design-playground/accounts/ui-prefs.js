@@ -15,6 +15,8 @@
     titleFont: 'inter',
     titleColor: 'link',
     siteIcons: true,
+    showFilters: true,
+    resultsPerPage: '10',
   };
 
   const FONT_STACKS = {
@@ -79,6 +81,8 @@
     el.dataset.uiTitleFont = p.titleFont;
     el.dataset.uiTitleColor = p.titleColor;
     el.dataset.uiSiteIcons = p.siteIcons ? 'on' : 'off';
+    el.dataset.uiShowFilters = p.showFilters !== false ? 'on' : 'off';
+    el.dataset.uiResultsPerPage = String(p.resultsPerPage || '10');
 
     el.style.setProperty('--ui-font-family', FONT_STACKS[p.font] || FONT_STACKS.inter);
     el.style.setProperty('--ui-title-font', FONT_STACKS[p.titleFont] || FONT_STACKS.inter);

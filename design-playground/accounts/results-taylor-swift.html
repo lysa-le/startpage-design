@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search — cheese — Accounts</title>
+  <title>Search — Taylor Swift — Accounts</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -1372,7 +1372,7 @@
       overflow: visible;
     }
 
-    /* ── Right rail — Wikipedia knowledge panel (Figma 3894:2835) ── */
+    /* ── Right rail — Wikipedia knowledge panel (Figma 3938:13629) ── */
     .serp-rail {
       min-width: 0;
       /* Sit under the meta line, slightly closer to results */
@@ -1389,11 +1389,12 @@
       align-items: stretch;
       gap: var(--spacing-24);
       width: 100%;
+      max-width: calc(var(--spacing-96) * 4 + var(--spacing-48)); /* ~430 */
     }
 
     .knowledge-panel__header {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       gap: var(--spacing-16);
     }
@@ -1401,7 +1402,6 @@
     .knowledge-panel__headings {
       flex: 1 1 auto;
       min-width: 0;
-      padding-top: var(--spacing-16);
     }
 
     .knowledge-panel__title {
@@ -1425,9 +1425,10 @@
 
     .knowledge-panel__image {
       flex: 0 0 auto;
-      width: calc(var(--spacing-48) + var(--spacing-96) + var(--spacing-8)); /* ~152 */
-      height: calc(var(--spacing-48) + var(--spacing-40)); /* ~88 */
+      width: calc(var(--spacing-96) + var(--spacing-8)); /* 104 ≈ Figma 102 */
+      height: calc(var(--spacing-96) + var(--spacing-48) + var(--spacing-8)); /* 152 ≈ Figma 150 */
       object-fit: cover;
+      object-position: center top;
       border-radius: var(--radius-lg);
       background: var(--color-background-secondary);
     }
@@ -1455,6 +1456,83 @@
     }
     .knowledge-panel__continue:hover {
       text-decoration: underline;
+    }
+
+    /* Infobox facts — label | value */
+    .knowledge-panel__facts {
+      display: grid;
+      grid-template-columns: calc(var(--spacing-96) + var(--spacing-12)) minmax(0, 1fr); /* ~108 + values */
+      column-gap: var(--spacing-16);
+      row-gap: var(--spacing-12);
+      align-items: start;
+      margin: 0;
+    }
+    .knowledge-panel__fact-label {
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .knowledge-panel__fact-value {
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+
+    /* Social / external links */
+    .knowledge-panel__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-24) calc(var(--spacing-24) + var(--spacing-4)); /* 28px row gap from Figma */
+      align-items: flex-start;
+    }
+    .knowledge-panel__link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-4);
+      text-decoration: none;
+      color: var(--color-text-link);
+      min-width: var(--spacing-32);
+    }
+    .knowledge-panel__link:hover .knowledge-panel__link-label {
+      text-decoration: underline;
+    }
+    .knowledge-panel__link-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      flex-shrink: 0;
+      background: var(--color-background-primary);
+    }
+    .knowledge-panel__link-icon img {
+      display: block;
+      width: calc(var(--spacing-24) + var(--spacing-4)); /* 28 */
+      height: calc(var(--spacing-24) + var(--spacing-4));
+      object-fit: contain;
+    }
+    .knowledge-panel__link-icon img.knowledge-panel__link-icon--sm {
+      width: var(--spacing-24);
+      height: var(--spacing-16);
+    }
+    .knowledge-panel__link-icon img.knowledge-panel__link-icon--globe {
+      width: calc(var(--spacing-16) + var(--spacing-4) + 1px); /* ~21 */
+      height: calc(var(--spacing-16) + var(--spacing-4) + 1px);
+    }
+    .knowledge-panel__link-label {
+      font-family: var(--font-family);
+      font-size: var(--font-utility-caption);
+      line-height: var(--font-utility-caption-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-align: center;
+      white-space: nowrap;
     }
 
     .knowledge-panel__footer {
@@ -1501,6 +1579,275 @@
       display: flex;
       align-items: center;
       white-space: nowrap;
+    }
+
+    /* ── News carousel — from news-hub-prototype All-tab serp-all-news ── */
+    .serp-all-news {
+      --news-publisher-max-chars: 14;
+      width: 100%;
+      max-width: 100%;
+    }
+    .serp-all-news .results-section-label {
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .serp-all-news__carousel {
+      position: relative;
+      width: 100%;
+      margin-top: var(--spacing-24);
+    }
+    .serp-all-news__viewport {
+      width: 100%;
+      overflow: hidden;
+    }
+    .serp-all-news__row {
+      --serp-all-news-carousel-gap: var(--spacing-24);
+      --serp-all-news-visible: 3;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: var(--serp-all-news-carousel-gap);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .serp-all-news__row::-webkit-scrollbar { display: none; }
+    .serp-all-news-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      flex: 0 0 calc(
+        (100% - (var(--serp-all-news-carousel-gap) * (var(--serp-all-news-visible) - 1)))
+        / var(--serp-all-news-visible)
+      );
+      min-width: 0;
+      overflow: hidden;
+      scroll-snap-align: start;
+    }
+    .icn-arrows {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--color-icon-primary);
+    }
+    .icn-arrows--right-circle,
+    .icn-arrows--left-circle {
+      width: var(--spacing-24);
+      height: var(--spacing-24);
+      border-radius: var(--radius-full);
+      background: var(--color-background-primary);
+    }
+    .serp-all-news__prev,
+    .serp-all-news__next {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--color-icon-primary);
+      transform: translateY(-50%);
+    }
+    .serp-all-news__prev { left: var(--spacing-8); }
+    .serp-all-news__next { right: var(--spacing-8); }
+    .serp-all-news__next:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+    .serp-all-news__prev:not(:disabled):hover .icn-arrows--left-circle,
+    .serp-all-news__next:not(:disabled):hover .icn-arrows--right-circle {
+      background: var(--color-button-brandblue);
+      border-color: transparent;
+      color: var(--color-text-inverted);
+    }
+    .serp-all-news__prev[hidden],
+    .serp-all-news__next[hidden] { display: none; }
+    .serp-all-news__prev .icn-arrows--left-circle,
+    .serp-all-news__next .icn-arrows--right-circle {
+      box-sizing: border-box;
+      background: var(--color-background-tertiary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      box-shadow: var(--shadow-search);
+    }
+    .serp-all-news-card__thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, var(--color-background-tertiary) 0%, transparent 55%),
+        var(--color-background-secondary);
+    }
+    .serp-all-news-card__thumb-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+    .serp-all-news-card:has(.serp-all-news-card__thumb:hover) .serp-all-news-card__thumb-img,
+    .serp-all-news-card:has(.serp-all-news-card__title:hover) .serp-all-news-card__thumb-img {
+      transform: scale(1.03);
+    }
+    .serp-all-news-card:has(.serp-all-news-card__thumb:hover) .serp-all-news-card__title {
+      text-decoration: underline;
+    }
+    .news-article__favicon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-24);
+      height: var(--spacing-24);
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+      background-color: var(--color-background-tertiary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      box-sizing: border-box;
+    }
+    .news-article__favicon--img {
+      overflow: hidden;
+      background-color: var(--color-whisper-0);
+    }
+    .news-article__favicon-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius-full);
+      display: block;
+    }
+    .news-article__favicon-label {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1;
+      color: var(--color-text-secondary);
+    }
+    .news-article__publisher {
+      flex: 0 0 auto;
+      max-width: min(calc(var(--news-publisher-max-chars) * 1ch), 100%);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary);
+    }
+    .serp-all-news-card .news-article__publisher {
+      color: var(--color-text-primary);
+    }
+    .serp-all-news-card__av-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-4);
+      align-self: flex-start;
+      margin-top: auto;
+      padding-top: var(--spacing-4);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    .serp-all-news-card__av-link:hover {
+      color: var(--color-text-link);
+      text-decoration: underline;
+    }
+    .serp-all-news-card__av-icon {
+      display: inline-flex;
+      flex-shrink: 0;
+      color: var(--color-icon-secondary);
+    }
+    .serp-all-news-card__meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: var(--spacing-8);
+      min-width: 0;
+      overflow: hidden;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .serp-all-news-card__meta .news-article__favicon { flex-shrink: 0; }
+    .serp-all-news-card__meta .news-article__publisher {
+      flex: 0 1 auto;
+      min-width: 0;
+      max-width: min(calc(var(--news-publisher-max-chars, 14) * 1ch), 100%);
+    }
+    .serp-all-news-card__time {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+    .serp-all-news-card__meta-sep {
+      flex: 0 0 auto;
+      color: var(--color-text-tertiary);
+      line-height: 1;
+    }
+    .serp-all-news-card__title {
+      margin: 0;
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .serp-all-news-card__title:hover { text-decoration: underline; }
+    .serp-all-news__more {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+      width: 100%;
+      margin-top: var(--spacing-24);
+    }
+    .serp-all-news__more-line {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 0;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .serp-all-news__more-btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      width: auto;
+      padding: var(--spacing-8) var(--spacing-24);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.15s ease;
+    }
+    .serp-all-news__more-btn:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+    .serp-all-news__more-btn .btn__icon {
+      display: block;
+      flex-shrink: 0;
     }
 
     /* ── Result entry animation ── */
@@ -2750,6 +3097,10 @@
       .hp-chrome__auth {
         gap: var(--spacing-8);
       }
+      .serp-all-news__row {
+        --serp-all-news-carousel-gap: var(--spacing-16);
+        --serp-all-news-visible: 1;
+      }
       .site-header--desktop {
         --serp-chrome-reserve: calc(var(--spacing-24) * 7); /* 168px */
         grid-template-columns:
@@ -3030,7 +3381,7 @@
           <!-- Search -->
           <div class="site-header__search-wrap">
             <div class="search-field search-field--serp has-value">
-              <input type="search" class="search-field__input" id="searchInput" value="cheese" autocomplete="off" spellcheck="false" aria-label="Search">
+              <input type="search" class="search-field__input" id="searchInput" value="Taylor Swift" autocomplete="off" spellcheck="false" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" id="clearBtn" aria-label="Clear search" tabindex="-1">
                   <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
@@ -3312,18 +3663,18 @@
       </div>
 
       <aside class="serp-rail" id="serpRail" aria-label="Related information">
-        <!-- Wikipedia knowledge panel — Figma Startpage-Design-Home 3894:2835 -->
-        <section class="knowledge-panel" id="knowledgePanel" aria-label="Cheese">
+        <!-- Wikipedia knowledge panel — Figma Startpage-Design-Home 3938:13629 -->
+        <section class="knowledge-panel" id="knowledgePanel" aria-label="Taylor Swift">
           <div class="knowledge-panel__header">
             <div class="knowledge-panel__headings">
-              <h2 class="knowledge-panel__title">Cheese</h2>
-              <p class="knowledge-panel__subtitle">Curdled milk food product</p>
+              <h2 class="knowledge-panel__title">Taylor Swift</h2>
+              <p class="knowledge-panel__subtitle">American singer-songwriter (born 1989)</p>
             </div>
             <img
               class="knowledge-panel__image"
-              src="assets/knowledge-cheese.jpg"
-              width="150"
-              height="90"
+              src="assets/knowledge-taylor-swift.jpg"
+              width="104"
+              height="152"
               alt=""
               loading="lazy"
               decoding="async"
@@ -3333,15 +3684,87 @@
           <hr class="knowledge-panel__rule" />
 
           <p class="knowledge-panel__text">
-            Cheese is a type of dairy product produced in a range of flavors, textures, and forms by coagulation of the milk protein casein.&nbsp;It is composed of proteins and fat from milk, usually of cows, goats or sheep, and sometimes of water buffalo.&nbsp;During production, milk is usually acidified and either the enzymes of rennet or bacterial enzymes with similar activity are added to cause the casein to coagulate ...
-            <a class="knowledge-panel__continue" href="https://en.wikipedia.org/wiki/Cheese" target="_blank" rel="noopener noreferrer">Continue in Wikipedia</a>
+            Taylor Alison Swift is an American singer-songwriter.&nbsp;An influential figure in popular culture, she is known for her autobiographical songwriting and artistic reinventions.&nbsp;Swift is the highest-grossing live music artist, the wealthiest female musician, and one of the best-selling music artists of all time.&nbsp;Swift signed with Big Machine Records in 2005 and debuted as a country singer with the albums Taylor Swift and Fearless.&nbsp;The singles &ldquo;Teardrops on My Guitar&rdquo;, &ldquo;Love Story&rdquo;, and &ldquo;You Belong with Me&rdquo; found crossover success on country and pop radio formats ...
+            <a class="knowledge-panel__continue" href="https://en.wikipedia.org/wiki/Taylor_Swift" target="_blank" rel="noopener noreferrer">Continue in Wikipedia</a>
           </p>
+
+          <hr class="knowledge-panel__rule" />
+
+          <dl class="knowledge-panel__facts">
+            <dt class="knowledge-panel__fact-label">Born</dt>
+            <dd class="knowledge-panel__fact-value">Taylor Alison Swift, December 13, 1989, West Reading, Pennsylvania, US</dd>
+            <dt class="knowledge-panel__fact-label">Age</dt>
+            <dd class="knowledge-panel__fact-value">36 years</dd>
+            <dt class="knowledge-panel__fact-label">Occupation</dt>
+            <dd class="knowledge-panel__fact-value">Singer-songwriter</dd>
+            <dt class="knowledge-panel__fact-label">Years active</dt>
+            <dd class="knowledge-panel__fact-value">2003-present</dd>
+            <dt class="knowledge-panel__fact-label">Organization</dt>
+            <dd class="knowledge-panel__fact-value">Taylor Swift Productions</dd>
+            <dt class="knowledge-panel__fact-label">Works</dt>
+            <dd class="knowledge-panel__fact-value">Albums, singles, songs, videos, performances</dd>
+            <dt class="knowledge-panel__fact-label">Relatives</dt>
+            <dd class="knowledge-panel__fact-value">Austin Swift (brother), Marjorie Finlay (grandmother), Jason Kelce (brother-in-law)</dd>
+          </dl>
+
+          <hr class="knowledge-panel__rule" />
+
+          <div class="knowledge-panel__links" aria-label="Related links">
+            <a class="knowledge-panel__link" href="https://www.taylorswift.com" target="_blank" rel="noopener noreferrer">
+              <span class="knowledge-panel__link-icon" aria-hidden="true">
+                <img class="knowledge-panel__link-icon--globe" src="assets/knowledge/website.svg" alt="" width="21" height="21" />
+              </span>
+              <span class="knowledge-panel__link-label">Website</span>
+            </a>
+            <a class="knowledge-panel__link" href="https://en.wikipedia.org/wiki/Taylor_Swift" target="_blank" rel="noopener noreferrer">
+              <span class="knowledge-panel__link-icon" aria-hidden="true">
+                <img class="knowledge-panel__link-icon--sm" src="assets/knowledge/wikipedia.png" alt="" width="24" height="16" />
+              </span>
+              <span class="knowledge-panel__link-label">Wikipedia</span>
+            </a>
+            <a class="knowledge-panel__link" href="https://x.com/taylorswift13" target="_blank" rel="noopener noreferrer">
+              <span class="knowledge-panel__link-icon" aria-hidden="true">
+                <img src="assets/knowledge/x.svg" alt="" width="32" height="32" />
+              </span>
+              <span class="knowledge-panel__link-label">X</span>
+            </a>
+            <a class="knowledge-panel__link" href="https://www.instagram.com/taylorswift" target="_blank" rel="noopener noreferrer">
+              <span class="knowledge-panel__link-icon" aria-hidden="true">
+                <img src="assets/knowledge/instagram.png" alt="" width="28" height="28" />
+              </span>
+              <span class="knowledge-panel__link-label">Instagram</span>
+            </a>
+            <a class="knowledge-panel__link" href="https://www.facebook.com/TaylorSwift" target="_blank" rel="noopener noreferrer">
+              <span class="knowledge-panel__link-icon" aria-hidden="true">
+                <img src="assets/knowledge/facebook.svg" alt="" width="28" height="28" />
+              </span>
+              <span class="knowledge-panel__link-label">Facebook</span>
+            </a>
+            <a class="knowledge-panel__link" href="https://open.spotify.com/artist/06HL4z0CvFAxyc27GXpf02" target="_blank" rel="noopener noreferrer">
+              <span class="knowledge-panel__link-icon" aria-hidden="true">
+                <img src="assets/knowledge/spotify.svg" alt="" width="28" height="28" />
+              </span>
+              <span class="knowledge-panel__link-label">Spotify</span>
+            </a>
+            <a class="knowledge-panel__link" href="https://www.imdb.com/name/nm2357847/" target="_blank" rel="noopener noreferrer">
+              <span class="knowledge-panel__link-icon" aria-hidden="true">
+                <img src="assets/knowledge/imdb.svg" alt="" width="28" height="28" />
+              </span>
+              <span class="knowledge-panel__link-label">IMDb</span>
+            </a>
+            <a class="knowledge-panel__link" href="https://soundcloud.com/taylorswiftmusic" target="_blank" rel="noopener noreferrer">
+              <span class="knowledge-panel__link-icon" aria-hidden="true">
+                <img src="assets/knowledge/soundcloud.svg" alt="" width="28" height="28" />
+              </span>
+              <span class="knowledge-panel__link-label">Soundcloud</span>
+            </a>
+          </div>
 
           <hr class="knowledge-panel__rule" />
 
           <div class="knowledge-panel__footer">
             <p class="knowledge-panel__more">
-              More from <a class="knowledge-panel__more-link" href="https://en.wikipedia.org/wiki/Cheese" target="_blank" rel="noopener noreferrer">Wikipedia</a>
+              More from <a class="knowledge-panel__more-link" href="https://en.wikipedia.org/wiki/Taylor_Swift" target="_blank" rel="noopener noreferrer">Wikipedia</a>
             </p>
             <div class="knowledge-panel__actions">
               <button type="button" class="knowledge-panel__action" id="hideWikipediaBtn">Hide Wikipedia</button>
@@ -3526,53 +3949,53 @@
     function pick(arr, seed) { return arr[hash(seed) % arr.length]; }
 
     /* ─────────────────────────────────────────────
-       Cheese SERP data — 4 top ads, 10 organic, 2 bottom ads
+       Taylor Swift SERP data — 4 top ads, organic results, 2 bottom ads
        ───────────────────────────────────────────── */
 
     const TOP_ADS = [
       {
         type: 'ad',
-        siteName: 'Cabot Creamery',
-        url: 'http://www.cabotcreamery.com/cheese',
-        title: 'Cabot Cheese — Award-Winning Cheddar Since 1919',
-        description: 'Shop Cabot cheese online. Sharp cheddar, pepper jack, and more from Vermont co-op farmers. Free shipping on orders over $50. Taste the difference in every bite.',
+        siteName: 'Ticketmaster',
+        url: 'http://www.ticketmaster.com/taylor-swift',
+        title: 'Taylor Swift Tickets — Official Tickets & VIP Packages',
+        description: 'Find official Taylor Swift concert tickets, VIP experiences, and verified resale. Get alerts for Eras Tour dates and upcoming stadium shows near you.',
         hasImage: true,
         stars: 5,
-        ratingLabel: 'rating for cabotcreamery.com',
-        sitelinks: ['Sharp Cheddar', 'Farmhouse', 'Snack Packs', 'Recipes'],
+        ratingLabel: 'rating for ticketmaster.com',
+        sitelinks: ['Concerts', 'VIP Packages', 'Verified Resale', 'Alerts'],
       },
       {
         type: 'ad',
-        siteName: 'Tillamook',
-        url: 'http://www.tillamook.com/products/cheese',
-        title: 'Tillamook Cheese — Extra Sharp Cheddar & More',
-        description: 'Made with care in Tillamook County, Oregon. Explore our cheese blocks, slices, and shreds. Find stores near you or shop online for delivery.',
-        hasImage: false,
-        stars: 4,
-        ratingLabel: 'rating for tillamook.com',
-        sitelinks: ['Extra Sharp', 'Medium Cheddar', 'Pepper Jack', 'Store Locator'],
-      },
-      {
-        type: 'ad',
-        siteName: 'Cheese.com',
-        url: 'http://www.cheese.com',
-        title: 'Cheese.com — Encyclopedia of Cheese Types & Pairings',
-        description: 'Browse 1,800+ cheeses by country, milk type, and texture. Pairing guides, recipes, and tasting notes for cheddar, brie, gouda, blue cheese, and more.',
-        hasImage: true,
-        stars: 4,
-        ratingLabel: 'rating for cheese.com',
-        sitelinks: ['By Country', 'By Milk', 'Soft Cheese', 'Hard Cheese'],
-      },
-      {
-        type: 'ad',
-        siteName: 'Sargento',
-        url: 'http://www.sargento.com',
-        title: 'Sargento Cheese Snacks — Real Cheese, Real Good',
-        description: 'Natural cheese snacks, slices, and shredded cheese for everyday meals. No artificial flavors. Find Sargento cheese near you.',
+        siteName: 'Spotify',
+        url: 'http://www.spotify.com/taylor-swift',
+        title: 'Listen to Taylor Swift — Official Artist Page on Spotify',
+        description: 'Stream Taylor Swift hits, album deep cuts, and curated playlists. Follow for new releases, The Tortured Poets Department, and Eras Tour live recordings.',
         hasImage: false,
         stars: 5,
-        ratingLabel: 'rating for sargento.com',
-        sitelinks: ['Snack Cheese', 'Sliced', 'Shredded', 'Recipes'],
+        ratingLabel: 'rating for spotify.com',
+        sitelinks: ['Top Songs', 'Albums', 'Playlists', 'Radio'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Amazon Music',
+        url: 'http://www.amazon.com/music/taylor-swift',
+        title: 'Taylor Swift Music — Stream & Download on Amazon Music',
+        description: 'Shop Taylor Swift CDs, vinyl, and Unlimited streaming. From Fearless (Taylor\'s Version) to Midnights — listen ad-free with Amazon Music Unlimited.',
+        hasImage: true,
+        stars: 4,
+        ratingLabel: 'rating for amazon.com',
+        sitelinks: ['Vinyl', 'CDs', 'Unlimited', 'Merch'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Taylor Swift Official Store',
+        url: 'http://www.taylorswift.com/store',
+        title: 'Official Taylor Swift Merch — Shop the Eras Collection',
+        description: 'Shop official apparel, vinyl, and limited-edition merch from TaylorSwift.com. New drops, Eras Tour collection, and exclusive fan club offers.',
+        hasImage: false,
+        stars: 5,
+        ratingLabel: 'rating for taylorswift.com',
+        sitelinks: ['New Arrivals', 'Vinyl', 'Apparel', 'Fan Club'],
       },
     ];
 
@@ -3580,166 +4003,159 @@
       {
         type: 'organic',
         siteName: 'Wikipedia',
-        url: 'https://en.wikipedia.org › wiki › Cheese',
-        title: 'Cheese — Wikipedia',
-        description: 'Cheese is a dairy product produced in a range of flavors, textures, and forms by coagulation of the milk protein casein. It comprises proteins and fat from milk, usually the milk of cows, buffalo, goats, or sheep.',
+        url: 'https://en.wikipedia.org › wiki › Taylor_Swift',
+        title: 'Taylor Swift — Wikipedia',
+        description: 'Taylor Alison Swift (born December 13, 1989) is an American singer-songwriter. A subject of widespread public interest, she has influenced the music industry and popular culture through her songwriting, artistry, and entrepreneurship.',
       },
       {
         type: 'organic',
-        siteName: 'Serious Eats',
-        url: 'https://seriouseats.com › cheese',
-        title: 'The Best Cheese Guides & Recipes — Serious Eats',
-        description: 'Learn how to buy, store, and cook with cheese. From grilled cheese technique to cheese board building, Serious Eats has tested guides for cheddar, mozzarella, and soft-ripened cheese.',
+        siteName: 'Taylor Swift Official',
+        url: 'https://taylorswift.com',
+        title: 'Taylor Swift | Official Website',
+        description: 'The official home for Taylor Swift news, music, merch, and tour updates. Explore albums, videos, and the latest from the Eras Tour and beyond.',
       },
       {
         type: 'organic',
-        siteName: 'Bon Appétit',
-        url: 'https://bonappetit.com › recipes › cheese',
-        title: 'Cheese Recipes & Tips from Bon Appétit',
-        description: 'Our favorite cheese recipes — mac and cheese, fondue, baked brie, and more. Plus how to build a cheese plate and which cheeses melt best.',
+        siteName: 'YouTube',
+        url: 'https://youtube.com › @TaylorSwift',
+        title: 'Taylor Swift — Official YouTube Channel',
+        description: 'Watch official music videos, live performances, and lyric videos from Taylor Swift. Subscribe for new releases and behind-the-scenes content.',
       },
       {
         type: 'organic',
-        siteName: 'Cheese.com',
-        url: 'https://cheese.com › browse',
-        title: 'Cheese Types A–Z — Browse Cheese.com',
-        description: 'Search cheese by name, country, or milk type. Detailed profiles cover taste, texture, aging, and wine pairings for thousands of varieties worldwide.',
+        siteName: 'AllMusic',
+        url: 'https://allmusic.com › artist › taylor-swift-mn0000482518',
+        title: 'Taylor Swift Biography, Songs & Albums | AllMusic',
+        description: 'Explore Taylor Swift\'s discography, from country beginnings through pop blockbusters and indie-folk reinventions. Reviews, credits, and similar artists.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Rolling Stone',
+        url: 'https://rollingstone.com › music › music-news › taylor-swift',
+        title: 'Taylor Swift News, Interviews & Album Reviews — Rolling Stone',
+        description: 'Latest Taylor Swift coverage: album reviews, Eras Tour reporting, interviews, and rankings of her greatest songs and records.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Billboard',
+        url: 'https://billboard.com › artist › taylor-swift',
+        title: 'Taylor Swift Chart History & News | Billboard',
+        description: 'Track Taylor Swift on the Billboard Hot 100 and Billboard 200. News on chart records, streaming milestones, and new releases.',
+      },
+      {
+        type: 'organic',
+        siteName: 'IMDb',
+        url: 'https://imdb.com › name › nm2357847',
+        title: 'Taylor Swift — Actress, Soundtrack — IMDb',
+        description: 'Filmography and credits for Taylor Swift, including Cats, Amsterdam, and soundtrack appearances. Biography, trivia, and photos.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Genius',
+        url: 'https://genius.com › artists › Taylor-swift',
+        title: 'Taylor Swift Lyrics, Songs & Albums | Genius',
+        description: 'Annotated lyrics for Taylor Swift songs across every era — folklore, 1989, Reputation, Midnights, and The Tortured Poets Department.',
+      },
+      {
+        type: 'organic',
+        siteName: 'The New York Times',
+        url: 'https://nytimes.com › topic › person › taylor-swift',
+        title: 'Taylor Swift — Topic Overview — The New York Times',
+        description: 'News, criticism, and features on Taylor Swift from The New York Times. Album reviews, cultural analysis, and Eras Tour coverage.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Pitchfork',
+        url: 'https://pitchfork.com › artists › 28758-taylor-swift',
+        title: 'Taylor Swift Albums, Reviews & News | Pitchfork',
+        description: 'Pitchfork reviews and features on Taylor Swift, including Folklore, Evermore, Midnights, and re-recorded Taylor\'s Version albums.',
       },
       {
         type: 'organic',
         siteName: 'Reddit',
-        url: 'https://reddit.com › r › cheese',
-        title: 'r/cheese — Community for Cheese Lovers',
-        description: 'Photos, recommendations, and tasting notes from cheese enthusiasts. Ask about obscure washed-rind cheeses, find the best grocery cheddar, or share your cheese board.',
+        url: 'https://reddit.com › r › TaylorSwift',
+        title: 'r/TaylorSwift — The Taylor Swift Subreddit',
+        description: 'Fan discussion of Taylor Swift music, theories, tour news, and album drops. Spoiler tags, megathreads, and weekly discussion posts.',
       },
       {
         type: 'organic',
-        siteName: 'The Kitchn',
-        url: 'https://thekitchn.com › cheese',
-        title: 'Cheese 101 — How to Buy, Store & Serve Cheese',
-        description: 'Practical cheese advice for home cooks: which cheese to buy, how long it lasts in the fridge, and easy recipes that put cheese front and center.',
+        siteName: 'Apple Music',
+        url: 'https://music.apple.com › artist › taylor-swift › 159260351',
+        title: 'Taylor Swift on Apple Music',
+        description: 'Stream Taylor Swift albums and playlists on Apple Music. Listen to complete discography including Taylor\'s Versions and live Eras performances.',
       },
       {
         type: 'organic',
-        siteName: 'BBC Good Food',
-        url: 'https://bbcgoodfood.com › recipes › collection › cheese-recipes',
-        title: 'Cheese Recipes — BBC Good Food',
-        description: 'Hundreds of cheese recipes from toasted sandwiches to soufflés. Includes cheddar, halloumi, mozzarella, and blue cheese ideas for weeknights and entertaining.',
+        siteName: 'Grammy.com',
+        url: 'https://grammy.com › artists › taylor-swift',
+        title: 'Taylor Swift | Recording Academy Grammy Awards',
+        description: 'Grammy wins and nominations for Taylor Swift, including Album of the Year victories and performances at the Grammy Awards.',
       },
       {
         type: 'organic',
-        siteName: "Culture: The Word on Cheese",
-        url: 'https://culturecheesemag.com',
-        title: 'Culture Magazine — The Word on Cheese',
-        description: 'Stories from cheese makers, affineurs, and mongers. Discover seasonal cheese, farmstead producers, and expert tasting notes for cheese lovers.',
+        siteName: 'BBC',
+        url: 'https://bbc.com › news › topics › cjnwl8q4g7nt',
+        title: 'Taylor Swift — Latest News & Features — BBC',
+        description: 'BBC News coverage of Taylor Swift: music, tours, cultural impact, and interviews. Features and analysis from Entertainment & Arts.',
       },
       {
         type: 'organic',
-        siteName: "Murray's Cheese",
-        url: 'https://murrayscheese.com',
-        title: "Murray's Cheese — Artisanal Cheese & Pairings",
-        description: 'Shop curated cheese boards, gift boxes, and everyday favorites from Murray\'s. Expert picks spanning soft, aged, and blue cheese with crackers and condiments.',
+        siteName: 'Discogs',
+        url: 'https://discogs.com › artist › 1124645-Taylor-Swift',
+        title: 'Taylor Swift Discography — Vinyl, CDs & More | Discogs',
+        description: 'Browse Taylor Swift releases on Discogs: vinyl variants, CD editions, and collector listings for every album era.',
       },
       {
         type: 'organic',
-        siteName: "America's Test Kitchen",
-        url: 'https://americastestkitchen.com › recipes › cheese',
-        title: 'Tested Cheese Recipes — America\'s Test Kitchen',
-        description: 'Scientifically tested mac and cheese, pizza, and cheese sauce recipes. Learn why low-moisture mozzarella melts differently than fresh, and which cheddar works best.',
+        siteName: 'Vogue',
+        url: 'https://vogue.com › tag › taylor-swift',
+        title: 'Taylor Swift Fashion, Interviews & Covers — Vogue',
+        description: 'Taylor Swift style and red-carpet moments in Vogue. Interviews, Eras Tour fashion notes, and magazine cover stories.',
       },
       {
         type: 'organic',
-        siteName: 'Epicurious',
-        url: 'https://epicurious.com › recipes › food › views › cheese',
-        title: 'Cheese Recipes & Techniques — Epicurious',
-        description: 'From fondue to grilled cheese, Epicurious covers melting science, cheese board styling, and classic recipes from chefs and home cooks.',
+        siteName: 'Metacritic',
+        url: 'https://metacritic.com › person › taylor-swift',
+        title: 'Taylor Swift Reviews — Metacritic',
+        description: 'Critic scores for Taylor Swift albums and films. Compare reviews for Midnights, Folklore, 1989 (Taylor\'s Version), and more.',
       },
       {
         type: 'organic',
-        siteName: 'Food52',
-        url: 'https://food52.com › recipes › cheese',
-        title: 'Cheese Recipes Community — Food52',
-        description: 'Crowd-sourced cheese recipes and tips: whipped feta, baked ricotta, and weeknight pasta with whatever cheese is in the fridge.',
-      },
-      {
-        type: 'organic',
-        siteName: 'NYT Cooking',
-        url: 'https://cooking.nytimes.com › searches › cheese',
-        title: 'Cheese Recipes — NYT Cooking',
-        description: 'Trusted cheese recipes from New York Times Cooking. Macaroni and cheese, cheese soufflé, and sharp cheddar snacks for any occasion.',
-      },
-      {
-        type: 'organic',
-        siteName: 'Cowgirl Creamery',
-        url: 'https://cowgirlcreamery.com',
-        title: 'Cowgirl Creamery — Artisan Cheese',
-        description: 'California artisan cheeses including Mt Tam and Red Hawk. Visit the creamery, shop online, or find Cowgirl Creamery cheese near you.',
-      },
-      {
-        type: 'organic',
-        siteName: 'Cheese Professor',
-        url: 'https://cheeseprofessor.com',
-        title: 'Cheese Professor — Guides & Reviews',
-        description: 'Independent cheese reviews, tasting notes, and buying guides for beginners and collectors exploring new styles and producers.',
-      },
-      {
-        type: 'organic',
-        siteName: 'Whole Foods Market',
-        url: 'https://wholefoodsmarket.com › products › cheese',
-        title: 'Cheese Department — Whole Foods Market',
-        description: 'Shop specialty cheese, organic cheddar, and ready-to-serve cheese boards. Find store hours and cheese counter specials near you.',
-      },
-      {
-        type: 'organic',
-        siteName: 'Cabot Creamery',
-        url: 'https://cabotcreamery.com',
-        title: 'Cabot Creamery — Award-Winning Cheddar',
-        description: 'Vermont cooperative cheddar and dairy products. Recipes, store locator, and the story behind Cabot\'s sharp and extra-sharp cheddar.',
-      },
-      {
-        type: 'organic',
-        siteName: 'Formaggio Kitchen',
-        url: 'https://formaggiokitchen.com',
-        title: 'Formaggio Kitchen — Specialty Cheese Shop',
-        description: 'Curated imported and domestic cheeses, olive oils, and pantry staples. Order online or visit Formaggio Kitchen shops in Cambridge and Boston.',
-      },
-      {
-        type: 'organic',
-        siteName: 'Cheese Underground',
-        url: 'https://cheeseunderground.blog',
-        title: 'Cheese Underground — Wisconsin Cheese Blog',
-        description: 'News and profiles from Wisconsin cheese makers. Follow aging caves, contests, and new releases from America\'s Dairyland.',
+        siteName: 'Last.fm',
+        url: 'https://last.fm › music › Taylor+Swift',
+        title: 'Taylor Swift — Listen on Last.fm',
+        description: 'Taylor Swift charts, similar artists, and scrobble stats on Last.fm. Discover top tracks and album listening trends.',
       },
     ];
 
     const BOTTOM_ADS = [
       {
         type: 'ad',
-        siteName: 'Tillamook',
-        url: 'http://www.tillamook.com/products/cheese/medium-cheddar',
-        title: 'Tillamook Medium Cheddar — Creamy, Bold Flavor',
-        description: 'Our medium cheddar is aged for a balanced bite. Perfect for sandwiches, nachos, and cheese boards. Find Tillamook cheese at retailers nationwide.',
+        siteName: 'Target',
+        url: 'http://www.target.com/c/taylor-swift',
+        title: 'Taylor Swift Vinyl & Merch — Shop Target',
+        description: 'Find Taylor Swift CDs, vinyl, books, and exclusive Target editions. Pickup and shipping available. Shop Midnights, 1989, and more.',
         hasImage: true,
-        stars: 5,
-        ratingLabel: 'rating for tillamook.com',
-        sitelinks: ['Medium Cheddar', 'Slices', 'Shreds', 'Recipes'],
+        stars: 4,
+        ratingLabel: 'rating for target.com',
+        sitelinks: ['Vinyl', 'CDs', 'Books', 'Exclusive'],
       },
       {
         type: 'ad',
-        siteName: 'Cabot Creamery',
-        url: 'http://www.cabotcreamery.com/products/seriously-sharp',
-        title: 'Cabot Seriously Sharp Cheddar — Bold Vermont Flavor',
-        description: 'Seriously Sharp is Cabot\'s signature aged cheddar. Stock up online with free shipping on select orders. Made by farmer-owners in New England.',
+        siteName: 'StubHub',
+        url: 'http://www.stubhub.com/taylor-swift-tickets',
+        title: 'Taylor Swift Tickets — Buy & Sell on StubHub',
+        description: 'Browse verified Taylor Swift tickets for stadium and arena shows. Fan-to-fan marketplace with a Buyer Guarantee on every order.',
         hasImage: false,
-        stars: 5,
-        ratingLabel: 'rating for cabotcreamery.com',
-        sitelinks: ['Seriously Sharp', 'Extra Sharp', 'Bars', 'Shop All'],
+        stars: 4,
+        ratingLabel: 'rating for stubhub.com',
+        sitelinks: ['Concerts', 'VIP', 'Seller Hub', 'Guarantee'],
       },
     ];
 
     function generateResults(rawQuery) {
       const q = rawQuery.trim();
-      const approx = pick([182000, 241000, 387000, 524000, 671000, 892000], q || 'cheese').toLocaleString();
+      const approx = pick([182000, 241000, 387000, 524000, 671000, 892000], q || 'Taylor Swift').toLocaleString();
       return {
         approx,
         topAds: TOP_ADS,
@@ -4040,6 +4456,212 @@
     }
 
     /* ─────────────────────────────────────────────
+       News carousel — ported from news-hub-prototype
+       ───────────────────────────────────────────── */
+    const NEWS_ARTICLES = [
+      {
+        id: 'ts-news-1',
+        publisher: 'Billboard',
+        title: 'Taylor Swift Adds International Dates to the Eras Tour',
+        time: '2 hours ago',
+        thumb: 'assets/news-thumbnails/billboard-img.png',
+      },
+      {
+        id: 'ts-news-2',
+        publisher: 'Rolling Stone',
+        title: 'How Folklore Rewrote Taylor Swift’s Career — and Pop Itself',
+        time: '5 hours ago',
+        thumb: 'assets/news-thumbnails/rollingstone-img.jpg',
+      },
+      {
+        id: 'ts-news-3',
+        publisher: 'Variety',
+        title: 'Taylor Swift’s Midnights Tops Charts for Another Week',
+        time: '8 hours ago',
+        thumb: 'assets/news-thumbnails/variety-img.png',
+      },
+      {
+        id: 'ts-news-4',
+        publisher: 'The New York Times',
+        title: 'Inside the Cultural Phenomenon of Taylor Swift’s Eras Tour',
+        time: '1 day ago',
+        thumb: 'assets/news-thumbnails/newyorktimes-img.png',
+      },
+      {
+        id: 'ts-news-5',
+        publisher: 'Pitchfork',
+        title: 'The Tortured Poets Department Review: Swift at Her Most Intimate',
+        time: '1 day ago',
+        thumb: 'assets/news-thumbnails/pitchfork-img.png',
+      },
+      {
+        id: 'ts-news-6',
+        publisher: 'BBC News',
+        title: 'Taylor Swift Breaks Another Streaming Record Worldwide',
+        time: '2 days ago',
+        thumb: 'assets/news-thumbnails/bbc-img.png',
+      },
+    ];
+
+    function formatNewsArticleTime(time) {
+      return time
+        .replace(/\bminutes\b/gi, 'min')
+        .replace(/\bminute\b/gi, 'min')
+        .replace(/\bhours\b/gi, 'hrs')
+        .replace(/\bhour\b/gi, 'hr')
+        .replace(/\bdays\b/gi, 'd')
+        .replace(/\bday\b/gi, 'd');
+    }
+
+    const NEWS_FAVICON_BASE = 'assets/news-favicons/';
+    const NEWS_FAVICONS = {
+      'Billboard': 'billboard.png',
+      'Rolling Stone': 'rollingstone.png',
+      'Variety': 'variety.png',
+      'The New York Times': 'new-york-times.png',
+      'Pitchfork': 'pitchfork.png',
+      'BBC News': 'bbc.png',
+    };
+
+    function getPublisherMonogram(publisher) {
+      const parts = String(publisher || '').trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return '?';
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+
+    function renderNewsPublisher(publisher, query, maxChars = 14) {
+      const label = publisher.length > maxChars ? `${publisher.slice(0, maxChars - 1)}…` : publisher;
+      return `<span class="news-article__publisher">${highlight(label, query)}</span>`;
+    }
+
+    function renderNewsFavicon(publisher) {
+      const file = NEWS_FAVICONS[publisher];
+      if (file) {
+        return `<span class="news-article__favicon news-article__favicon--img" aria-hidden="true"><img class="news-article__favicon-img" src="${NEWS_FAVICON_BASE}${file}" alt="" width="24" height="24" loading="lazy" decoding="async" /></span>`;
+      }
+      const monogram = getPublisherMonogram(publisher);
+      return `<span class="news-article__favicon" aria-hidden="true"><span class="news-article__favicon-label">${monogram}</span></span>`;
+    }
+
+    function renderNewsCard(article, query) {
+      const timeLabel = formatNewsArticleTime(article.time);
+      const imgSrc = article.thumb;
+      return `<li class="serp-all-news-card">
+        <div class="serp-all-news-card__thumb" aria-hidden="true">
+          <img class="serp-all-news-card__thumb-img" src="${imgSrc}" width="400" height="225" alt="" loading="lazy" decoding="async" />
+        </div>
+        <div class="serp-all-news-card__meta">
+          ${renderNewsFavicon(article.publisher)}
+          ${renderNewsPublisher(article.publisher, query)}
+          <span class="serp-all-news-card__meta-sep" aria-hidden="true">·</span>
+          <span class="serp-all-news-card__time">${timeLabel}</span>
+        </div>
+        <a class="serp-all-news-card__title" href="#">${highlight(article.title, query)}</a>
+        <a class="serp-all-news-card__av-link" href="#">
+          <span class="serp-all-news-card__av-icon" aria-hidden="true"><svg width="16" height="8" aria-hidden="true"><use href="#icon-av"/></svg></span>
+          Visit in Anonymous View
+        </a>
+      </li>`;
+    }
+
+    function renderNewsCarousel(query) {
+      const cards = NEWS_ARTICLES.map((article) => renderNewsCard(article, query)).join('');
+      return `<section class="serp-all-news" aria-label="News">
+        <h2 class="results-section-label">News about Taylor Swift</h2>
+        <div class="serp-all-news__carousel">
+          <div class="serp-all-news__viewport">
+            <ul class="serp-all-news__row" aria-label="News results carousel">
+              ${cards}
+            </ul>
+          </div>
+          <button type="button" class="serp-all-news__prev" hidden aria-label="Show previous news results">
+            <span class="icn-arrows icn-arrows--left-circle" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M14 8.5L10 12L14 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+          <button type="button" class="serp-all-news__next" aria-label="Show more news results">
+            <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M10 8.5L14 12L10 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+        <div class="serp-all-news__more">
+          <span class="serp-all-news__more-line" aria-hidden="true"></span>
+          <a class="serp-all-news__more-btn" href="#">
+            <span class="btn__label">See more news</span>
+            <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 4.5L10 8L6 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <span class="serp-all-news__more-line" aria-hidden="true"></span>
+        </div>
+      </section>`;
+    }
+
+    function syncSerpAllNewsCarousel(carousel) {
+      const row = carousel.querySelector('.serp-all-news__row');
+      const prevBtn = carousel.querySelector('.serp-all-news__prev');
+      const nextBtn = carousel.querySelector('.serp-all-news__next');
+      if (!row || !prevBtn || !nextBtn) return;
+      const canScroll = row.scrollWidth > row.clientWidth + 2;
+      const atStart = row.scrollLeft <= 2;
+      const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 2;
+      prevBtn.hidden = !canScroll || atStart;
+      nextBtn.hidden = !canScroll;
+      nextBtn.disabled = atEnd;
+    }
+
+    function syncAllSerpAllNewsCarousels() {
+      document.querySelectorAll('.serp-all-news__carousel').forEach(syncSerpAllNewsCarousel);
+    }
+
+    function scrollSerpAllNewsCarousel(carousel, direction) {
+      const row = carousel.querySelector('.serp-all-news__row');
+      const card = row?.querySelector('.serp-all-news-card');
+      if (!row || !card) return;
+      const styles = getComputedStyle(row);
+      const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+      const step = card.getBoundingClientRect().width + gap;
+      row.scrollBy({ left: direction * step, behavior: 'smooth' });
+    }
+
+    function bindNewsCarousel() {
+      const list = document.getElementById('resultsList');
+      if (!list || list.dataset.newsCarouselBound === '1') return;
+      list.dataset.newsCarouselBound = '1';
+
+      list.addEventListener('click', (e) => {
+        const prevBtn = e.target.closest('.serp-all-news__prev');
+        if (prevBtn) {
+          e.preventDefault();
+          const carousel = prevBtn.closest('.serp-all-news__carousel');
+          if (carousel && !prevBtn.hidden) scrollSerpAllNewsCarousel(carousel, -1);
+          return;
+        }
+        const nextBtn = e.target.closest('.serp-all-news__next');
+        if (nextBtn) {
+          e.preventDefault();
+          const carousel = nextBtn.closest('.serp-all-news__carousel');
+          if (carousel && !nextBtn.disabled) scrollSerpAllNewsCarousel(carousel, 1);
+        }
+      });
+
+      list.addEventListener('scroll', (e) => {
+        const row = e.target.closest?.('.serp-all-news__row');
+        if (!row) return;
+        const carousel = row.closest('.serp-all-news__carousel');
+        if (carousel) syncSerpAllNewsCarousel(carousel);
+      }, true);
+
+      window.addEventListener('resize', syncAllSerpAllNewsCarousels);
+    }
+
+    /* ─────────────────────────────────────────────
        Render the page
        ───────────────────────────────────────────── */
     function render(query) {
@@ -4054,7 +4676,7 @@
         list.innerHTML = `
           <div class="serp-empty">
             <p class="serp-empty__title">Type a query to see results</p>
-            <p class="serp-empty__sub">Try "cheese", "cheddar", or "brie".</p>
+            <p class="serp-empty__sub">Try "Taylor Swift", "Eras Tour", or "Folklore".</p>
           </div>`;
         meta.textContent = '';
         return;
@@ -4069,6 +4691,7 @@
       const showAds = !isSignedIn();
       const activeTop = showAds ? topAds : [];
       const activeBottom = showAds ? bottomAds : [];
+      const newsBlock = renderNewsCarousel(value);
 
       meta.textContent = showAds
         ? `About ${approx} results`
@@ -4077,12 +4700,17 @@
       const blocks = showAds
         ? [
             ...activeTop.map(item => renderAd(item, value)),
+            newsBlock,
             ...visibleOrganic.map(item => renderOrganic(item, value)),
             ...activeBottom.map(item => renderAd(item, value)),
           ]
-        : visibleOrganic.map(item => renderOrganic(item, value));
+        : [
+            newsBlock,
+            ...visibleOrganic.map(item => renderOrganic(item, value)),
+          ];
 
       list.innerHTML = blocks.join('');
+      requestAnimationFrame(syncAllSerpAllNewsCarousels);
     }
 
     function closeAllPrivacyPopovers(except) {
@@ -4408,7 +5036,7 @@
        ───────────────────────────────────────────── */
     const input = document.getElementById('searchInput');
     const params = new URLSearchParams(location.search);
-    const initialQuery = (params.get('q') ?? 'cheese').trim() || 'cheese';
+    const initialQuery = (params.get('q') ?? 'Taylor Swift').trim() || 'Taylor Swift';
 
     function isTaylorSwiftQuery(q) {
       return /^taylor\s+swift$/i.test(String(q || '').trim());
@@ -4428,8 +5056,9 @@
       return false;
     }
 
-    if (isTaylorSwiftQuery(initialQuery)) {
-      location.replace(`results-taylor-swift.html?q=${encodeURIComponent(initialQuery)}`);
+    /* Cheese (and other) queries belong on results.html */
+    if (initialQuery && !isTaylorSwiftQuery(initialQuery)) {
+      location.replace(`results.html?q=${encodeURIComponent(initialQuery)}`);
     } else {
 
     input.value = initialQuery;
@@ -4456,7 +5085,7 @@
 
     document.querySelector('.search-field__submit')?.addEventListener('click', (e) => {
       e.preventDefault();
-      const q = input.value.trim() || 'cheese';
+      const q = input.value.trim() || 'Taylor Swift';
       input.value = q;
       goToResultsPage(q);
     });
@@ -4464,7 +5093,7 @@
     input.addEventListener('keydown', (e) => {
       if (e.key !== 'Enter') return;
       e.preventDefault();
-      const q = input.value.trim() || 'cheese';
+      const q = input.value.trim() || 'Taylor Swift';
       input.value = q;
       goToResultsPage(q);
     });
@@ -4472,8 +5101,9 @@
     /* Initial render */
     render(input.value);
     bindPrivacyInsights();
+    bindNewsCarousel();
 
-    } // end else — not a Taylor Swift redirect
+    } // end else — Taylor Swift query
 
     (function knowledgePanel() {
       const rail = document.getElementById('serpRail');

@@ -933,6 +933,14 @@
       color: var(--color-text-secondary);
       opacity: 0.6;
     }
+    .search-field__input::-webkit-search-decoration,
+    .search-field__input::-webkit-search-cancel-button,
+    .search-field__input::-webkit-search-results-button,
+    .search-field__input::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+      appearance: none;
+      display: none;
+    }
 
     .search-field__actions {
       display: flex;
@@ -1502,7 +1510,10 @@
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         const q = input.value.trim() || 'cheese';
-        location.href = `results.html?q=${encodeURIComponent(q)}`;
+        const page = /^taylor\s+swift$/i.test(q)
+          ? 'results-taylor-swift.html'
+          : 'results.html';
+        location.href = `${page}?q=${encodeURIComponent(q)}`;
       });
     })();
 

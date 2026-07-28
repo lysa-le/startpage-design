@@ -62,7 +62,7 @@ Three distinct families live under the `.btn` base class. They differ in weight,
 | CSS class | Background | Text | Hover background |
 |---|---|---|---|
 | `.btn--teal` | `--color-button-teal` | `--color-text-primary` | `--color-button-tealhover` |
-| `.btn--brand-blue` | `--color-button-brandblue` | `--color-whisper-200` | `--color-button-brandbluehover` |
+| `.btn--brand-blue` | `--color-button-brandblue` | `--color-text-inverted` (`--color-whisper-0` / `#FFFFFF` in light) | `--color-button-brandbluehover` |
 | `.btn--purple` | `--color-button-purple` | `--color-whisper-200` | `--color-button-purplehover` |
 | `.btn--inactive` | `--color-button-inactive` | `--color-text-secondary` | _(none — non-interactive)_ |
 
@@ -74,7 +74,7 @@ These classes are self-sizing (include padding, radius, font). A `.btn--xs` modi
 |---|---|---|---|---|---|---|
 | `.btn--product-filled` | `--color-button-productfilled` | `--color-text-primary` | _(none)_ | `--color-button-productfilledhover` | regular | flat transition |
 | `.btn--product-selected` | transparent | `--color-text-primary` | `--border-stroke-md` solid `--color-stroke-primary-button` | _(none defined in Figma)_ | regular | none |
-| `.btn--product-brand-blue` | `--color-button-brandblue` | `--color-text-inverted` | _(none)_ | `--color-button-brandbluehover` | **bold** | flat transition |
+| `.btn--product-brand-blue` | `--color-button-brandblue` | `--color-text-inverted` (`--color-whisper-0` / `#FFFFFF` in light) | _(none)_ | `--color-button-brandbluehover` | **bold** | flat transition |
 
 ### 3.3 Ghost Variant
 

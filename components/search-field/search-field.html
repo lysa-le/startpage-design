@@ -231,13 +231,23 @@
       opacity: 0.6;
     }
 
+    /* Hide native search clear — we use the design-system icn-close */
+    .search-field__input::-webkit-search-decoration,
+    .search-field__input::-webkit-search-cancel-button,
+    .search-field__input::-webkit-search-results-button,
+    .search-field__input::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+      appearance: none;
+      display: none;
+    }
+
     /* ─────────────────────────────────────────────
        SEARCH FIELD — ACTIONS (right side)
        ───────────────────────────────────────────── */
     .search-field__actions {
       display: flex;
       align-items: center;
-      gap: var(--spacing-12);
+      gap: var(--spacing-16);
       padding-right: var(--spacing-20);
       flex-shrink: 0;
     }
@@ -254,8 +264,8 @@
       display: none;
       align-items: center;
       justify-content: center;
-      width: 16px;
-      height: 16px;
+      width: var(--spacing-16);
+      height: var(--spacing-16);
       padding: 0;
       background: none;
       border: none;
@@ -263,6 +273,12 @@
       color: var(--color-icon-tertiary);
       flex-shrink: 0;
       transition: color 100ms ease;
+    }
+
+    .search-field__clear svg {
+      width: 10px;
+      height: 10px;
+      display: block;
     }
 
     .search-field__clear:hover {
@@ -349,9 +365,9 @@
               <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -373,9 +389,9 @@
               <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -397,9 +413,9 @@
               <input type="text" class="search-field__input" value="search term" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -431,9 +447,9 @@
               <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -455,9 +471,9 @@
               <input type="text" class="search-field__input" placeholder="Search privately" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -479,9 +495,9 @@
               <input type="text" class="search-field__input" value="search term" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -513,9 +529,9 @@
               <input type="text" class="search-field__input" value="search term" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -537,9 +553,9 @@
               <input type="text" class="search-field__input" placeholder="" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -561,9 +577,9 @@
               <input type="text" class="search-field__input" value="search term" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -595,9 +611,9 @@
               <input type="text" class="search-field__input" value="search term" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -619,9 +635,9 @@
               <input type="text" class="search-field__input" placeholder="" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>
@@ -643,9 +659,9 @@
               <input type="text" class="search-field__input" value="search term" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" aria-label="Clear search" tabindex="-1">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="1" y1="1" x2="9" y2="9"/>
+                    <line x1="9" y1="1" x2="1" y2="9"/>
                   </svg>
                 </button>
                 <div class="search-field__divider" aria-hidden="true"></div>

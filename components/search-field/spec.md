@@ -56,7 +56,7 @@ Width is always fluid — set by the parent context, not the component.
 | Input `padding-left` (SERP)     | 16px | `--spacing-16` |
 | Actions `padding-right` (all)   | 20px | `--spacing-20` |
 | Actions `padding-right` (homepage desktop) | 24px | `--spacing-24` |
-| Gap between action items        | 12px | `--spacing-12` |
+| Gap between action items        | 16px | `--spacing-16` |
 
 ---
 
@@ -87,6 +87,7 @@ Width is always fluid — set by the parent context, not the component.
 | Caret colour | `--color-text-tertiary` |
 | Search icon colour | `--color-icon-secondary` |
 | Clear icon colour | `--color-icon-tertiary` |
+| Clear icon geometry | `icn-close` — 10×10px X in 16×16 button (`viewBox="0 0 10 10"`, stroke 1.5) |
 | Divider colour | `--color-stroke-primary` |
 | Drop shadow (homepage, all states) | `--shadow-search` |
 | Transition | `border-color 150ms ease, box-shadow 150ms ease` |
@@ -100,3 +101,4 @@ Width is always fluid — set by the parent context, not the component.
 3. **SERP inactive = pre-filled.** On SERP you always arrive with a search term, so the field starts with the previous query. Clear + divider are visible by default via CSS override on `.search-field--serp`.
 4. **SERP desktop shadow.** Default SERP desktop has no shadow; the header component adds `--shadow-search` via `.site-header--desktop .search-field--serp`. SERP mobile always carries `--shadow-search` regardless of focus state.
 5. **Icons are inline SVG** using `currentColor` — they inherit colour from the parent's `color` property, which is set to the appropriate token per element.
+6. **Native browser clear is suppressed.** `type="search"` inputs render a WebKit cancel button that does not match `icn-close`. Hide it with `::-webkit-search-cancel-button { display: none }` so only the design-system clear control shows.

@@ -227,7 +227,7 @@
   --color-text-primary:    var(--color-black-700);
   --color-text-secondary:  var(--color-midnight-300);
   --color-text-tertiary:   var(--color-midnight-400);
-  --color-text-inverted:   var(--color-whisper-50);
+  --color-text-inverted:   var(--color-whisper-0); /* #FFFFFF — on brand-blue buttons */
   --color-text-brandblue:  var(--color-brand-blue-400);
   --color-text-link:       var(--color-brand-blue-600);
   --color-text-teal:       var(--color-teal-550);

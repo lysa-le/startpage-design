@@ -524,8 +524,10 @@
     .settings-tabs {
       position: relative;
       align-self: start;
+      justify-self: end;
+      width: 100%;
+      max-width: 220px;
       min-width: 0;
-      max-width: 100%;
       min-height: 1px;
     }
     .settings-tabs__fixed {
@@ -538,6 +540,36 @@
       z-index: 30;
       width: min(220px, calc(100vw - var(--spacing-80)));
     }
+    .settings-tabs__back {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-4);
+      margin-bottom: var(--spacing-12);
+      padding: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .settings-tabs__back:hover {
+      color: var(--color-text-brandblue);
+      text-decoration: underline;
+    }
+    .settings-tabs__back:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+    .settings-tabs__back-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      display: block;
+      color: inherit;
+    }
     .settings-tabs__link {
       padding: var(--spacing-8) var(--spacing-12);
       border: none;
@@ -547,7 +579,7 @@
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-regular);
-      color: var(--color-text-tertiary);
+      color: var(--color-text-primary);
       cursor: pointer;
       white-space: nowrap;
       text-decoration: none;
@@ -556,7 +588,7 @@
       overflow-wrap: anywhere;
     }
     .settings-tabs__link:hover {
-      color: var(--color-text-secondary);
+      color: var(--color-text-primary);
       background: var(--color-background-quaternary);
     }
     .settings-tabs__link.is-active {
@@ -570,11 +602,15 @@
     }
 
     /* ── Layout ── */
+    /* Equal 1fr side tracks keep left/right rails balanced as the center caps */
     .settings-shell {
       display: grid;
-      /* Nav wide enough for “Account & Subscription”; aside yields first */
-      grid-template-columns: minmax(200px, 220px) minmax(0, 1fr) minmax(0, 240px);
-      gap: var(--spacing-48);
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, calc(var(--spacing-24) * 28))
+        minmax(0, 1fr);
+      column-gap: var(--spacing-48);
+      row-gap: var(--spacing-24);
       align-items: start;
       max-width: 1440px;
       margin: 0 auto;
@@ -583,13 +619,19 @@
     }
     .settings-main {
       min-width: 0;
+      width: 100%;
+      max-width: calc(var(--spacing-24) * 28); /* 672px */
     }
     @media (max-width: 1200px) {
       .settings-shell {
-        grid-template-columns: minmax(160px, 180px) minmax(0, 1fr) minmax(0, 180px);
-        gap: var(--spacing-24);
+        column-gap: var(--spacing-32);
       }
-      .settings-tabs__fixed {
+      .settings-tabs,
+      .settings-aside {
+        max-width: 180px;
+      }
+      .settings-tabs__fixed,
+      .settings-aside__fixed {
         width: min(180px, calc(100vw - var(--spacing-64)));
       }
       .settings-tabs__link {
@@ -599,9 +641,16 @@
     @media (max-width: 1024px) {
       .settings-shell {
         grid-template-columns: 1fr;
+        column-gap: 0;
         padding: var(--spacing-24);
       }
       .settings-header { padding: var(--spacing-16) var(--spacing-24); }
+      .settings-tabs,
+      .settings-aside {
+        justify-self: stretch;
+        max-width: none;
+        width: 100%;
+      }
       .settings-tabs__fixed {
         position: static;
         width: auto;
@@ -673,6 +722,15 @@
       margin: 0 0 var(--spacing-24);
       max-width: 36rem;
       text-wrap: pretty;
+    }
+    #general > .settings-section__lede {
+      max-width: none;
+      white-space: nowrap;
+    }
+    @media (max-width: 1024px) {
+      #general > .settings-section__lede {
+        white-space: normal;
+      }
     }
     .appearance-premium__lede {
       font-size: var(--font-body-sm);
@@ -1238,10 +1296,13 @@
       border-color: var(--color-black-700);
     }
     .scheme-tile[data-value="gray"] {
-      --scheme-bg: var(--color-whisper-0);
-      --scheme-bar-1: var(--color-black-700);
-      --scheme-bar-2: var(--color-black-550);
+      --scheme-bg: var(--color-black-800);
+      --scheme-bar-1: var(--color-whisper-200);
+      --scheme-bar-2: var(--color-midnight-200);
       --scheme-bar-3: var(--color-black-400);
+    }
+    .scheme-tile[data-value="gray"] .scheme-tile__preview {
+      border-color: var(--color-black-550);
     }
     .scheme-tile[data-value="terminal"] {
       --scheme-bg: var(--color-black-900);
@@ -1427,30 +1488,156 @@
 
     /* Schemes (preview + page feel) */
     html[data-ui-scheme="basic"] {
-      --color-text-link: var(--color-text-primary);
-      --color-button-brandblue: var(--color-text-primary);
+      --color-background-primary:    var(--color-whisper-0);
+      --color-background-secondary:  var(--color-whisper-200);
+      --color-background-tertiary:   var(--color-whisper-100);
+      --color-background-quaternary: var(--color-whisper-50);
+
+      --color-text-primary:   var(--color-black-800);
+      --color-text-secondary: var(--color-black-550);
+      --color-text-tertiary:  var(--color-black-400);
+      --color-text-link:      var(--color-black-800);
+      --color-text-inverted:  var(--color-whisper-0);
+      --color-text-brandblue: var(--color-teal-550);
+      --color-text-teal:      var(--color-teal-550);
+
+      --color-icon-primary:   var(--color-black-800);
+      --color-icon-secondary: var(--color-teal-550);
+      --color-icon-tertiary:  var(--color-black-400);
+
+      --color-stroke-primary:        var(--color-whisper-500);
+      --color-stroke-secondary:      var(--color-whisper-300);
+      --color-stroke-primary-button: var(--color-teal-550);
+
+      --color-button-productfilled:      var(--color-whisper-300);
+      --color-button-productfilledhover: var(--color-whisper-400);
+      --color-button-inactive:           var(--color-whisper-100);
+      --color-button-brandblue:          var(--color-black-800);
+      --color-button-brandbluehover:     var(--color-black-700);
+      --color-button-teal:               var(--color-teal-200);
+      --color-button-tealhover:          var(--color-teal-400);
     }
     html[data-ui-scheme="contrast"] {
-      --color-text-primary: var(--color-black-900);
-      --color-background-primary: var(--color-whisper-0);
-      --color-text-link: var(--color-brand-blue-600);
+      --color-background-primary:    var(--color-whisper-0);
+      --color-background-secondary:  var(--color-whisper-100);
+      --color-background-tertiary:   var(--color-whisper-50);
+      --color-background-quaternary: var(--color-whisper-0);
+
+      --color-text-primary:   var(--color-black-900);
+      --color-text-secondary: var(--color-black-700);
+      --color-text-tertiary:  var(--color-black-550);
+      --color-text-link:      var(--color-brand-blue-600);
+      --color-text-inverted:  var(--color-whisper-0);
+      --color-text-brandblue: var(--color-brand-blue-600);
+      --color-text-error:     var(--color-red-500);
+
+      --color-icon-primary:   var(--color-black-900);
+      --color-icon-secondary: var(--color-brand-blue-600);
+      --color-icon-tertiary:  var(--color-black-550);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-whisper-500);
+      --color-stroke-primary-button: var(--color-brand-blue-600);
+      --color-stroke-error:          var(--color-red-500);
+
+      --color-button-productfilled:      var(--color-whisper-300);
+      --color-button-productfilledhover: var(--color-whisper-400);
+      --color-button-inactive:           var(--color-whisper-200);
+      --color-button-brandblue:          var(--color-brand-blue-600);
+      --color-button-brandbluehover:     var(--color-brand-blue-500);
+      --color-button-teal:               var(--color-teal-200);
+      --color-button-tealhover:          var(--color-teal-400);
     }
     html[data-ui-scheme="terminal"] {
-      --color-background-primary: var(--color-black-900);
-      --color-text-primary: var(--color-teal-200);
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-800);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-teal-200);
       --color-text-secondary: var(--color-teal-400);
-      --color-text-link: var(--color-teal-200);
-      --color-stroke-primary: var(--color-black-400);
+      --color-text-tertiary:  var(--color-teal-500);
+      --color-text-link:      var(--color-teal-200);
+      --color-text-inverted:  var(--color-black-900);
+      --color-text-brandblue: var(--color-teal-200);
+
+      --color-icon-primary:   var(--color-teal-200);
+      --color-icon-secondary: var(--color-teal-400);
+      --color-icon-tertiary:  var(--color-teal-500);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-teal-400);
+
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-button-inactive:           var(--color-black-600);
+      --color-button-brandblue:          var(--color-teal-400);
+      --color-button-brandbluehover:     var(--color-teal-200);
+      --color-button-teal:               var(--color-teal-400);
+      --color-button-tealhover:          var(--color-teal-200);
     }
     html[data-ui-scheme="gray"] {
-      --color-background-primary: var(--color-black-800);
-      --color-text-primary: var(--color-whisper-200);
-      --color-text-link: var(--color-whisper-100);
-    }
+      --color-background-primary:    var(--color-black-800);
+      --color-background-secondary:  var(--color-black-700);
+      --color-background-tertiary:   var(--color-black-700);
+      --color-background-quaternary: var(--color-black-650);
 
-    /* Sidebar */
+      --color-text-primary:   var(--color-whisper-200);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+      --color-text-link:      var(--color-whisper-100);
+      --color-text-inverted:  var(--color-black-900);
+      --color-text-brandblue: var(--color-whisper-100);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-whisper-300);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-whisper-300);
+
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-button-inactive:           var(--color-black-600);
+      --color-button-brandblue:          var(--color-black-400);
+      --color-button-brandbluehover:     var(--color-black-550);
+    }
+    html[data-ui-scheme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+
+      --color-text-primary:   var(--color-whisper-100);
+      --color-text-secondary: var(--color-midnight-200);
+      --color-text-tertiary:  var(--color-midnight-100);
+      --color-text-link:      var(--color-brand-blue-100);
+      --color-text-inverted:  var(--color-black-800);
+      --color-text-brandblue: var(--color-brand-blue-100);
+
+      --color-icon-primary:   var(--color-whisper-200);
+      --color-icon-secondary: var(--color-brand-blue-100);
+      --color-icon-tertiary:  var(--color-midnight-100);
+
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-100);
+
+      --color-button-productfilled:      var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+      --color-button-inactive:           var(--color-black-600);
+      --color-button-brandblue:          var(--color-brand-blue-100);
+      --color-button-brandbluehover:     var(--color-brand-blue-300);
+      --color-button-teal:               var(--color-teal-400);
+      --color-button-tealhover:          var(--color-teal-200);
+    }
     .settings-aside {
       position: relative;
+      justify-self: start;
+      width: 100%;
+      max-width: 220px;
       min-height: 1px;
       margin-top: var(--spacing-24);
       margin-left: 0;
@@ -1459,7 +1646,7 @@
     .settings-aside__fixed {
       position: fixed;
       top: calc(var(--spacing-96) + var(--spacing-40));
-      width: min(240px, calc(100vw - var(--spacing-80)));
+      width: min(220px, calc(100vw - var(--spacing-80)));
       display: flex;
       flex-direction: column;
       gap: var(--spacing-12);
@@ -1474,11 +1661,6 @@
       padding-block: var(--spacing-8);
       text-align: center;
       line-height: var(--font-label-xs-lh);
-    }
-    @media (max-width: 1200px) {
-      .settings-aside__fixed {
-        width: min(180px, calc(100vw - var(--spacing-64)));
-      }
     }
     @media (max-width: 1024px) {
       .settings-aside {
@@ -1716,7 +1898,7 @@
       line-height: var(--font-label-xs-lh);
       font-weight: var(--font-weight-semibold);
       background-color: var(--color-button-brandblue);
-      color: var(--color-text-inverted);
+      color: var(--color-whisper-0);
       transition: background-color 0.15s ease;
     }
     .btn--product-brand-blue.btn--sm {
@@ -1762,7 +1944,7 @@
     }
     .btn--product-selected:hover {
       background-color: var(--color-button-brandblue);
-      color: var(--color-whisper-50);
+      color: var(--color-whisper-0);
     }
     [data-theme="dark"] .btn--product-selected:hover {
       background-color: var(--color-button-brandblue);
@@ -2601,6 +2783,12 @@
   <div class="settings-shell">
     <nav class="settings-tabs" aria-label="Settings sections">
       <div class="settings-tabs__fixed">
+        <a class="settings-tabs__back" href="results.html">
+          <svg class="settings-tabs__back-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back to search
+        </a>
         <a class="settings-tabs__link" href="#general" data-tab="general">General</a>
         <a class="settings-tabs__link" href="#privacy" data-tab="privacy">Privacy &amp; Safety</a>
         <a class="settings-tabs__link" href="#appearance" data-tab="appearance">Appearance</a>
@@ -3257,7 +3445,7 @@
               <span class="settings-row__label">Results per page</span>
             </div>
             <div class="settings-row__control">
-              <div class="dropdown dropdown--small dropdown--md" data-dd="rpp">
+              <div class="dropdown dropdown--small dropdown--md" data-dd="rpp" data-pref="resultsPerPage">
                 <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
                   <span class="dropdown__label">10</span>
                   <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -3277,6 +3465,15 @@
                   </ul>
                 </div>
               </div>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row__copy">
+              <span class="settings-row__label">Show filters</span>
+              <span class="settings-row__hint">All regions, Safe Search, and Any time on the results page</span>
+            </div>
+            <div class="settings-row__control">
+              <button type="button" class="toggle" id="showFiltersToggle" role="switch" aria-checked="true" aria-label="Show filters"><span class="toggle__thumb"></span></button>
             </div>
           </div>
         </div>
@@ -4047,7 +4244,7 @@
 
       /* ── Toggles (generic) ── */
       document.querySelectorAll('.toggle').forEach((btn) => {
-        if (btn.id === 'alignToggle' || btn.id === 'siteIconsToggle') return;
+        if (btn.id === 'alignToggle' || btn.id === 'siteIconsToggle' || btn.id === 'showFiltersToggle') return;
         btn.addEventListener('click', () => {
           const on = btn.getAttribute('aria-checked') !== 'true';
           btn.setAttribute('aria-checked', String(on));
@@ -4224,6 +4421,8 @@
         const alignOn = prefs.align === 'center';
         document.getElementById('alignToggle').setAttribute('aria-checked', String(alignOn));
         document.getElementById('siteIconsToggle').setAttribute('aria-checked', String(!!prefs.siteIcons));
+        const showFiltersToggle = document.getElementById('showFiltersToggle');
+        if (showFiltersToggle) showFiltersToggle.setAttribute('aria-checked', String(prefs.showFilters !== false));
       }
 
       function updatePreviewBg() {
@@ -4263,7 +4462,8 @@
         const key = dd.dataset.pref;
         dd.querySelectorAll('.dropdown__item').forEach((item) => {
           item.addEventListener('click', () => {
-            if (document.body.dataset.plan !== 'premium') return;
+            /* resultsPerPage lives in core Appearance — available on all plans */
+            if (key !== 'resultsPerPage' && document.body.dataset.plan !== 'premium') return;
             patch({ [key]: item.dataset.value });
           });
         });
@@ -4277,6 +4477,9 @@
       document.getElementById('siteIconsToggle').addEventListener('click', () => {
         if (document.body.dataset.plan !== 'premium') return;
         patch({ siteIcons: !prefs.siteIcons });
+      });
+      document.getElementById('showFiltersToggle')?.addEventListener('click', () => {
+        patch({ showFilters: !prefs.showFilters });
       });
 
       document.getElementById('resetUiPrefs').addEventListener('click', () => {
