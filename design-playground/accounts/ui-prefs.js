@@ -17,6 +17,7 @@
     siteIcons: true,
     showFilters: true,
     resultsPerPage: '10',
+    resultsLanguage: 'English',
   };
 
   const FONT_STACKS = {
@@ -83,6 +84,7 @@
     el.dataset.uiSiteIcons = p.siteIcons ? 'on' : 'off';
     el.dataset.uiShowFilters = p.showFilters !== false ? 'on' : 'off';
     el.dataset.uiResultsPerPage = String(p.resultsPerPage || '10');
+    el.dataset.uiResultsLanguage = p.resultsLanguage || 'English';
 
     const bodyFont = FONT_STACKS[p.font] || FONT_STACKS.inter;
     const titleFont = FONT_STACKS[p.titleFont] || FONT_STACKS.inter;

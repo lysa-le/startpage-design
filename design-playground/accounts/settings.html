@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="tokens.css" />
   <script src="ui-prefs.js"></script>
+  <script src="i18n.js"></script>
   <script>
     document.documentElement.dataset.plan = sessionStorage.getItem('accounts-plan') || 'basic';
     document.documentElement.dataset.auth = sessionStorage.getItem('accounts-auth') || 'signed-out';
@@ -1633,6 +1634,47 @@
       --color-button-teal:               var(--color-teal-400);
       --color-button-tealhover:          var(--color-teal-200);
     }
+    /*
+      Dark UI schemes use light primary text. Teal / light brand fills need
+      --color-text-inverted (dark) so labels stay legible on those surfaces.
+    */
+    html[data-ui-scheme="dark"] .hp-btn--teal,
+    html[data-ui-scheme="terminal"] .hp-btn--teal,
+    html[data-ui-scheme="gray"] .hp-btn--teal,
+    html[data-ui-scheme="dark"] .account-menu__upgrade.hp-btn--teal,
+    html[data-ui-scheme="terminal"] .account-menu__upgrade.hp-btn--teal,
+    html[data-ui-scheme="gray"] .account-menu__upgrade.hp-btn--teal,
+    html[data-ui-scheme="dark"] .btn--teal,
+    html[data-ui-scheme="terminal"] .btn--teal,
+    html[data-ui-scheme="gray"] .btn--teal,
+    html[data-ui-scheme="dark"] .btn--product-brand-blue,
+    html[data-ui-scheme="terminal"] .btn--product-brand-blue,
+    html[data-ui-scheme="gray"] .btn--product-brand-blue,
+    html[data-ui-scheme="dark"] .plan-modal__cta,
+    html[data-ui-scheme="terminal"] .plan-modal__cta,
+    html[data-ui-scheme="gray"] .plan-modal__cta,
+    html[data-ui-scheme="dark"] .account-menu__badge[data-plan="premium"],
+    html[data-ui-scheme="terminal"] .account-menu__badge[data-plan="premium"],
+    html[data-ui-scheme="gray"] .account-menu__badge[data-plan="premium"],
+    html[data-ui-scheme="dark"] .account-menu__badge[data-plan="basic"],
+    html[data-ui-scheme="terminal"] .account-menu__badge[data-plan="basic"],
+    html[data-ui-scheme="gray"] .account-menu__badge[data-plan="basic"] {
+      color: var(--color-text-inverted);
+    }
+    html[data-ui-scheme="dark"] .scheme-tile__check,
+    html[data-ui-scheme="terminal"] .scheme-tile__check {
+      background-color: var(--color-button-teal);
+      color: var(--color-text-inverted);
+    }
+    html[data-ui-scheme="dark"] .toggle__thumb,
+    html[data-ui-scheme="terminal"] .toggle__thumb {
+      background-color: var(--color-text-inverted);
+    }
+    html[data-ui-scheme="terminal"] .settings-header__logo,
+    html[data-ui-scheme="terminal"] .hp-logo,
+    html[data-ui-scheme="terminal"] .plan-modal__logo {
+      color: var(--color-whisper-100); /* match dark/gray logotype, not teal primary */
+    }
     .settings-aside {
       position: relative;
       justify-self: start;
@@ -2697,7 +2739,7 @@
                   </linearGradient>
                 </defs>
               </svg>
-              <span class="account-menu__badge" id="accountPlanBadge" data-plan="basic">Basic</span>
+              <span class="account-menu__badge" id="accountPlanBadge" data-plan="basic">Ad-Free Basic</span>
             </div>
 
             <hr class="account-menu__rule" />
@@ -2931,7 +2973,7 @@
               <span class="settings-row__label">Search results language</span>
             </div>
             <div class="settings-row__control">
-              <div class="dropdown dropdown--small dropdown--wide" data-dd="results-language">
+              <div class="dropdown dropdown--small dropdown--wide" data-dd="results-language" data-pref="resultsLanguage">
                 <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
                   <span class="dropdown__label">English</span>
                   <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -4468,8 +4510,8 @@
         const key = dd.dataset.pref;
         dd.querySelectorAll('.dropdown__item').forEach((item) => {
           item.addEventListener('click', () => {
-            /* resultsPerPage lives in core Appearance — available on all plans */
-            if (key !== 'resultsPerPage' && document.body.dataset.plan !== 'premium') return;
+            /* Core prefs available on all plans */
+            if (key !== 'resultsPerPage' && key !== 'resultsLanguage' && document.body.dataset.plan !== 'premium') return;
             patch({ [key]: item.dataset.value });
           });
         });
@@ -4689,8 +4731,8 @@
       });
 
       const PLAN_BADGE_LABELS = {
-        basic: 'Basic',
-        premium: 'Premium',
+        basic: 'Ad-Free Basic',
+        premium: 'Ad-Free Premium',
       };
 
       function setAccountPlanBadge(plan) {

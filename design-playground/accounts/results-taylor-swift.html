@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="tokens.css">
   <script src="ui-prefs.js"></script>
+  <script src="i18n.js"></script>
   <style>
     /* ─────────────────────────────────────────────
        Dark mode token overrides
@@ -776,11 +777,14 @@
 
     /* Appearance quick panel */
     .appearance-panel {
+      --ap-width: calc(var(--spacing-24) * 16.5); /* 396px — room for wider fonts */
+      --ap-control-width: calc(var(--spacing-24) * 5.75); /* 138px */
       position: absolute;
       top: calc(100% + var(--spacing-8));
       right: 0;
       z-index: 80;
-      width: calc(var(--spacing-24) * 15); /* 360px */
+      width: min(var(--ap-width), calc(100vw - var(--spacing-32)));
+      max-height: calc(100dvh - var(--spacing-64));
       display: none;
       flex-direction: column;
       gap: 0;
@@ -789,6 +793,19 @@
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-dropdown);
+      overflow: hidden;
+    }
+    html[data-ui-font-size="large"] .appearance-panel {
+      --ap-width: calc(var(--spacing-24) * 17.5); /* 420px */
+      --ap-control-width: calc(var(--spacing-24) * 6); /* 144px */
+    }
+    html[data-ui-font-size="larger"] .appearance-panel {
+      --ap-width: calc(var(--spacing-24) * 18.5); /* 444px */
+      --ap-control-width: calc(var(--spacing-24) * 6.5); /* 156px */
+    }
+    html[data-ui-font-size="largest"] .appearance-panel {
+      --ap-width: calc(var(--spacing-24) * 20); /* 480px */
+      --ap-control-width: calc(var(--spacing-24) * 7); /* 168px */
     }
     .appearance-panel.is-open { display: flex; }
     .appearance-panel__head {
@@ -798,6 +815,7 @@
       gap: var(--spacing-12);
       padding-bottom: var(--spacing-16);
       border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      flex-shrink: 0;
     }
     .appearance-panel__title {
       margin: 0;
@@ -833,6 +851,9 @@
       display: flex;
       flex-direction: column;
       gap: 0;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
     .appearance-panel__section {
       display: flex;
@@ -862,7 +883,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: var(--spacing-16);
+      gap: var(--spacing-12);
       min-height: var(--spacing-40);
     }
     .appearance-panel__label {
@@ -871,12 +892,15 @@
       line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
-      flex: 0 1 auto;
-      white-space: nowrap;
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: break-word;
     }
     .appearance-panel__control {
-      flex-shrink: 0;
-      width: calc(var(--spacing-24) * 5.5); /* 132px */
+      flex: 0 0 auto;
+      width: var(--ap-control-width);
+      max-width: 45%;
     }
     .appearance-panel__control .dropdown {
       width: 100%;
@@ -896,7 +920,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: var(--spacing-8);
       width: 100%;
+      min-height: var(--spacing-40);
       padding: var(--spacing-8) var(--spacing-12);
       background: none;
       border: none;
@@ -908,6 +934,7 @@
       font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
       text-align: left;
+      box-sizing: border-box;
     }
     .appearance-panel__control .dropdown--open .dropdown__trigger {
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -1038,9 +1065,9 @@
     /* Search location popover inside settings panel */
     .appearance-panel__row--location .appearance-panel__control {
       width: auto;
-      flex: 1;
+      flex: 1 1 auto;
       min-width: 0;
-      max-width: 168px;
+      max-width: min(calc(var(--spacing-24) * 8), 55%); /* up to 192px */
     }
     .appearance-panel .dropdown--popover.dropdown--open {
       border-radius: var(--radius-lg);
@@ -1219,6 +1246,7 @@
       gap: var(--spacing-8);
       padding-top: var(--spacing-16);
       border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      flex-shrink: 0;
     }
     .appearance-panel__footer .btn {
       flex: 1;
@@ -1231,6 +1259,9 @@
       text-align: center;
       text-decoration: none;
       transition: background-color 0.15s ease, color 0.15s ease;
+      white-space: normal;
+      height: auto;
+      min-height: var(--spacing-40);
     }
     .appearance-panel__footer .btn--product-brand-blue {
       gap: var(--spacing-4);
@@ -1287,37 +1318,10 @@
       margin-bottom: var(--spacing-24);
     }
 
-    .serp-filters__private {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-4);
-      height: calc(var(--spacing-24) + var(--spacing-4)); /* 28px */
-      padding: 0 var(--spacing-8);
-      border: none;
-      border-radius: var(--radius-full);
-      background: var(--color-teal-100);
-      color: var(--color-text-primary);
-      font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: 1;
-      font-weight: var(--font-weight-semibold);
-      cursor: default;
-      white-space: nowrap;
-    }
-    [data-theme="dark"] .serp-filters__private {
-      background: var(--color-background-quaternary);
-    }
-
-    .serp-filters__private-icon {
-      width: var(--spacing-16);
-      height: var(--spacing-16);
-      color: var(--color-teal-400);
+    .serp-filters__plan {
+      /* Reuses .account-menu__badge colors; filter-bar sizing */
       flex-shrink: 0;
-      display: block;
-    }
-    .serp-filters__private-check {
-      stroke: var(--color-black-900);
+      align-self: center;
     }
 
     .serp-filters__dropdowns {
@@ -2403,30 +2407,58 @@
       font-family: var(--ui-font-family, var(--font-family));
     }
     /*
-      Font size pref scales RESULT text only (same as settings preview).
+      Font size pref scales SERP content text (results, carousels, right rail).
       Do NOT set html { font-size } — tokens are rem-based, so a 14px root
       would make body-sm (0.875rem) render at ~12.25px instead of 14px.
     */
     .algo-result,
-    .ad-result {
+    .ad-result,
+    .knowledge-panel,
+    .serp-all-video,
+    .serp-all-news,
+    .serp-image-pack-block {
       --result-font-size: 0.875rem; /* medium = 14px body */
       --font-body-sm: var(--result-font-size);
       --font-body-sm-lh: calc(var(--result-font-size) * 20 / 14);
+      --font-body-md: calc(var(--result-font-size) * 16 / 14);
+      --font-body-md-lh: calc(var(--result-font-size) * 24 / 14);
       --font-body-lg: calc(var(--result-font-size) * 18 / 14);
       --font-body-lg-lh: calc(var(--result-font-size) * 28 / 14);
       --font-body-xs: calc(var(--result-font-size) * 12 / 14);
       --font-body-xs-lh: calc(var(--result-font-size) * 18 / 14);
+      --font-heading-xs: calc(var(--result-font-size) * 24 / 14);
+      --font-heading-xs-lh: calc(var(--result-font-size) * 32 / 14);
     }
     html[data-ui-font-size="small"] .algo-result,
-    html[data-ui-font-size="small"] .ad-result { --result-font-size: 0.75rem; } /* 12 */
+    html[data-ui-font-size="small"] .ad-result,
+    html[data-ui-font-size="small"] .knowledge-panel,
+    html[data-ui-font-size="small"] .serp-all-video,
+    html[data-ui-font-size="small"] .serp-all-news,
+    html[data-ui-font-size="small"] .serp-image-pack-block { --result-font-size: 0.75rem; } /* 12 */
     html[data-ui-font-size="medium"] .algo-result,
-    html[data-ui-font-size="medium"] .ad-result { --result-font-size: 0.875rem; } /* 14 */
+    html[data-ui-font-size="medium"] .ad-result,
+    html[data-ui-font-size="medium"] .knowledge-panel,
+    html[data-ui-font-size="medium"] .serp-all-video,
+    html[data-ui-font-size="medium"] .serp-all-news,
+    html[data-ui-font-size="medium"] .serp-image-pack-block { --result-font-size: 0.875rem; } /* 14 */
     html[data-ui-font-size="large"] .algo-result,
-    html[data-ui-font-size="large"] .ad-result { --result-font-size: 0.9375rem; } /* 15 */
+    html[data-ui-font-size="large"] .ad-result,
+    html[data-ui-font-size="large"] .knowledge-panel,
+    html[data-ui-font-size="large"] .serp-all-video,
+    html[data-ui-font-size="large"] .serp-all-news,
+    html[data-ui-font-size="large"] .serp-image-pack-block { --result-font-size: 0.9375rem; } /* 15 */
     html[data-ui-font-size="larger"] .algo-result,
-    html[data-ui-font-size="larger"] .ad-result { --result-font-size: 1rem; } /* 16 */
+    html[data-ui-font-size="larger"] .ad-result,
+    html[data-ui-font-size="larger"] .knowledge-panel,
+    html[data-ui-font-size="larger"] .serp-all-video,
+    html[data-ui-font-size="larger"] .serp-all-news,
+    html[data-ui-font-size="larger"] .serp-image-pack-block { --result-font-size: 1rem; } /* 16 */
     html[data-ui-font-size="largest"] .algo-result,
-    html[data-ui-font-size="largest"] .ad-result { --result-font-size: 1.125rem; } /* 18 */
+    html[data-ui-font-size="largest"] .ad-result,
+    html[data-ui-font-size="largest"] .knowledge-panel,
+    html[data-ui-font-size="largest"] .serp-all-video,
+    html[data-ui-font-size="largest"] .serp-all-news,
+    html[data-ui-font-size="largest"] .serp-image-pack-block { --result-font-size: 1.125rem; } /* 18 */
     html[data-ui-width="wide"] .serp-layout {
       grid-template-columns: minmax(0, 720px) minmax(0, calc(var(--spacing-24) * 18));
       max-width: calc(720px + var(--spacing-80) + (var(--spacing-24) * 18));
@@ -2599,6 +2631,39 @@
       --color-button-brandbluehover:     var(--color-brand-blue-300);
       --color-button-teal:               var(--color-teal-400);
       --color-button-tealhover:          var(--color-teal-200);
+    }
+
+    /*
+      Dark UI schemes use light primary text. Teal / light brand fills need
+      --color-text-inverted (dark) so labels stay legible on those surfaces.
+    */
+    html[data-ui-scheme="dark"] .hp-btn--teal,
+    html[data-ui-scheme="terminal"] .hp-btn--teal,
+    html[data-ui-scheme="gray"] .hp-btn--teal,
+    html[data-ui-scheme="dark"] .account-menu__upgrade.hp-btn--teal,
+    html[data-ui-scheme="terminal"] .account-menu__upgrade.hp-btn--teal,
+    html[data-ui-scheme="gray"] .account-menu__upgrade.hp-btn--teal,
+    html[data-ui-scheme="dark"] .plan-modal__cta,
+    html[data-ui-scheme="terminal"] .plan-modal__cta,
+    html[data-ui-scheme="gray"] .plan-modal__cta,
+    html[data-ui-scheme="dark"] .appearance-panel .btn--product-brand-blue,
+    html[data-ui-scheme="terminal"] .appearance-panel .btn--product-brand-blue,
+    html[data-ui-scheme="gray"] .appearance-panel .btn--product-brand-blue,
+    html[data-ui-scheme="dark"] .account-menu__badge[data-plan="premium"],
+    html[data-ui-scheme="terminal"] .account-menu__badge[data-plan="premium"],
+    html[data-ui-scheme="gray"] .account-menu__badge[data-plan="premium"],
+    html[data-ui-scheme="dark"] .account-menu__badge[data-plan="basic"],
+    html[data-ui-scheme="terminal"] .account-menu__badge[data-plan="basic"],
+    html[data-ui-scheme="gray"] .account-menu__badge[data-plan="basic"] {
+      color: var(--color-text-inverted);
+    }
+    html[data-ui-scheme="dark"] .appearance-panel .toggle__thumb,
+    html[data-ui-scheme="terminal"] .appearance-panel .toggle__thumb {
+      background-color: var(--color-text-inverted);
+    }
+    html[data-ui-scheme="terminal"] .site-header__logo-svg,
+    html[data-ui-scheme="terminal"] .plan-modal__logo {
+      color: var(--color-whisper-100); /* match dark/gray logotype, not teal primary */
     }
 
     .algo-result__description {
@@ -3672,14 +3737,13 @@
               </linearGradient>
             </defs>
           </svg>
-          <span class="account-menu__badge" id="accountPlanBadge" data-plan="basic">Basic</span>
+          <span class="account-menu__badge" id="accountPlanBadge" data-plan="basic" data-i18n="adFreeBasic">Ad-Free Basic</span>
         </div>
 
         <hr class="account-menu__rule" />
 
         <div class="account-menu__footer">
-          <button type="button" class="account-menu__upgrade hp-btn hp-btn--teal js-go-ad-free" role="menuitem">
-            Upgrade to Premium
+          <button type="button" class="account-menu__upgrade hp-btn hp-btn--teal js-go-ad-free" role="menuitem"><span data-i18n="upgradePremium">Upgrade to Premium</span>
           </button>
 
           <a href="settings.html#account" class="account-menu__action" role="menuitem">Manage Account</a>
@@ -3689,15 +3753,15 @@
               <path fill-rule="evenodd" clip-rule="evenodd" d="M10 12.5C10 12.633 9.947 12.76 9.854 12.854C9.76 12.947 9.633 13 9.5 13H1.5C1.367 13 1.24 12.947 1.146 12.854C1.053 12.76 1 12.633 1 12.5V3.5C1 3.367 1.053 3.24 1.146 3.146C1.24 3.053 1.367 3 1.5 3H9.5C9.633 3 9.76 3.053 9.854 3.146C9.947 3.24 10 3.367 10 3.5V5.5C10 5.633 10.053 5.76 10.146 5.854C10.24 5.947 10.367 6 10.5 6C10.633 6 10.76 5.947 10.854 5.854C10.947 5.76 11 5.633 11 5.5V3.5C11 3.102 10.842 2.721 10.561 2.439C10.279 2.158 9.898 2 9.5 2H1.5C1.102 2 0.721 2.158 0.439 2.439C0.158 2.721 0 3.102 0 3.5V12.5C0 12.898 0.158 13.279 0.439 13.561C0.721 13.842 1.102 14 1.5 14H9.5C9.898 14 10.279 13.842 10.561 13.561C10.842 13.279 11 12.898 11 12.5V10.5C11 10.367 10.947 10.24 10.854 10.146C10.76 10.053 10.633 10 10.5 10C10.367 10 10.24 10.053 10.146 10.146C10.053 10.24 10 10.367 10 10.5V12.5Z" fill="currentColor"/>
               <path fill-rule="evenodd" clip-rule="evenodd" d="M15.854 8.354C15.901 8.307 15.938 8.252 15.963 8.192C15.988 8.131 16.001 8.066 16.001 8C16.001 7.934 15.988 7.869 15.963 7.808C15.938 7.748 15.901 7.692 15.854 7.646L12.854 4.646C12.76 4.552 12.633 4.499 12.5 4.499C12.367 4.499 12.24 4.552 12.146 4.646C12.052 4.74 11.999 4.867 11.999 5C11.999 5.133 12.052 5.26 12.146 5.354L14.293 7.5H5.5C5.367 7.5 5.24 7.553 5.146 7.646C5.053 7.74 5 7.867 5 8C5 8.133 5.053 8.26 5.146 8.353C5.24 8.447 5.367 8.5 5.5 8.5H14.293L12.146 10.646C12.052 10.74 11.999 10.867 11.999 11C11.999 11.133 12.052 11.26 12.146 11.354C12.24 11.448 12.367 11.501 12.5 11.501C12.633 11.501 12.76 11.448 12.854 11.354L15.854 8.354Z" fill="currentColor"/>
             </svg>
-            Sign out
+            <span data-i18n="signOut">Sign out</span>
           </button>
         </div>
       </div>
     </div>
 
     <!-- Signed-out chrome -->
-    <button type="button" class="hp-btn hp-btn--teal auth-out js-go-ad-free">Go Ad-Free</button>
-    <button type="button" class="hp-btn hp-btn--product auth-out" id="logInBtn">Log In</button>
+    <button type="button" class="hp-btn hp-btn--teal auth-out js-go-ad-free"><span data-i18n="goAdFree">Go Ad-Free</span></button>
+    <button type="button" class="hp-btn hp-btn--product auth-out" id="logInBtn"><span data-i18n="logIn">Log In</span></button>
 
     </div>
 
@@ -3869,9 +3933,9 @@
                   <use href="#icon-settings"/>
                 </svg>
               </button>
-              <div class="appearance-panel" id="appearancePanel" role="dialog" aria-label="Settings" hidden>
+              <div class="appearance-panel" id="appearancePanel" role="dialog" data-i18n-aria="settings" aria-label="Settings" hidden>
                 <div class="appearance-panel__head">
-                  <h2 class="appearance-panel__title">Settings</h2>
+                  <h2 class="appearance-panel__title" data-i18n="settings">Settings</h2>
                   <button type="button" class="appearance-panel__close" id="appearanceClose" aria-label="Close">
                     <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                       <line x1="1" y1="1" x2="9" y2="9"/>
@@ -3882,10 +3946,10 @@
 
                 <div class="appearance-panel__body">
                   <section class="appearance-panel__section" aria-labelledby="appearanceSectionLabel">
-                    <h3 class="appearance-panel__subhead" id="appearanceSectionLabel">Appearance</h3>
+                    <h3 class="appearance-panel__subhead" id="appearanceSectionLabel" data-i18n="appearance">Appearance</h3>
                     <div class="appearance-panel__rows">
                       <div class="appearance-panel__row">
-                        <span class="appearance-panel__label">Theme</span>
+                        <span class="appearance-panel__label" data-i18n="theme">Theme</span>
                         <div class="appearance-panel__control">
                           <div class="dropdown dropdown--small" data-dd="appearance-theme">
                             <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
@@ -3894,8 +3958,8 @@
                             </button>
                             <div class="dropdown__panel" hidden>
                               <ul class="dropdown__list" role="listbox">
-                                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="light"><span class="dropdown__item-label">Light</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="dark"><span class="dropdown__item-label">Dark</span></li>
+                                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="light"><span class="dropdown__item-label" data-i18n="light">Light</span></li>
+                                <li class="dropdown__item" role="option" aria-selected="false" data-value="dark"><span class="dropdown__item-label" data-i18n="dark">Dark</span></li>
                               </ul>
                             </div>
                           </div>
@@ -3903,7 +3967,7 @@
                       </div>
 
                       <div class="appearance-panel__row">
-                        <span class="appearance-panel__label">Results per page</span>
+                        <span class="appearance-panel__label" data-i18n="resultsPerPage">Results per page</span>
                         <div class="appearance-panel__control">
                           <div class="dropdown dropdown--small" data-dd="appearance-rpp" data-pref="resultsPerPage">
                             <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
@@ -3922,7 +3986,7 @@
                       </div>
 
                       <div class="appearance-panel__row">
-                        <span class="appearance-panel__label">Font</span>
+                        <span class="appearance-panel__label" data-i18n="font">Font</span>
                         <div class="appearance-panel__control">
                           <div class="dropdown dropdown--small" data-dd="appearance-font" data-pref="font">
                             <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
@@ -3946,7 +4010,7 @@
                       </div>
 
                       <div class="appearance-panel__row">
-                        <span class="appearance-panel__label">Font size</span>
+                        <span class="appearance-panel__label" data-i18n="fontSize">Font size</span>
                         <div class="appearance-panel__control">
                           <div class="dropdown dropdown--small" data-dd="appearance-font-size" data-pref="fontSize">
                             <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
@@ -3955,11 +4019,11 @@
                             </button>
                             <div class="dropdown__panel" hidden>
                               <ul class="dropdown__list" role="listbox">
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="small"><span class="dropdown__item-label">Small</span></li>
-                                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="medium"><span class="dropdown__item-label">Medium</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="large"><span class="dropdown__item-label">Large</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="larger"><span class="dropdown__item-label">Larger</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="largest"><span class="dropdown__item-label">Largest</span></li>
+                                <li class="dropdown__item" role="option" aria-selected="false" data-value="small"><span class="dropdown__item-label" data-i18n="sizeSmall">Small</span></li>
+                                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="medium"><span class="dropdown__item-label" data-i18n="sizeMedium">Medium</span></li>
+                                <li class="dropdown__item" role="option" aria-selected="false" data-value="large"><span class="dropdown__item-label" data-i18n="sizeLarge">Large</span></li>
+                                <li class="dropdown__item" role="option" aria-selected="false" data-value="larger"><span class="dropdown__item-label" data-i18n="sizeLarger">Larger</span></li>
+                                <li class="dropdown__item" role="option" aria-selected="false" data-value="largest"><span class="dropdown__item-label" data-i18n="sizeLargest">Largest</span></li>
                               </ul>
                             </div>
                           </div>
@@ -3969,14 +4033,14 @@
                   </section>
 
                   <section class="appearance-panel__section" aria-labelledby="generalSectionLabel">
-                    <h3 class="appearance-panel__subhead" id="generalSectionLabel">General</h3>
+                    <h3 class="appearance-panel__subhead" id="generalSectionLabel" data-i18n="general">General</h3>
                     <div class="appearance-panel__rows">
                       <div class="appearance-panel__row appearance-panel__row--location">
-                        <span class="appearance-panel__label">Search location</span>
+                        <span class="appearance-panel__label" data-i18n="searchLocation">Search location</span>
                         <div class="appearance-panel__control">
                           <div class="dropdown dropdown--small dropdown--popover" data-dd="search-location">
                             <button type="button" class="dropdown__trigger" aria-haspopup="dialog" aria-expanded="false">
-                              <span class="dropdown__label">None selected</span>
+                              <span class="dropdown__label" data-i18n="noneSelected">None selected</span>
                               <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </button>
                             <div class="dropdown__panel location-pop" role="dialog" aria-label="Select a location" hidden>
@@ -4009,9 +4073,9 @@
                       </div>
 
                       <div class="appearance-panel__row">
-                        <span class="appearance-panel__label">Search results language</span>
+                        <span class="appearance-panel__label" data-i18n="resultsLanguage">Search results language</span>
                         <div class="appearance-panel__control">
-                          <div class="dropdown dropdown--small" data-dd="appearance-results-language">
+                          <div class="dropdown dropdown--small" data-dd="appearance-results-language" data-pref="resultsLanguage">
                             <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
                               <span class="dropdown__label">English</span>
                               <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -4035,13 +4099,13 @@
                       </div>
 
                       <div class="appearance-panel__row">
-                        <span class="appearance-panel__label">Show filters</span>
-                        <button type="button" class="toggle" id="appearanceShowFilters" role="switch" aria-checked="true" aria-label="Show filters"><span class="toggle__thumb"></span></button>
+                        <span class="appearance-panel__label" data-i18n="showFilters">Show filters</span>
+                        <button type="button" class="toggle" id="appearanceShowFilters" role="switch" aria-checked="true" data-i18n-aria="showFilters" aria-label="Show filters"><span class="toggle__thumb"></span></button>
                       </div>
 
                       <div class="appearance-panel__row">
-                        <span class="appearance-panel__label">Site icons</span>
-                        <button type="button" class="toggle" id="appearanceSiteIcons" role="switch" aria-checked="true" aria-label="Site icons"><span class="toggle__thumb"></span></button>
+                        <span class="appearance-panel__label" data-i18n="siteIcons">Site icons</span>
+                        <button type="button" class="toggle" id="appearanceSiteIcons" role="switch" aria-checked="true" data-i18n-aria="siteIcons" aria-label="Site icons"><span class="toggle__thumb"></span></button>
                       </div>
                     </div>
                   </section>
@@ -4049,10 +4113,10 @@
 
                 <div class="appearance-panel__footer">
                   <button type="button" class="btn btn--product-filled" id="appearanceReset">
-                    <span class="btn__label">Reset settings</span>
+                    <span class="btn__label" data-i18n="resetSettings">Reset settings</span>
                   </button>
                   <a class="btn btn--product-brand-blue" href="settings.html#general">
-                    <span class="btn__label">All settings</span>
+                    <span class="btn__label" data-i18n="allSettings">All settings</span>
                     <svg class="btn__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                       <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -4072,30 +4136,26 @@
     <div class="serp-layout">
       <div class="serp-main">
         <!-- Filter bar — Figma Startpage-Design-Home 3895:2856 -->
-        <div class="serp-filters" role="toolbar" aria-label="Search filters">
-          <div class="serp-filters__private" aria-label="Private Search on">
-            <svg class="serp-filters__private-icon" viewBox="0 0 13.124 15.969" fill="none" aria-hidden="true">
-              <path d="M6.15527 0.0745424C6.41743 -0.0248475 6.7066 -0.0248475 6.96875 0.0745424L12.3721 2.12337C12.824 2.29473 13.124 2.73203 13.124 3.22005V8.00032C13.124 10.5717 11.4465 12.576 10.0264 13.8324C9.29212 14.4819 8.56352 14.9882 8.02051 15.3314C7.74789 15.5036 7.51886 15.6374 7.35547 15.7288C7.27383 15.7745 7.20782 15.8095 7.16113 15.8343C7.13787 15.8467 7.11908 15.8566 7.10547 15.8636L7.08887 15.8724L7.08105 15.8763H7.08008C6.75025 15.9998 6.49955 16.0001 6.04297 15.8763L6.03516 15.8724L6.01855 15.8636C6.00494 15.8566 5.9862 15.8467 5.96289 15.8343C5.91619 15.8095 5.85024 15.7746 5.76855 15.7288C5.60516 15.6374 5.37618 15.5037 5.10352 15.3314C4.5605 14.9882 3.83193 14.4819 3.09766 13.8324C1.67749 12.576 4.49124e-05 10.5717 0 8.00032V3.22005C0 2.73215 0.299194 2.29481 0.750977 2.12337L6.15527 0.0745424Z" fill="currentColor"/>
-              <path class="serp-filters__private-check" d="M4 8.25024L5.55608 10.0286C5.65767 10.1447 5.83914 10.142 5.93721 10.0229L9.25 6.00024" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            Private Search
-          </div>
+        <div class="serp-filters" role="toolbar" data-i18n-aria="searchFilters" aria-label="Search filters">
+          <span
+            class="serp-filters__plan account-menu__badge auth-in"
+            id="serpPlanPill"
+            data-plan="basic"
+            data-i18n="adFree" data-i18n-aria="adFree" aria-label="Ad-Free"
+          >Ad-Free</span>
 
           <div class="serp-filters__dropdowns">
-            <button type="button" class="serp-filters__dropdown" aria-haspopup="listbox" aria-expanded="false">
-              All regions
+            <button type="button" class="serp-filters__dropdown" aria-haspopup="listbox" aria-expanded="false"><span data-i18n="allRegions">All regions</span>
               <svg class="serp-filters__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-            <button type="button" class="serp-filters__dropdown" aria-haspopup="listbox" aria-expanded="false">
-              Safe Search: Off
+            <button type="button" class="serp-filters__dropdown" aria-haspopup="listbox" aria-expanded="false"><span data-i18n="safeSearchOff">Safe Search: Off</span>
               <svg class="serp-filters__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-            <button type="button" class="serp-filters__dropdown" aria-haspopup="listbox" aria-expanded="false">
-              Any time
+            <button type="button" class="serp-filters__dropdown" aria-haspopup="listbox" aria-expanded="false"><span data-i18n="anyTime">Any time</span>
               <svg class="serp-filters__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -4130,7 +4190,7 @@
 
           <p class="knowledge-panel__text">
             Taylor Alison Swift is an American singer-songwriter.&nbsp;An influential figure in popular culture, she is known for her autobiographical songwriting and artistic reinventions.&nbsp;Swift is the highest-grossing live music artist, the wealthiest female musician, and one of the best-selling music artists of all time.&nbsp;Swift signed with Big Machine Records in 2005 and debuted as a country singer with the albums Taylor Swift and Fearless.&nbsp;The singles &ldquo;Teardrops on My Guitar&rdquo;, &ldquo;Love Story&rdquo;, and &ldquo;You Belong with Me&rdquo; found crossover success on country and pop radio formats ...
-            <a class="knowledge-panel__continue" href="https://en.wikipedia.org/wiki/Taylor_Swift" target="_blank" rel="noopener noreferrer">Continue in Wikipedia</a>
+            <a class="knowledge-panel__continue" href="https://en.wikipedia.org/wiki/Taylor_Swift" target="_blank" rel="noopener noreferrer" data-i18n="continueWikipedia">Continue in Wikipedia</a>
           </p>
 
           <hr class="knowledge-panel__rule" />
@@ -4208,13 +4268,12 @@
           <hr class="knowledge-panel__rule" />
 
           <div class="knowledge-panel__footer">
-            <p class="knowledge-panel__more">
-              More from <a class="knowledge-panel__more-link" href="https://en.wikipedia.org/wiki/Taylor_Swift" target="_blank" rel="noopener noreferrer">Wikipedia</a>
+            <p class="knowledge-panel__more"><span data-i18n="moreFrom">More from</span> <a class="knowledge-panel__more-link" href="https://en.wikipedia.org/wiki/Taylor_Swift" target="_blank" rel="noopener noreferrer">Wikipedia</a>
             </p>
             <div class="knowledge-panel__actions">
-              <button type="button" class="knowledge-panel__action" id="hideWikipediaBtn">Hide Wikipedia</button>
+              <button type="button" class="knowledge-panel__action" id="hideWikipediaBtn" data-i18n="hideWikipedia">Hide Wikipedia</button>
               <span class="knowledge-panel__sep" aria-hidden="true">|</span>
-              <a class="knowledge-panel__action" href="#">Feedback</a>
+              <a class="knowledge-panel__action" href="#" data-i18n="feedback">Feedback</a>
             </div>
           </div>
         </section>
@@ -4702,7 +4761,7 @@
 
       return `
         <div class="ad-result">
-          <span class="ad-result__sponsored">Sponsored</span>
+          <span class="ad-result__sponsored">${(window.AccountsI18n&&AccountsI18n.t('sponsored'))||'Sponsored'}</span>
           <div class="ad-result__source">
             ${renderAdFavicon(data.siteName)}
             <div class="ad-result__source-meta">
@@ -4845,7 +4904,7 @@
               <svg class="algo-result__av-icon" aria-hidden="true">
                 <use href="#icon-av"/>
               </svg>
-              <a class="algo-result__av-label" href="#">Visit in Anonymous View</a>
+              <a class="algo-result__av-label" href="#">${(window.AccountsI18n&&AccountsI18n.t('visitAnonymousView'))||'Visit in Anonymous View'}</a>
             </div>
           </div>`;
 
@@ -5011,7 +5070,7 @@
         <a class="serp-all-news-card__title" href="#">${highlight(article.title, query)}</a>
         <a class="serp-all-news-card__av-link" href="#">
           <span class="serp-all-news-card__av-icon" aria-hidden="true"><svg width="16" height="8" aria-hidden="true"><use href="#icon-av"/></svg></span>
-          Visit in Anonymous View
+          ${(window.AccountsI18n&&AccountsI18n.t('visitAnonymousView'))||'Visit in Anonymous View'}
         </a>
       </li>`;
     }
@@ -5019,7 +5078,7 @@
     function renderNewsCarousel(query) {
       const cards = NEWS_ARTICLES.map((article) => renderNewsCard(article, query)).join('');
       return `<section class="serp-all-news" aria-label="News">
-        <h2 class="results-section-label">News results</h2>
+        <h2 class="results-section-label">${(window.AccountsI18n&&AccountsI18n.t('newsResults'))||'News results'}</h2>
         <div class="serp-all-news__carousel">
           <div class="serp-all-news__viewport">
             <ul class="serp-all-news__row" aria-label="News results carousel">
@@ -5044,7 +5103,7 @@
         <div class="serp-all-news__more">
           <span class="serp-all-news__more-line" aria-hidden="true"></span>
           <a class="serp-all-news__more-btn" href="#">
-            <span class="btn__label">More news</span>
+            <span class="btn__label">${(window.AccountsI18n&&AccountsI18n.t('moreNews'))||'More news'}</span>
             <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M6 4.5L10 8L6 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -5160,7 +5219,7 @@
           <img class="serp-image-pack__img" src="${img.src}" alt="" width="200" height="140" loading="lazy" decoding="async" />
         </a>`).join('');
       return `<section class="serp-image-pack-block" aria-label="Images">
-        <h2 class="results-section-label">Image results</h2>
+        <h2 class="results-section-label">${(window.AccountsI18n&&AccountsI18n.t('imageResults'))||'Image results'}</h2>
         <div class="serp-image-pack">
           <a class="serp-image-pack__cell serp-image-pack__cell--main" href="#" aria-label="${main.alt}">
             <img class="serp-image-pack__img" src="${main.src}" alt="" width="400" height="280" loading="lazy" decoding="async" />
@@ -5178,7 +5237,7 @@
         <div class="serp-image-pack-block__more">
           <span class="serp-image-pack-block__more-line" aria-hidden="true"></span>
           <a class="serp-image-pack-block__more-btn" href="#">
-            <span class="btn__label">More images</span>
+            <span class="btn__label">${(window.AccountsI18n&&AccountsI18n.t('moreImages'))||'More images'}</span>
             <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M6 4.5L10 8L6 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -5280,7 +5339,7 @@
           </div>
           <a class="serp-all-video-card__av-link" href="#">
             <span class="serp-all-video-card__av-icon" aria-hidden="true"><svg width="16" height="8" aria-hidden="true"><use href="#icon-av"/></svg></span>
-            Visit in Anonymous View
+            ${(window.AccountsI18n&&AccountsI18n.t('visitAnonymousView'))||'Visit in Anonymous View'}
           </a>
         </div>
       </li>`;
@@ -5289,7 +5348,7 @@
     function renderVideoCarousel(query) {
       const cards = VIDEO_ARTICLES.map((video) => renderVideoCard(video, query)).join('');
       return `<section class="serp-all-video" aria-label="Videos">
-        <h2 class="results-section-label">Video results</h2>
+        <h2 class="results-section-label">${(window.AccountsI18n&&AccountsI18n.t('videoResults'))||'Video results'}</h2>
         <div class="serp-all-video__carousel">
           <div class="serp-all-video__viewport">
             <ul class="serp-all-video__row" aria-label="Video results carousel">
@@ -5314,7 +5373,7 @@
         <div class="serp-all-video__more">
           <span class="serp-all-video__more-line" aria-hidden="true"></span>
           <a class="serp-all-video__more-btn" href="#">
-            <span class="btn__label">More videos</span>
+            <span class="btn__label">${(window.AccountsI18n&&AccountsI18n.t('moreVideos'))||'More videos'}</span>
             <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M6 4.5L10 8L6 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -5388,9 +5447,7 @@
       const organicMid = visibleOrganic.slice(3, 6).map(item => renderOrganic(item, value));
       const organicTail = visibleOrganic.slice(6).map(item => renderOrganic(item, value));
 
-      meta.textContent = showAds
-        ? `About ${approx} results`
-        : `About ${approx} results · Ad-free`;
+      meta.textContent = (window.AccountsI18n && AccountsI18n.t('aboutResults', { n: approx })) || (`About ${approx} results`);
 
       const blocks = showAds
         ? [
@@ -5489,14 +5546,28 @@
     /* ─────────────────────────────────────────────
        Auth + plan persistence (sync with homepage)
        ───────────────────────────────────────────── */
-    const PLAN_BADGE_LABELS = { basic: 'Basic', premium: 'Premium' };
+    const PLAN_BADGE_LABELS = () => ({
+      basic: (window.AccountsI18n && AccountsI18n.t('adFreeBasic')) || 'Ad-Free Basic',
+      premium: (window.AccountsI18n && AccountsI18n.t('adFreePremium')) || 'Ad-Free Premium',
+    });
 
     function setAccountPlanBadge(plan) {
       const badge = document.getElementById('accountPlanBadge');
-      if (!badge) return;
       const next = plan === 'premium' ? 'premium' : 'basic';
-      badge.dataset.plan = next;
-      badge.textContent = PLAN_BADGE_LABELS[next];
+      if (badge) {
+        badge.dataset.plan = next;
+        badge.textContent = PLAN_BADGE_LABELS()[next];
+        badge.removeAttribute('data-i18n');
+      }
+      const serpPill = document.getElementById('serpPlanPill');
+      if (serpPill) {
+        const label = (window.AccountsI18n && AccountsI18n.t('adFree')) || 'Ad-Free';
+        serpPill.dataset.plan = next;
+        serpPill.textContent = label;
+        serpPill.setAttribute('aria-label', label);
+        serpPill.removeAttribute('data-i18n');
+        serpPill.removeAttribute('data-i18n-aria');
+      }
       document.body.dataset.plan = next;
       sessionStorage.setItem(PLAN_KEY, next);
       const q = document.getElementById('searchInput')?.value?.trim();
@@ -5873,7 +5944,9 @@
     function applyTheme(theme) {
       html.dataset.theme = theme;
       icon.textContent   = theme === 'dark' ? '🌙' : '☀️';
-      label.textContent  = theme === 'dark' ? 'Dark'  : 'Light';
+      label.textContent  = theme === 'dark'
+        ? ((window.AccountsI18n && AccountsI18n.t('dark')) || 'Dark')
+        : ((window.AccountsI18n && AccountsI18n.t('light')) || 'Light');
       const themeDd = document.querySelector('[data-dd="appearance-theme"]');
       if (themeDd) {
         const ddLabel = themeDd.querySelector('.dropdown__label');
@@ -5881,7 +5954,12 @@
           const on = item.dataset.value === theme;
           item.classList.toggle('dropdown__item--selected', on);
           item.setAttribute('aria-selected', String(on));
-          if (on && ddLabel) ddLabel.textContent = item.querySelector('.dropdown__item-label')?.textContent || theme;
+          if (on && ddLabel) {
+            const key = theme === 'dark' ? 'dark' : 'light';
+            ddLabel.textContent = (window.AccountsI18n && AccountsI18n.t(key))
+              || item.querySelector('.dropdown__item-label')?.textContent
+              || theme;
+          }
         });
       }
     }
@@ -5895,8 +5973,15 @@
 
     /* Apply UI customizations from settings */
     if (window.AccountsUIPrefs) {
-      AccountsUIPrefs.apply(AccountsUIPrefs.load());
+      const prefs = AccountsUIPrefs.load();
+      AccountsUIPrefs.apply(prefs);
+      if (window.AccountsI18n) AccountsI18n.apply(prefs.resultsLanguage || 'English');
+      applyTheme(document.documentElement.dataset.theme || localStorage.getItem('theme') || 'light');
       render(document.getElementById('searchInput')?.value || '');
+      /* Re-sync plan pills after i18n so labels match current plan + language */
+      const savedPlan = sessionStorage.getItem(PLAN_KEY);
+      if (savedPlan === 'basic' || savedPlan === 'premium') setAccountPlanBadge(savedPlan);
+      else setAccountPlanBadge(document.body.dataset.plan || 'basic');
     }
 
     /* ─────────────────────────────────────────────
@@ -5914,7 +5999,11 @@
         segoe: 'Segoe UI', verdana: 'Verdana', serif: 'Serif', mono: 'Mono',
       };
       const SIZE_LABELS = {
-        small: 'Small', medium: 'Medium', large: 'Large', larger: 'Larger', largest: 'Largest',
+        small: () => (window.AccountsI18n && AccountsI18n.t('sizeSmall')) || 'Small',
+        medium: () => (window.AccountsI18n && AccountsI18n.t('sizeMedium')) || 'Medium',
+        large: () => (window.AccountsI18n && AccountsI18n.t('sizeLarge')) || 'Large',
+        larger: () => (window.AccountsI18n && AccountsI18n.t('sizeLarger')) || 'Larger',
+        largest: () => (window.AccountsI18n && AccountsI18n.t('sizeLargest')) || 'Largest',
       };
 
       function closeAppearanceDropdowns() {
@@ -5937,9 +6026,17 @@
       function patchPrefs(partial) {
         const next = AccountsUIPrefs.save({ ...AccountsUIPrefs.load(), ...partial });
         AccountsUIPrefs.apply(next);
+        if (partial.resultsLanguage != null && window.AccountsI18n) {
+          AccountsI18n.apply(next.resultsLanguage);
+        }
         syncAppearanceControls(next);
-        if (partial.resultsPerPage != null) {
+        if (partial.resultsPerPage != null || partial.resultsLanguage != null) {
           render(document.getElementById('searchInput')?.value || '');
+        }
+        if (partial.resultsLanguage != null) {
+          setAccountPlanBadge(document.body.dataset.plan || 'basic');
+          const theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+          applyTheme(theme);
         }
       }
 
@@ -5971,7 +6068,7 @@
                 ddLabel.textContent = FONT_LABELS[val] || item.querySelector('.dropdown__item-label')?.textContent || val;
                 ddLabel.dataset.font = val;
               } else if (key === 'fontSize') {
-                ddLabel.textContent = SIZE_LABELS[val] || item.querySelector('.dropdown__item-label')?.textContent || val;
+                ddLabel.textContent = (SIZE_LABELS[val] && SIZE_LABELS[val]()) || item.querySelector('.dropdown__item-label')?.textContent || val;
                 ddLabel.dataset.size = val;
               } else {
                 ddLabel.textContent = item.querySelector('.dropdown__item-label')?.textContent || val;
@@ -6173,9 +6270,11 @@
       document.getElementById('appearanceReset')?.addEventListener('click', () => {
         const next = AccountsUIPrefs.save(AccountsUIPrefs.reset());
         AccountsUIPrefs.apply(next);
+        if (window.AccountsI18n) AccountsI18n.apply(next.resultsLanguage || 'English');
         applyTheme('light');
         localStorage.setItem('theme', 'light');
         syncAppearanceControls(next);
+        setAccountPlanBadge(document.body.dataset.plan || 'basic');
         render(document.getElementById('searchInput')?.value || '');
       });
 
