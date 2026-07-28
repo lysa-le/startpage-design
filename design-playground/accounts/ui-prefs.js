@@ -84,9 +84,14 @@
     el.dataset.uiShowFilters = p.showFilters !== false ? 'on' : 'off';
     el.dataset.uiResultsPerPage = String(p.resultsPerPage || '10');
 
-    el.style.setProperty('--ui-font-family', FONT_STACKS[p.font] || FONT_STACKS.inter);
-    el.style.setProperty('--ui-title-font', FONT_STACKS[p.titleFont] || FONT_STACKS.inter);
+    const bodyFont = FONT_STACKS[p.font] || FONT_STACKS.inter;
+    const titleFont = FONT_STACKS[p.titleFont] || FONT_STACKS.inter;
+
+    el.style.setProperty('--ui-font-family', bodyFont);
+    el.style.setProperty('--ui-title-font', titleFont);
     el.style.setProperty('--ui-title-color', TITLE_COLORS[p.titleColor] || TITLE_COLORS.link);
+    /* Remap design-system font token so news, knowledge rail, etc. follow the pref */
+    el.style.setProperty('--font-family', bodyFont);
 
     const bg = BG_COLORS[p.bg];
     if (bg) {

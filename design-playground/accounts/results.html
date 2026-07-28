@@ -1372,6 +1372,132 @@
       overflow: visible;
     }
 
+    /* ── Image pack (All-tab style collage) ── */
+    .serp-image-pack {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: var(--spacing-4);
+      width: 100%;
+      height: 172px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--color-background-primary);
+    }
+    .serp-image-pack__cell {
+      position: relative;
+      display: block;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      background: var(--color-background-secondary);
+      text-decoration: none;
+      color: inherit;
+    }
+    .serp-image-pack__cell--main {
+      grid-row: 1 / -1;
+    }
+    .serp-image-pack__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+    .serp-image-pack__cell:hover .serp-image-pack__img {
+      transform: scale(1.03);
+    }
+    .serp-image-pack__credit {
+      position: absolute;
+      left: var(--spacing-8);
+      top: var(--spacing-8);
+      z-index: 1;
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: 1;
+      font-weight: var(--font-weight-regular);
+      color: var(--color-whisper-0);
+      pointer-events: none;
+    }
+    .serp-image-pack__badge {
+      position: absolute;
+      right: var(--spacing-8);
+      bottom: var(--spacing-8);
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      border-radius: var(--radius-full);
+      background: var(--color-black-800);
+      color: var(--color-whisper-0);
+      opacity: 0.82;
+      pointer-events: none;
+    }
+    .serp-image-pack__badge svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      display: block;
+    }
+    .serp-image-pack-block {
+      width: 100%;
+      max-width: 100%;
+    }
+    .serp-image-pack-block .results-section-label {
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .serp-image-pack-block .serp-image-pack {
+      margin-top: var(--spacing-12);
+    }
+    .serp-image-pack-block__more {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+      width: 100%;
+      margin-top: var(--spacing-16);
+    }
+    .serp-image-pack-block__more-line {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 0;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .serp-image-pack-block__more-btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      width: auto;
+      padding: var(--spacing-8) var(--spacing-24);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.15s ease;
+    }
+    .serp-image-pack-block__more-btn:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+    .serp-image-pack-block__more-btn .btn__icon {
+      display: block;
+      flex-shrink: 0;
+    }
+
     /* ── Right rail — Wikipedia knowledge panel (Figma 3894:2835) ── */
     .serp-rail {
       min-width: 0;
@@ -1501,6 +1627,322 @@
       display: flex;
       align-items: center;
       white-space: nowrap;
+    }
+
+    /* ── Video carousel ── */
+    .serp-all-video {
+      width: 100%;
+      max-width: 100%;
+    }
+    .serp-all-video .results-section-label {
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .serp-all-video__carousel {
+      position: relative;
+      width: 100%;
+      margin-top: var(--spacing-12);
+    }
+    .serp-all-video__viewport {
+      width: 100%;
+      overflow: hidden;
+    }
+    .serp-all-video__row {
+      --serp-all-video-carousel-gap: var(--spacing-24);
+      --serp-all-video-visible: 3;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: var(--serp-all-video-carousel-gap);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .serp-all-video__row::-webkit-scrollbar { display: none; }
+    .serp-all-video-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      flex: 0 0 calc(
+        (100% - (var(--serp-all-video-carousel-gap) * (var(--serp-all-video-visible) - 1)))
+        / var(--serp-all-video-visible)
+      );
+      min-width: 0;
+      overflow: hidden;
+      scroll-snap-align: start;
+    }
+    .icn-arrows {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--color-icon-primary);
+    }
+    .icn-arrows--right-circle,
+    .icn-arrows--left-circle {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      border-radius: var(--radius-full);
+      background: var(--color-background-tertiary);
+    }
+    .serp-all-video__prev,
+    .serp-all-video__next {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--color-icon-primary);
+      transform: translateY(-50%);
+    }
+    /* Sit outside the track so cards stay left-aligned at the start */
+    .serp-all-video__prev {
+      left: calc(-1 * (var(--spacing-32) + var(--spacing-8)));
+    }
+    .serp-all-video__next {
+      right: calc(-1 * (var(--spacing-32) + var(--spacing-8)));
+    }
+    .serp-all-video__next:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+    .serp-all-video__prev:not(:disabled):hover .icn-arrows--left-circle,
+    .serp-all-video__next:not(:disabled):hover .icn-arrows--right-circle {
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+    }
+    .serp-all-video__prev[hidden],
+    .serp-all-video__next[hidden] {
+      display: inline-flex;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .serp-all-video__prev .icn-arrows--left-circle,
+    .serp-all-video__next .icn-arrows--right-circle {
+      box-sizing: border-box;
+      background: var(--color-background-tertiary);
+      border: none;
+    }
+    .serp-all-video__prev .icn-arrows svg,
+    .serp-all-video__next .icn-arrows svg {
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      shape-rendering: geometricPrecision;
+    }
+    .serp-all-video-card__thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, var(--color-background-tertiary) 0%, transparent 55%),
+        var(--color-background-secondary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      box-sizing: border-box;
+    }
+    .serp-all-video-card__thumb::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 42%;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(
+        to top,
+        var(--color-black-800) 0%,
+        transparent 100%
+      );
+      opacity: 0.55;
+    }
+    .serp-all-video-card__thumb-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+    .serp-all-video-card__duration {
+      position: absolute;
+      left: var(--spacing-8);
+      bottom: var(--spacing-8);
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-4);
+      padding: var(--spacing-4) var(--spacing-8);
+      border-radius: var(--radius-full);
+      background: var(--color-black-800);
+      color: var(--color-whisper-0);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: 1;
+      font-weight: var(--font-weight-medium);
+      pointer-events: none;
+    }
+    .serp-all-video-card__duration-icon {
+      display: inline-flex;
+      flex-shrink: 0;
+      width: var(--spacing-8);
+      height: var(--spacing-8);
+    }
+    .serp-all-video-card__duration-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .serp-all-video-card:has(.serp-all-video-card__thumb:hover) .serp-all-video-card__thumb-img,
+    .serp-all-video-card:has(.serp-all-video-card__title:hover) .serp-all-video-card__thumb-img {
+      transform: scale(1.04);
+    }
+    .serp-all-video-card:has(.serp-all-video-card__thumb:hover) .serp-all-video-card__title {
+      text-decoration: underline;
+    }
+    .serp-all-video-card__body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      min-width: 0;
+      flex: 1;
+    }
+    .serp-all-video-card__title {
+      margin: 0;
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-link);
+      text-decoration: none;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .serp-all-video-card__title:hover { text-decoration: underline; }
+    .serp-all-video-card__stats {
+      margin: 0;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+    .serp-all-video-card__source {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      min-width: 0;
+      margin: 0;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+    .serp-all-video-card__source-label {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .serp-all-video-card__platform {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+      overflow: hidden;
+      background-color: var(--color-whisper-0);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      box-sizing: border-box;
+    }
+    .serp-all-video-card__platform img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .serp-all-video-card__meta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+      min-width: 0;
+    }
+    .serp-all-video-card__av-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-4);
+      align-self: flex-start;
+      margin-top: auto;
+      padding-top: var(--spacing-4);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .serp-all-video-card__av-link:hover {
+      text-decoration: underline;
+    }
+    .serp-all-video-card__av-icon {
+      display: inline-flex;
+      flex-shrink: 0;
+      color: var(--color-icon-secondary);
+    }
+    .serp-all-video__more {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+      width: 100%;
+      margin-top: var(--spacing-16);
+    }
+    .serp-all-video__more-line {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 0;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .serp-all-video__more-btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      width: auto;
+      padding: var(--spacing-8) var(--spacing-24);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.15s ease;
+    }
+    .serp-all-video__more-btn:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+    .serp-all-video__more-btn .btn__icon {
+      display: block;
+      flex-shrink: 0;
     }
 
     /* ── Result entry animation ── */
@@ -2229,7 +2671,8 @@
       font-size: var(--font-body-lg);
       line-height: var(--font-body-lg-lh);
       font-weight: var(--font-weight-regular);
-      color: var(--color-text-link);
+      font-family: var(--ui-title-font, inherit);
+      color: var(--ui-title-color, var(--color-text-link));
       text-decoration: none;
       display: block;
     }
@@ -2781,6 +3224,10 @@
       }
       .plan-toggle__btn {
         padding: var(--spacing-8) var(--spacing-16);
+      }
+      .serp-all-video__row {
+        --serp-all-video-carousel-gap: var(--spacing-16);
+        --serp-all-video-visible: 1;
       }
     }
 
@@ -4040,6 +4487,252 @@
     }
 
     /* ─────────────────────────────────────────────
+       Image pack
+       ───────────────────────────────────────────── */
+    const IMAGE_PACK = {
+      credit: '',
+      images: [
+        { src: 'assets/image-carousel-thumbnails/cheese-1.jpg', alt: 'Assorted cheeses' },
+        { src: 'assets/image-carousel-thumbnails/cheese-2.jpg', alt: 'Cheese close-up' },
+        { src: 'assets/image-carousel-thumbnails/cheese-3.jpg', alt: 'Cheese board' },
+        { src: 'assets/image-carousel-thumbnails/cheese-4.jpg', alt: 'Cheese selection' },
+        { src: 'assets/image-carousel-thumbnails/cheese-5.jpg', alt: 'Cheese platter' },
+      ],
+    };
+
+    function renderImagePack() {
+      const [main, ...sides] = IMAGE_PACK.images;
+      const credit = IMAGE_PACK.credit
+        ? `<span class="serp-image-pack__credit">${IMAGE_PACK.credit}</span>`
+        : '';
+      const sideCells = sides.map((img) => `
+        <a class="serp-image-pack__cell" href="#" aria-label="${img.alt}">
+          <img class="serp-image-pack__img" src="${img.src}" alt="" width="200" height="140" loading="lazy" decoding="async" />
+        </a>`).join('');
+      return `<section class="serp-image-pack-block" aria-label="Images">
+        <h2 class="results-section-label">Image results</h2>
+        <div class="serp-image-pack">
+          <a class="serp-image-pack__cell serp-image-pack__cell--main" href="#" aria-label="${main.alt}">
+            <img class="serp-image-pack__img" src="${main.src}" alt="" width="400" height="280" loading="lazy" decoding="async" />
+            ${credit}
+          </a>
+          ${sideCells}
+          <span class="serp-image-pack__badge" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="6.5" cy="6" r="1.25" fill="currentColor"/>
+              <path d="M3.5 12.5L7 8.5L9.5 11L11 9.5L13.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="serp-image-pack-block__more">
+          <span class="serp-image-pack-block__more-line" aria-hidden="true"></span>
+          <a class="serp-image-pack-block__more-btn" href="#">
+            <span class="btn__label">More images</span>
+            <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 4.5L10 8L6 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <span class="serp-image-pack-block__more-line" aria-hidden="true"></span>
+        </div>
+      </section>`;
+    }
+
+    /* ─────────────────────────────────────────────
+       Videos carousel
+       ───────────────────────────────────────────── */
+    const VIDEO_ARTICLES = [
+      {
+        id: 'ch-vid-1',
+        title: 'How Cheese Is Made — From Farm to Wheel',
+        views: '2.1M views',
+        age: '2 years ago',
+        duration: '8:42',
+        platform: 'YouTube',
+        channel: 'Cabot Creamery',
+        thumb: 'assets/ad-images/cabot-cheese.png',
+      },
+      {
+        id: 'ch-vid-2',
+        title: 'Building the Perfect Cheese Board',
+        views: '840K views',
+        age: '1 year ago',
+        duration: '6:15',
+        platform: 'YouTube',
+        channel: 'Murray\'s Cheese',
+        thumb: 'assets/ad-images/cheese.jpg',
+      },
+      {
+        id: 'ch-vid-3',
+        title: 'Tillamook Cheddar Tasting Guide',
+        views: '320K views',
+        age: '8 months ago',
+        duration: '4:08',
+        platform: 'YouTube',
+        channel: 'Tillamook',
+        thumb: 'assets/ad-images/tillamook.png',
+      },
+      {
+        id: 'ch-vid-4',
+        title: 'Soft vs Hard Cheese: What\'s the Difference?',
+        views: '100K views',
+        age: '3 years ago',
+        duration: '1:24',
+        platform: 'YouTube',
+        channel: 'Serious Eats',
+        thumb: 'assets/knowledge-cheese.jpg',
+      },
+      {
+        id: 'ch-vid-5',
+        title: 'Mac and Cheese — 5 Restaurant Techniques',
+        views: '1.4M views',
+        age: '4 years ago',
+        duration: '12:03',
+        platform: 'YouTube',
+        channel: 'America\'s Test Kitchen',
+        thumb: 'assets/ad-images/cabot-cheese.png',
+      },
+      {
+        id: 'ch-vid-6',
+        title: 'Cheese Pairing Basics with Wine & Beer',
+        views: '560K views',
+        age: '2 years ago',
+        duration: '5:37',
+        platform: 'YouTube',
+        channel: 'Culture Cheese Mag',
+        thumb: 'assets/ad-images/cheese.jpg',
+      },
+    ];
+
+    function renderVideoCard(video, query) {
+      const stats = `${video.views} · ${video.age}`;
+      const source = `${video.platform} › ${video.channel}`;
+      return `<li class="serp-all-video-card">
+        <div class="serp-all-video-card__thumb" aria-hidden="true">
+          <img class="serp-all-video-card__thumb-img" src="${video.thumb}" width="400" height="225" alt="" loading="lazy" decoding="async" />
+          <span class="serp-all-video-card__duration">
+            <span class="serp-all-video-card__duration-icon" aria-hidden="true">
+              <svg viewBox="0 0 8 8" fill="currentColor" aria-hidden="true"><path d="M1.5 1v6l5.5-3L1.5 1Z"/></svg>
+            </span>
+            ${video.duration}
+          </span>
+        </div>
+        <div class="serp-all-video-card__body">
+          <a class="serp-all-video-card__title" href="#">${highlight(video.title, query)}</a>
+          <div class="serp-all-video-card__meta">
+            <p class="serp-all-video-card__stats">${stats}</p>
+            <p class="serp-all-video-card__source">
+              <span class="serp-all-video-card__platform" aria-hidden="true">
+                <img src="assets/algo-favicons/youtube.png" alt="" width="16" height="16" loading="lazy" decoding="async" />
+              </span>
+              <span class="serp-all-video-card__source-label">${highlight(source, query)}</span>
+            </p>
+          </div>
+          <a class="serp-all-video-card__av-link" href="#">
+            <span class="serp-all-video-card__av-icon" aria-hidden="true"><svg width="16" height="8" aria-hidden="true"><use href="#icon-av"/></svg></span>
+            Visit in Anonymous View
+          </a>
+        </div>
+      </li>`;
+    }
+
+    function renderVideoCarousel(query) {
+      const cards = VIDEO_ARTICLES.map((video) => renderVideoCard(video, query)).join('');
+      return `<section class="serp-all-video" aria-label="Videos">
+        <h2 class="results-section-label">Video results</h2>
+        <div class="serp-all-video__carousel">
+          <div class="serp-all-video__viewport">
+            <ul class="serp-all-video__row" aria-label="Video results carousel">
+              ${cards}
+            </ul>
+          </div>
+          <button type="button" class="serp-all-video__prev" hidden aria-label="Show previous video results">
+            <span class="icn-arrows icn-arrows--left-circle" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M14 7L9 12L14 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+          <button type="button" class="serp-all-video__next" aria-label="Show more video results">
+            <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M10 7L15 12L10 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+        <div class="serp-all-video__more">
+          <span class="serp-all-video__more-line" aria-hidden="true"></span>
+          <a class="serp-all-video__more-btn" href="#">
+            <span class="btn__label">More videos</span>
+            <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 4.5L10 8L6 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <span class="serp-all-video__more-line" aria-hidden="true"></span>
+        </div>
+      </section>`;
+    }
+
+    function syncSerpAllVideoCarousel(carousel) {
+      const row = carousel.querySelector('.serp-all-video__row');
+      const prevBtn = carousel.querySelector('.serp-all-video__prev');
+      const nextBtn = carousel.querySelector('.serp-all-video__next');
+      if (!row || !prevBtn || !nextBtn) return;
+      const canScroll = row.scrollWidth > row.clientWidth + 2;
+      const atStart = row.scrollLeft <= 2;
+      const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 2;
+      prevBtn.hidden = !canScroll || atStart;
+      nextBtn.hidden = !canScroll;
+      nextBtn.disabled = atEnd;
+    }
+
+    function syncAllSerpAllVideoCarousels() {
+      document.querySelectorAll('.serp-all-video__carousel').forEach(syncSerpAllVideoCarousel);
+    }
+
+    function scrollSerpAllVideoCarousel(carousel, direction) {
+      const row = carousel.querySelector('.serp-all-video__row');
+      const card = row?.querySelector('.serp-all-video-card');
+      if (!row || !card) return;
+      const styles = getComputedStyle(row);
+      const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+      const step = card.getBoundingClientRect().width + gap;
+      row.scrollBy({ left: direction * step, behavior: 'smooth' });
+    }
+
+    function bindVideoCarousel() {
+      const list = document.getElementById('resultsList');
+      if (!list || list.dataset.videoCarouselBound === '1') return;
+      list.dataset.videoCarouselBound = '1';
+
+      list.addEventListener('click', (e) => {
+        const prevBtn = e.target.closest('.serp-all-video__prev');
+        if (prevBtn) {
+          e.preventDefault();
+          const carousel = prevBtn.closest('.serp-all-video__carousel');
+          if (carousel && !prevBtn.hidden) scrollSerpAllVideoCarousel(carousel, -1);
+          return;
+        }
+        const nextBtn = e.target.closest('.serp-all-video__next');
+        if (nextBtn) {
+          e.preventDefault();
+          const carousel = nextBtn.closest('.serp-all-video__carousel');
+          if (carousel && !nextBtn.disabled) scrollSerpAllVideoCarousel(carousel, 1);
+        }
+      });
+
+      list.addEventListener('scroll', (e) => {
+        const row = e.target.closest?.('.serp-all-video__row');
+        if (!row) return;
+        const carousel = row.closest('.serp-all-video__carousel');
+        if (carousel) syncSerpAllVideoCarousel(carousel);
+      }, true);
+
+      window.addEventListener('resize', syncAllSerpAllVideoCarousels);
+    }
+
+    /* ─────────────────────────────────────────────
        Render the page
        ───────────────────────────────────────────── */
     function render(query) {
@@ -4069,6 +4762,11 @@
       const showAds = !isSignedIn();
       const activeTop = showAds ? topAds : [];
       const activeBottom = showAds ? bottomAds : [];
+      const videoBlock = renderVideoCarousel(value);
+      const imagePack = renderImagePack();
+      const organicHead = visibleOrganic.slice(0, 3).map(item => renderOrganic(item, value));
+      const organicMid = visibleOrganic.slice(3, 6).map(item => renderOrganic(item, value));
+      const organicTail = visibleOrganic.slice(6).map(item => renderOrganic(item, value));
 
       meta.textContent = showAds
         ? `About ${approx} results`
@@ -4077,12 +4775,23 @@
       const blocks = showAds
         ? [
             ...activeTop.map(item => renderAd(item, value)),
-            ...visibleOrganic.map(item => renderOrganic(item, value)),
+            ...organicHead,
+            videoBlock,
+            ...organicMid,
+            imagePack,
+            ...organicTail,
             ...activeBottom.map(item => renderAd(item, value)),
           ]
-        : visibleOrganic.map(item => renderOrganic(item, value));
+        : [
+            ...organicHead,
+            videoBlock,
+            ...organicMid,
+            imagePack,
+            ...organicTail,
+          ];
 
       list.innerHTML = blocks.join('');
+      requestAnimationFrame(syncAllSerpAllVideoCarousels);
     }
 
     function closeAllPrivacyPopovers(except) {
@@ -4472,6 +5181,7 @@
     /* Initial render */
     render(input.value);
     bindPrivacyInsights();
+    bindVideoCarousel();
 
     } // end else — not a Taylor Swift redirect
 
@@ -4706,7 +5416,12 @@
               localStorage.setItem('theme', value);
               return;
             }
-            if (dd.dataset.pref) patchPrefs({ [dd.dataset.pref]: value });
+            if (dd.dataset.pref) {
+              const partial = { [dd.dataset.pref]: value };
+              /* SERP has one Font control — apply to body + result titles */
+              if (dd.dataset.pref === 'font') partial.titleFont = value;
+              patchPrefs(partial);
+            }
           });
         });
       });
