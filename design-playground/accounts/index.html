@@ -1287,7 +1287,7 @@
           Monthly
         </button>
         <button type="button" class="plan-toggle__btn" data-period="yearly" id="periodYearly" aria-pressed="false">
-          Yearly <span class="plan-toggle__save">Save 17%</span>
+          Yearly <span class="plan-toggle__save">Save 25%</span>
         </button>
       </div>
 
@@ -1296,7 +1296,7 @@
           <span class="plan-card__name">Basic</span>
           <span class="plan-card__promise">Search with no ads</span>
           <span class="plan-card__price">
-            <span class="plan-card__amount" data-price-basic>$2.99</span>
+            <span class="plan-card__amount" data-price-basic>$3.99</span>
             <span class="plan-card__period" data-period-label>/ month</span>
           </span>
           <ul class="plan-card__features">
@@ -1310,13 +1310,19 @@
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Cross-device sync
+              Cross device sync
             </li>
             <li class="plan-card__feature">
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Enhanced tracker protections
+              Privacy scoring
+            </li>
+            <li class="plan-card__feature">
+              <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Standard ad blocker
             </li>
           </ul>
         </div>
@@ -1326,7 +1332,7 @@
           <span class="plan-card__name">Premium</span>
           <span class="plan-card__promise">Upgrade your search</span>
           <span class="plan-card__price">
-            <span class="plan-card__amount" data-price-premium>$6.99</span>
+            <span class="plan-card__amount" data-price-premium>$9.99</span>
             <span class="plan-card__period" data-period-label>/ month</span>
           </span>
           <ul class="plan-card__features">
@@ -1334,7 +1340,7 @@
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Everything included in basic
+              Everything included in Basic
             </li>
             <li class="plan-card__feature">
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -1346,19 +1352,19 @@
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              AI content filtering
+              Granular ranking control
             </li>
             <li class="plan-card__feature">
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Block unwanted websites
+              AI detection
             </li>
             <li class="plan-card__feature">
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Tracker blocking
+              Custom ad blocker
             </li>
             <li class="plan-card__feature">
               <svg class="plan-card__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -1531,8 +1537,8 @@
       if (!overlay || !modal) return;
 
       const PRICES = {
-        monthly: { basic: '$2.99', premium: '$6.99', label: '/ month' },
-        yearly: { basic: '$29.99', premium: '$69.99', label: '/ year' },
+        monthly: { basic: '$3.99', premium: '$9.99', label: '/ month' },
+        yearly: { basic: '$35.99', premium: '$89.99', label: '/ year' },
       };
       const CTA_LABELS = {
         basic: 'Get Basic Ad-Free',
