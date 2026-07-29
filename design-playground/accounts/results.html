@@ -1242,11 +1242,17 @@
 
     .appearance-panel__footer {
       display: flex;
+      flex-direction: column;
       align-items: stretch;
-      gap: var(--spacing-8);
+      gap: var(--spacing-12);
       padding-top: var(--spacing-16);
       border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
       flex-shrink: 0;
+    }
+    .appearance-panel__footer-actions {
+      display: flex;
+      align-items: stretch;
+      gap: var(--spacing-8);
     }
     .appearance-panel__footer .btn {
       flex: 1;
@@ -1263,6 +1269,7 @@
       height: auto;
       min-height: var(--spacing-40);
     }
+    .appearance-panel__footer .btn--product-filled,
     .appearance-panel__footer .btn--product-brand-blue {
       gap: var(--spacing-4);
     }
@@ -1279,6 +1286,24 @@
     .appearance-panel .btn--product-filled:hover {
       background-color: var(--color-button-productfilledhover);
     }
+    .appearance-panel__reset {
+      align-self: center;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .appearance-panel__reset:hover {
+      color: var(--color-text-brandblue);
+      text-decoration: underline;
+    }
 
     html[data-ui-show-filters="off"] .serp-filters__dropdowns {
       display: none;
@@ -1293,12 +1318,22 @@
     .serp-layout {
       display: grid;
       grid-template-columns: minmax(0, 598px) minmax(0, calc(var(--spacing-24) * 18)); /* ~432px rail */
-      gap: var(--spacing-80);
+      grid-template-areas:
+        "chrome rail"
+        "main rail";
+      column-gap: var(--spacing-80);
+      row-gap: 0;
       align-items: start;
       max-width: calc(598px + var(--spacing-80) + (var(--spacing-24) * 18));
     }
 
+    .serp-chrome {
+      grid-area: chrome;
+      min-width: 0;
+    }
+
     .serp-main {
+      grid-area: main;
       min-width: 0;
     }
 
@@ -1504,6 +1539,7 @@
 
     /* ── Right rail — Wikipedia knowledge panel (Figma 3894:2835) ── */
     .serp-rail {
+      grid-area: rail;
       min-width: 0;
       /* Sit under the meta line, slightly closer to results */
       margin-top: var(--spacing-40);
@@ -2125,9 +2161,41 @@
     html[data-ui-align="center"] .serp-body {
       display: flex;
       justify-content: center;
+      /* Drop the logo-column offset so the column is truly centered */
+      padding-inline: var(--spacing-48);
     }
     html[data-ui-align="center"] .serp-layout {
+      grid-template-columns: minmax(0, 598px);
+      grid-template-areas:
+        "chrome"
+        "rail"
+        "main";
+      max-width: 598px;
+      width: 100%;
       margin-inline: auto;
+      column-gap: 0;
+      row-gap: 0;
+    }
+    html[data-ui-align="center"][data-ui-width="wide"] .serp-layout {
+      grid-template-columns: minmax(0, 720px);
+      max-width: 720px;
+    }
+    html[data-ui-align="center"][data-ui-width="super-wide"] .serp-layout {
+      grid-template-columns: minmax(0, 880px);
+      max-width: 880px;
+    }
+    html[data-ui-align="center"] .serp-meta {
+      margin-bottom: var(--spacing-8);
+    }
+    html[data-ui-align="center"] .serp-rail {
+      /* Inline under filters, above results — same width as main column */
+      margin-top: 0;
+      margin-bottom: var(--spacing-40);
+      width: 100%;
+    }
+    html[data-ui-align="center"] .results-list,
+    html[data-ui-align="center"] .serp-empty {
+      max-width: none;
     }
     html[data-ui-bg]:not([data-ui-bg="default"]) body {
       background: var(--ui-bg-override, var(--color-background-primary));
@@ -3321,7 +3389,8 @@
         grid-template-columns: minmax(0, 598px);
         max-width: 598px;
       }
-      .serp-rail {
+      /* Side rail only — keep it when center-align stacks it inline */
+      html:not([data-ui-align="center"]) .serp-rail {
         display: none;
       }
     }
@@ -3447,7 +3516,7 @@
                 Settings
               </a>
             </li>
-            <li><a class="site-nav__link" href="settings.html#ui-customizations">Customize UI</a></li>
+            <li><a class="site-nav__link" href="settings.html#ui-customizations">Customize Startpage</a></li>
             <li><a class="site-nav__link" href="settings.html#account">Billing &amp; Subscription</a></li>
           </ul>
         </section>
@@ -3763,15 +3832,18 @@
                 </div>
 
                 <div class="appearance-panel__footer">
-                  <button type="button" class="btn btn--product-filled" id="appearanceReset">
-                    <span class="btn__label" data-i18n="resetSettings">Reset settings</span>
-                  </button>
-                  <a class="btn btn--product-brand-blue" href="settings.html#general">
-                    <span class="btn__label" data-i18n="allSettings">All settings</span>
-                    <svg class="btn__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                      <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </a>
+                  <div class="appearance-panel__footer-actions">
+                    <a class="btn btn--product-filled" href="settings.html#general">
+                      <span class="btn__label" data-i18n="allSettings">All settings</span>
+                      <svg class="btn__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                    <button type="button" class="btn btn--product-brand-blue" id="appearanceSave">
+                      <span class="btn__label" data-i18n="save">Save</span>
+                    </button>
+                  </div>
+                  <button type="button" class="appearance-panel__reset" id="appearanceReset" data-i18n="resetSettings">Reset settings</button>
                 </div>
               </div>
             </div>
@@ -3785,7 +3857,7 @@
   <!-- ── Results body ── -->
   <main class="serp-body">
     <div class="serp-layout">
-      <div class="serp-main">
+      <div class="serp-chrome">
         <!-- Filter bar — Figma Startpage-Design-Home 3895:2856 -->
         <div class="serp-filters" role="toolbar" data-i18n-aria="searchFilters" aria-label="Search filters">
           <span
@@ -3815,6 +3887,9 @@
         </div>
 
         <p class="serp-meta" id="serpMeta" aria-live="polite"></p>
+      </div>
+
+      <div class="serp-main">
         <div class="results-list" id="resultsList" aria-label="Search results"></div>
       </div>
 
@@ -5648,6 +5723,11 @@
         const on = document.getElementById('appearanceSiteIcons').getAttribute('aria-checked') !== 'true';
         patchPrefs({ siteIcons: on });
       });
+      document.getElementById('appearanceSave')?.addEventListener('click', () => {
+        setOpen(false);
+        toggleBtn.focus();
+      });
+
       document.getElementById('appearanceReset')?.addEventListener('click', () => {
         const next = AccountsUIPrefs.save(AccountsUIPrefs.reset());
         AccountsUIPrefs.apply(next);

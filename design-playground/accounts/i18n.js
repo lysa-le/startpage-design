@@ -248,6 +248,18 @@
       Dansk: 'Webstedsikoner',
       Norsk: 'Nettstedsikoner',
     },
+    save: {
+      English: 'Save',
+      Deutsch: 'Speichern',
+      Nederlands: 'Opslaan',
+      Español: 'Guardar',
+      Français: 'Enregistrer',
+      Italiano: 'Salva',
+      Português: 'Guardar',
+      Svenska: 'Spara',
+      Dansk: 'Gem',
+      Norsk: 'Lagre',
+    },
     resetSettings: {
       English: 'Reset settings',
       Deutsch: 'Zurücksetzen',
