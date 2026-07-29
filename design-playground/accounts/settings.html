@@ -1459,7 +1459,8 @@
       outline: var(--border-stroke-sm) solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
       outline-offset: calc(-1 * var(--border-stroke-sm));
     }
-    html[data-ui-site-icons="off"] .ui-preview__favicon { display: none; }
+    html[data-ui-site-icons="off"] .ui-preview__favicon,
+    html[data-ui-basic-view="on"] .ui-preview__favicon { display: none; }
     .ui-preview__site {
       font-size: 1em;
       color: var(--color-text-primary);
@@ -3657,6 +3658,129 @@
 
             <div class="settings-row">
               <div class="settings-row__copy">
+                <span class="settings-row__label">Background color</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="swatch-group" role="group" aria-label="Background color" data-pref="bg">
+                  <button type="button" class="swatch swatch--default" data-value="default" aria-label="Default" title="Default"></button>
+                  <button type="button" class="swatch" data-value="quaternary" style="--swatch-color: var(--color-whisper-50)" aria-label="Whisper" title="Whisper"></button>
+                  <button type="button" class="swatch" data-value="secondary" style="--swatch-color: var(--color-whisper-300)" aria-label="Lavender" title="Lavender"></button>
+                  <button type="button" class="swatch" data-value="tertiary" style="--swatch-color: var(--color-brand-blue-50)" aria-label="Blue wash" title="Blue wash"></button>
+                  <button type="button" class="swatch" data-value="whisper" style="--swatch-color: var(--color-whisper-100)" aria-label="Soft blue" title="Soft blue"></button>
+                  <button type="button" class="swatch" data-value="midnight" style="--swatch-color: var(--color-midnight-50)" aria-label="Midnight wash" title="Midnight wash"></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="ui-preview-wrap">
+              <h4 class="ui-preview__label">Live preview</h4>
+              <div class="ui-preview" id="uiPreview" aria-live="polite">
+                <div class="ui-preview__result">
+                  <div class="ui-preview__source">
+                    <div class="ui-preview__favicon" aria-hidden="true"></div>
+                    <div>
+                      <div class="ui-preview__site">Wikipedia</div>
+                      <div class="ui-preview__url">https://en.wikipedia.org › wiki › Cheese</div>
+                    </div>
+                  </div>
+                  <a class="ui-preview__title" href="#">Cheese — Wikipedia</a>
+                  <p class="ui-preview__desc">Cheese is a dairy product produced in wide ranges of flavors, textures, and forms by coagulation of the milk protein casein.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        <button type="button" class="settings-section__reset" id="resetUiPrefs">Reset settings</button>
+
+        <!-- Display Options -->
+        <div class="appearance-premium" id="results-display">
+          <div class="appearance-premium__subhead">
+            <h3 class="appearance-premium__title settings-section__title--sub">
+              Display Options
+            </h3>
+          </div>
+          <div class="settings-card">
+            <div class="settings-row">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Basic view</span>
+                <span class="settings-row__hint">Hide Instant Answers, carousels, images, and site icons</span>
+              </div>
+              <div class="settings-row__control">
+                <button type="button" class="toggle" id="basicViewToggle" role="switch" aria-checked="false" aria-label="Basic view"><span class="toggle__thumb"></span></button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Infinite scroll</span>
+                <span class="settings-row__hint">Replace pagination with Load more search results on the results page</span>
+              </div>
+              <div class="settings-row__control">
+                <button type="button" class="toggle" id="infiniteScrollToggle" role="switch" aria-checked="false" aria-label="Infinite scroll"><span class="toggle__thumb"></span></button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Instant Answers</span>
+              </div>
+              <div class="settings-row__control">
+                <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Instant Answers"><span class="toggle__thumb"></span></button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Theme</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="dropdown dropdown--small dropdown--md" data-dd="theme">
+                  <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="dropdown__label">Default</span>
+                    <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="dropdown__panel" hidden>
+                    <hr class="dropdown__divider" />
+                    <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="Default">
+                      <span class="dropdown__item-label">Default</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Light">
+                      <span class="dropdown__item-label">Light</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Dark">
+                      <span class="dropdown__item-label">Dark</span>
+                    </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Results per page</span>
+              </div>
+              <div class="settings-row__control">
+                <div class="dropdown dropdown--small dropdown--md" data-dd="rpp" data-pref="resultsPerPage">
+                  <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="dropdown__label">10</span>
+                    <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="dropdown__panel" hidden>
+                    <hr class="dropdown__divider" />
+                    <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="10">
+                      <span class="dropdown__item-label">10</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="20">
+                      <span class="dropdown__item-label">20</span>
+                    </li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="50">
+                      <span class="dropdown__item-label">50</span>
+                    </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row__copy">
                 <span class="settings-row__label">Page width</span>
               </div>
               <div class="settings-row__control">
@@ -3694,128 +3818,23 @@
 
             <div class="settings-row">
               <div class="settings-row__copy">
-                <span class="settings-row__label">Background color</span>
+                <span class="settings-row__label">Show filters</span>
+                <span class="settings-row__hint">All regions, Safe Search, and Any time on the results page</span>
               </div>
               <div class="settings-row__control">
-                <div class="swatch-group" role="group" aria-label="Background color" data-pref="bg">
-                  <button type="button" class="swatch swatch--default" data-value="default" aria-label="Default" title="Default"></button>
-                  <button type="button" class="swatch" data-value="quaternary" style="--swatch-color: var(--color-whisper-50)" aria-label="Whisper" title="Whisper"></button>
-                  <button type="button" class="swatch" data-value="secondary" style="--swatch-color: var(--color-whisper-300)" aria-label="Lavender" title="Lavender"></button>
-                  <button type="button" class="swatch" data-value="tertiary" style="--swatch-color: var(--color-brand-blue-50)" aria-label="Blue wash" title="Blue wash"></button>
-                  <button type="button" class="swatch" data-value="whisper" style="--swatch-color: var(--color-whisper-100)" aria-label="Soft blue" title="Soft blue"></button>
-                  <button type="button" class="swatch" data-value="midnight" style="--swatch-color: var(--color-midnight-50)" aria-label="Midnight wash" title="Midnight wash"></button>
-                </div>
+                <button type="button" class="toggle" id="showFiltersToggle" role="switch" aria-checked="true" aria-label="Show filters"><span class="toggle__thumb"></span></button>
               </div>
             </div>
-
-            <div class="ui-preview-wrap">
-              <h4 class="ui-preview__label">Live preview</h4>
-              <div class="ui-preview" id="uiPreview" aria-live="polite">
-                <div class="ui-preview__result">
-                  <div class="ui-preview__source">
-                    <div class="ui-preview__favicon" aria-hidden="true"></div>
-                    <div>
-                      <div class="ui-preview__site">Wikipedia</div>
-                      <div class="ui-preview__url">https://en.wikipedia.org › wiki › Cheese</div>
-                    </div>
-                  </div>
-                  <a class="ui-preview__title" href="#">Cheese — Wikipedia</a>
-                  <p class="ui-preview__desc">Cheese is a dairy product produced in wide ranges of flavors, textures, and forms by coagulation of the milk protein casein.</p>
-                </div>
+            <div class="settings-row">
+              <div class="settings-row__copy">
+                <span class="settings-row__label">Site icons</span>
+              </div>
+              <div class="settings-row__control">
+                <button type="button" class="toggle" id="siteIconsToggle" role="switch" aria-checked="true" aria-label="Site icons"><span class="toggle__thumb"></span></button>
               </div>
             </div>
           </div>
-        <button type="button" class="settings-section__reset" id="resetUiPrefs">Reset settings</button>
-
-        <!-- Display Options — Instant Answers, filters, etc. -->
-        <div class="appearance-premium" id="results-display">
-          <div class="appearance-premium__subhead">
-            <h3 class="appearance-premium__title settings-section__title--sub">
-              Display Options
-            </h3>
-          </div>
-        <div class="settings-card">
-          <div class="settings-row">
-            <div class="settings-row__copy">
-              <span class="settings-row__label">Instant Answers</span>
-            </div>
-            <div class="settings-row__control">
-              <button type="button" class="toggle" role="switch" aria-checked="true" aria-label="Instant Answers"><span class="toggle__thumb"></span></button>
-            </div>
-          </div>
-          <div class="settings-row">
-            <div class="settings-row__copy">
-              <span class="settings-row__label">Theme</span>
-            </div>
-            <div class="settings-row__control">
-              <div class="dropdown dropdown--small dropdown--md" data-dd="theme">
-                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
-                  <span class="dropdown__label">Default</span>
-                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <div class="dropdown__panel" hidden>
-                  <hr class="dropdown__divider" />
-                  <ul class="dropdown__list" role="listbox">
-                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="Default">
-                    <span class="dropdown__item-label">Default</span>
-                  </li>
-                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Light">
-                    <span class="dropdown__item-label">Light</span>
-                  </li>
-                  <li class="dropdown__item" role="option" aria-selected="false" data-value="Dark">
-                    <span class="dropdown__item-label">Dark</span>
-                  </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="settings-row">
-            <div class="settings-row__copy">
-              <span class="settings-row__label">Results per page</span>
-            </div>
-            <div class="settings-row__control">
-              <div class="dropdown dropdown--small dropdown--md" data-dd="rpp" data-pref="resultsPerPage">
-                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
-                  <span class="dropdown__label">10</span>
-                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <div class="dropdown__panel" hidden>
-                  <hr class="dropdown__divider" />
-                  <ul class="dropdown__list" role="listbox">
-                  <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="10">
-                    <span class="dropdown__item-label">10</span>
-                  </li>
-                  <li class="dropdown__item" role="option" aria-selected="false" data-value="20">
-                    <span class="dropdown__item-label">20</span>
-                  </li>
-                  <li class="dropdown__item" role="option" aria-selected="false" data-value="50">
-                    <span class="dropdown__item-label">50</span>
-                  </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="settings-row">
-            <div class="settings-row__copy">
-              <span class="settings-row__label">Show filters</span>
-              <span class="settings-row__hint">All regions, Safe Search, and Any time on the results page</span>
-            </div>
-            <div class="settings-row__control">
-              <button type="button" class="toggle" id="showFiltersToggle" role="switch" aria-checked="true" aria-label="Show filters"><span class="toggle__thumb"></span></button>
-            </div>
-          </div>
-          <div class="settings-row">
-            <div class="settings-row__copy">
-              <span class="settings-row__label">Site icons</span>
-            </div>
-            <div class="settings-row__control">
-              <button type="button" class="toggle" id="siteIconsToggle" role="switch" aria-checked="true" aria-label="Site icons"><span class="toggle__thumb"></span></button>
-            </div>
-          </div>
-        </div>
-        <button type="button" class="settings-section__reset" data-reset="appearance">Reset settings</button>
+          <button type="button" class="settings-section__reset" data-reset="appearance">Reset settings</button>
         </div>
 
       </section>
@@ -4291,7 +4310,7 @@
 
       /* ── Toggles (generic) ── */
       document.querySelectorAll('.toggle').forEach((btn) => {
-        if (btn.id === 'alignToggle' || btn.id === 'siteIconsToggle' || btn.id === 'showFiltersToggle') return;
+        if (btn.id === 'alignToggle' || btn.id === 'siteIconsToggle' || btn.id === 'showFiltersToggle' || btn.id === 'basicViewToggle' || btn.id === 'infiniteScrollToggle') return;
         btn.addEventListener('click', () => {
           const on = btn.getAttribute('aria-checked') !== 'true';
           btn.setAttribute('aria-checked', String(on));
@@ -4470,6 +4489,10 @@
         document.getElementById('siteIconsToggle').setAttribute('aria-checked', String(!!prefs.siteIcons));
         const showFiltersToggle = document.getElementById('showFiltersToggle');
         if (showFiltersToggle) showFiltersToggle.setAttribute('aria-checked', String(prefs.showFilters !== false));
+        const basicViewToggle = document.getElementById('basicViewToggle');
+        if (basicViewToggle) basicViewToggle.setAttribute('aria-checked', String(!!prefs.basicView));
+        const infiniteScrollToggle = document.getElementById('infiniteScrollToggle');
+        if (infiniteScrollToggle) infiniteScrollToggle.setAttribute('aria-checked', String(!!prefs.infiniteScroll));
       }
 
       function updatePreviewBg() {
@@ -4528,6 +4551,12 @@
       document.getElementById('showFiltersToggle')?.addEventListener('click', () => {
         patch({ showFilters: !prefs.showFilters });
       });
+      document.getElementById('basicViewToggle')?.addEventListener('click', () => {
+        patch({ basicView: !prefs.basicView });
+      });
+      document.getElementById('infiniteScrollToggle')?.addEventListener('click', () => {
+        patch({ infiniteScroll: !prefs.infiniteScroll });
+      });
 
       document.getElementById('resetUiPrefs').addEventListener('click', () => {
         if (document.body.dataset.plan !== 'premium') return;
@@ -4581,7 +4610,7 @@
         Object.keys(AccountsUIPrefs.DEFAULTS).forEach((k) => {
           if (!params.has(k)) return;
           let v = params.get(k);
-          if (k === 'siteIcons') v = v === 'true';
+          if (k === 'siteIcons' || k === 'showFilters' || k === 'basicView' || k === 'infiniteScroll') v = v === 'true';
           fromUrl[k] = v;
         });
         prefs = fromUrl;

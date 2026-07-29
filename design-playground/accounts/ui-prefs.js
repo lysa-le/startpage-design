@@ -16,6 +16,8 @@
     titleColor: 'link',
     siteIcons: true,
     showFilters: true,
+    basicView: false,
+    infiniteScroll: false,
     resultsPerPage: '10',
     resultsLanguage: 'English',
   };
@@ -83,6 +85,8 @@
     el.dataset.uiTitleColor = p.titleColor;
     el.dataset.uiSiteIcons = p.siteIcons ? 'on' : 'off';
     el.dataset.uiShowFilters = p.showFilters !== false ? 'on' : 'off';
+    el.dataset.uiBasicView = p.basicView ? 'on' : 'off';
+    el.dataset.uiInfiniteScroll = p.infiniteScroll ? 'on' : 'off';
     el.dataset.uiResultsPerPage = String(p.resultsPerPage || '10');
     el.dataset.uiResultsLanguage = p.resultsLanguage || 'English';
 

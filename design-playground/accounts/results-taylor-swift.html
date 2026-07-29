@@ -1411,6 +1411,135 @@
       overflow: visible;
     }
 
+
+    /* ── Pagination (Figma 161:684) + infinite scroll load more ── */
+    .serp-pager {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      max-width: 598px;
+      margin-top: var(--spacing-48);
+      margin-bottom: var(--spacing-48);
+    }
+    .serp-pager[hidden] { display: none !important; }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+    .pagination__page {
+      width: calc(var(--spacing-12) * 2 + var(--font-button-xs-lh));
+      height: calc(var(--spacing-12) * 2 + var(--font-button-xs-lh));
+      flex-shrink: 0;
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background-color: transparent;
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-regular);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .pagination__page:hover {
+      background-color: var(--color-button-productfilled);
+      border-color: var(--color-button-productfilled);
+    }
+    .pagination__page[aria-current="page"] {
+      background-color: var(--color-button-brandblue);
+      border-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+      font-weight: var(--font-weight-semibold);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .pagination__page[aria-current="page"]:hover {
+      background-color: var(--color-button-brandbluehover);
+      border-color: var(--color-button-brandbluehover);
+    }
+    .pagination__nav {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-12) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      border: none;
+      background-color: var(--color-button-productfilled);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      white-space: nowrap;
+    }
+    .pagination__nav:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+    .pagination__page:focus-visible,
+    .pagination__nav:focus-visible,
+    .serp-load-more:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
+    }
+
+    .serp-load-more {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      box-sizing: border-box;
+      padding: var(--spacing-16) var(--spacing-16);
+      border-radius: var(--radius-lg);
+      border: none;
+      background-color: var(--color-button-productfilled);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      white-space: nowrap;
+    }
+    .serp-load-more:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+    .serp-load-more[hidden] { display: none !important; }
+
+    .serp-page-break {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      width: 100%;
+      margin: var(--spacing-8) 0;
+    }
+    .serp-page-break__line {
+      flex: 1;
+      height: 0;
+      border: none;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      margin: 0;
+    }
+    .serp-page-break__num {
+      flex-shrink: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-secondary);
+    }
+
+    html[data-ui-infinite-scroll="on"] .pagination { display: none !important; }
+    html[data-ui-infinite-scroll="off"] .serp-load-more,
+    html:not([data-ui-infinite-scroll]) .serp-load-more { display: none !important; }
+
     /* ── Image pack (All-tab style collage) ── */
     .serp-image-pack {
       position: relative;
@@ -2542,6 +2671,7 @@
       max-width: none;
     }
     html[data-ui-align="center"] .results-list,
+    html[data-ui-align="center"] .serp-pager,
     html[data-ui-align="center"] .serp-empty {
       max-width: none;
     }
@@ -2550,6 +2680,17 @@
     }
     html[data-ui-site-icons="off"] .algo-result__favicon,
     html[data-ui-site-icons="off"] .ad-result__favicon {
+      display: none !important;
+    }
+    /* Basic view — strip Instant Answers, carousels, images, favicons */
+    html[data-ui-basic-view="on"] .serp-rail,
+    html[data-ui-basic-view="on"] .serp-image-pack-block,
+    html[data-ui-basic-view="on"] .serp-all-video,
+    html[data-ui-basic-view="on"] .serp-all-news,
+    html[data-ui-basic-view="on"] .algo-result__favicon,
+    html[data-ui-basic-view="on"] .ad-result__favicon,
+    html[data-ui-basic-view="on"] .news-article__favicon,
+    html[data-ui-basic-view="on"] .ad-result__image {
       display: none !important;
     }
     html[data-ui-scheme="basic"] {
@@ -4171,6 +4312,16 @@
                       </div>
 
                       <div class="appearance-panel__row">
+                        <span class="appearance-panel__label" data-i18n="infiniteScroll">Infinite scroll</span>
+                        <button type="button" class="toggle" id="appearanceInfiniteScroll" role="switch" aria-checked="false" data-i18n-aria="infiniteScroll" aria-label="Infinite scroll"><span class="toggle__thumb"></span></button>
+                      </div>
+
+                      <div class="appearance-panel__row">
+                        <span class="appearance-panel__label" data-i18n="basicView">Basic view</span>
+                        <button type="button" class="toggle" id="appearanceBasicView" role="switch" aria-checked="false" data-i18n-aria="basicView" aria-label="Basic view"><span class="toggle__thumb"></span></button>
+                      </div>
+
+                      <div class="appearance-panel__row">
                         <span class="appearance-panel__label" data-i18n="showFilters">Show filters</span>
                         <button type="button" class="toggle" id="appearanceShowFilters" role="switch" aria-checked="true" data-i18n-aria="showFilters" aria-label="Show filters"><span class="toggle__thumb"></span></button>
                       </div>
@@ -4243,6 +4394,10 @@
 
       <div class="serp-main">
         <div class="results-list" id="resultsList" aria-label="Search results"></div>
+        <div class="serp-pager" id="serpPager" hidden>
+          <nav class="pagination" id="serpPagination" aria-label="Pagination"></nav>
+          <button type="button" class="serp-load-more" id="serpLoadMore" hidden data-i18n="loadMore">Load more search results</button>
+        </div>
       </div>
 
       <aside class="serp-rail" id="serpRail" aria-label="Related information">
@@ -4741,6 +4896,79 @@
       },
     ];
 
+    /* Page 2 ads — different creatives from page 1 */
+    const PAGE2_TOP_ADS = [
+      {
+        type: 'ad',
+        siteName: 'Spotify',
+        url: 'http://www.spotify.com/playlist/taylor-swift-essentials',
+        title: 'Taylor Swift Essentials — Official Playlist on Spotify',
+        description: 'A curated playlist of chart-toppers and fan favorites across every era. Follow to get new tracks the moment they drop.',
+        hasImage: false,
+        stars: 5,
+        ratingLabel: 'rating for spotify.com',
+        sitelinks: ['Essentials', 'This Is Taylor', 'Radio', 'Follow'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Ticketmaster',
+        url: 'http://www.ticketmaster.com/taylor-swift/verified-fan',
+        title: 'Taylor Swift Verified Fan — Register for Presale Access',
+        description: 'Sign up for Verified Fan to unlock exclusive presale codes and face-value tickets. Get notified when registration opens for your city.',
+        hasImage: true,
+        stars: 5,
+        ratingLabel: 'rating for ticketmaster.com',
+        sitelinks: ['Verified Fan', 'Presale', 'Alerts', 'FAQ'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Amazon Music',
+        url: 'http://www.amazon.com/music/unlimited/taylor-swift',
+        title: 'Taylor Swift HD — Stream in Ultra HD on Amazon Music',
+        description: 'Hear every era in spatial audio and Ultra HD. Try Amazon Music Unlimited free, then keep streaming ad-free.',
+        hasImage: true,
+        stars: 4,
+        ratingLabel: 'rating for amazon.com',
+        sitelinks: ['Unlimited', 'Spatial Audio', 'Vinyl', 'Try Free'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Taylor Swift Official Store',
+        url: 'http://www.taylorswift.com/store/vinyl',
+        title: 'Taylor Swift Vinyl — Shop Official Pressings',
+        description: 'Limited-edition vinyl, signed variants when available, and collector bundles. Free shipping on qualifying official store orders.',
+        hasImage: false,
+        stars: 5,
+        ratingLabel: 'rating for taylorswift.com',
+        sitelinks: ['Vinyl', 'Variants', 'Bundles', 'Shipping'],
+      },
+    ];
+
+    const PAGE2_BOTTOM_ADS = [
+      {
+        type: 'ad',
+        siteName: 'StubHub',
+        url: 'http://www.stubhub.com/taylor-swift-vip',
+        title: 'Taylor Swift VIP Packages — StubHub Exclusive Seats',
+        description: 'Upgrade to VIP seating with lounge access and merchandise credits. Buyer Guarantee on every StubHub ticket.',
+        hasImage: false,
+        stars: 4,
+        ratingLabel: 'rating for stubhub.com',
+        sitelinks: ['VIP', 'Floor Seats', 'Guarantee', 'Sell Tickets'],
+      },
+      {
+        type: 'ad',
+        siteName: 'Target',
+        url: 'http://www.target.com/c/taylor-swift-exclusive',
+        title: 'Target Exclusive Taylor Swift Editions — Limited Stock',
+        description: 'Shop Target-only vinyl variants, journals, and gift sets. Order online for same-day pickup where available.',
+        hasImage: true,
+        stars: 4,
+        ratingLabel: 'rating for target.com',
+        sitelinks: ['Exclusives', 'Pickup', 'Gift Sets', 'Vinyl'],
+      },
+    ];
+
     function generateResults(rawQuery) {
       const q = rawQuery.trim();
       const approx = pick([182000, 241000, 387000, 524000, 671000, 892000], q || 'Taylor Swift').toLocaleString();
@@ -4749,6 +4977,8 @@
         topAds: TOP_ADS,
         organic: ORGANIC_RESULTS,
         bottomAds: BOTTOM_ADS,
+        page2TopAds: PAGE2_TOP_ADS,
+        page2BottomAds: PAGE2_BOTTOM_ADS,
       };
     }
 
@@ -5491,13 +5721,205 @@
     /* ─────────────────────────────────────────────
        Render the page
        ───────────────────────────────────────────── */
-    function render(query) {
+
+    /* ─────────────────────────────────────────────
+       Pagination / infinite scroll (2 pages)
+       ───────────────────────────────────────────── */
+    const SERP_TOTAL_PAGES = 2;
+    let serpPage = 1;
+    let infinitePage2Loaded = false;
+
+    function tUi(key, fallback) {
+      return (window.AccountsI18n && AccountsI18n.t(key)) || fallback;
+    }
+
+    function getVisibleOrganicPool(query) {
+      const { organic } = generateResults(query);
+      const blocked = new Set(getBlockedDomains());
+      let pool = organic.filter(item => !blocked.has(extractDomain(item.url, item.siteName)));
+      const rpp = getResultsPerPage();
+      const need = rpp * SERP_TOTAL_PAGES;
+      let i = 0;
+      while (pool.length < need && organic.length) {
+        const src = organic[i % organic.length];
+        pool.push({
+          ...src,
+          title: `${src.title} — more results`,
+          url: `${src.url}${src.url.includes('?') ? '&' : '?'}page=2&n=${i}`,
+        });
+        i += 1;
+      }
+      return pool.slice(0, need);
+    }
+
+    function getOrganicPageSlice(query, page) {
+      const rpp = getResultsPerPage();
+      const pool = getVisibleOrganicPool(query);
+      return pool.slice((page - 1) * rpp, page * rpp);
+    }
+
+    function buildOrganicBlocks(items, query) {
+      return items.map(item => renderOrganic(item, query));
+    }
+
+    function buildPage2Blocks(query, pageOrganic) {
+      const { page2TopAds, page2BottomAds } = generateResults(query);
+      const showAds = !isSignedIn();
+      const organic = buildOrganicBlocks(pageOrganic, query);
+      if (!showAds) return organic;
+      return [
+        ...(page2TopAds || []).map(item => renderAd(item, query)),
+        ...organic,
+        ...(page2BottomAds || []).map(item => renderAd(item, query)),
+      ];
+    }
+
+    function buildPage1Blocks(query, pageOrganic) {
+      const { topAds, bottomAds } = generateResults(query);
+      const showAds = !isSignedIn();
+      const activeTop = showAds ? topAds : [];
+      const activeBottom = showAds ? bottomAds : [];
+      const hasNews = typeof renderNewsCarousel === 'function';
+      const newsBlock = hasNews ? renderNewsCarousel(query) : '';
+      const videoBlock = typeof renderVideoCarousel === 'function' ? renderVideoCarousel(query) : '';
+      const imagePack = typeof renderImagePack === 'function' ? renderImagePack() : '';
+      const organicHead = pageOrganic.slice(0, 3).map(item => renderOrganic(item, query));
+      const organicMid = pageOrganic.slice(3, 6).map(item => renderOrganic(item, query));
+      const organicTail = pageOrganic.slice(6).map(item => renderOrganic(item, query));
+
+      let blocks;
+      if (hasNews) {
+        blocks = showAds
+          ? [
+              ...activeTop.map(item => renderAd(item, query)),
+              newsBlock,
+              ...organicHead,
+              videoBlock,
+              ...organicMid,
+              imagePack,
+              ...organicTail,
+              ...activeBottom.map(item => renderAd(item, query)),
+            ]
+          : [
+              newsBlock,
+              ...organicHead,
+              videoBlock,
+              ...organicMid,
+              imagePack,
+              ...organicTail,
+            ];
+      } else {
+        blocks = showAds
+          ? [
+              ...activeTop.map(item => renderAd(item, query)),
+              ...organicHead,
+              videoBlock,
+              ...organicMid,
+              imagePack,
+              ...organicTail,
+              ...activeBottom.map(item => renderAd(item, query)),
+            ]
+          : [
+              ...organicHead,
+              videoBlock,
+              ...organicMid,
+              imagePack,
+              ...organicTail,
+            ];
+      }
+      return blocks.filter(Boolean);
+    }
+
+    function renderPageBreak(pageNum) {
+      return `<div class="serp-page-break" role="separator" aria-label="Page ${pageNum}">
+        <span class="serp-page-break__num">${pageNum}</span>
+        <hr class="serp-page-break__line" />
+      </div>`;
+    }
+
+    function updateSerpPager() {
+      const pager = document.getElementById('serpPager');
+      const nav = document.getElementById('serpPagination');
+      const loadMore = document.getElementById('serpLoadMore');
+      if (!pager || !nav || !loadMore) return;
+
+      const infinite = document.documentElement.dataset.uiInfiniteScroll === 'on';
+      const prevLabel = tUi('paginationPrev', 'Prev');
+      const nextLabel = tUi('paginationNext', 'Next');
+      loadMore.textContent = tUi('loadMore', 'Load more search results');
+
+      pager.hidden = false;
+
+      const pageBtns = [1, 2].map((n) => {
+        const current = !infinite && serpPage === n ? ' aria-current="page"' : '';
+        return `<button type="button" class="pagination__page" data-page="${n}" aria-label="Page ${n}"${current}>${n}</button>`;
+      }).join('');
+
+      const prev = (!infinite && serpPage > 1)
+        ? `<button type="button" class="pagination__nav" data-page-nav="prev">${prevLabel}</button>`
+        : '';
+      const next = (!infinite && serpPage < SERP_TOTAL_PAGES)
+        ? `<button type="button" class="pagination__nav" data-page-nav="next">${nextLabel}</button>`
+        : '';
+
+      nav.innerHTML = `${prev}${pageBtns}${next}`;
+      loadMore.hidden = !infinite || infinitePage2Loaded;
+    }
+
+    function goToSerpPage(page) {
+      serpPage = Math.min(SERP_TOTAL_PAGES, Math.max(1, page));
+      infinitePage2Loaded = false;
+      const q = document.getElementById('searchInput')?.value || '';
+      render(q, { preservePage: true });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function loadMoreSerpPage() {
+      if (infinitePage2Loaded) return;
+      const query = (document.getElementById('searchInput')?.value || '').trim();
+      if (!query) return;
+      const list = document.getElementById('resultsList');
+      const page2 = getOrganicPageSlice(query, 2);
+      list.insertAdjacentHTML('beforeend', renderPageBreak(2) + buildPage2Blocks(query, page2).join(''));
+      infinitePage2Loaded = true;
+      updateSerpPager();
+      requestAnimationFrame(() => {
+        if (typeof syncAllSerpAllVideoCarousels === 'function') syncAllSerpAllVideoCarousels();
+        if (typeof syncAllSerpAllNewsCarousels === 'function') syncAllSerpAllNewsCarousels();
+      });
+    }
+
+    function bindSerpPager() {
+      const pager = document.getElementById('serpPager');
+      if (!pager || pager.dataset.bound === '1') return;
+      pager.dataset.bound = '1';
+      pager.addEventListener('click', (e) => {
+        const pageBtn = e.target.closest('.pagination__page[data-page]');
+        if (pageBtn) {
+          goToSerpPage(parseInt(pageBtn.dataset.page, 10));
+          return;
+        }
+        const navBtn = e.target.closest('[data-page-nav]');
+        if (navBtn) {
+          const dir = navBtn.dataset.pageNav;
+          goToSerpPage(dir === 'next' ? serpPage + 1 : serpPage - 1);
+          return;
+        }
+        if (e.target.closest('#serpLoadMore')) {
+          loadMoreSerpPage();
+        }
+      });
+    }
+
+    function render(query, opts = {}) {
       const list = document.getElementById('resultsList');
       const meta = document.getElementById('serpMeta');
+      const pager = document.getElementById('serpPager');
       const field = document.querySelector('.search-field');
       const value = query.trim();
 
       field?.classList.toggle('has-value', value.length > 0);
+      bindSerpPager();
 
       if (!value) {
         list.innerHTML = `
@@ -5506,53 +5928,39 @@
             <p class="serp-empty__sub">Try "Taylor Swift", "Eras Tour", or "Folklore".</p>
           </div>`;
         meta.textContent = '';
+        if (pager) pager.hidden = true;
+        list.dataset.serpRendered = '0';
+        serpPage = 1;
+        infinitePage2Loaded = false;
         return;
       }
 
-      const { approx, organic, topAds, bottomAds } = generateResults(value);
-      const blocked = new Set(getBlockedDomains());
-      const visibleOrganic = organic
-        .filter(item => !blocked.has(extractDomain(item.url, item.siteName)))
-        .slice(0, getResultsPerPage());
-      /* Ad-free when logged in — no sponsored results */
-      const showAds = !isSignedIn();
-      const activeTop = showAds ? topAds : [];
-      const activeBottom = showAds ? bottomAds : [];
-      const newsBlock = renderNewsCarousel(value);
-      const videoBlock = renderVideoCarousel(value);
-      const imagePack = renderImagePack();
-      const organicHead = visibleOrganic.slice(0, 3).map(item => renderOrganic(item, value));
-      const organicMid = visibleOrganic.slice(3, 6).map(item => renderOrganic(item, value));
-      const organicTail = visibleOrganic.slice(6).map(item => renderOrganic(item, value));
+      if (!opts.preservePage) {
+        serpPage = 1;
+        infinitePage2Loaded = false;
+      }
+
+      const { approx } = generateResults(value);
+      const infinite = document.documentElement.dataset.uiInfiniteScroll === 'on';
+      const page = infinite ? 1 : serpPage;
+      const pageOrganic = getOrganicPageSlice(value, page);
 
       meta.textContent = (window.AccountsI18n && AccountsI18n.t('aboutResults', { n: approx })) || (`About ${approx} results`);
 
-      const blocks = showAds
-        ? [
-            ...activeTop.map(item => renderAd(item, value)),
-            newsBlock,
-            ...organicHead,
-            videoBlock,
-            ...organicMid,
-            imagePack,
-            ...organicTail,
-            ...activeBottom.map(item => renderAd(item, value)),
-          ]
-        : [
-            newsBlock,
-            ...organicHead,
-            videoBlock,
-            ...organicMid,
-            imagePack,
-            ...organicTail,
-          ];
+      if (page === 1) {
+        list.innerHTML = buildPage1Blocks(value, pageOrganic).join('');
+      } else {
+        list.innerHTML = buildPage2Blocks(value, pageOrganic).join('');
+      }
 
-      list.innerHTML = blocks.join('');
+      list.dataset.serpRendered = '1';
+      updateSerpPager();
       requestAnimationFrame(() => {
-        syncAllSerpAllNewsCarousels();
-        syncAllSerpAllVideoCarousels();
+        if (typeof syncAllSerpAllVideoCarousels === 'function') syncAllSerpAllVideoCarousels();
+        if (typeof syncAllSerpAllNewsCarousels === 'function') syncAllSerpAllNewsCarousels();
       });
     }
+
 
     function closeAllPrivacyPopovers(except) {
       document.querySelectorAll('.privacy-popover.is-open').forEach(pop => {
@@ -6108,7 +6516,11 @@
           AccountsI18n.apply(next.resultsLanguage);
         }
         syncAppearanceControls(next);
-        if (partial.resultsPerPage != null || partial.resultsLanguage != null) {
+        if (partial.resultsPerPage != null || partial.resultsLanguage != null || partial.infiniteScroll != null) {
+          if (partial.resultsPerPage != null || partial.infiniteScroll != null) {
+            serpPage = 1;
+            infinitePage2Loaded = false;
+          }
           render(document.getElementById('searchInput')?.value || '');
         }
         if (partial.resultsLanguage != null) {
@@ -6157,8 +6569,12 @@
 
         const filtersToggle = document.getElementById('appearanceShowFilters');
         const iconsToggle = document.getElementById('appearanceSiteIcons');
+        const basicViewToggle = document.getElementById('appearanceBasicView');
         if (filtersToggle) filtersToggle.setAttribute('aria-checked', String(p.showFilters !== false));
         if (iconsToggle) iconsToggle.setAttribute('aria-checked', String(!!p.siteIcons));
+        if (basicViewToggle) basicViewToggle.setAttribute('aria-checked', String(!!p.basicView));
+        const infiniteToggle = document.getElementById('appearanceInfiniteScroll');
+        if (infiniteToggle) infiniteToggle.setAttribute('aria-checked', String(!!p.infiniteScroll));
       }
 
       toggleBtn.addEventListener('click', (e) => {
@@ -6345,12 +6761,25 @@
         const on = document.getElementById('appearanceSiteIcons').getAttribute('aria-checked') !== 'true';
         patchPrefs({ siteIcons: on });
       });
+      document.getElementById('appearanceBasicView')?.addEventListener('click', () => {
+        const on = document.getElementById('appearanceBasicView').getAttribute('aria-checked') !== 'true';
+        patchPrefs({ basicView: on });
+      });
+      document.getElementById('appearanceInfiniteScroll')?.addEventListener('click', () => {
+        const on = document.getElementById('appearanceInfiniteScroll').getAttribute('aria-checked') !== 'true';
+        serpPage = 1;
+        infinitePage2Loaded = false;
+        patchPrefs({ infiniteScroll: on });
+        render(document.getElementById('searchInput')?.value || '');
+      });
       document.getElementById('appearanceSave')?.addEventListener('click', () => {
         setOpen(false);
         toggleBtn.focus();
       });
 
       document.getElementById('appearanceReset')?.addEventListener('click', () => {
+        serpPage = 1;
+        infinitePage2Loaded = false;
         const next = AccountsUIPrefs.save(AccountsUIPrefs.reset());
         AccountsUIPrefs.apply(next);
         if (window.AccountsI18n) AccountsI18n.apply(next.resultsLanguage || 'English');
