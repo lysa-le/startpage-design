@@ -231,6 +231,7 @@
         var(--spacing-12) +
         var(--spacing-20)
       ); /* ~268px */
+      --serp-header-height: calc(67px + 36px + var(--border-stroke-sm));
       display: grid;
       grid-template-columns:
         var(--spacing-24)
@@ -775,25 +776,44 @@
       display: block;
     }
 
-    /* Appearance quick panel */
-    .appearance-panel {
-      --ap-width: calc(var(--spacing-24) * 16.5); /* 396px — room for wider fonts */
-      --ap-control-width: calc(var(--spacing-24) * 5.75); /* 138px */
-      position: absolute;
-      top: calc(100% + var(--spacing-8));
+    /* Appearance settings drawer (right) — below header, no dim overlay */
+    .appearance-drawer-overlay {
+      position: fixed;
+      top: var(--serp-header-height, calc(67px + 36px + var(--border-stroke-sm)));
       right: 0;
-      z-index: 80;
-      width: min(var(--ap-width), calc(100vw - var(--spacing-32)));
-      max-height: calc(100dvh - var(--spacing-64));
-      display: none;
+      bottom: 0;
+      z-index: 230;
+      display: flex;
+      justify-content: flex-end;
+      background: transparent;
+      pointer-events: none;
+    }
+    .appearance-drawer-overlay.is-open {
+      pointer-events: none;
+    }
+    .appearance-panel {
+      --ap-width: calc(var(--spacing-24) * 16.5); /* 396px */
+      --ap-control-width: calc(var(--spacing-24) * 5.75); /* 138px */
+      --ap-space: var(--spacing-16);
+      --ap-space-sm: var(--spacing-12);
+      position: relative;
+      width: min(var(--ap-width), 100vw);
+      height: 100%;
+      max-height: none;
+      display: flex;
       flex-direction: column;
       gap: 0;
-      padding: var(--spacing-20);
+      padding: var(--ap-space);
+      box-sizing: border-box;
       background: var(--color-background-primary);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      border-radius: var(--radius-lg);
+      border: none;
+      border-left: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      border-radius: 0;
       box-shadow: var(--shadow-dropdown);
       overflow: hidden;
+      pointer-events: auto;
+      transform: translateX(100%);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     html[data-ui-font-size="large"] .appearance-panel {
       --ap-width: calc(var(--spacing-24) * 17.5); /* 420px */
@@ -807,21 +827,32 @@
       --ap-width: calc(var(--spacing-24) * 20); /* 480px */
       --ap-control-width: calc(var(--spacing-24) * 7); /* 168px */
     }
-    .appearance-panel.is-open { display: flex; }
+    .appearance-drawer-overlay.is-open .appearance-panel {
+      transform: translateX(0);
+    }
+    body.appearance-drawer-open .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 240;
+    }
+    body.appearance-drawer-open .hp-chrome {
+      z-index: 250;
+    }
     .appearance-panel__head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: var(--spacing-12);
-      padding-bottom: var(--spacing-16);
+      padding-top: var(--spacing-8);
+      padding-bottom: var(--spacing-24);
       border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
       flex-shrink: 0;
     }
     .appearance-panel__title {
       margin: 0;
       font-family: var(--font-family);
-      font-size: var(--font-body-md);
-      line-height: var(--font-body-md-lh);
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-primary);
     }
@@ -829,8 +860,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: var(--spacing-24);
-      height: var(--spacing-24);
+      width: var(--spacing-32);
+      height: var(--spacing-32);
       padding: 0;
       border: none;
       border-radius: var(--radius-full);
@@ -843,14 +874,15 @@
       color: var(--color-text-primary);
     }
     .appearance-panel__close svg {
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       display: block;
     }
     .appearance-panel__body {
       display: flex;
       flex-direction: column;
       gap: 0;
+      flex: 1 1 auto;
       min-height: 0;
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -858,8 +890,8 @@
     .appearance-panel__section {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-8);
-      padding-block: var(--spacing-16);
+      gap: var(--ap-space-sm);
+      padding-block: var(--ap-space);
     }
     .appearance-panel__section + .appearance-panel__section {
       border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
@@ -877,13 +909,13 @@
     .appearance-panel__rows {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-8);
+      gap: var(--ap-space-sm);
     }
     .appearance-panel__row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: var(--spacing-12);
+      gap: var(--ap-space-sm);
       min-height: var(--spacing-40);
     }
     .appearance-panel__label {
@@ -1244,28 +1276,28 @@
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      gap: var(--spacing-12);
-      padding-top: var(--spacing-16);
+      gap: var(--ap-space);
+      padding-top: var(--ap-space);
       border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
       flex-shrink: 0;
     }
     .appearance-panel__footer-actions {
       display: flex;
       align-items: stretch;
-      gap: var(--spacing-8);
+      gap: var(--ap-space-sm);
     }
     .appearance-panel__footer .btn {
       flex: 1;
       min-width: 0;
-      padding: var(--spacing-8) var(--spacing-12);
+      padding: var(--spacing-12) var(--spacing-16);
       border-radius: var(--radius-lg);
-      font-size: var(--font-button-xs);
+      font-size: var(--font-button-sm);
       line-height: var(--font-label-xs-lh);
       font-weight: var(--font-weight-semibold);
       text-align: center;
       text-decoration: none;
       transition: background-color 0.15s ease, color 0.15s ease;
-      white-space: normal;
+      white-space: nowrap;
       height: auto;
       min-height: var(--spacing-40);
     }
@@ -3683,7 +3715,213 @@
     </nav>
   </div>
 
-  <!-- Inline SVG sprite (file:// safe) -->
+  <div class="appearance-drawer-overlay" id="appearanceDrawer" hidden>
+  <div class="appearance-panel" id="appearancePanel" role="dialog" aria-modal="true" data-i18n-aria="settings" aria-label="Settings">
+    <div class="appearance-panel__head">
+      <h2 class="appearance-panel__title" data-i18n="settings">Settings</h2>
+      <button type="button" class="appearance-panel__close" id="appearanceClose" aria-label="Close">
+        <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+          <line x1="1" y1="1" x2="9" y2="9"/>
+          <line x1="9" y1="1" x2="1" y2="9"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="appearance-panel__body">
+      <section class="appearance-panel__section" aria-labelledby="appearanceSectionLabel">
+        <h3 class="appearance-panel__subhead" id="appearanceSectionLabel" data-i18n="appearance">Appearance</h3>
+        <div class="appearance-panel__rows">
+          <div class="appearance-panel__row">
+            <span class="appearance-panel__label" data-i18n="theme">Theme</span>
+            <div class="appearance-panel__control">
+              <div class="dropdown dropdown--small" data-dd="appearance-theme">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">Light</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="light"><span class="dropdown__item-label" data-i18n="light">Light</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="dark"><span class="dropdown__item-label" data-i18n="dark">Dark</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="appearance-panel__row">
+            <span class="appearance-panel__label" data-i18n="resultsPerPage">Results per page</span>
+            <div class="appearance-panel__control">
+              <div class="dropdown dropdown--small" data-dd="appearance-rpp" data-pref="resultsPerPage">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">10</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="10"><span class="dropdown__item-label">10</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="20"><span class="dropdown__item-label">20</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="50"><span class="dropdown__item-label">50</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="appearance-panel__row">
+            <span class="appearance-panel__label" data-i18n="font">Font</span>
+            <div class="appearance-panel__control">
+              <div class="dropdown dropdown--small" data-dd="appearance-font" data-pref="font">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label" data-font="inter">Inter</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="inter"><span class="dropdown__item-label">Inter</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="arial"><span class="dropdown__item-label">Arial</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="georgia"><span class="dropdown__item-label">Georgia</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="helvetica"><span class="dropdown__item-label">Helvetica</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="segoe"><span class="dropdown__item-label">Segoe UI</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="verdana"><span class="dropdown__item-label">Verdana</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="serif"><span class="dropdown__item-label">Serif</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="mono"><span class="dropdown__item-label">Mono</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="appearance-panel__row">
+            <span class="appearance-panel__label" data-i18n="fontSize">Font size</span>
+            <div class="appearance-panel__control">
+              <div class="dropdown dropdown--small" data-dd="appearance-font-size" data-pref="fontSize">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label" data-size="medium">Medium</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="small"><span class="dropdown__item-label" data-i18n="sizeSmall">Small</span></li>
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="medium"><span class="dropdown__item-label" data-i18n="sizeMedium">Medium</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="large"><span class="dropdown__item-label" data-i18n="sizeLarge">Large</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="larger"><span class="dropdown__item-label" data-i18n="sizeLarger">Larger</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="largest"><span class="dropdown__item-label" data-i18n="sizeLargest">Largest</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="appearance-panel__section" aria-labelledby="generalSectionLabel">
+        <h3 class="appearance-panel__subhead" id="generalSectionLabel" data-i18n="general">General</h3>
+        <div class="appearance-panel__rows">
+          <div class="appearance-panel__row appearance-panel__row--location">
+            <span class="appearance-panel__label" data-i18n="searchLocation">Search location</span>
+            <div class="appearance-panel__control">
+              <div class="dropdown dropdown--small dropdown--popover" data-dd="search-location">
+                <button type="button" class="dropdown__trigger" aria-haspopup="dialog" aria-expanded="false">
+                  <span class="dropdown__label" data-i18n="noneSelected">None selected</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel location-pop" role="dialog" aria-label="Select a location" hidden>
+                  <div class="location-pop__body">
+                    <ul class="location-pop__list" role="listbox" aria-label="Search location options">
+                      <li class="location-pop__option is-selected" role="option" aria-selected="true" data-loc="none">
+                        <span class="location-pop__option-label">None selected</span>
+                      </li>
+                      <li class="location-pop__option" role="option" aria-selected="false" data-loc="device">
+                        <span class="location-pop__option-label">Use device location</span>
+                      </li>
+                      <li class="location-pop__option location-pop__option--custom" role="option" aria-selected="false" data-loc="custom" data-mode="option">
+                        <span class="location-pop__option-label">Enter city or postal code</span>
+                        <input class="location-pop__input" id="locCustomInput" type="text" placeholder="Enter city or postal code" aria-label="Enter city or postal code" autocomplete="postal-code" />
+                        <button type="button" class="location-pop__clear" id="locClear" aria-label="Clear location">
+                          <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg>
+                        </button>
+                      </li>
+                    </ul>
+                    <p class="location-pop__hint" id="locHint" hidden>*Location must have region, state or country code. Example: 90210 CA</p>
+                    <button type="button" class="btn btn--product-brand-blue location-pop__done" id="locDone">
+                      <span class="btn__label">Done</span>
+                    </button>
+                  </div>
+                  <hr class="dropdown__divider" />
+                  <p class="location-pop__foot">Your location stays private. <a href="#">Learn How</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="appearance-panel__row">
+            <span class="appearance-panel__label" data-i18n="resultsLanguage">Search results language</span>
+            <div class="appearance-panel__control">
+              <div class="dropdown dropdown--small" data-dd="appearance-results-language" data-pref="resultsLanguage">
+                <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="dropdown__label">English</span>
+                  <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="dropdown__panel" hidden>
+                  <ul class="dropdown__list" role="listbox">
+                    <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="English"><span class="dropdown__item-label">English</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Deutsch"><span class="dropdown__item-label">Deutsch</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Nederlands"><span class="dropdown__item-label">Nederlands</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Español"><span class="dropdown__item-label">Español</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Français"><span class="dropdown__item-label">Français</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Italiano"><span class="dropdown__item-label">Italiano</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Português"><span class="dropdown__item-label">Português</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Svenska"><span class="dropdown__item-label">Svenska</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Dansk"><span class="dropdown__item-label">Dansk</span></li>
+                    <li class="dropdown__item" role="option" aria-selected="false" data-value="Norsk"><span class="dropdown__item-label">Norsk</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="appearance-panel__row">
+            <span class="appearance-panel__label" data-i18n="infiniteScroll">Infinite scroll</span>
+            <button type="button" class="toggle" id="appearanceInfiniteScroll" role="switch" aria-checked="false" data-i18n-aria="infiniteScroll" aria-label="Infinite scroll"><span class="toggle__thumb"></span></button>
+          </div>
+
+          <div class="appearance-panel__row">
+            <span class="appearance-panel__label" data-i18n="basicView">Simple view</span>
+            <button type="button" class="toggle" id="appearanceBasicView" role="switch" aria-checked="false" data-i18n-aria="basicView" aria-label="Simple view"><span class="toggle__thumb"></span></button>
+          </div>
+
+          <div class="appearance-panel__row">
+            <span class="appearance-panel__label" data-i18n="showFilters">Show filters</span>
+            <button type="button" class="toggle" id="appearanceShowFilters" role="switch" aria-checked="true" data-i18n-aria="showFilters" aria-label="Show filters"><span class="toggle__thumb"></span></button>
+          </div>
+
+          <div class="appearance-panel__row">
+            <span class="appearance-panel__label" data-i18n="siteIcons">Site icons</span>
+            <button type="button" class="toggle" id="appearanceSiteIcons" role="switch" aria-checked="true" data-i18n-aria="siteIcons" aria-label="Site icons"><span class="toggle__thumb"></span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="appearance-panel__footer">
+      <div class="appearance-panel__footer-actions">
+        <a class="btn btn--product-filled" href="settings.html#general">
+          <span class="btn__label" data-i18n="allSettings">All settings</span>
+          <svg class="btn__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <button type="button" class="btn btn--product-brand-blue" id="appearanceSave">
+          <span class="btn__label" data-i18n="save">Save</span>
+        </button>
+      </div>
+      <button type="button" class="appearance-panel__reset" id="appearanceReset" data-i18n="resetSettings">Reset settings</button>
+    </div>
+  </div>
+  </div>
+
+<!-- Inline SVG sprite (file:// safe) -->
   <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
     <symbol id="icon-settings" viewBox="0 0 16 16" fill="none">
       <path d="M13.0167 10.0833C12.9279 10.2844 12.9015 10.5075 12.9407 10.7237C12.9799 10.94 13.083 11.1395 13.2367 11.2967L13.2767 11.3367C13.4006 11.4605 13.499 11.6075 13.5661 11.7694C13.6332 11.9313 13.6677 12.1048 13.6677 12.28C13.6677 12.4552 13.6332 12.6287 13.5661 12.7906C13.499 12.9525 13.4006 13.0995 13.2767 13.2233C13.1528 13.3473 13.0058 13.4456 12.8439 13.5127C12.6821 13.5798 12.5086 13.6144 12.3333 13.6144C12.1581 13.6144 11.9846 13.5798 11.8227 13.5127C11.6609 13.4456 11.5138 13.3473 11.39 13.2233L11.35 13.1833C11.1929 13.0296 10.9933 12.9265 10.7771 12.8873C10.5608 12.8481 10.3377 12.8746 10.1367 12.9633C9.93949 13.0478 9.77132 13.1882 9.65287 13.367C9.53442 13.5459 9.47086 13.7555 9.47 13.97V14.0833C9.47 14.437 9.32952 14.7761 9.07948 15.0261C8.82943 15.2762 8.49029 15.4167 8.13667 15.4167C7.78305 15.4167 7.44391 15.2762 7.19386 15.0261C6.94381 14.7761 6.80333 14.437 6.80333 14.0833V14.0233C6.79817 13.8027 6.72675 13.5887 6.59834 13.4091C6.46994 13.2296 6.29049 13.0929 6.08333 13.0167C5.88226 12.9279 5.65921 12.9015 5.44294 12.9407C5.22668 12.9799 5.02712 13.083 4.87 13.2367L4.83 13.2767C4.70617 13.4006 4.55912 13.499 4.39725 13.5661C4.23539 13.6332 4.06189 13.6677 3.88667 13.6677C3.71145 13.6677 3.53794 13.6332 3.37608 13.5661C3.21422 13.499 3.06716 13.4006 2.94333 13.2767C2.81936 13.1528 2.72102 13.0058 2.65392 12.8439C2.58682 12.6821 2.55228 12.5086 2.55228 12.3333C2.55228 12.1581 2.58682 11.9846 2.65392 11.8227C2.72102 11.6609 2.81936 11.5138 2.94333 11.39L2.98333 11.35C3.13702 11.1929 3.24012 10.9933 3.27934 10.7771C3.31855 10.5608 3.29208 10.3377 3.20333 10.1367C3.11882 9.93949 2.9785 9.77132 2.79964 9.65287C2.62078 9.53442 2.41119 9.47086 2.19667 9.47H2.08333C1.72971 9.47 1.39057 9.32952 1.14052 9.07947C0.890476 8.82943 0.75 8.49029 0.75 8.13667C0.75 7.78304 0.890476 7.44391 1.14052 7.19386C1.39057 6.94381 1.72971 6.80333 2.08333 6.80333H2.14333C2.364 6.79817 2.578 6.72675 2.75753 6.59834C2.93706 6.46993 3.07381 6.29049 3.15 6.08333C3.23874 5.88226 3.26522 5.6592 3.226 5.44294C3.18679 5.22668 3.08369 5.02712 2.93 4.87L2.89 4.83C2.76603 4.70617 2.66769 4.55912 2.60059 4.39725C2.53349 4.23539 2.49895 4.06189 2.49895 3.88667C2.49895 3.71145 2.53349 3.53794 2.60059 3.37608C2.66769 3.21422 2.76603 3.06716 2.89 2.94333C3.01383 2.81936 3.16088 2.72102 3.32275 2.65392C3.48461 2.58682 3.65811 2.55228 3.83333 2.55228C4.00855 2.55228 4.18206 2.58682 4.34392 2.65392C4.50578 2.72102 4.65284 2.81936 4.77667 2.94333L4.81667 2.98333C4.97379 3.13702 5.17334 3.24012 5.38961 3.27934C5.60587 3.31855 5.82892 3.29208 6.03 3.20333H6.08333C6.28051 3.11882 6.44868 2.9785 6.56713 2.79964C6.68558 2.62078 6.74915 2.41119 6.75 2.19667V2.08333C6.75 1.72971 6.89048 1.39057 7.14053 1.14052C7.39057 0.890476 7.72971 0.75 8.08333 0.75C8.43696 0.75 8.77609 0.890476 9.02614 1.14052C9.27619 1.39057 9.41667 1.72971 9.41667 2.08333V2.14333C9.41752 2.35786 9.48109 2.56745 9.59954 2.74631C9.71799 2.92517 9.88615 3.06549 10.0833 3.15C10.2844 3.23874 10.5075 3.26522 10.7237 3.226C10.94 3.18679 11.1395 3.08369 11.2967 2.93L11.3367 2.89C11.4605 2.76603 11.6076 2.66769 11.7694 2.60059C11.9313 2.53349 12.1048 2.49895 12.28 2.49895C12.4552 2.49895 12.6287 2.53349 12.7906 2.60059C12.9525 2.66769 13.0995 2.76603 13.2233 2.89C13.3473 3.01383 13.4456 3.16088 13.5127 3.32275C13.5798 3.48461 13.6144 3.65811 13.6144 3.83333C13.6144 4.00855 13.5798 4.18206 13.5127 4.34392C13.4456 4.50578 13.3473 4.65284 13.2233 4.77667L13.1833 4.81667C13.0296 4.97379 12.9265 5.17334 12.8873 5.38961C12.8481 5.60587 12.8746 5.82892 12.9633 6.03V6.08333C13.0478 6.28051 13.1882 6.44868 13.367 6.56713C13.5459 6.68558 13.7555 6.74914 13.97 6.75H14.0833C14.437 6.75 14.7761 6.89048 15.0261 7.14052C15.2762 7.39057 15.4167 7.72971 15.4167 8.08333C15.4167 8.43695 15.2762 8.77609 15.0261 9.02614C14.7761 9.27619 14.437 9.41667 14.0833 9.41667H14.0233C13.8088 9.41752 13.5992 9.48109 13.4204 9.59954C13.2415 9.71799 13.1012 9.88615 13.0167 10.0833Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3789,214 +4027,11 @@
               </nav>
             </div>
             <div class="appearance-wrap">
-              <button type="button" class="site-header__settings-btn" id="appearanceToggle" aria-label="Settings" aria-expanded="false" aria-controls="appearancePanel">
+              <button type="button" class="site-header__settings-btn" id="appearanceToggle" aria-label="Open settings" aria-expanded="false" aria-haspopup="dialog" aria-controls="appearanceDrawer">
                 <svg width="16" height="16" aria-hidden="true">
                   <use href="#icon-settings"/>
                 </svg>
               </button>
-              <div class="appearance-panel" id="appearancePanel" role="dialog" data-i18n-aria="settings" aria-label="Settings" hidden>
-                <div class="appearance-panel__head">
-                  <h2 class="appearance-panel__title" data-i18n="settings">Settings</h2>
-                  <button type="button" class="appearance-panel__close" id="appearanceClose" aria-label="Close">
-                    <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                      <line x1="1" y1="1" x2="9" y2="9"/>
-                      <line x1="9" y1="1" x2="1" y2="9"/>
-                    </svg>
-                  </button>
-                </div>
-
-                <div class="appearance-panel__body">
-                  <section class="appearance-panel__section" aria-labelledby="appearanceSectionLabel">
-                    <h3 class="appearance-panel__subhead" id="appearanceSectionLabel" data-i18n="appearance">Appearance</h3>
-                    <div class="appearance-panel__rows">
-                      <div class="appearance-panel__row">
-                        <span class="appearance-panel__label" data-i18n="theme">Theme</span>
-                        <div class="appearance-panel__control">
-                          <div class="dropdown dropdown--small" data-dd="appearance-theme">
-                            <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
-                              <span class="dropdown__label">Light</span>
-                              <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </button>
-                            <div class="dropdown__panel" hidden>
-                              <ul class="dropdown__list" role="listbox">
-                                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="light"><span class="dropdown__item-label" data-i18n="light">Light</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="dark"><span class="dropdown__item-label" data-i18n="dark">Dark</span></li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="appearance-panel__row">
-                        <span class="appearance-panel__label" data-i18n="resultsPerPage">Results per page</span>
-                        <div class="appearance-panel__control">
-                          <div class="dropdown dropdown--small" data-dd="appearance-rpp" data-pref="resultsPerPage">
-                            <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
-                              <span class="dropdown__label">10</span>
-                              <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </button>
-                            <div class="dropdown__panel" hidden>
-                              <ul class="dropdown__list" role="listbox">
-                                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="10"><span class="dropdown__item-label">10</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="20"><span class="dropdown__item-label">20</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="50"><span class="dropdown__item-label">50</span></li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="appearance-panel__row">
-                        <span class="appearance-panel__label" data-i18n="font">Font</span>
-                        <div class="appearance-panel__control">
-                          <div class="dropdown dropdown--small" data-dd="appearance-font" data-pref="font">
-                            <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
-                              <span class="dropdown__label" data-font="inter">Inter</span>
-                              <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </button>
-                            <div class="dropdown__panel" hidden>
-                              <ul class="dropdown__list" role="listbox">
-                                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="inter"><span class="dropdown__item-label">Inter</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="arial"><span class="dropdown__item-label">Arial</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="georgia"><span class="dropdown__item-label">Georgia</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="helvetica"><span class="dropdown__item-label">Helvetica</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="segoe"><span class="dropdown__item-label">Segoe UI</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="verdana"><span class="dropdown__item-label">Verdana</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="serif"><span class="dropdown__item-label">Serif</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="mono"><span class="dropdown__item-label">Mono</span></li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="appearance-panel__row">
-                        <span class="appearance-panel__label" data-i18n="fontSize">Font size</span>
-                        <div class="appearance-panel__control">
-                          <div class="dropdown dropdown--small" data-dd="appearance-font-size" data-pref="fontSize">
-                            <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
-                              <span class="dropdown__label" data-size="medium">Medium</span>
-                              <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </button>
-                            <div class="dropdown__panel" hidden>
-                              <ul class="dropdown__list" role="listbox">
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="small"><span class="dropdown__item-label" data-i18n="sizeSmall">Small</span></li>
-                                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="medium"><span class="dropdown__item-label" data-i18n="sizeMedium">Medium</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="large"><span class="dropdown__item-label" data-i18n="sizeLarge">Large</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="larger"><span class="dropdown__item-label" data-i18n="sizeLarger">Larger</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="largest"><span class="dropdown__item-label" data-i18n="sizeLargest">Largest</span></li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
-
-                  <section class="appearance-panel__section" aria-labelledby="generalSectionLabel">
-                    <h3 class="appearance-panel__subhead" id="generalSectionLabel" data-i18n="general">General</h3>
-                    <div class="appearance-panel__rows">
-                      <div class="appearance-panel__row appearance-panel__row--location">
-                        <span class="appearance-panel__label" data-i18n="searchLocation">Search location</span>
-                        <div class="appearance-panel__control">
-                          <div class="dropdown dropdown--small dropdown--popover" data-dd="search-location">
-                            <button type="button" class="dropdown__trigger" aria-haspopup="dialog" aria-expanded="false">
-                              <span class="dropdown__label" data-i18n="noneSelected">None selected</span>
-                              <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </button>
-                            <div class="dropdown__panel location-pop" role="dialog" aria-label="Select a location" hidden>
-                              <div class="location-pop__body">
-                                <ul class="location-pop__list" role="listbox" aria-label="Search location options">
-                                  <li class="location-pop__option is-selected" role="option" aria-selected="true" data-loc="none">
-                                    <span class="location-pop__option-label">None selected</span>
-                                  </li>
-                                  <li class="location-pop__option" role="option" aria-selected="false" data-loc="device">
-                                    <span class="location-pop__option-label">Use device location</span>
-                                  </li>
-                                  <li class="location-pop__option location-pop__option--custom" role="option" aria-selected="false" data-loc="custom" data-mode="option">
-                                    <span class="location-pop__option-label">Enter city or postal code</span>
-                                    <input class="location-pop__input" id="locCustomInput" type="text" placeholder="Enter city or postal code" aria-label="Enter city or postal code" autocomplete="postal-code" />
-                                    <button type="button" class="location-pop__clear" id="locClear" aria-label="Clear location">
-                                      <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg>
-                                    </button>
-                                  </li>
-                                </ul>
-                                <p class="location-pop__hint" id="locHint" hidden>*Location must have region, state or country code. Example: 90210 CA</p>
-                                <button type="button" class="btn btn--product-brand-blue location-pop__done" id="locDone">
-                                  <span class="btn__label">Done</span>
-                                </button>
-                              </div>
-                              <hr class="dropdown__divider" />
-                              <p class="location-pop__foot">Your location stays private. <a href="#">Learn How</a></p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="appearance-panel__row">
-                        <span class="appearance-panel__label" data-i18n="resultsLanguage">Search results language</span>
-                        <div class="appearance-panel__control">
-                          <div class="dropdown dropdown--small" data-dd="appearance-results-language" data-pref="resultsLanguage">
-                            <button type="button" class="dropdown__trigger" aria-haspopup="listbox" aria-expanded="false">
-                              <span class="dropdown__label">English</span>
-                              <svg class="dropdown__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </button>
-                            <div class="dropdown__panel" hidden>
-                              <ul class="dropdown__list" role="listbox">
-                                <li class="dropdown__item dropdown__item--selected" role="option" aria-selected="true" data-value="English"><span class="dropdown__item-label">English</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="Deutsch"><span class="dropdown__item-label">Deutsch</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="Nederlands"><span class="dropdown__item-label">Nederlands</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="Español"><span class="dropdown__item-label">Español</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="Français"><span class="dropdown__item-label">Français</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="Italiano"><span class="dropdown__item-label">Italiano</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="Português"><span class="dropdown__item-label">Português</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="Svenska"><span class="dropdown__item-label">Svenska</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="Dansk"><span class="dropdown__item-label">Dansk</span></li>
-                                <li class="dropdown__item" role="option" aria-selected="false" data-value="Norsk"><span class="dropdown__item-label">Norsk</span></li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="appearance-panel__row">
-                        <span class="appearance-panel__label" data-i18n="infiniteScroll">Infinite scroll</span>
-                        <button type="button" class="toggle" id="appearanceInfiniteScroll" role="switch" aria-checked="false" data-i18n-aria="infiniteScroll" aria-label="Infinite scroll"><span class="toggle__thumb"></span></button>
-                      </div>
-
-                      <div class="appearance-panel__row">
-                        <span class="appearance-panel__label" data-i18n="basicView">Basic view</span>
-                        <button type="button" class="toggle" id="appearanceBasicView" role="switch" aria-checked="false" data-i18n-aria="basicView" aria-label="Basic view"><span class="toggle__thumb"></span></button>
-                      </div>
-
-                      <div class="appearance-panel__row">
-                        <span class="appearance-panel__label" data-i18n="showFilters">Show filters</span>
-                        <button type="button" class="toggle" id="appearanceShowFilters" role="switch" aria-checked="true" data-i18n-aria="showFilters" aria-label="Show filters"><span class="toggle__thumb"></span></button>
-                      </div>
-
-                      <div class="appearance-panel__row">
-                        <span class="appearance-panel__label" data-i18n="siteIcons">Site icons</span>
-                        <button type="button" class="toggle" id="appearanceSiteIcons" role="switch" aria-checked="true" data-i18n-aria="siteIcons" aria-label="Site icons"><span class="toggle__thumb"></span></button>
-                      </div>
-                    </div>
-                  </section>
-                </div>
-
-                <div class="appearance-panel__footer">
-                  <div class="appearance-panel__footer-actions">
-                    <a class="btn btn--product-filled" href="settings.html#general">
-                      <span class="btn__label" data-i18n="allSettings">All settings</span>
-                      <svg class="btn__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </a>
-                    <button type="button" class="btn btn--product-brand-blue" id="appearanceSave">
-                      <span class="btn__label" data-i18n="save">Save</span>
-                    </button>
-                  </div>
-                  <button type="button" class="appearance-panel__reset" id="appearanceReset" data-i18n="resetSettings">Reset settings</button>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -5885,12 +5920,26 @@
         });
       }
 
+      const overlay = document.getElementById('appearanceDrawer');
+      if (!overlay) return;
+
       function setOpen(open) {
-        panel.classList.toggle('is-open', open);
-        panel.hidden = !open;
+        if (open) syncDrawerTop();
+        overlay.classList.toggle('is-open', open);
+        overlay.hidden = !open;
         toggleBtn.setAttribute('aria-expanded', String(open));
+        document.body.classList.toggle('appearance-drawer-open', open);
         if (!open) closeAppearanceDropdowns();
       }
+
+      function syncDrawerTop() {
+        const header = document.getElementById('header-desktop');
+        if (!header) return;
+        const h = Math.ceil(header.getBoundingClientRect().height);
+        if (h > 0) document.documentElement.style.setProperty('--serp-header-height', h + 'px');
+      }
+      syncDrawerTop();
+      window.addEventListener('resize', syncDrawerTop);
 
       function patchPrefs(partial) {
         const next = AccountsUIPrefs.save({ ...AccountsUIPrefs.load(), ...partial });
@@ -5963,17 +6012,20 @@
 
       toggleBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        setOpen(!panel.classList.contains('is-open'));
+        setOpen(overlay.hidden);
       });
       closeBtn?.addEventListener('click', (e) => {
         e.stopPropagation();
         setOpen(false);
         toggleBtn.focus();
       });
-      panel.addEventListener('click', (e) => e.stopPropagation());
-      document.addEventListener('click', () => setOpen(false));
+      document.addEventListener('click', (e) => {
+        if (overlay.hidden) return;
+        if (panel.contains(e.target) || wrap.contains(e.target)) return;
+        setOpen(false);
+      });
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && panel.classList.contains('is-open')) {
+        if (e.key === 'Escape' && !overlay.hidden) {
           setOpen(false);
           toggleBtn.focus();
         }
