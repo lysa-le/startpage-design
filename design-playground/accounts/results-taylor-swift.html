@@ -792,9 +792,17 @@
       pointer-events: none;
     }
     .appearance-panel {
-      --ap-width: calc(var(--spacing-24) * 16.5); /* 396px */
-      --ap-control-width: calc(var(--spacing-24) * 5.75); /* 138px */
-      --ap-space: var(--spacing-16);
+      /* Figma 1:188 — 394×863 panel, 20px vertical rhythm */
+      --ap-width: 394px;
+      --ap-control-width: 138px;
+      --ap-control-height: 34px;
+      --ap-location-width: 191px;
+      --ap-btn-height: 36px;
+      --ap-btn-gap: 10px;
+      --ap-pad-x: var(--spacing-12);
+      --ap-pad-top: var(--spacing-20);
+      --ap-pad-bottom: var(--spacing-12);
+      --ap-space: var(--spacing-20);
       --ap-space-sm: var(--spacing-12);
       position: relative;
       width: min(var(--ap-width), 100vw);
@@ -803,7 +811,7 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      padding: var(--ap-space);
+      padding: var(--ap-pad-top) var(--ap-pad-x) var(--ap-pad-bottom);
       box-sizing: border-box;
       background: var(--color-background-primary);
       border: none;
@@ -816,16 +824,19 @@
       transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     html[data-ui-font-size="large"] .appearance-panel {
-      --ap-width: calc(var(--spacing-24) * 17.5); /* 420px */
-      --ap-control-width: calc(var(--spacing-24) * 6); /* 144px */
+      --ap-width: 420px;
+      --ap-control-width: 144px;
+      --ap-location-width: 200px;
     }
     html[data-ui-font-size="larger"] .appearance-panel {
-      --ap-width: calc(var(--spacing-24) * 18.5); /* 444px */
-      --ap-control-width: calc(var(--spacing-24) * 6.5); /* 156px */
+      --ap-width: 444px;
+      --ap-control-width: 156px;
+      --ap-location-width: 210px;
     }
     html[data-ui-font-size="largest"] .appearance-panel {
-      --ap-width: calc(var(--spacing-24) * 20); /* 480px */
-      --ap-control-width: calc(var(--spacing-24) * 7); /* 168px */
+      --ap-width: 480px;
+      --ap-control-width: 168px;
+      --ap-location-width: 220px;
     }
     .appearance-drawer-overlay.is-open .appearance-panel {
       transform: translateX(0);
@@ -842,9 +853,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: var(--spacing-12);
-      padding-top: var(--spacing-8);
-      padding-bottom: var(--spacing-24);
+      gap: var(--ap-space-sm);
+      padding: 0 0 var(--ap-space);
       border-bottom: var(--border-stroke-sm) solid var(--color-stroke-primary);
       flex-shrink: 0;
     }
@@ -852,7 +862,7 @@
       margin: 0;
       font-family: var(--font-family);
       font-size: var(--font-heading-xs);
-      line-height: var(--font-heading-xs-lh);
+      line-height: var(--font-heading-xs);
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-primary);
     }
@@ -862,12 +872,14 @@
       justify-content: center;
       width: var(--spacing-32);
       height: var(--spacing-32);
+      margin: calc(var(--spacing-4) * -1) calc(var(--spacing-4) * -1) calc(var(--spacing-4) * -1) 0;
       padding: 0;
       border: none;
       border-radius: var(--radius-full);
       background: transparent;
       color: var(--color-text-secondary);
       cursor: pointer;
+      flex-shrink: 0;
     }
     .appearance-panel__close:hover {
       background: var(--color-background-secondary);
@@ -878,29 +890,37 @@
       height: 12px;
       display: block;
     }
+    .appearance-panel__scroll {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
     .appearance-panel__body {
       display: flex;
       flex-direction: column;
-      gap: 0;
-      flex: 1 1 auto;
+      flex: 0 0 auto;
       min-height: 0;
-      overflow-y: auto;
-      overscroll-behavior: contain;
     }
     .appearance-panel__section {
       display: flex;
       flex-direction: column;
-      gap: var(--ap-space-sm);
-      padding-block: var(--ap-space);
+      flex: 0 0 auto;
+      gap: var(--ap-space);
+      padding: var(--ap-space) 0 0;
     }
     .appearance-panel__section + .appearance-panel__section {
       border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      margin-top: var(--ap-space);
+      padding-top: var(--ap-space);
     }
     .appearance-panel__subhead {
       margin: 0;
       font-family: var(--font-family);
       font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
+      line-height: var(--font-body-xs);
       font-weight: var(--font-weight-bold);
       color: var(--color-text-tertiary);
       text-transform: uppercase;
@@ -909,14 +929,17 @@
     .appearance-panel__rows {
       display: flex;
       flex-direction: column;
-      gap: var(--ap-space-sm);
+      justify-content: flex-start;
+      flex: 0 0 auto;
+      gap: var(--ap-space);
     }
     .appearance-panel__row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: var(--ap-space-sm);
-      min-height: var(--spacing-40);
+      min-height: 0;
+      flex-shrink: 0;
     }
     .appearance-panel__label {
       font-family: var(--font-family);
@@ -954,8 +977,9 @@
       justify-content: space-between;
       gap: var(--spacing-8);
       width: 100%;
-      min-height: var(--spacing-40);
-      padding: var(--spacing-8) var(--spacing-12);
+      min-height: var(--ap-control-height);
+      height: var(--ap-control-height);
+      padding: 0 var(--spacing-12);
       background: none;
       border: none;
       border-radius: var(--radius-lg);
@@ -1096,10 +1120,10 @@
 
     /* Search location popover inside settings panel */
     .appearance-panel__row--location .appearance-panel__control {
-      width: auto;
-      flex: 1 1 auto;
+      width: var(--ap-location-width);
+      flex: 0 0 auto;
       min-width: 0;
-      max-width: min(calc(var(--spacing-24) * 8), 55%); /* up to 192px */
+      max-width: 55%;
     }
     .appearance-panel .dropdown--popover.dropdown--open {
       border-radius: var(--radius-lg);
@@ -1277,29 +1301,119 @@
       flex-direction: column;
       align-items: stretch;
       gap: var(--ap-space);
-      padding-top: var(--ap-space);
-      border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
-      flex-shrink: 0;
+      margin-top: var(--ap-space);
+      padding: 0;
+      flex: 0 0 auto;
     }
     .appearance-panel__footer-actions {
       display: flex;
       align-items: stretch;
+      gap: var(--ap-btn-gap);
+    }
+    .appearance-panel__footer-meta {
+      display: flex;
+      flex-direction: column;
       gap: var(--ap-space-sm);
+      padding-top: var(--ap-space);
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+    }
+    .appearance-panel__footer-note {
+      margin: 0;
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+    .appearance-panel__url-row {
+      display: flex;
+      align-items: center;
+      gap: var(--ap-space-sm);
+    }
+    .appearance-panel__url-field {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      height: var(--ap-btn-height);
+      padding: 0 var(--spacing-12);
+      box-sizing: border-box;
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      transition: border-color 150ms ease;
+    }
+    .appearance-panel__url-field:focus-within {
+      border-color: var(--color-stroke-primary-button);
+    }
+    .appearance-panel__url {
+      width: 100%;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-primary);
+      outline: none;
+      font-variant-numeric: tabular-nums;
+    }
+    .appearance-panel .icn-copy {
+      display: inline-grid;
+      place-items: center;
+      border: none;
+      padding: 0;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      color: var(--color-icon-primary);
+      background-color: var(--color-background-secondary);
+      transition: background-color 0.2s ease, color 0.2s ease;
+      flex-shrink: 0;
+    }
+    .appearance-panel .icn-copy--lg {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+    }
+    .appearance-panel .icn-copy:not(.icn-copy--bare):hover {
+      background-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+    }
+    .appearance-panel .icn-copy[data-state="check"]:not(.icn-copy--bare) {
+      background-color: var(--color-icon-secondary);
+      color: var(--color-text-inverted);
+    }
+    .appearance-panel .icn-copy[data-state="check"]:not(.icn-copy--bare):hover {
+      background-color: var(--color-button-brandbluehover);
+    }
+    .appearance-panel .icn-copy__svg {
+      grid-area: 1 / 1;
+      width: 14px;
+      height: 14px;
+      display: block;
+      transition: opacity 0.15s ease;
+    }
+    .appearance-panel .icn-copy__svg--copy  { opacity: 1; }
+    .appearance-panel .icn-copy__svg--check { opacity: 0; }
+    .appearance-panel .icn-copy[data-state="check"] .icn-copy__svg--copy  { opacity: 0; }
+    .appearance-panel .icn-copy[data-state="check"] .icn-copy__svg--check { opacity: 1; }
+    .appearance-panel .icn-copy:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 3px;
     }
     .appearance-panel__footer .btn {
       flex: 1;
       min-width: 0;
-      padding: var(--spacing-12) var(--spacing-16);
+      padding: 0 var(--spacing-12);
       border-radius: var(--radius-lg);
-      font-size: var(--font-button-sm);
-      line-height: var(--font-label-xs-lh);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-semibold);
       text-align: center;
       text-decoration: none;
       transition: background-color 0.15s ease, color 0.15s ease;
       white-space: nowrap;
-      height: auto;
-      min-height: var(--spacing-40);
+      height: var(--ap-btn-height);
+      min-height: var(--ap-btn-height);
     }
     .appearance-panel__footer .btn--product-filled,
     .appearance-panel__footer .btn--product-brand-blue {
@@ -1326,8 +1440,8 @@
       cursor: pointer;
       font-family: var(--font-family);
       font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      font-weight: var(--font-weight-medium);
+      line-height: var(--font-body-xs);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-link);
       text-decoration: none;
       transition: color 0.15s ease;
@@ -1339,6 +1453,17 @@
 
     html[data-ui-show-filters="off"] .serp-filters__dropdowns {
       display: none;
+    }
+    /* Collapse filter-bar space so results move up */
+    html[data-ui-show-filters="off"] .serp-filters {
+      margin-bottom: var(--spacing-12);
+    }
+    html[data-ui-show-filters="off"] body[data-auth="signed-out"] .serp-filters {
+      display: none;
+      margin-bottom: 0;
+    }
+    html[data-ui-show-filters="off"] .serp-body {
+      padding-top: var(--spacing-20);
     }
 
     /* ── Results body ── */
@@ -1432,6 +1557,63 @@
       color: var(--color-icon-tertiary);
       flex-shrink: 0;
       display: block;
+      transition: transform 0.15s ease;
+    }
+    .serp-filters__dd {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .serp-filters__dd.is-open .serp-filters__chevron {
+      transform: rotate(180deg);
+    }
+    .serp-filters__menu {
+      position: absolute;
+      top: calc(100% + var(--spacing-8));
+      left: 0;
+      z-index: 40;
+      min-width: calc(var(--spacing-24) * 8); /* 192px */
+      margin: 0;
+      padding: var(--spacing-4) 0;
+      list-style: none;
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-dropdown);
+    }
+    .serp-filters__option {
+      display: block;
+      width: 100%;
+      padding: var(--spacing-8) var(--spacing-12);
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      white-space: nowrap;
+    }
+    .serp-filters__option:hover,
+    .serp-filters__option[aria-selected="true"] {
+      background: var(--color-background-secondary);
+    }
+    .algo-result__ai-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      height: var(--spacing-24);
+      padding: 0 var(--spacing-8);
+      border-radius: var(--radius-full);
+      background: var(--color-background-secondary);
+      color: var(--color-text-tertiary);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.02em;
     }
 
     /* ── Results list ── */
@@ -2943,7 +3125,7 @@
     /* ── Privacy insights shield (all plans) ── */
     .algo-result--premium {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) var(--spacing-32);
+      grid-template-columns: minmax(0, 1fr) auto;
       column-gap: var(--spacing-12);
       align-items: start;
     }
@@ -2961,7 +3143,9 @@
     .algo-result__privacy {
       position: relative;
       display: flex;
+      align-items: center;
       justify-content: flex-end;
+      gap: var(--spacing-8);
       padding-top: var(--spacing-4);
       z-index: 1;
     }
@@ -4079,6 +4263,7 @@
       </button>
     </div>
 
+    <div class="appearance-panel__scroll">
     <div class="appearance-panel__body">
       <section class="appearance-panel__section" aria-labelledby="appearanceSectionLabel">
         <h3 class="appearance-panel__subhead" id="appearanceSectionLabel" data-i18n="appearance">Appearance</h3>
@@ -4254,21 +4439,39 @@
           </div>
         </div>
       </section>
-    </div>
 
     <div class="appearance-panel__footer">
       <div class="appearance-panel__footer-actions">
+        <button type="button" class="btn btn--product-brand-blue" id="appearanceSave">
+          <span class="btn__label" data-i18n="saveSettings">Save Settings</span>
+        </button>
         <a class="btn btn--product-filled" href="settings.html#general">
-          <span class="btn__label" data-i18n="allSettings">All settings</span>
+          <span class="btn__label" data-i18n="allSettings">All Settings</span>
           <svg class="btn__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
-        <button type="button" class="btn btn--product-brand-blue" id="appearanceSave">
-          <span class="btn__label" data-i18n="save">Save</span>
-        </button>
       </div>
-      <button type="button" class="appearance-panel__reset" id="appearanceReset" data-i18n="resetSettings">Reset settings</button>
+      <button type="button" class="appearance-panel__reset" id="appearanceReset" data-i18n="resetSettings">Reset Settings</button>
+      <div class="appearance-panel__footer-meta">
+        <p class="appearance-panel__footer-note">Deleting cookies will reset these settings. Don't want a cookie? Bookmark the settings URL below:</p>
+        <div class="appearance-panel__url-row">
+          <div class="appearance-panel__url-field">
+            <input class="appearance-panel__url" id="appearanceSettingsUrl" readonly value="" aria-label="Settings URL" />
+          </div>
+          <button type="button" class="icn-copy icn-copy--lg" id="appearanceCopySettingsUrl" data-state="copy" aria-label="Copy settings URL">
+            <svg class="icn-copy__svg icn-copy__svg--copy" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9.28333 2.19314V1.75C9.28333 1.19771 8.83562 0.75 8.28333 0.75H1.75C1.19772 0.75 0.75 1.19772 0.75 1.75V8.28333C0.75 8.83562 1.19772 9.28333 1.75 9.28333H2.25588"/>
+              <path d="M4.21667 11.7499V5.21655C4.21667 4.66427 4.66439 4.21655 5.21668 4.21655H11.75C12.3023 4.21655 12.75 4.66427 12.75 5.21655V11.7499C12.75 12.3022 12.3023 12.7499 11.75 12.7499H5.21667C4.66439 12.7499 4.21667 12.3022 4.21667 11.7499Z"/>
+            </svg>
+            <svg class="icn-copy__svg icn-copy__svg--check" viewBox="0 0 12 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M1 4L4.5 7.5L11 1"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
     </div>
   </div>
   </div>
@@ -4421,6 +4624,19 @@
                 <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
+            <div class="serp-filters__dd" data-filter="aiContent">
+              <button type="button" class="serp-filters__dropdown" id="aiContentFilterBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="aiContentFilterMenu">
+                <span class="serp-filters__dd-label" id="aiContentFilterLabel" data-i18n="aiContentAll">AI content: All</span>
+                <svg class="serp-filters__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4.5 6L8 10L11.5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <ul class="serp-filters__menu" id="aiContentFilterMenu" role="listbox" aria-label="AI content filter" hidden>
+                <li role="option" class="serp-filters__option" data-value="all" aria-selected="true" data-i18n="aiContentAll">AI content: All</li>
+                <li role="option" class="serp-filters__option" data-value="hide" aria-selected="false" data-i18n="aiContentHideOption">Hide AI content</li>
+                <li role="option" class="serp-filters__option" data-value="only" aria-selected="false" data-i18n="aiContentOnlyOption">AI content only</li>
+              </ul>
+            </div>
           </div>
         </div>
 
@@ -4826,6 +5042,7 @@
         url: 'https://imdb.com › name › nm2357847',
         title: 'Taylor Swift — Actress, Soundtrack — IMDb',
         description: 'Filmography and credits for Taylor Swift, including Cats, Amsterdam, and soundtrack appearances. Biography, trivia, and photos.',
+        aiGenerated: true,
       },
       {
         type: 'organic',
@@ -4833,6 +5050,7 @@
         url: 'https://genius.com › artists › Taylor-swift',
         title: 'Taylor Swift Lyrics, Songs & Albums | Genius',
         description: 'Annotated lyrics for Taylor Swift songs across every era — folklore, 1989, Reputation, Midnights, and The Tortured Poets Department.',
+        aiGenerated: true,
       },
       {
         type: 'organic',
@@ -4847,6 +5065,7 @@
         url: 'https://pitchfork.com › artists › 28758-taylor-swift',
         title: 'Taylor Swift Albums, Reviews & News | Pitchfork',
         description: 'Pitchfork reviews and features on Taylor Swift, including Folklore, Evermore, Midnights, and re-recorded Taylor\'s Version albums.',
+        aiGenerated: true,
       },
       {
         type: 'organic',
@@ -4854,6 +5073,7 @@
         url: 'https://reddit.com › r › TaylorSwift',
         title: 'r/TaylorSwift — The Taylor Swift Subreddit',
         description: 'Fan discussion of Taylor Swift music, theories, tour news, and album drops. Spoiler tags, megathreads, and weekly discussion posts.',
+        aiGenerated: true,
       },
       {
         type: 'organic',
@@ -5187,12 +5407,15 @@
         <path d="M6.15527 0.0745424C6.41743 -0.0248475 6.7066 -0.0248475 6.96875 0.0745424L12.3721 2.12337C12.824 2.29473 13.124 2.73203 13.124 3.22005V8.00032C13.124 10.5717 11.4465 12.576 10.0264 13.8324C9.29212 14.4819 8.56352 14.9882 8.02051 15.3314C7.74789 15.5036 7.51886 15.6374 7.35547 15.7288C7.27383 15.7745 7.20782 15.8095 7.16113 15.8343C7.13787 15.8467 7.11908 15.8566 7.10547 15.8636L7.08887 15.8724L7.08105 15.8763H7.08008C6.75025 15.9998 6.49955 16.0001 6.04297 15.8763L6.03516 15.8724L6.01855 15.8636C6.00494 15.8566 5.9862 15.8467 5.96289 15.8343C5.91619 15.8095 5.85024 15.7746 5.76855 15.7288C5.60516 15.6374 5.37618 15.5037 5.10352 15.3314C4.5605 14.9882 3.83193 14.4819 3.09766 13.8324C1.67749 12.576 4.49124e-05 10.5717 0 8.00032V3.22005C0 2.73215 0.299194 2.29481 0.750977 2.12337L6.15527 0.0745424Z" fill="transparent" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
       </svg>`;
 
-    function renderPrivacyPopover(domain) {
+    function renderPrivacyPopover(domain, opts = {}) {
       const insights = privacyInsights(domain);
-      const aiHtml = isPremium() && insights.aiHeavy
+      const showAiNotice = !!opts.aiGenerated || (isPremium() && insights.aiHeavy);
+      const aiTitle = (window.AccountsI18n && AccountsI18n.t('aiContentNoticeTitle')) || 'AI Content Notice';
+      const aiBody = (window.AccountsI18n && AccountsI18n.t('aiContentNoticeBody')) || 'This result appears to include AI-generated content.';
+      const aiHtml = showAiNotice
         ? `<div class="privacy-popover__ai" role="status">
-            <p class="privacy-popover__ai-title"><span class="privacy-popover__ai-icon" aria-hidden="true">⚠</span>AI Content Notice</p>
-            <p class="privacy-popover__ai-body">This site appears to publish a high volume of AI-generated content.</p>
+            <p class="privacy-popover__ai-title"><span class="privacy-popover__ai-icon" aria-hidden="true">⚠</span>${aiTitle}</p>
+            <p class="privacy-popover__ai-body">${aiBody}</p>
           </div>`
         : '';
 
@@ -5232,6 +5455,9 @@
 
     function renderOrganic(data, query) {
       const domain = extractDomain(data.url, data.siteName);
+      const aiBadge = data.aiGenerated
+        ? `<span class="algo-result__ai-badge">${(window.AccountsI18n&&AccountsI18n.t('aiGeneratedBadge'))||'AI'}</span>`
+        : '';
       const core = `
           <div class="algo-result__source">
             ${renderAlgoFavicon(data.siteName)}
@@ -5255,6 +5481,7 @@
         <div class="algo-result algo-result--premium" data-domain="${domain}">
           <div class="algo-result__main">${core}</div>
           <div class="algo-result__privacy">
+            ${aiBadge}
             <button
               type="button"
               class="privacy-shield"
@@ -5264,7 +5491,7 @@
             >
               ${SHIELD_OUTLINE}
             </button>
-            ${renderPrivacyPopover(domain)}
+            ${renderPrivacyPopover(domain, { aiGenerated: !!data.aiGenerated })}
           </div>
         </div>`;
     }
@@ -5768,15 +5995,31 @@
       return (window.AccountsI18n && AccountsI18n.t(key)) || fallback;
     }
 
+    function getAiContentPref() {
+      const v = window.AccountsUIPrefs?.load()?.aiContent;
+      return v === 'hide' || v === 'only' ? v : 'all';
+    }
+
     function getVisibleOrganicPool(query) {
       const { organic } = generateResults(query);
       const blocked = new Set(getBlockedDomains());
-      let pool = organic.filter(item => !blocked.has(extractDomain(item.url, item.siteName)));
+      const aiMode = getAiContentPref();
+      let pool = organic.filter((item) => {
+        if (blocked.has(extractDomain(item.url, item.siteName))) return false;
+        if (aiMode === 'hide' && item.aiGenerated) return false;
+        if (aiMode === 'only' && !item.aiGenerated) return false;
+        return true;
+      });
       const rpp = getResultsPerPage();
       const need = rpp * SERP_TOTAL_PAGES;
       let i = 0;
-      while (pool.length < need && organic.length) {
-        const src = organic[i % organic.length];
+      const source = pool.length ? pool.slice() : organic.filter((item) => {
+        if (aiMode === 'hide' && item.aiGenerated) return false;
+        if (aiMode === 'only' && !item.aiGenerated) return false;
+        return true;
+      });
+      while (pool.length < need && source.length) {
+        const src = source[i % source.length];
         pool.push({
           ...src,
           title: `${src.title} — more results`,
@@ -6540,13 +6783,29 @@
       const overlay = document.getElementById('appearanceDrawer');
       if (!overlay) return;
 
+      function updateAppearanceSettingsUrl(prefs) {
+        const p = prefs || AccountsUIPrefs.load();
+        const input = document.getElementById('appearanceSettingsUrl');
+        if (!input) return;
+        const url = new URL('settings.html', location.href);
+        url.hash = 'appearance';
+        Object.entries(p).forEach(([k, v]) => {
+          url.searchParams.set(k, String(v));
+        });
+        input.value = url.toString();
+      }
+
       function setOpen(open) {
-        if (open) syncDrawerTop();
         overlay.classList.toggle('is-open', open);
         overlay.hidden = !open;
         toggleBtn.setAttribute('aria-expanded', String(open));
         document.body.classList.toggle('appearance-drawer-open', open);
-        if (!open) closeAppearanceDropdowns();
+        if (open) {
+          syncDrawerTop();
+          updateAppearanceSettingsUrl();
+        } else {
+          closeAppearanceDropdowns();
+        }
       }
 
       function syncDrawerTop() {
@@ -6563,8 +6822,10 @@
         AccountsUIPrefs.apply(next);
         if (partial.resultsLanguage != null && window.AccountsI18n) {
           AccountsI18n.apply(next.resultsLanguage);
+          if (typeof window.syncAiContentFilter === 'function') window.syncAiContentFilter(next);
         }
         syncAppearanceControls(next);
+        updateAppearanceSettingsUrl(next);
         if (partial.resultsPerPage != null || partial.resultsLanguage != null || partial.infiniteScroll != null) {
           if (partial.resultsPerPage != null || partial.infiniteScroll != null) {
             serpPage = 1;
@@ -6838,11 +7099,115 @@
         applyTheme('light');
         localStorage.setItem('theme', 'light');
         syncAppearanceControls(next);
+        updateAppearanceSettingsUrl(next);
         setAccountPlanBadge(document.body.dataset.plan || 'basic');
         render(document.getElementById('searchInput')?.value || '');
       });
 
+      document.getElementById('appearanceCopySettingsUrl')?.addEventListener('click', async () => {
+        const input = document.getElementById('appearanceSettingsUrl');
+        const btn = document.getElementById('appearanceCopySettingsUrl');
+        if (!input || !btn || btn.dataset.state === 'check') return;
+        try {
+          await navigator.clipboard.writeText(input.value);
+        } catch {
+          input.select();
+        }
+        btn.dataset.state = 'check';
+        btn.setAttribute('aria-label', 'Copied');
+        setTimeout(() => {
+          btn.dataset.state = 'copy';
+          btn.setAttribute('aria-label', 'Copy settings URL');
+        }, 1500);
+      });
+
       syncAppearanceControls();
+      updateAppearanceSettingsUrl();
+    })();
+
+    (function initAiContentFilter() {
+      const wrap = document.querySelector('.serp-filters__dd[data-filter="aiContent"]');
+      const btn = document.getElementById('aiContentFilterBtn');
+      const menu = document.getElementById('aiContentFilterMenu');
+      const label = document.getElementById('aiContentFilterLabel');
+      if (!wrap || !btn || !menu || !label || !window.AccountsUIPrefs) return;
+
+      const LABEL_KEYS = {
+        all: 'aiContentAll',
+        hide: 'aiContentHide',
+        only: 'aiContentOnly',
+      };
+      const LABEL_FALLBACKS = {
+        all: 'AI content: All',
+        hide: 'AI content: Hidden',
+        only: 'AI content: Only',
+      };
+
+      function closeMenu() {
+        wrap.classList.remove('is-open');
+        menu.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+      }
+
+      function syncAiContentFilter(prefs) {
+        const mode = (prefs || AccountsUIPrefs.load()).aiContent;
+        const value = mode === 'hide' || mode === 'only' ? mode : 'all';
+        const key = LABEL_KEYS[value];
+        label.dataset.i18n = key;
+        label.textContent = tUi(key, LABEL_FALLBACKS[value]);
+        menu.querySelectorAll('.serp-filters__option').forEach((opt) => {
+          const on = opt.dataset.value === value;
+          opt.setAttribute('aria-selected', String(on));
+          if (window.AccountsI18n && opt.dataset.i18n) {
+            opt.textContent = AccountsI18n.t(opt.dataset.i18n) || opt.textContent;
+          }
+        });
+      }
+      window.syncAiContentFilter = syncAiContentFilter;
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const willOpen = menu.hidden;
+        document.querySelectorAll('.serp-filters__dd.is-open').forEach((dd) => {
+          if (dd !== wrap) {
+            dd.classList.remove('is-open');
+            const m = dd.querySelector('.serp-filters__menu');
+            const b = dd.querySelector('.serp-filters__dropdown');
+            if (m) m.hidden = true;
+            if (b) b.setAttribute('aria-expanded', 'false');
+          }
+        });
+        if (willOpen) {
+          wrap.classList.add('is-open');
+          menu.hidden = false;
+          btn.setAttribute('aria-expanded', 'true');
+        } else {
+          closeMenu();
+        }
+      });
+
+      menu.addEventListener('click', (e) => {
+        const opt = e.target.closest('.serp-filters__option');
+        if (!opt) return;
+        e.stopPropagation();
+        const value = opt.dataset.value === 'hide' || opt.dataset.value === 'only' ? opt.dataset.value : 'all';
+        const next = AccountsUIPrefs.save({ ...AccountsUIPrefs.load(), aiContent: value });
+        AccountsUIPrefs.apply(next);
+        syncAiContentFilter(next);
+        closeMenu();
+        serpPage = 1;
+        infinitePage2Loaded = false;
+        render(document.getElementById('searchInput')?.value || '');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!wrap.contains(e.target)) closeMenu();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMenu();
+      });
+
+      syncAiContentFilter();
     })();
 
     (function fixPlaygroundLink() {

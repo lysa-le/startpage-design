@@ -18,6 +18,7 @@
     showFilters: true,
     basicView: false,
     infiniteScroll: false,
+    aiContent: 'all', /* all | hide | only */
     resultsPerPage: '10',
     resultsLanguage: 'English',
   };
@@ -87,6 +88,7 @@
     el.dataset.uiShowFilters = p.showFilters !== false ? 'on' : 'off';
     el.dataset.uiBasicView = p.basicView ? 'on' : 'off';
     el.dataset.uiInfiniteScroll = p.infiniteScroll ? 'on' : 'off';
+    el.dataset.uiAiContent = p.aiContent === 'hide' || p.aiContent === 'only' ? p.aiContent : 'all';
     el.dataset.uiResultsPerPage = String(p.resultsPerPage || '10');
     el.dataset.uiResultsLanguage = p.resultsLanguage || 'English';
 
