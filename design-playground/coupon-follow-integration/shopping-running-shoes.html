@@ -3755,9 +3755,10 @@
     .shopping-body {
       --shopping-sidebar-width: calc(var(--spacing-96) + var(--spacing-48) + var(--spacing-12));
       --product-card-text-gap: 6px; /* between title / price / merchant / meta — below spacing scale */
-      --product-card-star-size: var(--spacing-12);
-      --shopping-size-cell: calc(var(--spacing-32) + var(--spacing-16));
+      --product-card-star-size: var(--spacing-16);
+      --shopping-size-btn-height: var(--spacing-32);
       --shopping-filter-pill-height: calc(var(--spacing-24) + var(--spacing-4)); /* 28px — matches tag--sm */
+      --shopping-swatch-size: var(--spacing-20);
       padding: var(--spacing-16) var(--spacing-24) var(--spacing-48);
       max-width: 1440px;
       margin: 0 auto;
@@ -3768,38 +3769,113 @@
       gap: var(--spacing-32);
       align-items: start;
     }
+    .shopping-sidebar {
+      position: sticky;
+      top: var(--spacing-16);
+      max-height: calc(100vh - var(--spacing-32));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding-right: var(--spacing-4);
+      scrollbar-width: thin;
+    }
+    .shopping-sidebar__header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-8);
+      margin-bottom: 0;
+      padding-bottom: var(--spacing-20);
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
     .shopping-sidebar__heading {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      margin: 0;
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .shopping-sidebar__heading svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      color: var(--color-icon-primary);
+      flex-shrink: 0;
+    }
+    .shopping-clear-filters {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-4);
+      padding: 0;
+      border: none;
+      background: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      cursor: pointer;
+    }
+    .shopping-clear-filters[hidden] {
+      display: none;
+    }
+    .shopping-clear-filters svg {
+      width: var(--spacing-8);
+      height: var(--spacing-8);
+      flex-shrink: 0;
+      color: currentColor;
+    }
+    .shopping-clear-filters:hover { text-decoration: underline; }
+    .shopping-clear-filters:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-sm);
+    }
+    .shopping-sidebar__section {
+      padding: var(--spacing-20) 0;
+      border-bottom: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .shopping-sidebar__section:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .shopping-sidebar__label {
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-primary);
-      margin-bottom: var(--spacing-8);
-    }
-    .shopping-sidebar__section {
-      padding: var(--spacing-16) 0;
-      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
-    }
-    .shopping-sidebar__section:first-of-type { border-top: none; padding-top: 0; }
-    .shopping-sidebar__label {
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-primary);
       margin-bottom: var(--spacing-12);
+    }
+    .shopping-filter-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
     }
     .shopping-filter-check {
       display: flex;
       align-items: center;
       gap: var(--spacing-12);
-      margin-bottom: var(--spacing-8);
+      margin: 0;
+      padding: var(--spacing-4) var(--spacing-8) var(--spacing-4) var(--spacing-4);
+      margin-inline: calc(var(--spacing-4) * -1);
+      border-radius: var(--radius-md);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
       color: var(--color-text-primary);
       cursor: pointer;
+      transition: background-color 0.15s ease;
     }
-    .shopping-filter-check:last-child { margin-bottom: 0; }
+    .shopping-filter-check:hover {
+      background: var(--color-background-secondary);
+    }
+    .shopping-filter-check:has(input:checked) {
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-medium);
+    }
     .shopping-filter-check input {
       appearance: none;
+      position: relative;
       width: var(--spacing-16);
       height: var(--spacing-16);
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
@@ -3807,12 +3883,22 @@
       margin: 0;
       flex-shrink: 0;
       background: var(--color-background-primary);
-      transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
     }
     .shopping-filter-check input:checked {
       border-color: var(--color-button-brandblue);
       background: var(--color-button-brandblue);
-      box-shadow: inset 0 0 0 2px var(--color-background-primary);
+    }
+    .shopping-filter-check input:checked::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 2px;
+      width: 4px;
+      height: 8px;
+      border: solid var(--color-text-inverted);
+      border-width: 0 var(--border-stroke-md) var(--border-stroke-md) 0;
+      transform: rotate(45deg);
     }
     .shopping-filter-check input:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
@@ -3820,21 +3906,24 @@
     }
     .shopping-size-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, var(--shopping-size-cell)));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: var(--spacing-8);
     }
     .shopping-size-btn {
-      min-height: var(--shopping-size-cell);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--shopping-size-btn-height);
       padding: var(--spacing-4);
       border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-md);
       background: var(--color-background-primary);
       font-family: var(--font-family);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
       color: var(--color-text-primary);
       cursor: pointer;
-      transition: border-color 0.15s ease, background-color 0.15s ease;
+      transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
     }
     .shopping-size-btn:hover {
       border-color: var(--color-stroke-primary);
@@ -3843,32 +3932,41 @@
     .shopping-size-btn[aria-pressed="true"] {
       border-color: var(--color-stroke-primary-button);
       background: var(--color-background-secondary);
-      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      font-weight: var(--font-weight-semibold);
+      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-stroke-primary-button);
     }
     .shopping-size-btn:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: var(--spacing-4);
     }
     .shopping-color-grid {
-      display: grid;
-      grid-template-columns: repeat(6, var(--spacing-16));
-      gap: var(--spacing-8);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-12);
     }
     .shopping-color-swatch {
-      width: var(--spacing-16);
-      height: var(--spacing-16);
+      width: var(--shopping-swatch-size);
+      height: var(--shopping-swatch-size);
       border-radius: var(--radius-full);
       border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
       padding: 0;
       cursor: pointer;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      flex-shrink: 0;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    }
+    .shopping-color-swatch--light {
+      border-color: var(--color-stroke-primary);
     }
     .shopping-color-swatch:hover {
+      transform: scale(1.08);
       border-color: var(--color-stroke-primary);
     }
     .shopping-color-swatch[aria-pressed="true"] {
       border-color: var(--color-stroke-primary-button);
-      box-shadow: 0 0 0 2px var(--color-background-primary), 0 0 0 3px var(--color-stroke-primary-button);
+      box-shadow:
+        0 0 0 var(--border-stroke-lg) var(--color-background-primary),
+        0 0 0 calc(var(--border-stroke-lg) + var(--border-stroke-sm)) var(--color-stroke-primary-button);
     }
     .shopping-color-swatch:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
@@ -3881,40 +3979,15 @@
       gap: var(--spacing-16);
       margin-bottom: var(--spacing-16);
     }
-    .shopping-active-filters-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--spacing-16);
-      margin-bottom: var(--spacing-24);
-    }
-    .shopping-active-filters-bar[hidden] {
-      display: none;
-    }
     .shopping-active-filters {
       display: flex;
       flex-wrap: wrap;
-      flex: 1;
       gap: var(--spacing-8);
-      min-width: 0;
+      margin-bottom: var(--spacing-24);
     }
-    .shopping-clear-filters {
-      flex-shrink: 0;
-      padding: 0;
-      border: none;
-      background: none;
-      font-family: var(--font-family);
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      color: var(--color-text-link);
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .shopping-clear-filters:hover { text-decoration: underline; }
-    .shopping-clear-filters:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: var(--spacing-4);
-      border-radius: var(--radius-sm);
+    .shopping-active-filters:empty {
+      display: none;
+      margin-bottom: 0;
     }
     .shopping-filter-pill {
       --shopping-filter-pill-gap: 6px; /* below spacing scale — matches tag component */
@@ -3968,8 +4041,15 @@
       color: var(--color-text-primary);
       cursor: pointer;
     }
-    .shopping-sort svg { color: var(--color-icon-tertiary); flex-shrink: 0; }
+    .shopping-sort__chevron {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      color: var(--color-icon-tertiary);
+      flex-shrink: 0;
+      transition: color 0.15s ease;
+    }
     .shopping-sort:hover { color: var(--color-text-link); }
+    .shopping-sort:hover .shopping-sort__chevron { color: var(--color-icon-secondary); }
     .shopping-sort:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: var(--spacing-4);
@@ -3999,26 +4079,37 @@
     .product-card {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-8);
       width: 100%;
       height: 100%;
-      text-decoration: none;
       color: inherit;
       background: var(--color-background-primary);
       border: var(--border-stroke-sm) solid var(--color-stroke-primary);
       border-radius: var(--radius-lg);
       overflow: hidden;
-      transition: border-color 0.15s ease, color 0.15s ease;
+      transition: border-color 0.15s ease;
     }
-    .product-card:hover {
+    .product-card__link {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: var(--spacing-8);
+      min-width: 0;
+      text-decoration: none;
+      color: inherit;
+    }
+    .product-card:hover,
+    .product-card:has(.product-card__link:focus-visible) {
       border-color: var(--color-stroke-primary-button);
     }
-    .product-card:hover .product-card__title,
-    .product-card:focus-visible .product-card__title {
+    .product-card__link:hover .product-card__title,
+    .product-card__link:focus-visible .product-card__title {
       text-decoration: underline;
       text-underline-offset: 2px;
     }
-    .product-card:focus-visible {
+    .product-card__link:focus-visible {
+      outline: none;
+    }
+    .product-card:has(.product-card__link:focus-visible) {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: var(--spacing-4);
     }
@@ -4119,6 +4210,7 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      gap: var(--spacing-4);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
       color: var(--color-text-primary);
@@ -4133,6 +4225,38 @@
       height: var(--product-card-star-size);
       flex-shrink: 0;
       color: var(--color-accent-gold);
+    }
+    .product-card__meta-shipping {
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+    .product-card__coupon {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      margin: var(--spacing-8) var(--spacing-12) var(--spacing-12);
+      padding: var(--spacing-4) var(--spacing-8);
+      border: var(--border-stroke-lg) dashed var(--color-stroke-primary-button);
+      border-radius: var(--radius-md);
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .product-card:has(.product-card__coupon) .product-card__body {
+      padding-bottom: 0;
+    }
+    .product-card__coupon:hover {
+      background: var(--color-background-secondary);
+    }
+    .product-card__coupon:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
     }
     .shopping-pager {
       display: flex;
@@ -4645,33 +4769,48 @@
   <main class="shopping-body">
     <div class="shopping-layout">
       <aside class="shopping-sidebar" aria-label="Shopping filters">
-        <h2 class="shopping-sidebar__heading">Filter by:</h2>
+        <div class="shopping-sidebar__header">
+          <h2 class="shopping-sidebar__heading">
+            <svg width="16" height="16" aria-hidden="true"><use href="#icon-filter"/></svg>
+            Filter by
+          </h2>
+          <button type="button" class="shopping-clear-filters" id="shoppingClearFilters" hidden>
+            <svg width="8" height="8" aria-hidden="true"><use href="#icon-close-sm"/></svg>
+            Clear filters
+          </button>
+        </div>
 
         <section class="shopping-sidebar__section">
           <h3 class="shopping-sidebar__label">Department</h3>
-          <label class="shopping-filter-check"><input type="checkbox"> Men&apos;s</label>
-          <label class="shopping-filter-check"><input type="checkbox" checked> Women&apos;s</label>
-          <label class="shopping-filter-check"><input type="checkbox"> Unisex</label>
-          <label class="shopping-filter-check"><input type="checkbox"> Kids</label>
-          <label class="shopping-filter-check"><input type="checkbox"> Boys</label>
+          <div class="shopping-filter-list">
+            <label class="shopping-filter-check"><input type="checkbox"> Men&apos;s</label>
+            <label class="shopping-filter-check"><input type="checkbox" checked> Women&apos;s</label>
+            <label class="shopping-filter-check"><input type="checkbox"> Unisex</label>
+            <label class="shopping-filter-check"><input type="checkbox"> Kids</label>
+            <label class="shopping-filter-check"><input type="checkbox"> Boys</label>
+          </div>
         </section>
 
         <section class="shopping-sidebar__section">
           <h3 class="shopping-sidebar__label">Price</h3>
-          <label class="shopping-filter-check"><input type="checkbox"> Up to $50</label>
-          <label class="shopping-filter-check"><input type="checkbox"> $50 - $70</label>
-          <label class="shopping-filter-check"><input type="checkbox" checked> $70 - $100</label>
-          <label class="shopping-filter-check"><input type="checkbox"> $110 - $150</label>
-          <label class="shopping-filter-check"><input type="checkbox"> Over $150</label>
+          <div class="shopping-filter-list">
+            <label class="shopping-filter-check"><input type="checkbox"> Up to $50</label>
+            <label class="shopping-filter-check"><input type="checkbox"> $50 - $70</label>
+            <label class="shopping-filter-check"><input type="checkbox" checked> $70 - $100</label>
+            <label class="shopping-filter-check"><input type="checkbox"> $110 - $150</label>
+            <label class="shopping-filter-check"><input type="checkbox"> Over $150</label>
+          </div>
         </section>
 
         <section class="shopping-sidebar__section">
           <h3 class="shopping-sidebar__label">Brand</h3>
-          <label class="shopping-filter-check"><input type="checkbox" checked> Nike</label>
-          <label class="shopping-filter-check"><input type="checkbox"> Puma</label>
-          <label class="shopping-filter-check"><input type="checkbox"> ASICS</label>
-          <label class="shopping-filter-check"><input type="checkbox"> New Balance</label>
-          <label class="shopping-filter-check"><input type="checkbox"> adidas</label>
+          <div class="shopping-filter-list">
+            <label class="shopping-filter-check"><input type="checkbox" checked> Nike</label>
+            <label class="shopping-filter-check"><input type="checkbox"> Puma</label>
+            <label class="shopping-filter-check"><input type="checkbox"> ASICS</label>
+            <label class="shopping-filter-check"><input type="checkbox"> New Balance</label>
+            <label class="shopping-filter-check"><input type="checkbox"> adidas</label>
+          </div>
         </section>
 
         <section class="shopping-sidebar__section">
@@ -4700,7 +4839,7 @@
             <button type="button" class="shopping-color-swatch" style="background:var(--color-text-teal)" aria-label="Teal"></button>
             <button type="button" class="shopping-color-swatch" style="background:var(--color-gold-500)" aria-label="Gold"></button>
             <button type="button" class="shopping-color-swatch" style="background:var(--color-red-400)" aria-label="Red"></button>
-            <button type="button" class="shopping-color-swatch" style="background:var(--color-whisper-0)" aria-label="White"></button>
+            <button type="button" class="shopping-color-swatch shopping-color-swatch--light" style="background:var(--color-whisper-0)" aria-label="White"></button>
           </div>
         </section>
       </aside>
@@ -4709,19 +4848,17 @@
         <div class="shopping-main__toolbar">
           <button type="button" class="shopping-sort" aria-haspopup="listbox" aria-expanded="false">
             Sort by: Featured
-            <svg width="10" height="4" viewBox="0 0 10 4" fill="none" aria-hidden="true"><path d="M1 1L5 3L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="shopping-sort__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <p class="shopping-results-count" id="shoppingResultsCount">Over 180 results for <strong>&ldquo;running shoes&rdquo;</strong></p>
         </div>
 
-        <div class="shopping-active-filters-bar" id="shoppingActiveFiltersBar" hidden>
-          <div class="shopping-active-filters" id="shoppingActiveFilters" aria-live="polite" aria-label="Active filters"></div>
-          <button type="button" class="shopping-clear-filters" id="shoppingClearFilters">Clear all filters</button>
-        </div>
+        <div class="shopping-active-filters" id="shoppingActiveFilters" aria-live="polite" aria-label="Active filters"></div>
 
         <ul class="shopping-grid" id="shoppingGrid" aria-label="Product results">
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Brooks Running Shoes - Ghost 14" loading="lazy" decoding="async">
             </div>
@@ -4731,13 +4868,16 @@
               <span class="product-card__price product-card__price--sale"><span class="product-card__price-current">$99.95</span> <s class="product-card__price-was">$115.95</s></span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/brooks.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>Brooks</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.5 out of 5 stars">4.5<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(1k+)</span></span>
+                <span class="product-card__meta-rating" aria-label="4.5 out of 5 stars">4.5<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(1k+)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>
               </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Nike Air Zoom Pegasus 40" loading="lazy" decoding="async">
             </div>
@@ -4749,10 +4889,13 @@
               <span class="product-card__meta">
                 <span class="product-card__meta-rating" aria-label="4.7 out of 5 stars">4.7<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(2k+)</span></span>              </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="ASICS Gel-Nimbus 25" loading="lazy" decoding="async">
             </div>
@@ -4761,13 +4904,15 @@
               <span class="product-card__price">$159.95</span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/asics.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>ASICS</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.3 out of 5 stars">4.3<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(890)</span></span>
+                <span class="product-card__meta-rating" aria-label="4.3 out of 5 stars">4.3<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(890)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>
               </span>
             </div>
-          </a>
+            </a>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="HOKA Clifton 9" loading="lazy" decoding="async">
             </div>
@@ -4776,12 +4921,14 @@
               <span class="product-card__price">$144.95</span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/hoka.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>HOKA</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.8 out of 5 stars">4.8<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(1.2k+)</span></span>              </span>
+                <span class="product-card__meta-rating" aria-label="4.8 out of 5 stars">4.8<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(1.2k+)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>              </span>
             </div>
-          </a>
+            </a>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="New Balance Fresh Foam X 880v14" loading="lazy" decoding="async">
             </div>
@@ -4794,10 +4941,13 @@
                 <span class="product-card__meta-rating" aria-label="4.6 out of 5 stars">4.6<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(756)</span></span>
               </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Saucony Ride 17" loading="lazy" decoding="async">
             </div>
@@ -4806,12 +4956,14 @@
               <span class="product-card__price">$129.95</span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/saucony.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>Saucony</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.4 out of 5 stars">4.4<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(430)</span></span>              </span>
+                <span class="product-card__meta-rating" aria-label="4.4 out of 5 stars">4.4<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(430)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>              </span>
             </div>
-          </a>
+            </a>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Adidas Ultraboost Light" loading="lazy" decoding="async">
             </div>
@@ -4821,13 +4973,16 @@
               <span class="product-card__price">$190.00</span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/adidas.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>adidas</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.9 out of 5 stars">4.9<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(3k+)</span></span>
+                <span class="product-card__meta-rating" aria-label="4.9 out of 5 stars">4.9<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(3k+)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>
               </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Brooks Adrenaline GTS 23" loading="lazy" decoding="async">
             </div>
@@ -4838,10 +4993,13 @@
               <span class="product-card__meta">
                 <span class="product-card__meta-rating" aria-label="4.2 out of 5 stars">4.2<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(980)</span></span>              </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Nike React Infinity Run 4" loading="lazy" decoding="async">
             </div>
@@ -4851,13 +5009,15 @@
               <span class="product-card__price product-card__price--sale"><span class="product-card__price-current">$159.99</span> <s class="product-card__price-was">$179.99</s></span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/nike.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>Nike.com</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.5 out of 5 stars">4.5<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(1.5k+)</span></span>
+                <span class="product-card__meta-rating" aria-label="4.5 out of 5 stars">4.5<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(1.5k+)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>
               </span>
             </div>
-          </a>
+            </a>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="On Cloudrunner 2" loading="lazy" decoding="async">
             </div>
@@ -4868,10 +5028,13 @@
               <span class="product-card__meta">
                 <span class="product-card__meta-rating" aria-label="4.6 out of 5 stars">4.6<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(620)</span></span>              </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Mizuno Wave Rider 27" loading="lazy" decoding="async">
             </div>
@@ -4880,13 +5043,15 @@
               <span class="product-card__price">$134.95</span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/mizuno.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>Mizuno</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.3 out of 5 stars">4.3<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(310)</span></span>
+                <span class="product-card__meta-rating" aria-label="4.3 out of 5 stars">4.3<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(310)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>
               </span>
             </div>
-          </a>
+            </a>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Salomon Speedcross 6" loading="lazy" decoding="async">
             </div>
@@ -4898,10 +5063,13 @@
               <span class="product-card__meta">
                 <span class="product-card__meta-rating" aria-label="4.7 out of 5 stars">4.7<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(540)</span></span>              </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Brooks Glycerin 21" loading="lazy" decoding="async">
             </div>
@@ -4910,13 +5078,15 @@
               <span class="product-card__price">$164.95</span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/brooks.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>Brooks</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.8 out of 5 stars">4.8<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(720)</span></span>
+                <span class="product-card__meta-rating" aria-label="4.8 out of 5 stars">4.8<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(720)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>
               </span>
             </div>
-          </a>
+            </a>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="ASICS Gel-Kayano 30" loading="lazy" decoding="async">
             </div>
@@ -4928,10 +5098,13 @@
               <span class="product-card__meta">
                 <span class="product-card__meta-rating" aria-label="4.4 out of 5 stars">4.4<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(1.1k+)</span></span>              </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="New Balance FuelCell Rebel v4" loading="lazy" decoding="async">
             </div>
@@ -4940,13 +5113,15 @@
               <span class="product-card__price">$139.99</span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/new-balance.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>New Balance</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.5 out of 5 stars">4.5<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(480)</span></span>
+                <span class="product-card__meta-rating" aria-label="4.5 out of 5 stars">4.5<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(480)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>
               </span>
             </div>
-          </a>
+            </a>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="HOKA Bondi 8" loading="lazy" decoding="async">
             </div>
@@ -4957,10 +5132,13 @@
               <span class="product-card__meta">
                 <span class="product-card__meta-rating" aria-label="4.6 out of 5 stars">4.6<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(900)</span></span>              </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Nike Vaporfly 3" loading="lazy" decoding="async">
             </div>
@@ -4970,13 +5148,15 @@
               <span class="product-card__price">$249.99</span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/nike.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>Nike.com</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.9 out of 5 stars">4.9<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(2.2k+)</span></span>
+                <span class="product-card__meta-rating" aria-label="4.9 out of 5 stars">4.9<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(2.2k+)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>
               </span>
             </div>
-          </a>
+            </a>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Adidas Adizero Boston 12" loading="lazy" decoding="async">
             </div>
@@ -4988,10 +5168,13 @@
               <span class="product-card__meta">
                 <span class="product-card__meta-rating" aria-label="4.3 out of 5 stars">4.3<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(670)</span></span>              </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Brooks Cascadia 17" loading="lazy" decoding="async">
             </div>
@@ -5000,13 +5183,15 @@
               <span class="product-card__price">$129.95</span>
               <span class="product-card__merchant"><span class="product-card__favicon" aria-hidden="true"><img src="assets/shopping-favicons/brooks.png" alt="" width="16" height="16" loading="lazy" decoding="async"></span>Brooks</span>
               <span class="product-card__meta">
-                <span class="product-card__meta-rating" aria-label="4.7 out of 5 stars">4.7<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(390)</span></span>
+                <span class="product-card__meta-rating" aria-label="4.7 out of 5 stars">4.7<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(390)</span></span> <span class="product-card__meta-shipping" aria-label="Free shipping">· Free shipping</span>
               </span>
             </div>
-          </a>
+            </a>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Saucony Endorphin Speed 4" loading="lazy" decoding="async">
             </div>
@@ -5017,10 +5202,13 @@
               <span class="product-card__meta">
                 <span class="product-card__meta-rating" aria-label="4.5 out of 5 stars">4.5<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(810)</span></span>              </span>
             </div>
-          </a>
+            </a>
+            <button type="button" class="product-card__coupon">Coupon code available</button>
+          </article>
           </li>
           <li class="shopping-grid__item">
-            <a class="product-card" href="#">
+            <article class="product-card">
+            <a class="product-card__link" href="#">
             <div class="product-card__media">
               <img src="assets/shopping/shoe-placeholder.png" alt="Altra Lone Peak 8" loading="lazy" decoding="async">
             </div>
@@ -5032,7 +5220,8 @@
                 <span class="product-card__meta-rating" aria-label="4.4 out of 5 stars">4.4<svg class="product-card__meta-star" aria-hidden="true"><use href="#icon-star-filled"/></svg><span class="product-card__meta-count">(260)</span></span>
               </span>
             </div>
-          </a>
+            </a>
+          </article>
           </li>
         </ul>
 
@@ -6812,8 +7001,8 @@
     (function initShoppingFilters() {
       const sidebar = document.querySelector('.shopping-sidebar');
       const pillsContainer = document.getElementById('shoppingActiveFilters');
-      const filtersBar = document.getElementById('shoppingActiveFiltersBar');
-      if (!sidebar || !pillsContainer || !filtersBar) return;
+      const clearBtn = document.getElementById('shoppingClearFilters');
+      if (!sidebar || !pillsContainer || !clearBtn) return;
 
       function getActiveFilters() {
         const filters = [];
@@ -6872,7 +7061,7 @@
           pill.append(label, removeBtn);
           pillsContainer.appendChild(pill);
         });
-        filtersBar.hidden = filters.length === 0;
+        clearBtn.hidden = filters.length === 0;
       }
 
       sidebar.querySelectorAll('.shopping-filter-check input[type="checkbox"]').forEach((input) => {
@@ -6896,7 +7085,7 @@
         });
       });
 
-      document.getElementById('shoppingClearFilters')?.addEventListener('click', () => {
+      clearBtn.addEventListener('click', () => {
         sidebar.querySelectorAll('.shopping-filter-check input[type="checkbox"]').forEach((input) => {
           input.checked = false;
         });
@@ -6910,6 +7099,23 @@
       });
 
       renderActiveFilterPills();
+    })();
+
+    (function initProductCoupons() {
+      document.querySelectorAll('.product-card__coupon').forEach((btn) => {
+        const defaultLabel = btn.textContent.trim();
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (btn.dataset.busy === 'true') return;
+          btn.dataset.busy = 'true';
+          btn.textContent = 'Code copied';
+          window.setTimeout(() => {
+            btn.textContent = defaultLabel;
+            delete btn.dataset.busy;
+          }, 1500);
+        });
+      });
     })();
 
     window.addEventListener('resize', () => {
