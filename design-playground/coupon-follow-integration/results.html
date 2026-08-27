@@ -5965,8 +5965,14 @@
       return /^running\s+shoes$/i.test(String(q || '').trim());
     }
 
+    function isHotelsMiamiQuery(q) {
+      return /^hotels\s+in\s+miami$/i.test(String(q || '').trim());
+    }
+
     function goToResultsPage(q) {
-      const page = isRunningShoesQuery(q) ? 'results-running-shoes.html' : 'results.html';
+      const page = isRunningShoesQuery(q)
+        ? 'results-running-shoes.html'
+        : (isHotelsMiamiQuery(q) ? 'results-hotels-miami.html' : 'results.html');
       const here = location.pathname.split('/').pop() || '';
       if (here !== page) {
         location.href = `${page}?q=${encodeURIComponent(q)}`;
@@ -5981,6 +5987,8 @@
 
     if (isRunningShoesQuery(initialQuery)) {
       location.replace(`results-running-shoes.html?q=${encodeURIComponent(initialQuery)}`);
+    } else if (isHotelsMiamiQuery(initialQuery)) {
+      location.replace(`results-hotels-miami.html?q=${encodeURIComponent(initialQuery)}`);
     } else {
 
     input.value = initialQuery;
@@ -6037,7 +6045,9 @@
     })();
 
     function getWebResultsPage(q) {
-      return isRunningShoesQuery(q) ? 'results-running-shoes.html' : 'results.html';
+      if (isRunningShoesQuery(q)) return 'results-running-shoes.html';
+      if (isHotelsMiamiQuery(q)) return 'results-hotels-miami.html';
+      return 'results.html';
     }
 
     function navigateVertical(vertical, q) {

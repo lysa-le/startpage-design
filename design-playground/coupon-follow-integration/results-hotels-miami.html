@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coupon Follow Integration — Search</title>
+  <title>Coupon Follow Integration — Hotels in Miami</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -1474,14 +1474,14 @@
 
     .serp-layout {
       display: grid;
-      grid-template-columns: minmax(0, 598px);
+      grid-template-columns: minmax(0, 598px) minmax(0, calc(var(--spacing-24) * 18)); /* ~432px rail */
       grid-template-areas:
-        "chrome"
-        "main";
-      column-gap: 0;
+        "chrome rail"
+        "main rail";
+      column-gap: var(--spacing-80);
       row-gap: 0;
       align-items: start;
-      max-width: 598px;
+      max-width: calc(598px + var(--spacing-80) + (var(--spacing-24) * 18));
     }
 
     .serp-chrome {
@@ -1880,12 +1880,38 @@
       flex-shrink: 0;
     }
 
-    /* ── Right rail — Wikipedia knowledge panel (Figma 3894:2835) ── */
+    /* ── Right rail — Hotels booking widget (Figma 286:3415) ── */
     .serp-rail {
       grid-area: rail;
       min-width: 0;
-      /* Sit under the meta line, slightly closer to results */
       margin-top: var(--spacing-40);
+      position: sticky;
+      top: var(--spacing-24);
+      align-self: start;
+      max-height: calc(100dvh - var(--spacing-48));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      /* Keep scrollbar in a gutter to the right of the widget, not over content */
+      padding-right: var(--spacing-12);
+      margin-right: calc(var(--spacing-12) * -1);
+      scrollbar-gutter: stable;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-stroke-secondary) transparent;
+    }
+
+    .serp-rail::-webkit-scrollbar {
+      width: var(--spacing-8);
+    }
+
+    .serp-rail::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .serp-rail::-webkit-scrollbar-thumb {
+      background: var(--color-stroke-secondary);
+      border-radius: var(--radius-full);
+      border: var(--spacing-4) solid transparent;
+      background-clip: content-box;
     }
 
     .serp-rail[hidden] {
@@ -2011,6 +2037,1083 @@
       align-items: center;
       white-space: nowrap;
     }
+
+
+    /* ── Hotels booking widget — Figma Startpage-Design-Home 286:3415 ── */
+    .hotels-widget {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+      width: 100%;
+    }
+    .hotels-widget[hidden] {
+      display: none !important;
+    }
+    .hotels-widget__map-wrap {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--color-background-secondary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .hotels-widget__map {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 430 / 240;
+      object-fit: cover;
+    }
+    .hotels-widget__map-pins {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .hotels-widget__map-pin {
+      position: absolute;
+      left: var(--pin-x);
+      top: var(--pin-y);
+      transform: translate(-50%, -100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-20);
+      height: calc(var(--spacing-24) + var(--spacing-8));
+      color: var(--color-text-inverted);
+      font-size: var(--font-body-sm);
+      font-weight: var(--font-weight-bold);
+      line-height: 1;
+    }
+    .hotels-widget__map-pin svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .hotels-widget__map-pin-num {
+      position: relative;
+      margin-top: calc(var(--spacing-4) * -1);
+    }
+    .hotels-widget__map-zoom {
+      position: absolute;
+      left: var(--spacing-8);
+      top: var(--spacing-8);
+      display: flex;
+      flex-direction: column;
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      box-shadow: var(--shadow-search);
+      overflow: hidden;
+    }
+    .hotels-widget__map-zoom-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-40);
+      height: var(--spacing-40);
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--color-icon-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      line-height: 1;
+      cursor: pointer;
+    }
+    .hotels-widget__map-zoom-btn + .hotels-widget__map-zoom-btn {
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .hotels-widget__map-zoom-btn:hover {
+      background: var(--color-background-secondary);
+    }
+    .hotels-widget__map-zoom-btn:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: calc(var(--spacing-4) * -1);
+    }
+    .hotels-widget__map-expand {
+      position: absolute;
+      right: var(--spacing-8);
+      bottom: calc(var(--spacing-24) + var(--spacing-8));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: calc(var(--spacing-40) + var(--spacing-4));
+      height: calc(var(--spacing-40) + var(--spacing-4));
+      padding: 0;
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      box-shadow: var(--shadow-search);
+      color: var(--color-icon-primary);
+      cursor: pointer;
+    }
+    .hotels-widget__map-expand svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+    }
+    .hotels-widget__map-expand:hover {
+      background: var(--color-background-secondary);
+    }
+    .hotels-widget__map-expand:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hotels-widget__map-attribution {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 50%;
+      margin: 0;
+      padding: var(--spacing-4) var(--spacing-12);
+      border-radius: 0 0 var(--radius-lg) 0;
+      background: color-mix(in srgb, var(--color-background-primary) 70%, transparent);
+      font-size: var(--font-body-xs);
+      line-height: 1;
+      color: var(--color-text-primary);
+      text-align: center;
+      white-space: nowrap;
+    }
+    .hotels-widget__booking {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+    .hotels-widget__dates {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-12);
+    }
+    .hotels-widget__date {
+      position: relative;
+      min-width: 0;
+    }
+    .hotels-widget__field {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      width: 100%;
+      padding: var(--spacing-4) var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .hotels-widget__field:hover {
+      border-color: var(--color-stroke-primary-button);
+      background: var(--color-background-secondary);
+    }
+    .hotels-widget__field[aria-expanded="true"] {
+      border-color: var(--color-stroke-primary-button);
+    }
+    .hotels-widget__field:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hotels-widget__field--full {
+      width: 100%;
+    }
+    .hotels-widget__field-icon {
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      flex-shrink: 0;
+      color: var(--color-icon-secondary);
+    }
+    .hotels-widget__field-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      min-width: 0;
+    }
+    .hotels-widget__field-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .hotels-widget__field-value {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+    .hotels-widget__calendar {
+      position: absolute;
+      top: calc(100% + var(--spacing-8));
+      left: 0;
+      z-index: 20;
+      width: calc(var(--spacing-32) * 8 + var(--spacing-24));
+      max-width: min(100vw - var(--spacing-32), calc(var(--spacing-32) * 9));
+      padding: var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      box-shadow: var(--shadow-search);
+    }
+    .hotels-widget__date:last-child .hotels-widget__calendar {
+      left: auto;
+      right: 0;
+    }
+    .hotels-widget__calendar[hidden] {
+      display: none;
+    }
+    .hotels-widget__calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-8);
+      margin-bottom: var(--spacing-12);
+    }
+    .hotels-widget__calendar-title {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .hotels-widget__calendar-nav {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: var(--color-background-secondary);
+      color: var(--color-icon-primary);
+      cursor: pointer;
+    }
+    .hotels-widget__calendar-nav:hover {
+      background: var(--color-button-productfilledhover);
+    }
+    .hotels-widget__calendar-nav:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hotels-widget__calendar-nav svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+    }
+    .hotels-widget__calendar-weekdays,
+    .hotels-widget__calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: var(--spacing-4);
+    }
+    .hotels-widget__calendar-weekdays {
+      margin-bottom: var(--spacing-4);
+    }
+    .hotels-widget__calendar-weekday {
+      text-align: center;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .hotels-widget__calendar-day {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1;
+      min-height: var(--spacing-32);
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: 1;
+      color: var(--color-text-primary);
+      cursor: pointer;
+    }
+    .hotels-widget__calendar-day:hover:not(:disabled) {
+      background: var(--color-background-secondary);
+    }
+    .hotels-widget__calendar-day:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hotels-widget__calendar-day--muted {
+      color: var(--color-text-tertiary);
+    }
+    .hotels-widget__calendar-day--selected {
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+      font-weight: var(--font-weight-semibold);
+    }
+    .hotels-widget__calendar-day--selected:hover:not(:disabled) {
+      background: var(--color-button-brandbluehover);
+    }
+    .hotels-widget__calendar-day--today:not(.hotels-widget__calendar-day--selected) {
+      box-shadow: inset 0 0 0 var(--border-stroke-sm) var(--color-stroke-primary-button);
+    }
+    .hotels-widget__calendar-day:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+    .hotels-widget__guests {
+      position: relative;
+      width: 100%;
+    }
+    .hotels-widget__guests-panel {
+      position: absolute;
+      top: calc(100% + var(--spacing-8));
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      padding: var(--spacing-16);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      box-shadow: var(--shadow-search);
+    }
+    .hotels-widget__guests-panel[hidden] {
+      display: none;
+    }
+    .hotels-widget__guests-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+    }
+    .hotels-widget__guests-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+      min-width: 0;
+    }
+    .hotels-widget__guests-label {
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .hotels-widget__guests-hint {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .hotels-widget__guests-stepper {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      flex-shrink: 0;
+    }
+    .hotels-widget__guests-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      padding: 0;
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-full);
+      background: var(--color-background-primary);
+      color: var(--color-icon-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      line-height: 1;
+      cursor: pointer;
+    }
+    .hotels-widget__guests-btn:hover:not(:disabled) {
+      border-color: var(--color-stroke-primary-button);
+      background: var(--color-background-secondary);
+    }
+    .hotels-widget__guests-btn:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hotels-widget__guests-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+    .hotels-widget__guests-count {
+      min-width: var(--spacing-24);
+      text-align: center;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .hotels-widget__list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+    }
+    .hotels-widget__rule {
+      display: block;
+      width: 100%;
+      margin: 0;
+      border: none;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .hotels-widget__item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      padding: var(--spacing-12);
+      /* Keep hover ring inside the rail — negative margins get clipped by overflow */
+      margin-inline: 0;
+      border: var(--border-stroke-lg) solid transparent;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .hotels-widget__item:hover,
+    .hotels-widget__item:focus-visible {
+      border-color: var(--color-stroke-primary-button);
+      background: var(--color-background-quaternary);
+      outline: none;
+    }
+    .hotels-widget__item:focus-visible {
+      box-shadow: 0 0 0 var(--border-stroke-lg) var(--color-stroke-primary-button);
+    }
+    .hotels-widget__item-head {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
+    .hotels-widget__item-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+    }
+    .hotels-widget__item-title {
+      margin: 0;
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.01em;
+      color: var(--color-text-primary);
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .hotels-widget__item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--spacing-8);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+    }
+    .hotels-widget__address {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+    .hotels-widget__meta-text {
+      color: var(--color-text-tertiary);
+    }
+    .hotels-widget__rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+    }
+    .hotels-widget__star {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+    }
+    .hotels-widget__star--filled {
+      color: var(--color-accent-gold);
+    }
+    .hotels-widget__star--empty {
+      color: var(--color-background-secondary);
+    }
+    .hotels-widget__price {
+      display: flex;
+      align-items: baseline;
+      justify-content: flex-end;
+      flex-shrink: 0;
+      gap: var(--spacing-4);
+      margin: 0;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .hotels-widget__price-amount {
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-teal);
+    }
+    .hotels-widget__photos {
+      position: relative;
+      width: 100%;
+    }
+    .hotels-widget__photos-viewport {
+      width: 100%;
+      overflow: hidden;
+    }
+    .hotels-widget__photos-row {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: var(--spacing-8);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .hotels-widget__photos-row::-webkit-scrollbar {
+      display: none;
+    }
+    .hotels-widget__photos-row > li {
+      flex: 0 0 calc(var(--spacing-96) + var(--spacing-16));
+      width: calc(var(--spacing-96) + var(--spacing-16));
+      scroll-snap-align: start;
+    }
+    .hotels-widget__photo {
+      display: block;
+      width: 100%;
+      height: calc(var(--spacing-64) + var(--spacing-12));
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+      background: var(--color-background-secondary);
+    }
+    .hotels-widget__photos-prev,
+    .hotels-widget__photos-next {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--color-icon-primary);
+      transform: translateY(-50%);
+    }
+    .hotels-widget__photos-prev {
+      left: var(--spacing-4);
+    }
+    .hotels-widget__photos-next {
+      right: var(--spacing-4);
+    }
+    .hotels-widget__photos-prev .icn-arrows,
+    .hotels-widget__photos-next .icn-arrows {
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      border-radius: var(--radius-full);
+      background: var(--color-background-primary);
+      box-shadow: var(--shadow-search);
+    }
+    .hotels-widget__photos-prev:not(:disabled):hover .icn-arrows,
+    .hotels-widget__photos-next:not(:disabled):hover .icn-arrows {
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+    }
+    .hotels-widget__photos-next:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+    .hotels-widget__photos-prev[hidden],
+    .hotels-widget__photos-next[hidden] {
+      display: none;
+    }
+    .hotels-widget__photos-prev:focus-visible,
+    .hotels-widget__photos-next:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-full);
+    }
+    .hotels-widget__actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-8);
+      padding-top: var(--spacing-4);
+    }
+    .hotels-widget__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-4);
+      min-height: var(--spacing-32);
+      min-width: 0;
+      padding: var(--spacing-8) var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary-button);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-brandblue);
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+      position: relative;
+      z-index: 1;
+    }
+    .hotels-widget__btn:hover {
+      background: var(--color-button-brandblue);
+      border-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+    }
+    .hotels-widget__btn:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hotels-widget__btn svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+    }
+    .hotels-widget__more {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+      width: 100%;
+    }
+    .hotels-widget__more-line {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 0;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .hotels-widget__more-btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      width: auto;
+      padding: var(--spacing-8) var(--spacing-24);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      line-height: var(--font-button-xs-lh);
+      font-weight: var(--font-weight-regular);
+      background-color: var(--color-background-primary);
+      color: var(--color-text-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .hotels-widget__more-btn:hover {
+      background-color: var(--color-button-productfilledhover);
+    }
+    .hotels-widget__more-btn:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hotels-widget__more-btn .btn__icon {
+      display: block;
+      flex-shrink: 0;
+    }
+    .hotels-widget__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--spacing-8) var(--spacing-12);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      padding-top: var(--spacing-4);
+    }
+    .hotels-widget__source {
+      margin: 0;
+      color: var(--color-text-tertiary);
+    }
+    .hotels-widget__source-link {
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .hotels-widget__source-link:hover {
+      text-decoration: underline;
+    }
+    .hotels-widget__footer-actions {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .hotels-widget__footer-action {
+      padding: 0;
+      border: none;
+      background: none;
+      font: inherit;
+      color: var(--color-text-link);
+      cursor: pointer;
+    }
+    .hotels-widget__footer-action:hover {
+      text-decoration: underline;
+    }
+    .hotels-widget__footer-sep {
+      color: var(--color-text-tertiary);
+      margin: 0 var(--spacing-8);
+    }
+
+    /* ── Hotel detail / quick view — Figma 286:3417 ── */
+    .hotels-detail {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+      width: 100%;
+    }
+    .hotels-detail[hidden] {
+      display: none;
+    }
+    .hotels-detail__back {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      align-self: flex-start;
+      padding: 0;
+      border: none;
+      background: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-link);
+      cursor: pointer;
+    }
+    .hotels-detail__back svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+    }
+    .hotels-detail__back:hover {
+      text-decoration: underline;
+    }
+    .hotels-detail__back:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-sm);
+    }
+    .hotels-detail__hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--color-background-secondary);
+    }
+    .hotels-detail__hero-photo,
+    .hotels-detail__hero-map {
+      display: block;
+      width: 100%;
+      height: calc(var(--spacing-96) + var(--spacing-48));
+      object-fit: cover;
+    }
+    .hotels-detail__title {
+      margin: 0;
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      width: 100%;
+    }
+    .hotels-detail__photos-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+    }
+    .hotels-detail__photos-source {
+      margin: 0;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .hotels-detail__reviews {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+    .hotels-detail__field-mirror {
+      pointer-events: none;
+      cursor: default;
+    }
+    .hotels-detail__rule {
+      display: block;
+      width: 100%;
+      margin: 0;
+      border: none;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+    }
+    .hotels-detail__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--spacing-8);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+    }
+    .hotels-detail__contacts {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+    .hotels-detail__contact {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__contact-label {
+      font-weight: var(--font-weight-semibold);
+    }
+    .hotels-detail__booking {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+    .hotels-detail__booking-dates {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-12);
+    }
+    .hotels-detail__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: var(--spacing-40);
+      padding: var(--spacing-8) var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary-button);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-brandblue);
+      cursor: pointer;
+    }
+    .hotels-detail__cta:hover {
+      background: var(--color-background-secondary);
+    }
+    .hotels-detail__cta:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hotels-detail__section-title {
+      margin: 0;
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-lg-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.01em;
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__blurb {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__more {
+      color: var(--color-text-link);
+      text-decoration: none;
+      font-weight: var(--font-weight-semibold);
+    }
+    .hotels-detail__more:hover {
+      text-decoration: underline;
+    }
+    .hotels-detail__amenities {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-12) var(--spacing-16);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .hotels-detail__amenity {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__amenity svg {
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      flex-shrink: 0;
+      color: var(--color-icon-secondary);
+    }
+    .hotels-detail__photos {
+      display: flex;
+      gap: var(--spacing-8);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .hotels-detail__photos::-webkit-scrollbar {
+      display: none;
+    }
+    .hotels-detail__photo {
+      flex: 0 0 calc(var(--spacing-96) + var(--spacing-16));
+      width: calc(var(--spacing-96) + var(--spacing-16));
+      height: calc(var(--spacing-64) + var(--spacing-12));
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+      background: var(--color-background-secondary);
+    }
+    .hotels-detail__qa {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+    .hotels-detail__qa-q {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__qa-a {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-tertiary);
+    }
+    .hotels-detail__chip-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-8);
+      align-self: flex-start;
+      min-height: var(--spacing-40);
+      padding: var(--spacing-8) var(--spacing-16);
+      border: none;
+      border-radius: var(--radius-lg);
+      background: var(--color-button-productfilled);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+      cursor: pointer;
+    }
+    .hotels-detail__chip-btn:hover {
+      background: var(--color-button-productfilledhover);
+    }
+    .hotels-detail__chip-btn svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      color: var(--color-icon-tertiary);
+    }
+    .hotels-detail__chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+    }
+    .hotels-detail__related {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-12);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .hotels-detail__related-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      min-width: 0;
+      width: 100%;
+      padding: var(--spacing-4);
+      margin: 0;
+      border: var(--border-stroke-sm) solid transparent;
+      border-radius: var(--radius-lg);
+      background: none;
+      font: inherit;
+      text-align: left;
+      color: inherit;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .hotels-detail__related-card:hover,
+    .hotels-detail__related-card:focus-visible {
+      border-color: var(--color-stroke-primary);
+      outline: none;
+    }
+    .hotels-detail__related-img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+      background: var(--color-background-secondary);
+    }
+    .hotels-detail__related-name {
+      margin: 0;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__related-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--spacing-4);
+      margin: 0;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+    }
+    .hotels-detail__around {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--spacing-8);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .hotels-detail__around-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-8);
+      text-align: center;
+    }
+    .hotels-detail__around-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-48);
+      height: var(--spacing-48);
+      border-radius: var(--radius-full);
+      background: var(--color-button-productfilled);
+      color: var(--color-icon-primary);
+    }
+    .hotels-detail__around-icon svg {
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+    }
+    .hotels-detail__around-label {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--spacing-8) var(--spacing-12);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+    }
+
 
     /* ── Video carousel ── */
     .serp-all-video {
@@ -2447,7 +3550,7 @@
     */
     .algo-result,
     .ad-result,
-    .knowledge-panel,
+    .hotels-widget,
     .serp-all-video,
     .serp-all-news,
     .serp-image-pack-block {
@@ -2465,41 +3568,41 @@
     }
     html[data-ui-font-size="small"] .algo-result,
     html[data-ui-font-size="small"] .ad-result,
-    html[data-ui-font-size="small"] .knowledge-panel,
+    html[data-ui-font-size="small"] .hotels-widget,
     html[data-ui-font-size="small"] .serp-all-video,
     html[data-ui-font-size="small"] .serp-all-news,
     html[data-ui-font-size="small"] .serp-image-pack-block { --result-font-size: 0.75rem; } /* 12 */
     html[data-ui-font-size="medium"] .algo-result,
     html[data-ui-font-size="medium"] .ad-result,
-    html[data-ui-font-size="medium"] .knowledge-panel,
+    html[data-ui-font-size="medium"] .hotels-widget,
     html[data-ui-font-size="medium"] .serp-all-video,
     html[data-ui-font-size="medium"] .serp-all-news,
     html[data-ui-font-size="medium"] .serp-image-pack-block { --result-font-size: 0.875rem; } /* 14 */
     html[data-ui-font-size="large"] .algo-result,
     html[data-ui-font-size="large"] .ad-result,
-    html[data-ui-font-size="large"] .knowledge-panel,
+    html[data-ui-font-size="large"] .hotels-widget,
     html[data-ui-font-size="large"] .serp-all-video,
     html[data-ui-font-size="large"] .serp-all-news,
     html[data-ui-font-size="large"] .serp-image-pack-block { --result-font-size: 0.9375rem; } /* 15 */
     html[data-ui-font-size="larger"] .algo-result,
     html[data-ui-font-size="larger"] .ad-result,
-    html[data-ui-font-size="larger"] .knowledge-panel,
+    html[data-ui-font-size="larger"] .hotels-widget,
     html[data-ui-font-size="larger"] .serp-all-video,
     html[data-ui-font-size="larger"] .serp-all-news,
     html[data-ui-font-size="larger"] .serp-image-pack-block { --result-font-size: 1rem; } /* 16 */
     html[data-ui-font-size="largest"] .algo-result,
     html[data-ui-font-size="largest"] .ad-result,
-    html[data-ui-font-size="largest"] .knowledge-panel,
+    html[data-ui-font-size="largest"] .hotels-widget,
     html[data-ui-font-size="largest"] .serp-all-video,
     html[data-ui-font-size="largest"] .serp-all-news,
     html[data-ui-font-size="largest"] .serp-image-pack-block { --result-font-size: 1.125rem; } /* 18 */
     html[data-ui-width="wide"] .serp-layout {
-      grid-template-columns: minmax(0, 720px);
-      max-width: 720px;
+      grid-template-columns: minmax(0, 720px) minmax(0, calc(var(--spacing-24) * 18));
+      max-width: calc(720px + var(--spacing-80) + (var(--spacing-24) * 18));
     }
     html[data-ui-width="super-wide"] .serp-layout {
-      grid-template-columns: minmax(0, 880px);
-      max-width: 880px;
+      grid-template-columns: minmax(0, 880px) minmax(0, calc(var(--spacing-24) * 18));
+      max-width: calc(880px + var(--spacing-80) + (var(--spacing-24) * 18));
     }
     html[data-ui-align="center"] .serp-body {
       display: flex;
@@ -2511,6 +3614,7 @@
       grid-template-columns: minmax(0, 598px);
       grid-template-areas:
         "chrome"
+        "rail"
         "main";
       max-width: 598px;
       width: 100%;
@@ -2531,6 +3635,12 @@
     }
     html[data-ui-align="center"] .serp-rail {
       /* Inline under filters, above results — same width as main column */
+      position: static;
+      max-height: none;
+      overflow-y: visible;
+      padding-right: 0;
+      margin-right: 0;
+      scrollbar-gutter: auto;
       margin-top: 0;
       margin-bottom: var(--spacing-40);
       width: 100%;
@@ -4191,7 +5301,7 @@
           <!-- Search -->
           <div class="site-header__search-wrap">
             <div class="search-field search-field--serp has-value">
-              <input type="search" class="search-field__input" id="searchInput" value="running shoes" autocomplete="off" spellcheck="false" aria-label="Search">
+              <input type="search" class="search-field__input" id="searchInput" value="hotels in miami" autocomplete="off" spellcheck="false" aria-label="Search">
               <div class="search-field__actions">
                 <button class="search-field__clear" id="clearBtn" aria-label="Clear search" tabindex="-1">
                   <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
@@ -4297,6 +5407,302 @@
           <button type="button" class="serp-load-more" id="serpLoadMore" hidden data-i18n="loadMore">Load more search results</button>
         </div>
       </div>
+
+
+      <aside class="serp-rail" id="serpRail" aria-label="Hotel booking">
+        <section class="hotels-widget" id="hotelsWidget" aria-label="Hotels in Miami">
+          <div class="hotels-widget__map-wrap">
+            <img class="hotels-widget__map" src="assets/hotels/miami-map.png" width="430" height="240" alt="Map of hotels in Miami" loading="lazy" decoding="async">
+            <div class="hotels-widget__map-pins" aria-hidden="true">
+              <span class="hotels-widget__map-pin" style="--pin-x: 31%; --pin-y: 28%">
+                <svg viewBox="0 0 20 27" fill="none" aria-hidden="true"><path d="M10 0C4.477 0 0 4.477 0 10c0 7.5 10 17 10 17s10-9.5 10-17c0-5.523-4.477-10-10-10Z" fill="var(--color-text-error)"/></svg>
+                <span class="hotels-widget__map-pin-num">1</span>
+              </span>
+              <span class="hotels-widget__map-pin" style="--pin-x: 42%; --pin-y: 68%">
+                <svg viewBox="0 0 20 27" fill="none" aria-hidden="true"><path d="M10 0C4.477 0 0 4.477 0 10c0 7.5 10 17 10 17s10-9.5 10-17c0-5.523-4.477-10-10-10Z" fill="var(--color-text-error)"/></svg>
+                <span class="hotels-widget__map-pin-num">2</span>
+              </span>
+              <span class="hotels-widget__map-pin" style="--pin-x: 69%; --pin-y: 61%">
+                <svg viewBox="0 0 20 27" fill="none" aria-hidden="true"><path d="M10 0C4.477 0 0 4.477 0 10c0 7.5 10 17 10 17s10-9.5 10-17c0-5.523-4.477-10-10-10Z" fill="var(--color-text-error)"/></svg>
+                <span class="hotels-widget__map-pin-num">3</span>
+              </span>
+            </div>
+            <div class="hotels-widget__map-zoom" aria-hidden="true">
+              <button type="button" class="hotels-widget__map-zoom-btn" tabindex="-1" aria-hidden="true">+</button>
+              <button type="button" class="hotels-widget__map-zoom-btn" tabindex="-1" aria-hidden="true">−</button>
+            </div>
+            <button type="button" class="hotels-widget__map-expand" tabindex="-1" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M10 14h4v-4M6 14H2v-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <p class="hotels-widget__map-attribution">Terms of use · ©1987–2025 HERE</p>
+          </div>
+
+          <div class="hotels-widget__booking">
+            <div class="hotels-widget__dates">
+              <div class="hotels-widget__date" data-date-field="checkin">
+                <button
+                  type="button"
+                  class="hotels-widget__field"
+                  id="hotelCheckInBtn"
+                  aria-haspopup="dialog"
+                  aria-expanded="false"
+                  aria-controls="hotelCheckInCal"
+                >
+                  <svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <div class="hotels-widget__field-text">
+                    <span class="hotels-widget__field-label">Check-in</span>
+                    <span class="hotels-widget__field-value" data-date-value>05/09/25</span>
+                  </div>
+                </button>
+                <div class="hotels-widget__calendar" id="hotelCheckInCal" role="dialog" aria-label="Select check-in date" hidden></div>
+              </div>
+              <div class="hotels-widget__date" data-date-field="checkout">
+                <button
+                  type="button"
+                  class="hotels-widget__field"
+                  id="hotelCheckOutBtn"
+                  aria-haspopup="dialog"
+                  aria-expanded="false"
+                  aria-controls="hotelCheckOutCal"
+                >
+                  <svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <div class="hotels-widget__field-text">
+                    <span class="hotels-widget__field-label">Check-out</span>
+                    <span class="hotels-widget__field-value" data-date-value>05/12/25</span>
+                  </div>
+                </button>
+                <div class="hotels-widget__calendar" id="hotelCheckOutCal" role="dialog" aria-label="Select check-out date" hidden></div>
+              </div>
+            </div>
+            <div class="hotels-widget__guests" id="hotelGuests">
+              <button
+                type="button"
+                class="hotels-widget__field hotels-widget__field--full"
+                id="hotelGuestsBtn"
+                aria-haspopup="dialog"
+                aria-expanded="false"
+                aria-controls="hotelGuestsPanel"
+              >
+                <svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <div class="hotels-widget__field-text">
+                  <span class="hotels-widget__field-label">Guests</span>
+                  <span class="hotels-widget__field-value" data-guests-value>2 adults</span>
+                </div>
+              </button>
+              <div class="hotels-widget__guests-panel" id="hotelGuestsPanel" role="dialog" aria-label="Select guests" hidden>
+                <div class="hotels-widget__guests-row">
+                  <div class="hotels-widget__guests-info">
+                    <span class="hotels-widget__guests-label">Adults</span>
+                    <span class="hotels-widget__guests-hint">Ages 18+</span>
+                  </div>
+                  <div class="hotels-widget__guests-stepper" data-guest-type="adults">
+                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="dec" aria-label="Fewer adults">−</button>
+                    <span class="hotels-widget__guests-count" data-guest-count>2</span>
+                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="inc" aria-label="More adults">+</button>
+                  </div>
+                </div>
+                <div class="hotels-widget__guests-row">
+                  <div class="hotels-widget__guests-info">
+                    <span class="hotels-widget__guests-label">Children</span>
+                    <span class="hotels-widget__guests-hint">Ages 0–17</span>
+                  </div>
+                  <div class="hotels-widget__guests-stepper" data-guest-type="children">
+                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="dec" aria-label="Fewer children">−</button>
+                    <span class="hotels-widget__guests-count" data-guest-count>0</span>
+                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="inc" aria-label="More children">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hotels-widget__list">
+            <hr class="hotels-widget__rule">
+
+            <article class="hotels-widget__item" data-hotel-id="intercontinental" tabindex="0" role="button" aria-label="View details for Intercontinental Miami by Ihg">
+              <div class="hotels-widget__item-head">
+                <div class="hotels-widget__item-title-row">
+                  <h2 class="hotels-widget__item-title">1. Intercontinental Miami by Ihg</h2>
+                  <p class="hotels-widget__price">
+                    <span class="hotels-widget__price-amount">$289</span>
+                  </p>
+                </div>
+                <div class="hotels-widget__item-meta">
+                  <span class="hotels-widget__rating" aria-label="5 out of 5 on Priceline">
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                  </span>
+                  <span class="hotels-widget__meta-text">Priceline (8,945 reviews)</span>
+                </div>
+                <p class="hotels-widget__address">100 Chopin Plaza, Miami, FL 33131</p>
+              </div>
+              <div class="hotels-widget__photos">
+                <div class="hotels-widget__photos-viewport">
+                  <ul class="hotels-widget__photos-row" aria-label="Intercontinental Miami photos">
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-intercontinental.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-sheraton.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-hampton.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-intercontinental.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-sheraton.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-hampton.jpg" alt="" loading="lazy" decoding="async"></li>
+                  </ul>
+                </div>
+                <button type="button" class="hotels-widget__photos-prev" hidden aria-label="Previous photos">
+                  <span class="icn-arrows icn-arrows--left-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M14 7L9 12L14 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="hotels-widget__photos-next" aria-label="Next photos">
+                  <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M10 7L15 12L10 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+              <div class="hotels-widget__actions">
+                <button type="button" class="hotels-widget__btn">Check Availability</button>
+                <button type="button" class="hotels-widget__btn">Get Directions<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5L14.5 8 8 14.5 1.5 8 8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 8h4.5M9.5 8L7.5 6M9.5 8L7.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              </div>
+            </article>
+
+            <hr class="hotels-widget__rule">
+
+            <article class="hotels-widget__item" data-hotel-id="sheraton" tabindex="0" role="button" aria-label="View details for Sheraton Miami Airport Hotel">
+              <div class="hotels-widget__item-head">
+                <div class="hotels-widget__item-title-row">
+                  <h2 class="hotels-widget__item-title">2. Sheraton Miami Airport Hotel &amp; Executive Meeting Center</h2>
+                  <p class="hotels-widget__price">
+                    <span class="hotels-widget__price-amount">$179</span>
+                  </p>
+                </div>
+                <div class="hotels-widget__item-meta">
+                  <span class="hotels-widget__rating" aria-label="4 out of 5 on Priceline">
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--empty" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                  </span>
+                  <span class="hotels-widget__meta-text">Priceline (5,244 reviews)</span>
+                </div>
+                <p class="hotels-widget__address">3900 NW 21st St, Miami, FL 33142</p>
+              </div>
+              <div class="hotels-widget__photos">
+                <div class="hotels-widget__photos-viewport">
+                  <ul class="hotels-widget__photos-row" aria-label="Sheraton Miami Airport Hotel photos">
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-sheraton.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-hampton.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-intercontinental.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-sheraton.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-hampton.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-intercontinental.jpg" alt="" loading="lazy" decoding="async"></li>
+                  </ul>
+                </div>
+                <button type="button" class="hotels-widget__photos-prev" hidden aria-label="Previous photos">
+                  <span class="icn-arrows icn-arrows--left-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M14 7L9 12L14 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="hotels-widget__photos-next" aria-label="Next photos">
+                  <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M10 7L15 12L10 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+              <div class="hotels-widget__actions">
+                <button type="button" class="hotels-widget__btn">Check Availability</button>
+                <button type="button" class="hotels-widget__btn">Get Directions<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5L14.5 8 8 14.5 1.5 8 8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 8h4.5M9.5 8L7.5 6M9.5 8L7.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              </div>
+            </article>
+
+            <hr class="hotels-widget__rule">
+
+            <article class="hotels-widget__item" data-hotel-id="hampton" tabindex="0" role="button" aria-label="View details for Hampton Inn Brickell-Downtown">
+              <div class="hotels-widget__item-head">
+                <div class="hotels-widget__item-title-row">
+                  <h2 class="hotels-widget__item-title">3. Hampton Inn &amp; Suites Miami / Brickell-Downtown</h2>
+                  <p class="hotels-widget__price">
+                    <span class="hotels-widget__price-amount">$159</span>
+                  </p>
+                </div>
+                <div class="hotels-widget__item-meta">
+                  <span class="hotels-widget__rating" aria-label="4 out of 5 on Priceline">
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    <svg class="hotels-widget__star hotels-widget__star--empty" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                  </span>
+                  <span class="hotels-widget__meta-text">Priceline (5,076 reviews)</span>
+                </div>
+                <p class="hotels-widget__address">50 SW 12th St, Miami, FL 33130</p>
+              </div>
+              <div class="hotels-widget__photos">
+                <div class="hotels-widget__photos-viewport">
+                  <ul class="hotels-widget__photos-row" aria-label="Hampton Inn Brickell photos">
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-hampton.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-intercontinental.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-sheraton.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-hampton.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-intercontinental.jpg" alt="" loading="lazy" decoding="async"></li>
+                    <li><img class="hotels-widget__photo" src="assets/hotels/hotel-sheraton.jpg" alt="" loading="lazy" decoding="async"></li>
+                  </ul>
+                </div>
+                <button type="button" class="hotels-widget__photos-prev" hidden aria-label="Previous photos">
+                  <span class="icn-arrows icn-arrows--left-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M14 7L9 12L14 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                <button type="button" class="hotels-widget__photos-next" aria-label="Next photos">
+                  <span class="icn-arrows icn-arrows--right-circle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M10 7L15 12L10 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+              <div class="hotels-widget__actions">
+                <button type="button" class="hotels-widget__btn">Check Availability</button>
+                <button type="button" class="hotels-widget__btn">Get Directions<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5L14.5 8 8 14.5 1.5 8 8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 8h4.5M9.5 8L7.5 6M9.5 8L7.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              </div>
+            </article>
+          </div>
+
+          <div class="hotels-widget__more">
+            <span class="hotels-widget__more-line" aria-hidden="true"></span>
+            <button type="button" class="hotels-widget__more-btn">
+              <span class="btn__label">See more</span>
+              <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <span class="hotels-widget__more-line" aria-hidden="true"></span>
+          </div>
+
+          <footer class="hotels-widget__footer">
+            <p class="hotels-widget__source">Data from <a class="hotels-widget__source-link" href="#">TripAdvisor</a></p>
+            <div class="hotels-widget__footer-actions">
+              <button type="button" class="hotels-widget__footer-action" id="hideHotelsBtn">Hide Hotels</button>
+              <span class="hotels-widget__footer-sep" aria-hidden="true">|</span>
+              <a class="hotels-widget__footer-action" href="#">Feedback</a>
+            </div>
+          </footer>
+        </section>
+
+        <section class="hotels-detail" id="hotelsDetail" aria-label="Hotel details" hidden></section>
+      </aside>
     </div>
   </main>
 
@@ -4478,218 +5884,211 @@
     function pick(arr, seed) { return arr[hash(seed) % arr.length]; }
 
     /* ─────────────────────────────────────────────
-       Running shoes SERP data — 4 top ads, 10 organic, 2 bottom ads
+       Hotels in Miami SERP data — 4 top ads, 18 organic, 2 bottom ads
        ───────────────────────────────────────────── */
 
     const TOP_ADS = [
       {
         type: 'ad',
-        siteName: 'Nike',
-        url: 'http://www.nike.com/w/running-shoes',
-        title: 'Nike Running Shoes — Shop Men\'s & Women\'s',
-        description: 'Find your next pair of Nike running shoes. Road, trail, and race-day options with React and ZoomX cushioning. Free shipping on select orders.',
+        siteName: 'Booking.com',
+        url: 'http://www.booking.com/city/us/miami.html',
+        title: 'Hotels in Miami — Book with Free Cancellation',
+        description: 'Compare hotel prices in Miami Beach, Brickell, and Downtown. Read verified guest reviews and book with free cancellation on select stays.',
         hasImage: true,
         stars: 5,
-        ratingLabel: 'rating for nike.com',
-        sitelinks: ['Men\'s', 'Women\'s', 'Trail', 'Racing'],
+        ratingLabel: 'rating for booking.com',
+        sitelinks: ['Miami Beach', 'Brickell', 'Airport', 'Deals'],
       },
       {
         type: 'ad',
-        siteName: 'Adidas',
-        url: 'http://www.adidas.com/us/running-shoes',
-        title: 'adidas Running Shoes — Ultraboost & More',
-        description: 'Shop adidas running shoes with BOOST cushioning and Lightstrike foam. Built for daily miles, speed work, and race day.',
+        siteName: 'Expedia',
+        url: 'http://www.expedia.com/Miami-Hotels.d178286.Travel-Guide-Hotels',
+        title: 'Top Miami Hotels | Expedia',
+        description: 'Book Miami hotels with member prices and bundle with flights. Filter by star rating, neighborhood, pool, and free breakfast.',
         hasImage: false,
         stars: 5,
-        ratingLabel: 'rating for adidas.com',
-        sitelinks: ['Ultraboost', 'Adizero', 'Trail', 'Sale'],
+        ratingLabel: 'rating for expedia.com',
+        sitelinks: ['South Beach', 'Downtown', 'Resorts', 'Packages'],
       },
       {
         type: 'ad',
-        siteName: 'HOKA',
-        url: 'http://www.hoka.com/running-shoes',
-        title: 'HOKA Running Shoes — Maximal Cushion, Minimal Weight',
-        description: 'Discover HOKA\'s signature meta-rocker geometry and plush foam. Clifton, Bondi, and Speedgoat — find your ride.',
+        siteName: 'Marriott',
+        url: 'http://www.marriott.com/en-us/destinations/united-states/florida/miami.mi',
+        title: 'Miami Hotels | Marriott Bonvoy',
+        description: 'Stay at Marriott hotels across Miami and Miami Beach. Earn points on every stay and enjoy member-exclusive rates.',
         hasImage: true,
         stars: 5,
-        ratingLabel: 'rating for hoka.com',
-        sitelinks: ['Clifton', 'Bondi', 'Trail', 'Find a Store'],
+        ratingLabel: 'rating for marriott.com',
+        sitelinks: ['Miami Beach', 'Brickell', 'Airport', 'Member Rates'],
       },
       {
         type: 'ad',
-        siteName: 'REI',
-        url: 'http://www.rei.com/c/mens-running-shoes',
-        title: 'Running Shoes at REI — Expert Fit & Advice',
-        description: 'Shop Brooks, Salomon, Altra, and more at REI. Free in-store fitting help and easy returns on running shoes.',
+        siteName: 'Hilton',
+        url: 'http://www.hilton.com/en/locations/usa/florida/miami/',
+        title: 'Hotels in Miami, FL — Hilton',
+        description: 'Browse Hilton hotels in Miami including airport, downtown, and beachfront properties. Best Price Guarantee on direct bookings.',
         hasImage: false,
         stars: 4,
-        ratingLabel: 'rating for rei.com',
-        sitelinks: ['Men\'s', 'Women\'s', 'Trail', 'Members'],
+        ratingLabel: 'rating for hilton.com',
+        sitelinks: ['Beachfront', 'Airport', 'Downtown', 'Honors'],
       },
     ];
 
     const ORGANIC_RESULTS = [
       {
         type: 'organic',
+        siteName: 'TripAdvisor',
+        url: 'https://tripadvisor.com › Hotels-g34438-Miami_Florida-Hotels.html',
+        title: 'THE 10 BEST Hotels in Miami, FL 2026 (from $89)',
+        description: 'Find the right hotel for you. View deals from hundreds of travel sites at once. See photos, amenities, and guest ratings for Miami hotels near the beach and airport.',
+      },
+      {
+        type: 'organic',
+        siteName: 'Booking.com',
+        url: 'https://booking.com › city › us › miami.html',
+        title: 'Hotels in Miami — Booking.com',
+        description: 'Compare hotel prices in Miami Beach, Brickell, and Downtown. Free cancellation on select stays. Read verified guest reviews before you book.',
+      },
+      {
+        type: 'organic',
         siteName: 'Wikipedia',
-        url: 'https://en.wikipedia.org › wiki › Running_shoe',
-        title: 'Running shoe — Wikipedia',
-        description: 'A running shoe is a shoe engineered for running. Designs vary by cushioning, stability, drop, and intended surface such as road or trail.',
+        url: 'https://en.wikipedia.org › wiki › Miami',
+        title: 'Miami — Wikipedia',
+        description: 'Miami is a coastal metropolis in Miami-Dade County, Florida. Known for beaches, Art Deco architecture, and a vibrant hotel and tourism scene in South Beach and Brickell.',
       },
       {
         type: 'organic',
-        siteName: 'Runner\'s World',
-        url: 'https://runnersworld.com › gear › shoes',
-        title: 'Best Running Shoes of 2026 — Runner\'s World',
-        description: 'Lab- and wear-tested reviews of the best daily trainers, racing shoes, and trail shoes. Find the right pair for your gait and goals.',
+        siteName: 'Expedia',
+        url: 'https://expedia.com › Miami-Hotels.d178286.Travel-Guide-Hotels',
+        title: 'Top Miami Hotels | Expedia',
+        description: 'Book Miami hotels with member prices and bundle with flights. Filter by star rating, neighborhood, pool, and free breakfast.',
       },
       {
         type: 'organic',
-        siteName: 'Nike',
-        url: 'https://nike.com › w › running',
-        title: 'Running Shoes & Gear — Nike',
-        description: 'Shop Nike running shoes for training and racing. Explore Pegasus, Vaporfly, Invincible, and more.',
-      },
-      {
-        type: 'organic',
-        siteName: 'Brooks',
-        url: 'https://brooksrunning.com › shoes',
-        title: 'Brooks Running Shoes — Ghost, Glycerin & Adrenaline',
-        description: 'Soft, smooth, and ready for everyday miles. Shop Brooks running shoes engineered with DNA LOFT and GuideRails support.',
+        siteName: 'Marriott',
+        url: 'https://marriott.com › destinations › miami',
+        title: 'Miami Hotels | Marriott Bonvoy',
+        description: 'Stay at Marriott hotels across Miami and Miami Beach. Earn points on every stay and enjoy member-exclusive rates.',
       },
       {
         type: 'organic',
         siteName: 'Reddit',
-        url: 'https://reddit.com › r › RunningShoeGeeks',
-        title: 'r/RunningShoeGeeks — Running Shoe Discussions',
-        description: 'Recommendations, rotation advice, and reviews from runners comparing daily trainers, super shoes, and trail kicks.',
+        url: 'https://reddit.com › r › Miami › best-hotels',
+        title: 'r/Miami — Best hotels and neighborhoods to stay in?',
+        description: 'Local recommendations for Miami hotels in South Beach, Brickell, and Coral Gables. Tips on parking, beach access, and avoiding tourist traps.',
         aiGenerated: true,
       },
       {
         type: 'organic',
-        siteName: 'HOKA',
-        url: 'https://hoka.com › shoes',
-        title: 'HOKA Shoes — Official Site',
-        description: 'Maximal cushion running shoes for road and trail. Explore Clifton, Bondi, Mach, and Speedgoat collections.',
+        siteName: 'Hilton',
+        url: 'https://hilton.com › locations › usa › florida › miami',
+        title: 'Hotels in Miami, FL — Hilton',
+        description: 'Browse Hilton hotels in Miami including airport, downtown, and beachfront properties. Best Price Guarantee on direct bookings.',
       },
       {
         type: 'organic',
-        siteName: 'REI',
-        url: 'https://rei.com › c › running-shoes',
-        title: 'Running Shoes — REI Co-op',
-        description: 'Compare road and trail running shoes from top brands. Member rewards, expert advice, and easy returns.',
+        siteName: 'KAYAK',
+        url: 'https://kayak.com › Miami-Hotels.14498.hotel.ksp',
+        title: 'Hotels in Miami from $72/night — KAYAK',
+        description: 'Search hundreds of travel sites for Miami hotel deals. Set price alerts and compare neighborhoods like South Beach and Wynwood.',
       },
       {
         type: 'organic',
-        siteName: 'Adidas',
-        url: 'https://adidas.com › running',
-        title: 'Running Shoes — adidas',
-        description: 'Ultraboost, Adizero, and Solarglide running shoes for training and racing. Shop men\'s and women\'s sizes.',
+        siteName: 'Visit Florida',
+        url: 'https://visitflorida.com › places-to-stay › hotels › miami',
+        title: 'Miami Hotels & Places to Stay | Visit Florida',
+        description: 'Official guide to Miami accommodations from luxury resorts to boutique hotels. Explore Brickell, Coral Gables, and Miami Beach.',
       },
       {
         type: 'organic',
-        siteName: 'New Balance',
-        url: 'https://newbalance.com › running',
-        title: 'New Balance Running Shoes — Fresh Foam & FuelCell',
-        description: 'Plush daily trainers and race-day FuelCell options. Shop 1080, Fresh Foam X, and SuperComp models.',
+        siteName: 'Hotels.com',
+        url: 'https://hotels.com › hotels-miami-florida',
+        title: 'Miami Hotels — Hotels.com',
+        description: 'Earn rewards on Miami hotel stays. Filter by beach access, family-friendly amenities, and free parking.',
+      },
+      {
+        type: 'organic',
+        siteName: 'IHG',
+        url: 'https://ihg.com › destinations › miami-fl',
+        title: 'Miami Hotels | IHG Hotels & Resorts',
+        description: 'Find InterContinental, Kimpton, and Holiday Inn hotels in Miami. Book direct for the best available rate and flexible cancellation.',
       },
       {
         type: 'organic',
         siteName: 'The New York Times',
-        url: 'https://nytimes.com › wirecutter › reviews › best-running-shoes',
-        title: 'The Best Running Shoes — Wirecutter',
-        description: 'Wirecutter\'s tested picks for comfortable, durable running shoes for beginners and everyday training.',
+        url: 'https://nytimes.com › travel › miami › hotels',
+        title: 'Where to Stay in Miami — NYT Travel',
+        description: 'Editor picks for Miami hotels from South Beach resorts to Brickell business hotels and quieter Coral Gables stays.',
         aiGenerated: true,
       },
       {
         type: 'organic',
-        siteName: 'Fleet Feet',
-        url: 'https://fleetfeet.com › running-shoes',
-        title: 'Running Shoes — Fleet Feet',
-        description: 'Get fitted for running shoes in store or shop online. Gait analysis, wide sizes, and expert recommendations.',
+        siteName: 'Google',
+        url: 'https://google.com › travel › hotels › Miami',
+        title: 'Miami Hotels — Google Hotels',
+        description: 'Compare hotel prices across sites, see maps of Miami neighborhoods, and track price changes before booking your stay.',
       },
       {
         type: 'organic',
-        siteName: 'Salomon',
-        url: 'https://salomon.com › running',
-        title: 'Salomon Trail Running Shoes',
-        description: 'Grip and protection for technical trails. Shop Speedcross, Sense, and Pulsar trail running shoes.',
+        siteName: 'Condé Nast Traveler',
+        url: 'https://cntraveler.com › hotels › miami',
+        title: 'Best Hotels in Miami — Condé Nast Traveler',
+        description: 'Curated list of the best Miami hotels for beach lovers, design fans, and business travelers. Updated with new openings and classics.',
         aiGenerated: true,
       },
       {
         type: 'organic',
-        siteName: 'Altra',
-        url: 'https://altrarunning.com',
-        title: 'Altra Running — FootShape Toe Box',
-        description: 'Zero-drop running shoes with a roomy FootShape fit for natural movement on road and trail.',
+        siteName: 'Lonely Planet',
+        url: 'https://lonelyplanet.com › usa › florida › miami › hotels',
+        title: 'Where to Stay in Miami — Lonely Planet',
+        description: 'Neighborhood guide to Miami hotels: South Beach nightlife, Brickell dining, and family-friendly options near the airport.',
       },
       {
         type: 'organic',
-        siteName: 'ASICS',
-        url: 'https://asics.com › running',
-        title: 'ASICS Running Shoes — Gel & FF BLAST+',
-        description: 'From Gel-Nimbus to Metaspeed, find ASICS shoes for cushioned miles and race-day speed.',
+        siteName: 'Priceline',
+        url: 'https://priceline.com › hotels › miami',
+        title: 'Miami Hotel Deals — Priceline',
+        description: 'Express Deals and Name Your Own Price options for Miami hotels. Compare rates across Miami Beach and downtown.',
       },
       {
         type: 'organic',
-        siteName: 'Road Runner Sports',
-        url: 'https://roadrunnersports.com',
-        title: 'Road Runner Sports — Running Shoes & Apparel',
-        description: 'Huge selection of running shoes with fitting help, VIP rewards, and wear-test programs.',
+        siteName: 'Yelp',
+        url: 'https://yelp.com › miami › hotels',
+        title: 'Top 10 Best Hotels in Miami, FL — Yelp',
+        description: 'User reviews and photos of Miami hotels. Filter by price, amenities, and neighborhood to find highly rated stays.',
         aiGenerated: true,
       },
       {
         type: 'organic',
-        siteName: 'RunRepeat',
-        url: 'https://runrepeat.com › ranking › best-running-shoes',
-        title: 'Best Running Shoes Ranked — RunRepeat',
-        description: 'Data-driven rankings of the best running shoes based on lab tests and thousands of runner reviews.',
-      },
-      {
-        type: 'organic',
-        siteName: 'Saucony',
-        url: 'https://saucony.com › running',
-        title: 'Saucony Running Shoes — Ride, Endorphin & Peregrine',
-        description: 'Smooth daily trainers and carbon-plated racers. Shop Saucony road and trail collections.',
-      },
-      {
-        type: 'organic',
-        siteName: 'Dick\'s Sporting Goods',
-        url: 'https://dickssportinggoods.com › running-shoes',
-        title: 'Running Shoes — Dick\'s Sporting Goods',
-        description: 'Shop Nike, Brooks, HOKA, and more. Free shipping thresholds and in-store pickup available.',
-      },
-      {
-        type: 'organic',
-        siteName: 'Competitor.com',
-        url: 'https://competitor.com › gear › shoes',
-        title: 'Running Shoe Reviews & Buying Guides',
-        description: 'Guides to cushioning, stability, and racing shoes so you can choose the right pair with confidence.',
+        siteName: 'The Points Guy',
+        url: 'https://thepointsguy.com › guide › best-hotels-miami',
+        title: 'Best Hotels in Miami for Points & Cash — The Points Guy',
+        description: 'How to use hotel points and elite benefits at Miami Marriott, Hilton, Hyatt, and IHG properties. Best redemption values.',
       },
     ];
 
     const BOTTOM_ADS = [
       {
         type: 'ad',
-        siteName: 'Brooks',
-        url: 'http://www.brooksrunning.com/shoes',
-        title: 'Brooks Ghost & Glycerin — Soft Miles Ahead',
-        description: 'Feel the difference with Brooks DNA cushioning. Shop Ghost, Glycerin, and Adrenaline GTS for everyday runs.',
+        siteName: 'TripAdvisor',
+        url: 'http://www.tripadvisor.com/Hotels-g34438-Miami_Florida-Hotels.html',
+        title: 'Best Miami Hotels — Tripadvisor Reviews',
+        description: 'Read millions of traveler reviews and compare Miami hotel prices. See photos, amenities, and rankings for South Beach and downtown stays.',
         hasImage: true,
         stars: 5,
-        ratingLabel: 'rating for brooksrunning.com',
-        sitelinks: ['Ghost', 'Glycerin', 'Adrenaline', 'Store Locator'],
+        ratingLabel: 'rating for tripadvisor.com',
+        sitelinks: ['Top 10', 'South Beach', 'Luxury', 'Budget'],
       },
       {
         type: 'ad',
-        siteName: 'New Balance',
-        url: 'http://www.newbalance.com/running',
-        title: 'New Balance Running — Fresh Foam Comfort',
-        description: 'Reliable fit and plush foam for long runs. Explore Fresh Foam X and FuelCell racing shoes.',
+        siteName: 'Hotels.com',
+        url: 'http://www.hotels.com/de1646915/hotels-miami-florida/',
+        title: 'Miami Hotels — Earn Rewards with Hotels.com',
+        description: 'Book Miami hotels and earn rewards toward free nights. Filter by beach access, pool, and free parking.',
         hasImage: false,
         stars: 4,
-        ratingLabel: 'rating for newbalance.com',
-        sitelinks: ['1080', 'FuelCell', 'Wide Widths', 'Sale'],
+        ratingLabel: 'rating for hotels.com',
+        sitelinks: ['Miami Beach', 'Rewards', 'Deals', 'Last Minute'],
       },
     ];
 
@@ -4697,78 +6096,78 @@
     const PAGE2_TOP_ADS = [
       {
         type: 'ad',
-        siteName: 'Nike',
-        url: 'http://www.nike.com/w/running-shoes',
-        title: 'Nike Running Shoes — Shop Men\'s & Women\'s',
-        description: 'Find your next pair of Nike running shoes. Road, trail, and race-day options with React and ZoomX cushioning. Free shipping on select orders.',
+        siteName: 'Booking.com',
+        url: 'http://www.booking.com/city/us/miami-beach.html',
+        title: 'Miami Beach Hotels — Book Direct on Booking.com',
+        description: 'Oceanfront resorts and boutique hotels on Miami Beach. Compare prices, read reviews, and book with free cancellation on select properties.',
         hasImage: true,
         stars: 5,
-        ratingLabel: 'rating for nike.com',
-        sitelinks: ['Men\'s', 'Women\'s', 'Trail', 'Racing'],
+        ratingLabel: 'rating for booking.com',
+        sitelinks: ['Oceanfront', 'Boutique', 'Family', 'Deals'],
       },
       {
         type: 'ad',
-        siteName: 'Adidas',
-        url: 'http://www.adidas.com/us/running-shoes',
-        title: 'adidas Running Shoes — Ultraboost & More',
-        description: 'Shop adidas running shoes with BOOST cushioning and Lightstrike foam. Built for daily miles, speed work, and race day.',
+        siteName: 'Expedia',
+        url: 'http://www.expedia.com/Miami-Beach-Hotels.d602786.Travel-Guide-Hotels',
+        title: 'Miami Beach Hotel Deals — Expedia',
+        description: 'Save on Miami Beach hotels when you bundle with flights. Member prices and flexible booking options.',
         hasImage: false,
         stars: 5,
-        ratingLabel: 'rating for adidas.com',
-        sitelinks: ['Ultraboost', 'Adizero', 'Trail', 'Sale'],
+        ratingLabel: 'rating for expedia.com',
+        sitelinks: ['Resorts', 'Boutique', 'Packages', 'Member Deals'],
       },
       {
         type: 'ad',
-        siteName: 'HOKA',
-        url: 'http://www.hoka.com/running-shoes',
-        title: 'HOKA Running Shoes — Maximal Cushion, Minimal Weight',
-        description: 'Discover HOKA\'s signature meta-rocker geometry and plush foam. Clifton, Bondi, and Speedgoat — find your ride.',
+        siteName: 'Marriott',
+        url: 'http://www.marriott.com/hotels/travel/miami-beach',
+        title: 'Miami Beach Marriott Hotels — Bonvoy Rates',
+        description: 'Beachfront and downtown Marriott properties in Miami. Earn and redeem Bonvoy points on your stay.',
         hasImage: true,
         stars: 5,
-        ratingLabel: 'rating for hoka.com',
-        sitelinks: ['Clifton', 'Bondi', 'Trail', 'Find a Store'],
+        ratingLabel: 'rating for marriott.com',
+        sitelinks: ['Beachfront', 'Luxury', 'Points', 'Meetings'],
       },
       {
         type: 'ad',
-        siteName: 'REI',
-        url: 'http://www.rei.com/c/mens-running-shoes',
-        title: 'Running Shoes at REI — Expert Fit & Advice',
-        description: 'Shop Brooks, Salomon, Altra, and more at REI. Free in-store fitting help and easy returns on running shoes.',
+        siteName: 'Hilton',
+        url: 'http://www.hilton.com/en/locations/usa/florida/miami-beach/',
+        title: 'Miami Beach Hilton Hotels — Honors Benefits',
+        description: 'Stay at Hilton resorts and hotels in Miami Beach. Best Price Guarantee and Hilton Honors member perks.',
         hasImage: false,
         stars: 4,
-        ratingLabel: 'rating for rei.com',
-        sitelinks: ['Men\'s', 'Women\'s', 'Trail', 'Members'],
+        ratingLabel: 'rating for hilton.com',
+        sitelinks: ['Resorts', 'Honors', 'Beach', 'Business'],
       },
     ];
 
     const PAGE2_BOTTOM_ADS = [
       {
         type: 'ad',
-        siteName: 'Brooks',
-        url: 'http://www.brooksrunning.com/shoes',
-        title: 'Brooks Ghost & Glycerin — Soft Miles Ahead',
-        description: 'Feel the difference with Brooks DNA cushioning. Shop Ghost, Glycerin, and Adrenaline GTS for everyday runs.',
-        hasImage: true,
+        siteName: 'TripAdvisor',
+        url: 'http://www.tripadvisor.com/Hotels-g34439-Miami_Beach_Florida-Hotels.html',
+        title: 'Miami Beach Hotels — Tripadvisor Rankings',
+        description: 'Traveler-ranked Miami Beach hotels with photos and honest reviews. Compare prices across booking sites.',
+        hasImage: false,
         stars: 5,
-        ratingLabel: 'rating for brooksrunning.com',
-        sitelinks: ['Ghost', 'Glycerin', 'Adrenaline', 'Store Locator'],
+        ratingLabel: 'rating for tripadvisor.com',
+        sitelinks: ['Rankings', 'Photos', 'Map', 'Compare'],
       },
       {
         type: 'ad',
-        siteName: 'New Balance',
-        url: 'http://www.newbalance.com/running',
-        title: 'New Balance Running — Fresh Foam Comfort',
-        description: 'Reliable fit and plush foam for long runs. Explore Fresh Foam X and FuelCell racing shoes.',
-        hasImage: false,
+        siteName: 'Hotels.com',
+        url: 'http://www.hotels.com/ho123456/miami-beach-hotels/',
+        title: 'Miami Beach Hotel Sale — Hotels.com',
+        description: 'Limited-time deals on Miami Beach hotels. Earn stamps toward free nights with Hotels.com Rewards.',
+        hasImage: true,
         stars: 4,
-        ratingLabel: 'rating for newbalance.com',
-        sitelinks: ['1080', 'FuelCell', 'Wide Widths', 'Sale'],
+        ratingLabel: 'rating for hotels.com',
+        sitelinks: ['Sale', 'Rewards', 'Beach', 'Luxury'],
       },
     ];
 
     function generateResults(rawQuery) {
       const q = rawQuery.trim();
-      const approx = pick([182000, 241000, 387000, 524000, 671000, 892000], q || 'running shoes').toLocaleString();
+      const approx = pick([182000, 241000, 387000, 524000, 671000, 892000], q || 'hotels in miami').toLocaleString();
       return {
         approx,
         topAds: TOP_ADS,
@@ -4826,6 +6225,10 @@
 
     const AD_IMAGE_BASE = 'assets/ad-images/';
     const AD_IMAGES = {
+      'Booking.com': 'assets/hotels/hotel-intercontinental.jpg',
+      'Marriott': 'assets/hotels/hotel-sheraton.jpg',
+      'TripAdvisor': 'assets/hotels/hotel-hampton.jpg',
+      'Hotels.com': 'assets/hotels/hotel-intercontinental.jpg',
       'Cabot Creamery': 'cabot-cheese.png',
       'Cheese.com': 'cheese.jpg',
       'Tillamook': 'tillamook.png',
@@ -4846,7 +6249,8 @@
       if (!data.hasImage) return '';
       const file = AD_IMAGES[data.siteName];
       if (file) {
-        return `<div class="ad-result__image" aria-hidden="true"><img src="${AD_IMAGE_BASE}${file}" alt="" width="100" height="100" loading="lazy" decoding="async" /></div>`;
+        const src = file.startsWith('assets/') ? file : `${AD_IMAGE_BASE}${file}`;
+        return `<div class="ad-result__image" aria-hidden="true"><img src="${src}" alt="" width="100" height="100" loading="lazy" decoding="async" /></div>`;
       }
       return `<div class="ad-result__image" aria-hidden="true"></div>`;
     }
@@ -5081,11 +6485,11 @@
     const IMAGE_PACK = {
       credit: '',
       images: [
-        { src: 'assets/image-carousel-thumbnails/cheese-1.jpg', alt: 'Running shoes' },
-        { src: 'assets/image-carousel-thumbnails/cheese-2.jpg', alt: 'Shoe detail' },
-        { src: 'assets/image-carousel-thumbnails/cheese-3.jpg', alt: 'Running shoes lineup' },
-        { src: 'assets/image-carousel-thumbnails/cheese-4.jpg', alt: 'Trail running shoes' },
-        { src: 'assets/image-carousel-thumbnails/cheese-5.jpg', alt: 'Racing shoes' },
+        { src: 'assets/hotels/hotel-intercontinental.jpg', alt: 'InterContinental Miami hotel' },
+        { src: 'assets/hotels/hotel-sheraton.jpg', alt: 'Sheraton Miami Airport Hotel' },
+        { src: 'assets/hotels/hotel-hampton.jpg', alt: 'Hampton Inn Miami' },
+        { src: 'assets/hotels/miami-map.png', alt: 'Map of Miami hotels' },
+        { src: 'assets/hotels/hotel-intercontinental.jpg', alt: 'Miami hotel exterior' },
       ],
     };
 
@@ -5132,64 +6536,64 @@
        ───────────────────────────────────────────── */
     const VIDEO_ARTICLES = [
       {
-        id: 'ch-vid-1',
-        title: 'How Cheese Is Made — From Farm to Wheel',
-        views: '2.1M views',
-        age: '2 years ago',
-        duration: '8:42',
-        platform: 'YouTube',
-        channel: 'Cabot Creamery',
-        thumb: 'assets/ad-images/cabot-cheese.png',
-      },
-      {
-        id: 'ch-vid-2',
-        title: 'Building the Perfect Cheese Board',
-        views: '840K views',
+        id: 'mi-vid-1',
+        title: 'Top 10 Miami Hotels — South Beach & Brickell Guide',
+        views: '1.8M views',
         age: '1 year ago',
-        duration: '6:15',
+        duration: '12:24',
         platform: 'YouTube',
-        channel: 'Murray\'s Cheese',
-        thumb: 'assets/ad-images/cheese.jpg',
+        channel: 'Expedia',
+        thumb: 'assets/hotels/hotel-intercontinental.jpg',
       },
       {
-        id: 'ch-vid-3',
-        title: 'Tillamook Cheddar Tasting Guide',
-        views: '320K views',
+        id: 'mi-vid-2',
+        title: 'Miami Beach Hotel Tour — Oceanfront Resorts',
+        views: '920K views',
         age: '8 months ago',
-        duration: '4:08',
+        duration: '9:15',
         platform: 'YouTube',
-        channel: 'Tillamook',
-        thumb: 'assets/ad-images/tillamook.png',
+        channel: 'TripAdvisor',
+        thumb: 'assets/hotels/hotel-sheraton.jpg',
       },
       {
-        id: 'ch-vid-4',
-        title: 'Soft vs Hard Cheese: What\'s the Difference?',
-        views: '100K views',
-        age: '3 years ago',
-        duration: '1:24',
-        platform: 'YouTube',
-        channel: 'Serious Eats',
-        thumb: 'assets/knowledge-cheese.jpg',
-      },
-      {
-        id: 'ch-vid-5',
-        title: 'Mac and Cheese — 5 Restaurant Techniques',
-        views: '1.4M views',
-        age: '4 years ago',
-        duration: '12:03',
-        platform: 'YouTube',
-        channel: 'America\'s Test Kitchen',
-        thumb: 'assets/ad-images/cabot-cheese.png',
-      },
-      {
-        id: 'ch-vid-6',
-        title: 'Cheese Pairing Basics with Wine & Beer',
-        views: '560K views',
+        id: 'mi-vid-3',
+        title: 'Where to Stay in Miami — Neighborhood Guide',
+        views: '540K views',
         age: '2 years ago',
-        duration: '5:37',
+        duration: '7:42',
         platform: 'YouTube',
-        channel: 'Culture Cheese Mag',
-        thumb: 'assets/ad-images/cheese.jpg',
+        channel: 'Lonely Planet',
+        thumb: 'assets/hotels/hotel-hampton.jpg',
+      },
+      {
+        id: 'mi-vid-4',
+        title: 'Best Budget Hotels in Miami Under $150/night',
+        views: '310K views',
+        age: '6 months ago',
+        duration: '5:08',
+        platform: 'YouTube',
+        channel: 'The Points Guy',
+        thumb: 'assets/hotels/miami-map.png',
+      },
+      {
+        id: 'mi-vid-5',
+        title: 'Luxury Miami Hotels — Faena, Edition & More',
+        views: '780K views',
+        age: '1 year ago',
+        duration: '11:03',
+        platform: 'YouTube',
+        channel: 'Condé Nast Traveler',
+        thumb: 'assets/hotels/hotel-intercontinental.jpg',
+      },
+      {
+        id: 'mi-vid-6',
+        title: 'Miami Airport Hotels — Which One to Pick?',
+        views: '420K views',
+        age: '3 years ago',
+        duration: '4:37',
+        platform: 'YouTube',
+        channel: 'Visit Florida',
+        thumb: 'assets/hotels/hotel-sheraton.jpg',
       },
     ];
 
@@ -5544,7 +6948,7 @@
         list.innerHTML = `
           <div class="serp-empty">
             <p class="serp-empty__title">Type a query to see results</p>
-            <p class="serp-empty__sub">Try "running shoes", "nike", or "hoka".</p>
+            <p class="serp-empty__sub">Try "hotels in miami", "miami beach hotels", or "brickell hotels".</p>
           </div>`;
         meta.textContent = '';
         if (pager) pager.hidden = true;
@@ -5918,7 +7322,7 @@
        ───────────────────────────────────────────── */
     const input = document.getElementById('searchInput');
     const params = new URLSearchParams(location.search);
-    const initialQuery = (params.get('q') ?? 'running shoes').trim() || 'running shoes';
+    const initialQuery = (params.get('q') ?? 'hotels in miami').trim() || 'hotels in miami';
 
     function isRunningShoesQuery(q) {
       return /^running\s+shoes$/i.test(String(q || '').trim());
@@ -5929,9 +7333,7 @@
     }
 
     function goToResultsPage(q) {
-      const page = isRunningShoesQuery(q)
-        ? 'results-running-shoes.html'
-        : (isHotelsMiamiQuery(q) ? 'results-hotels-miami.html' : 'results.html');
+      const page = isRunningShoesQuery(q) ? 'results-running-shoes.html' : (isHotelsMiamiQuery(q) ? 'results-hotels-miami.html' : 'results.html');
       const here = location.pathname.split('/').pop() || '';
       if (here !== page) {
         location.href = `${page}?q=${encodeURIComponent(q)}`;
@@ -5944,12 +7346,10 @@
       return false;
     }
 
-    if (!isRunningShoesQuery(initialQuery)) {
-      if (isHotelsMiamiQuery(initialQuery)) {
-        location.replace(`results-hotels-miami.html?q=${encodeURIComponent(initialQuery)}`);
-      } else {
-        location.replace(`results.html?q=${encodeURIComponent(initialQuery)}`);
-      }
+    if (isRunningShoesQuery(initialQuery)) {
+      location.replace(`results-running-shoes.html?q=${encodeURIComponent(initialQuery)}`);
+    } else if (!isHotelsMiamiQuery(initialQuery)) {
+      location.replace(`results.html?q=${encodeURIComponent(initialQuery)}`);
     } else {
 
     input.value = initialQuery;
@@ -5976,7 +7376,7 @@
 
     document.querySelector('.search-field__submit')?.addEventListener('click', (e) => {
       e.preventDefault();
-      const q = input.value.trim() || 'running shoes';
+      const q = input.value.trim() || 'hotels in miami';
       input.value = q;
       goToResultsPage(q);
     });
@@ -5984,7 +7384,7 @@
     input.addEventListener('keydown', (e) => {
       if (e.key !== 'Enter') return;
       e.preventDefault();
-      const q = input.value.trim() || 'running shoes';
+      const q = input.value.trim() || 'hotels in miami';
       input.value = q;
       goToResultsPage(q);
     });
@@ -5994,14 +7394,635 @@
     bindPrivacyInsights();
     bindVideoCarousel();
 
-    } // end else — running shoes page init
+    } // end else — hotels in miami page init
 
-    (function knowledgePanel() {
+    (function hotelsWidget() {
       const rail = document.getElementById('serpRail');
-      const hideBtn = document.getElementById('hideWikipediaBtn');
-      if (!rail || !hideBtn) return;
+      const hideBtn = document.getElementById('hideHotelsBtn');
+      const widget = document.getElementById('hotelsWidget');
+      const detail = document.getElementById('hotelsDetail');
+      if (!rail || !hideBtn || !widget || !detail) return;
       hideBtn.addEventListener('click', () => {
         rail.hidden = true;
+      });
+
+      const HOTEL_DETAILS = {
+        intercontinental: {
+          name: 'Intercontinental Miami by Ihg',
+          stars: 5,
+          reviews: '8,945',
+          address: '100 Chopin Plaza, Miami, FL 33131',
+          phone: '+1 305-577-1000',
+          hero: 'assets/hotels/hotel-intercontinental.jpg',
+          photos: [
+            'assets/hotels/hotel-intercontinental.jpg',
+            'assets/hotels/hotel-sheraton.jpg',
+            'assets/hotels/hotel-hampton.jpg',
+            'assets/hotels/hotel-intercontinental.jpg',
+          ],
+          blurb: 'Discover a new dimension of worldly travels paired with unrivaled hospitality at InterContinental Miami. Set in the heart of Miami, our hotel offers richly appointed accommodations with breathtaking views along Biscayne Bay. From dramatic digital artscapes, 653 luxury guestrooms &…',
+          amenities: [
+            { icon: 'check', label: 'Hair dryer' },
+            { icon: 'parking', label: 'Valet parking' },
+            { icon: 'check', label: 'Additional bathroom' },
+            { icon: 'wifi', label: 'Free High Speed Internet (WiFi)' },
+            { icon: 'gym', label: 'Fitness Center with Gym / Workout Room' },
+            { icon: 'pool', label: 'Pool' },
+          ],
+          qa: {
+            q: 'Are airport or cruise shuttles available?',
+            a: 'Guests note paid airport transfers and nearby cruise options; confirm with the front desk when booking.',
+          },
+          reviewLead: 'Travelers praise the bayfront location, spacious rooms, and attentive staff.',
+          reviewCaveat: 'Some mention noise from events and resort-style fees.',
+        },
+        sheraton: {
+          name: 'Sheraton Miami Airport Hotel & Executive Meeting Center',
+          stars: 4,
+          reviews: '5,244',
+          address: '3900 NW 21st St, Miami, FL 33142',
+          phone: '+1 305-871-3800',
+          hero: 'assets/hotels/hotel-sheraton.jpg',
+          photos: [
+            'assets/hotels/hotel-sheraton.jpg',
+            'assets/hotels/hotel-hampton.jpg',
+            'assets/hotels/hotel-intercontinental.jpg',
+            'assets/hotels/hotel-sheraton.jpg',
+          ],
+          blurb: 'Stay close to Miami International Airport with easy access to meeting spaces, a seasonal pool, and complimentary shuttle service. Rooms include work-friendly desks and soft landing beds for late-night arrivals &…',
+          amenities: [
+            { icon: 'check', label: 'Airport shuttle' },
+            { icon: 'parking', label: 'Self parking' },
+            { icon: 'wifi', label: 'Free High Speed Internet (WiFi)' },
+            { icon: 'gym', label: 'Fitness Center' },
+            { icon: 'pool', label: 'Pool' },
+            { icon: 'check', label: 'Business center' },
+          ],
+          qa: {
+            q: 'Is there a free airport shuttle?',
+            a: 'Yes — guests report a complimentary shuttle to MIA on a regular schedule.',
+          },
+          reviewLead: 'Guests like the airport convenience, friendly staff, and quiet rooms for short stays.',
+          reviewCaveat: 'A few note dated finishes and limited nearby dining options.',
+        },
+        hampton: {
+          name: 'Hampton Inn & Suites Miami / Brickell-Downtown',
+          stars: 4,
+          reviews: '5,076',
+          address: '50 SW 12th St, Miami, FL 33130',
+          phone: '+1 305-377-7700',
+          hero: 'assets/hotels/hotel-hampton.jpg',
+          photos: [
+            'assets/hotels/hotel-hampton.jpg',
+            'assets/hotels/hotel-intercontinental.jpg',
+            'assets/hotels/hotel-sheraton.jpg',
+            'assets/hotels/hotel-hampton.jpg',
+          ],
+          blurb: 'Located in the Brickell financial district, this Hampton Inn offers free hot breakfast, an outdoor pool, and suites with kitchenettes — a practical base for downtown Miami &…',
+          amenities: [
+            { icon: 'check', label: 'Free breakfast' },
+            { icon: 'wifi', label: 'Free High Speed Internet (WiFi)' },
+            { icon: 'pool', label: 'Pool' },
+            { icon: 'gym', label: 'Fitness Center' },
+            { icon: 'parking', label: 'Parking available' },
+            { icon: 'check', label: 'Kitchenette suites' },
+          ],
+          qa: {
+            q: 'Is parking available on-site?',
+            a: 'Paid self-parking is available; rates vary by season — ask at check-in.',
+          },
+          reviewLead: 'Reviewers highlight clean rooms, solid breakfast, and a convenient Brickell location.',
+          reviewCaveat: 'Some mention street noise and busy elevators during peak hours.',
+        },
+      };
+
+      const RELATED_HOTELS = [
+        { id: 'hampton', name: 'Hampton Inn Brickell', stars: 4, reviews: '5,076', img: 'assets/hotels/hotel-hampton.jpg' },
+        { id: 'sheraton', name: 'Sheraton Miami Airport', stars: 4, reviews: '5,244', img: 'assets/hotels/hotel-sheraton.jpg' },
+        { id: 'intercontinental', name: 'Intercontinental Miami', stars: 5, reviews: '8,945', img: 'assets/hotels/hotel-intercontinental.jpg' },
+      ];
+
+      const AMENITY_ICONS = {
+        check: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.2l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        parking: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.25" y="2.25" width="11.5" height="11.5" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M6.1 11.5V4.5h2.55c1.55 0 2.55.85 2.55 2.2S10.2 8.9 8.65 8.9H6.1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        wifi: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 6.4c3.5-3.2 7.5-3.2 11 0M4.4 8.6c2.4-2.2 4.8-2.2 7.2 0M6.3 10.8a3.1 3.1 0 013.4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="13" r="1" fill="currentColor"/></svg>',
+        gym: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.25 4.75v6.5M10.75 4.75v6.5M3.5 6v4M12.5 6v4M5.25 8h5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+        pool: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.75a2.1 2.1 0 012.15 2.25c0 1.85-2.15 3.35-2.15 3.35S5.85 6.85 5.85 5A2.1 2.1 0 018 2.75z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M2.25 11.25c.95 0 1.05-.9 2.1-.9s1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9M2.25 13.5c.95 0 1.05-.9 2.1-.9s1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>',
+      };
+
+      function starsMarkup(count, labelPrefix) {
+        const bits = [];
+        for (let i = 1; i <= 5; i += 1) {
+          const filled = i <= count;
+          bits.push(`<svg class="hotels-widget__star hotels-widget__star--${filled ? 'filled' : 'empty'}" aria-hidden="true"><use href="#icon-star-filled"/></svg>`);
+        }
+        return `<span class="hotels-widget__rating" aria-label="${labelPrefix || `${count} out of 5`}">${bits.join('')}</span>`;
+      }
+
+      function bookingMirrorHtml() {
+        const checkIn = widget.querySelector('[data-date-field="checkin"] [data-date-value]')?.textContent?.trim() || '05/09/25';
+        const checkOut = widget.querySelector('[data-date-field="checkout"] [data-date-value]')?.textContent?.trim() || '05/12/25';
+        const guests = widget.querySelector('[data-guests-value]')?.textContent?.trim() || '2 adults';
+        const calIcon = '<svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+        const guestIcon = '<svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+        return `
+          <div class="hotels-detail__booking">
+            <div class="hotels-detail__booking-dates">
+              <div class="hotels-widget__field hotels-detail__field-mirror" tabindex="-1">
+                ${calIcon}
+                <div class="hotels-widget__field-text">
+                  <span class="hotels-widget__field-label">Check-in</span>
+                  <span class="hotels-widget__field-value">${checkIn}</span>
+                </div>
+              </div>
+              <div class="hotels-widget__field hotels-detail__field-mirror" tabindex="-1">
+                ${calIcon}
+                <div class="hotels-widget__field-text">
+                  <span class="hotels-widget__field-label">Check-out</span>
+                  <span class="hotels-widget__field-value">${checkOut}</span>
+                </div>
+              </div>
+            </div>
+            <div class="hotels-widget__field hotels-widget__field--full hotels-detail__field-mirror" tabindex="-1">
+              ${guestIcon}
+              <div class="hotels-widget__field-text">
+                <span class="hotels-widget__field-label">Guests</span>
+                <span class="hotels-widget__field-value">${guests}</span>
+              </div>
+            </div>
+            <button type="button" class="hotels-detail__cta">Compare Prices</button>
+          </div>`;
+      }
+
+      function relatedHtml(currentId) {
+        return RELATED_HOTELS.filter((h) => h.id !== currentId).slice(0, 3).map((h) => `
+          <li>
+            <button type="button" class="hotels-detail__related-card" data-related-hotel="${h.id}" aria-label="View details for ${h.name}">
+              <img class="hotels-detail__related-img" src="${h.img}" alt="" loading="lazy" decoding="async">
+              <p class="hotels-detail__related-name">${h.name}</p>
+              <p class="hotels-detail__related-meta">${starsMarkup(h.stars)} ${h.reviews} reviews</p>
+            </button>
+          </li>`).join('');
+      }
+
+      function renderHotelDetail(hotelId) {
+        const hotel = HOTEL_DETAILS[hotelId];
+        if (!hotel) return;
+        const amenities = hotel.amenities.map((a) => `
+          <li class="hotels-detail__amenity">${AMENITY_ICONS[a.icon] || AMENITY_ICONS.check}<span>${a.label}</span></li>`).join('');
+        const photos = hotel.photos.map((src) => `
+          <img class="hotels-detail__photo" src="${src}" alt="" loading="lazy" decoding="async">`).join('');
+
+        detail.innerHTML = `
+          <button type="button" class="hotels-detail__back" id="hotelsDetailBack">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back to hotels
+          </button>
+          <div class="hotels-detail__hero">
+            <img class="hotels-detail__hero-photo" src="${hotel.hero}" alt="" loading="lazy" decoding="async">
+            <img class="hotels-detail__hero-map" src="assets/hotels/miami-map.png" alt="" loading="lazy" decoding="async">
+          </div>
+          <h2 class="hotels-detail__title">${hotel.name}</h2>
+          <hr class="hotels-detail__rule">
+          <div class="hotels-detail__meta">
+            ${starsMarkup(hotel.stars, `${hotel.stars} out of 5 on Priceline`)}
+            <span class="hotels-widget__meta-text">Priceline (${hotel.reviews} reviews) · Hotel</span>
+          </div>
+          <div class="hotels-detail__contacts">
+            <p class="hotels-detail__contact"><span class="hotels-detail__contact-label">Address:</span> ${hotel.address}</p>
+            <p class="hotels-detail__contact"><span class="hotels-detail__contact-label">Phone:</span> ${hotel.phone}</p>
+          </div>
+          ${bookingMirrorHtml()}
+          <hr class="hotels-detail__rule">
+          <div class="hotels-detail__stack">
+            <h3 class="hotels-detail__section-title">Hotel Details</h3>
+            <p class="hotels-detail__blurb">${hotel.blurb} <a class="hotels-detail__more" href="#">More</a></p>
+            <ul class="hotels-detail__amenities">${amenities}</ul>
+          </div>
+          <div class="hotels-detail__stack">
+            <div class="hotels-detail__photos-head">
+              <h3 class="hotels-detail__section-title">Photos</h3>
+              <p class="hotels-detail__photos-source">Priceline</p>
+            </div>
+            <div class="hotels-detail__photos">${photos}</div>
+          </div>
+          <div class="hotels-detail__stack">
+            <h3 class="hotels-detail__section-title">Questions &amp; Answers</h3>
+            <div class="hotels-detail__qa">
+              <p class="hotels-detail__qa-q">${hotel.qa.q}</p>
+              <p class="hotels-detail__qa-a">${hotel.qa.a}</p>
+            </div>
+            <button type="button" class="hotels-detail__chip-btn">Read all Q &amp; A’s <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+          <div class="hotels-detail__reviews">
+            <h3 class="hotels-detail__section-title">Reviews</h3>
+            <div class="hotels-detail__meta">${starsMarkup(hotel.stars)}</div>
+            <p class="hotels-detail__blurb">${hotel.reviewLead}</p>
+            <p class="hotels-detail__blurb">${hotel.reviewCaveat}</p>
+            <div class="hotels-detail__chip-row">
+              <button type="button" class="hotels-detail__chip-btn">Write a review <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button type="button" class="hotels-detail__chip-btn">Read all reviews <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+          </div>
+          <div class="hotels-detail__stack">
+            <h3 class="hotels-detail__section-title">People also search for</h3>
+            <ul class="hotels-detail__related">${relatedHtml(hotelId)}</ul>
+          </div>
+          <div class="hotels-detail__stack">
+            <h3 class="hotels-detail__section-title">Search around this place</h3>
+            <ul class="hotels-detail__around">
+              <li class="hotels-detail__around-item">
+                <span class="hotels-detail__around-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M4 9h12v7H4V9zm2-3h8l1 3H5l1-3zM8 12h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="hotels-detail__around-label">Restaurants</span>
+              </li>
+              <li class="hotels-detail__around-item">
+                <span class="hotels-detail__around-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M3 16V8l7-4 7 4v8H3zm4 0v-4h6v4" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+                <span class="hotels-detail__around-label">Hotels</span>
+              </li>
+              <li class="hotels-detail__around-item">
+                <span class="hotels-detail__around-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M7 10c0-2 1.5-3.5 3-3.5S13 8 13 10c2 .5 3 2 3 3.5H4C4 12 5 10.5 7 10z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+                <span class="hotels-detail__around-label">Bars</span>
+              </li>
+              <li class="hotels-detail__around-item">
+                <span class="hotels-detail__around-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 3l6 3v4c0 3.5-2.5 6-6 7-3.5-1-6-3.5-6-7V6l6-3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+                <span class="hotels-detail__around-label">Things to do</span>
+              </li>
+            </ul>
+          </div>
+          <footer class="hotels-detail__footer">
+            <p class="hotels-widget__source">Data from <a class="hotels-widget__source-link" href="#">TripAdvisor</a></p>
+            <div class="hotels-widget__footer-actions">
+              <button type="button" class="hotels-widget__footer-action" data-hide-hotels>Hide Hotels</button>
+              <span class="hotels-widget__footer-sep" aria-hidden="true">|</span>
+              <a class="hotels-widget__footer-action" href="#">Feedback</a>
+            </div>
+          </footer>
+        `;
+      }
+
+      function openHotelDetail(hotelId) {
+        if (!HOTEL_DETAILS[hotelId]) return;
+        renderHotelDetail(hotelId);
+        widget.hidden = true;
+        detail.hidden = false;
+        rail.scrollTop = 0;
+        detail.querySelector('#hotelsDetailBack')?.focus();
+      }
+
+      function closeHotelDetail() {
+        detail.hidden = true;
+        detail.innerHTML = '';
+        widget.hidden = false;
+        rail.scrollTop = 0;
+      }
+
+      rail.querySelectorAll('.hotels-widget__item[data-hotel-id]').forEach((item) => {
+        item.querySelectorAll('.hotels-widget__btn').forEach((btn) => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+          });
+        });
+        item.addEventListener('click', (e) => {
+          if (e.target.closest('button, a')) return;
+          openHotelDetail(item.getAttribute('data-hotel-id'));
+        });
+        item.addEventListener('keydown', (e) => {
+          if (e.target !== item) return;
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          e.preventDefault();
+          openHotelDetail(item.getAttribute('data-hotel-id'));
+        });
+      });
+
+      detail.addEventListener('click', (e) => {
+        if (e.target.closest('#hotelsDetailBack')) {
+          closeHotelDetail();
+          return;
+        }
+        if (e.target.closest('[data-hide-hotels]')) {
+          rail.hidden = true;
+          return;
+        }
+        const related = e.target.closest('[data-related-hotel]');
+        if (related) {
+          openHotelDetail(related.getAttribute('data-related-hotel'));
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !detail.hidden) {
+          closeHotelDetail();
+        }
+      });
+
+      function syncHotelPhotosCarousel(carousel) {
+        const row = carousel.querySelector('.hotels-widget__photos-row');
+        const prevBtn = carousel.querySelector('.hotels-widget__photos-prev');
+        const nextBtn = carousel.querySelector('.hotels-widget__photos-next');
+        if (!row || !prevBtn || !nextBtn) return;
+        const canScroll = row.scrollWidth > row.clientWidth + 2;
+        const atStart = row.scrollLeft <= 2;
+        const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 2;
+        prevBtn.hidden = !canScroll || atStart;
+        nextBtn.hidden = !canScroll;
+        nextBtn.disabled = atEnd;
+      }
+
+      function scrollHotelPhotosCarousel(carousel, direction) {
+        const row = carousel.querySelector('.hotels-widget__photos-row');
+        const item = row?.querySelector('li');
+        if (!row || !item) return;
+        const styles = getComputedStyle(row);
+        const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+        const step = item.getBoundingClientRect().width + gap;
+        row.scrollBy({ left: direction * step, behavior: 'smooth' });
+      }
+
+      rail.querySelectorAll('.hotels-widget__photos').forEach((carousel) => {
+        const row = carousel.querySelector('.hotels-widget__photos-row');
+        const prevBtn = carousel.querySelector('.hotels-widget__photos-prev');
+        const nextBtn = carousel.querySelector('.hotels-widget__photos-next');
+        if (!row || !prevBtn || !nextBtn) return;
+
+        prevBtn.addEventListener('click', () => scrollHotelPhotosCarousel(carousel, -1));
+        nextBtn.addEventListener('click', () => scrollHotelPhotosCarousel(carousel, 1));
+        row.addEventListener('scroll', () => syncHotelPhotosCarousel(carousel), { passive: true });
+        syncHotelPhotosCarousel(carousel);
+      });
+
+      window.addEventListener('resize', () => {
+        rail.querySelectorAll('.hotels-widget__photos').forEach(syncHotelPhotosCarousel);
+      });
+
+      /* ── Check-in / check-out date calendars ── */
+      const dateFields = {
+        checkin: rail.querySelector('[data-date-field="checkin"]'),
+        checkout: rail.querySelector('[data-date-field="checkout"]'),
+      };
+      if (!dateFields.checkin || !dateFields.checkout) return;
+
+      const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+      const MONTHS = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December',
+      ];
+
+      const dates = {
+        checkin: parseDisplayDate(dateFields.checkin.querySelector('[data-date-value]')?.textContent) || new Date(2025, 4, 9),
+        checkout: parseDisplayDate(dateFields.checkout.querySelector('[data-date-value]')?.textContent) || new Date(2025, 4, 12),
+      };
+      const viewMonth = {
+        checkin: new Date(dates.checkin.getFullYear(), dates.checkin.getMonth(), 1),
+        checkout: new Date(dates.checkout.getFullYear(), dates.checkout.getMonth(), 1),
+      };
+
+      function parseDisplayDate(text) {
+        const m = String(text || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2})$/);
+        if (!m) return null;
+        const year = 2000 + parseInt(m[3], 10);
+        return new Date(year, parseInt(m[1], 10) - 1, parseInt(m[2], 10));
+      }
+
+      function formatDisplayDate(date) {
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const yy = String(date.getFullYear()).slice(-2);
+        return `${mm}/${dd}/${yy}`;
+      }
+
+      function sameDay(a, b) {
+        return a && b
+          && a.getFullYear() === b.getFullYear()
+          && a.getMonth() === b.getMonth()
+          && a.getDate() === b.getDate();
+      }
+
+      function startOfDay(d) {
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      }
+
+      function addDays(d, n) {
+        const next = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        next.setDate(next.getDate() + n);
+        return next;
+      }
+
+      function syncFieldLabels() {
+        dateFields.checkin.querySelector('[data-date-value]').textContent = formatDisplayDate(dates.checkin);
+        dateFields.checkout.querySelector('[data-date-value]').textContent = formatDisplayDate(dates.checkout);
+      }
+
+      function closeAllCalendars() {
+        Object.keys(dateFields).forEach((key) => {
+          const wrap = dateFields[key];
+          const btn = wrap.querySelector('.hotels-widget__field');
+          const cal = wrap.querySelector('.hotels-widget__calendar');
+          if (btn) btn.setAttribute('aria-expanded', 'false');
+          if (cal) cal.hidden = true;
+        });
+      }
+
+      function closeGuestsPanel() {
+        const guestsWrap = rail.querySelector('#hotelGuests');
+        if (!guestsWrap) return;
+        const btn = guestsWrap.querySelector('#hotelGuestsBtn');
+        const panel = guestsWrap.querySelector('#hotelGuestsPanel');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+        if (panel) panel.hidden = true;
+      }
+
+      function closeAllHotelPopovers() {
+        closeAllCalendars();
+        closeGuestsPanel();
+      }
+
+      function renderCalendar(fieldKey) {
+        const wrap = dateFields[fieldKey];
+        const cal = wrap.querySelector('.hotels-widget__calendar');
+        const selected = dates[fieldKey];
+        const cursor = viewMonth[fieldKey];
+        const year = cursor.getFullYear();
+        const month = cursor.getMonth();
+        const firstDow = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrev = new Date(year, month, 0).getDate();
+        const today = startOfDay(new Date());
+        const minDate = fieldKey === 'checkout' ? addDays(dates.checkin, 1) : null;
+
+        const cells = [];
+        for (let i = 0; i < 42; i += 1) {
+          let dayNum;
+          let cellDate;
+          let muted = false;
+          if (i < firstDow) {
+            dayNum = daysInPrev - firstDow + i + 1;
+            cellDate = new Date(year, month - 1, dayNum);
+            muted = true;
+          } else if (i >= firstDow + daysInMonth) {
+            dayNum = i - firstDow - daysInMonth + 1;
+            cellDate = new Date(year, month + 1, dayNum);
+            muted = true;
+          } else {
+            dayNum = i - firstDow + 1;
+            cellDate = new Date(year, month, dayNum);
+          }
+
+          const disabled = minDate ? startOfDay(cellDate) < startOfDay(minDate) : false;
+          const classes = ['hotels-widget__calendar-day'];
+          if (muted) classes.push('hotels-widget__calendar-day--muted');
+          if (sameDay(cellDate, selected)) classes.push('hotels-widget__calendar-day--selected');
+          if (sameDay(cellDate, today)) classes.push('hotels-widget__calendar-day--today');
+
+          cells.push(`<button
+            type="button"
+            class="${classes.join(' ')}"
+            data-date="${cellDate.getFullYear()}-${cellDate.getMonth() + 1}-${cellDate.getDate()}"
+            ${disabled ? 'disabled' : ''}
+            aria-label="${MONTHS[cellDate.getMonth()]} ${cellDate.getDate()}, ${cellDate.getFullYear()}"
+            ${sameDay(cellDate, selected) ? 'aria-current="date"' : ''}
+          >${dayNum}</button>`);
+        }
+
+        cal.innerHTML = `
+          <div class="hotels-widget__calendar-header">
+            <button type="button" class="hotels-widget__calendar-nav" data-cal-nav="-1" aria-label="Previous month">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <p class="hotels-widget__calendar-title">${MONTHS[month]} ${year}</p>
+            <button type="button" class="hotels-widget__calendar-nav" data-cal-nav="1" aria-label="Next month">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div class="hotels-widget__calendar-weekdays" aria-hidden="true">
+            ${WEEKDAYS.map((d) => `<span class="hotels-widget__calendar-weekday">${d}</span>`).join('')}
+          </div>
+          <div class="hotels-widget__calendar-grid">
+            ${cells.join('')}
+          </div>
+        `;
+      }
+
+      function openCalendar(fieldKey) {
+        closeAllHotelPopovers();
+        viewMonth[fieldKey] = new Date(dates[fieldKey].getFullYear(), dates[fieldKey].getMonth(), 1);
+        renderCalendar(fieldKey);
+        const wrap = dateFields[fieldKey];
+        wrap.querySelector('.hotels-widget__field').setAttribute('aria-expanded', 'true');
+        wrap.querySelector('.hotels-widget__calendar').hidden = false;
+      }
+
+      function selectDate(fieldKey, date) {
+        dates[fieldKey] = startOfDay(date);
+        if (fieldKey === 'checkin' && dates.checkout <= dates.checkin) {
+          dates.checkout = addDays(dates.checkin, 1);
+          viewMonth.checkout = new Date(dates.checkout.getFullYear(), dates.checkout.getMonth(), 1);
+        }
+        if (fieldKey === 'checkout' && dates.checkout <= dates.checkin) {
+          dates.checkout = addDays(dates.checkin, 1);
+        }
+        syncFieldLabels();
+        closeAllHotelPopovers();
+      }
+
+      Object.keys(dateFields).forEach((fieldKey) => {
+        const wrap = dateFields[fieldKey];
+        const btn = wrap.querySelector('.hotels-widget__field');
+        const cal = wrap.querySelector('.hotels-widget__calendar');
+
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const open = btn.getAttribute('aria-expanded') === 'true';
+          if (open) closeAllHotelPopovers();
+          else openCalendar(fieldKey);
+        });
+
+        cal.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const nav = e.target.closest('[data-cal-nav]');
+          if (nav) {
+            const dir = parseInt(nav.getAttribute('data-cal-nav'), 10);
+            viewMonth[fieldKey] = new Date(
+              viewMonth[fieldKey].getFullYear(),
+              viewMonth[fieldKey].getMonth() + dir,
+              1
+            );
+            renderCalendar(fieldKey);
+            return;
+          }
+          const dayBtn = e.target.closest('.hotels-widget__calendar-day');
+          if (!dayBtn || dayBtn.disabled) return;
+          const [y, m, d] = dayBtn.getAttribute('data-date').split('-').map(Number);
+          selectDate(fieldKey, new Date(y, m - 1, d));
+        });
+      });
+
+      /* ── Guests: adults + children steppers ── */
+      const guestsWrap = rail.querySelector('#hotelGuests');
+      const guestsBtn = guestsWrap?.querySelector('#hotelGuestsBtn');
+      const guestsPanel = guestsWrap?.querySelector('#hotelGuestsPanel');
+      const guestsValue = guestsWrap?.querySelector('[data-guests-value]');
+      const guests = { adults: 2, children: 0 };
+      const GUEST_LIMITS = { adults: { min: 1, max: 8 }, children: { min: 0, max: 6 } };
+
+      function formatGuestsLabel() {
+        const adultLabel = guests.adults === 1 ? '1 adult' : `${guests.adults} adults`;
+        if (guests.children <= 0) return adultLabel;
+        const childLabel = guests.children === 1 ? '1 child' : `${guests.children} children`;
+        return `${adultLabel}, ${childLabel}`;
+      }
+
+      function syncGuestsUI() {
+        if (guestsValue) guestsValue.textContent = formatGuestsLabel();
+        guestsPanel?.querySelectorAll('[data-guest-type]').forEach((stepper) => {
+          const type = stepper.getAttribute('data-guest-type');
+          const countEl = stepper.querySelector('[data-guest-count]');
+          const decBtn = stepper.querySelector('[data-guest-action="dec"]');
+          const incBtn = stepper.querySelector('[data-guest-action="inc"]');
+          const limits = GUEST_LIMITS[type];
+          if (countEl) countEl.textContent = String(guests[type]);
+          if (decBtn) decBtn.disabled = guests[type] <= limits.min;
+          if (incBtn) incBtn.disabled = guests[type] >= limits.max;
+        });
+      }
+
+      function openGuestsPanel() {
+        closeAllHotelPopovers();
+        if (guestsBtn) guestsBtn.setAttribute('aria-expanded', 'true');
+        if (guestsPanel) guestsPanel.hidden = false;
+      }
+
+      if (guestsWrap && guestsBtn && guestsPanel) {
+        guestsBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const open = guestsBtn.getAttribute('aria-expanded') === 'true';
+          if (open) closeGuestsPanel();
+          else openGuestsPanel();
+        });
+
+        guestsPanel.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const actionBtn = e.target.closest('[data-guest-action]');
+          if (!actionBtn || actionBtn.disabled) return;
+          const stepper = actionBtn.closest('[data-guest-type]');
+          const type = stepper?.getAttribute('data-guest-type');
+          if (!type || !GUEST_LIMITS[type]) return;
+          const action = actionBtn.getAttribute('data-guest-action');
+          const next = guests[type] + (action === 'inc' ? 1 : -1);
+          guests[type] = Math.min(GUEST_LIMITS[type].max, Math.max(GUEST_LIMITS[type].min, next));
+          syncGuestsUI();
+        });
+
+        syncGuestsUI();
+      }
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hotels-widget__date') && !e.target.closest('.hotels-widget__guests')) {
+          closeAllHotelPopovers();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeAllHotelPopovers();
       });
     })();
 
@@ -6012,7 +8033,7 @@
     }
 
     function navigateVertical(vertical, q) {
-      const query = String(q || '').trim() || 'running shoes';
+      const query = String(q || '').trim() || 'cheese';
       if (vertical === 'shopping') {
         location.href = `shopping-running-shoes.html?q=${encodeURIComponent(query)}`;
         return;
@@ -6041,7 +8062,7 @@
       tabs.forEach(tab => {
         tab.addEventListener('click', () => {
           const vertical = tab.dataset.vertical;
-          const q = document.getElementById('searchInput')?.value?.trim() || 'running shoes';
+          const q = document.getElementById('searchInput')?.value?.trim() || 'hotels in miami';
           if (vertical === 'shopping') {
             navigateVertical('shopping', q);
             return;

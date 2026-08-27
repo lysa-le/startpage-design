@@ -6922,8 +6922,14 @@
       return /^running\s+shoes$/i.test(String(q || '').trim());
     }
 
+    function isHotelsMiamiQuery(q) {
+      return /^hotels\s+in\s+miami$/i.test(String(q || '').trim());
+    }
+
     function getWebResultsPage(q) {
-      return isRunningShoesQuery(q) ? 'results-running-shoes.html' : 'results.html';
+      if (isRunningShoesQuery(q)) return 'results-running-shoes.html';
+      if (isHotelsMiamiQuery(q)) return 'results-hotels-miami.html';
+      return 'results.html';
     }
 
     function getShoppingPage() {

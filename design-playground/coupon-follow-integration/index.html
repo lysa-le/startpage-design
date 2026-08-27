@@ -1518,7 +1518,7 @@
         const q = input.value.trim() || 'cheese';
         const page = /^running\s+shoes$/i.test(q)
           ? 'results-running-shoes.html'
-          : 'results.html';
+          : (/^hotels\s+in\s+miami$/i.test(q) ? 'results-hotels-miami.html' : 'results.html');
         location.href = `${page}?q=${encodeURIComponent(q)}`;
       });
     })();
