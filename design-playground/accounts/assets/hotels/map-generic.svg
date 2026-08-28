@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="480" viewBox="0 0 860 480" fill="none" aria-hidden="true">
+  <rect width="860" height="480" fill="#E8ECF4"/>
+  <!-- water -->
+  <path d="M0 290 C120 250 220 320 340 300 C460 280 520 340 640 320 C740 305 800 350 860 330 L860 480 L0 480 Z" fill="#C5D6EA"/>
+  <path d="M520 0 C540 80 500 140 560 200 C600 250 680 240 740 280 C790 310 830 300 860 320 L860 0 Z" fill="#C5D6EA"/>
+  <!-- parks -->
+  <rect x="90" y="70" width="110" height="70" rx="8" fill="#D5E6D0"/>
+  <rect x="610" y="60" width="90" height="55" rx="8" fill="#D5E6D0"/>
+  <rect x="250" y="360" width="140" height="50" rx="8" fill="#D5E6D0"/>
+  <!-- major roads -->
+  <path d="M0 120 H860" stroke="#F7F8FC" stroke-width="18"/>
+  <path d="M0 220 H860" stroke="#F7F8FC" stroke-width="14"/>
+  <path d="M0 340 H520" stroke="#F7F8FC" stroke-width="16"/>
+  <path d="M180 0 V480" stroke="#F7F8FC" stroke-width="16"/>
+  <path d="M420 0 V480" stroke="#F7F8FC" stroke-width="20"/>
+  <path d="M680 0 V480" stroke="#F7F8FC" stroke-width="14"/>
+  <!-- secondary roads -->
+  <path d="M0 60 H860" stroke="#F2F4FA" stroke-width="6"/>
+  <path d="M0 170 H860" stroke="#F2F4FA" stroke-width="6"/>
+  <path d="M0 280 H860" stroke="#F2F4FA" stroke-width="6"/>
+  <path d="M0 400 H860" stroke="#F2F4FA" stroke-width="6"/>
+  <path d="M80 0 V480" stroke="#F2F4FA" stroke-width="5"/>
+  <path d="M280 0 V480" stroke="#F2F4FA" stroke-width="5"/>
+  <path d="M540 0 V480" stroke="#F2F4FA" stroke-width="5"/>
+  <path d="M780 0 V480" stroke="#F2F4FA" stroke-width="5"/>
+  <!-- road center lines -->
+  <path d="M0 120 H860" stroke="#D0D3F2" stroke-width="1.5" stroke-dasharray="8 10" opacity="0.7"/>
+  <path d="M420 0 V480" stroke="#D0D3F2" stroke-width="1.5" stroke-dasharray="8 10" opacity="0.7"/>
+  <!-- blocks -->
+  <rect x="200" y="80" width="60" height="28" rx="3" fill="#DDE2EF"/>
+  <rect x="450" y="140" width="80" height="36" rx="3" fill="#DDE2EF"/>
+  <rect x="700" y="180" width="50" height="40" rx="3" fill="#DDE2EF"/>
+  <rect x="100" y="240" width="55" height="30" rx="3" fill="#DDE2EF"/>
+  <rect x="460" y="250" width="70" height="32" rx="3" fill="#DDE2EF"/>
+</svg>

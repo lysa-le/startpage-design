@@ -2082,16 +2082,31 @@
       font-size: var(--font-body-sm);
       font-weight: var(--font-weight-bold);
       line-height: 1;
+      transition: transform 0.15s ease, filter 0.15s ease;
+      transform-origin: center bottom;
+      z-index: 1;
     }
     .hotels-widget__map-pin svg {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
+      color: var(--color-text-error);
+    }
+    .hotels-widget__map-pin svg path {
+      fill: currentColor;
     }
     .hotels-widget__map-pin-num {
       position: relative;
       margin-top: calc(var(--spacing-4) * -1);
+    }
+    .hotels-widget__map-pin.is-active {
+      z-index: 2;
+      transform: translate(-50%, -100%) scale(1.28);
+      filter: drop-shadow(0 var(--spacing-4) var(--spacing-8) color-mix(in srgb, var(--color-stroke-primary-button) 45%, transparent));
+    }
+    .hotels-widget__map-pin.is-active svg {
+      color: var(--color-button-brandblue);
     }
     .hotels-widget__map-zoom {
       position: absolute;
@@ -2441,7 +2456,7 @@
     .hotels-widget__list {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-24);
+      gap: var(--spacing-12);
     }
     .hotels-widget__rule {
       display: block;
@@ -2631,48 +2646,6 @@
       outline-offset: var(--spacing-4);
       border-radius: var(--radius-full);
     }
-    .hotels-widget__actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--spacing-8);
-      padding-top: var(--spacing-4);
-    }
-    .hotels-widget__btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-4);
-      min-height: var(--spacing-32);
-      min-width: 0;
-      padding: var(--spacing-8) var(--spacing-12);
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary-button);
-      border-radius: var(--radius-lg);
-      background: var(--color-background-primary);
-      font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-brandblue);
-      cursor: pointer;
-      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-      white-space: nowrap;
-      position: relative;
-      z-index: 1;
-    }
-    .hotels-widget__btn:hover {
-      background: var(--color-button-brandblue);
-      border-color: var(--color-button-brandblue);
-      color: var(--color-text-inverted);
-    }
-    .hotels-widget__btn:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: var(--spacing-4);
-    }
-    .hotels-widget__btn svg {
-      width: var(--spacing-16);
-      height: var(--spacing-16);
-      flex-shrink: 0;
-    }
     .hotels-widget__more {
       display: flex;
       align-items: center;
@@ -2769,21 +2742,21 @@
     .hotels-detail__back {
       display: inline-flex;
       align-items: center;
-      gap: var(--spacing-8);
+      gap: var(--spacing-4);
       align-self: flex-start;
       padding: 0;
       border: none;
       background: none;
       font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-link);
       cursor: pointer;
     }
     .hotels-detail__back svg {
-      width: var(--spacing-16);
-      height: var(--spacing-16);
+      width: var(--spacing-12);
+      height: var(--spacing-12);
       flex-shrink: 0;
     }
     .hotels-detail__back:hover {
@@ -2795,19 +2768,23 @@
       border-radius: var(--radius-sm);
     }
     .hotels-detail__hero {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
+      display: block;
+      width: 100%;
       border-radius: var(--radius-lg);
       overflow: hidden;
       background: var(--color-background-secondary);
     }
-    .hotels-detail__hero-photo,
-    .hotels-detail__hero-map {
+    .hotels-detail__hero-photo {
       display: block;
       width: 100%;
-      height: calc(var(--spacing-96) + var(--spacing-48));
+      height: calc(var(--spacing-96) + var(--spacing-96) + var(--spacing-48));
       object-fit: cover;
+    }
+    .hotels-detail__summary {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      width: 100%;
     }
     .hotels-detail__title {
       margin: 0;
@@ -2842,6 +2819,12 @@
     .hotels-detail__field-mirror {
       pointer-events: none;
       cursor: default;
+      min-height: calc(var(--spacing-32) + var(--spacing-16) + var(--spacing-4));
+      box-sizing: border-box;
+    }
+    .hotels-detail__field-mirror:hover {
+      border-color: var(--color-stroke-primary);
+      background: var(--color-background-primary);
     }
     .hotels-detail__rule {
       display: block;
@@ -2861,7 +2844,7 @@
     .hotels-detail__contacts {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-12);
+      gap: var(--spacing-4);
     }
     .hotels-detail__contact {
       margin: 0;
@@ -2882,12 +2865,20 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--spacing-12);
     }
+    .hotels-detail__actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-8);
+      margin-top: var(--spacing-8);
+    }
     .hotels-detail__cta {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: var(--spacing-4);
       width: 100%;
       min-height: var(--spacing-40);
+      min-width: 0;
       padding: var(--spacing-8) var(--spacing-12);
       border: var(--border-stroke-sm) solid var(--color-stroke-primary-button);
       border-radius: var(--radius-lg);
@@ -2898,14 +2889,162 @@
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-brandblue);
       cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+    .hotels-detail__cta svg {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
     }
     .hotels-detail__cta:hover {
-      background: var(--color-background-secondary);
+      background: var(--color-button-brandblue);
+      border-color: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
     }
     .hotels-detail__cta:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: var(--spacing-4);
     }
+
+    /* ── Coupon Follow hotel deal ── */
+    .hotels-widget__deal {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-4);
+      margin-top: var(--spacing-4);
+      padding: var(--spacing-4) var(--spacing-8);
+      border: var(--border-stroke-lg) dashed var(--color-stroke-primary-button);
+      border-radius: var(--radius-md);
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .hotels-widget__deal:hover {
+      background: var(--color-background-secondary);
+    }
+    .hotels-widget__deal:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hotels-detail__deal {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      padding: var(--spacing-16);
+      border: none;
+      border-radius: var(--radius-lg);
+      background: var(--color-background-tertiary);
+    }
+    .hotels-detail__deal-logo {
+      display: block;
+      width: calc(var(--spacing-96) + var(--spacing-4));
+      height: auto;
+    }
+    .hotels-detail__deal-title {
+      margin: 0;
+      font-size: var(--font-body-lg);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__deal-note {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-tertiary);
+    }
+    .hotels-detail__deal-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--spacing-8);
+    }
+    .hotels-detail__deal-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: calc(var(--spacing-64) + var(--spacing-12));
+      min-height: calc(var(--spacing-24) + var(--spacing-4));
+      padding: var(--spacing-4) var(--spacing-12);
+      border: var(--border-stroke-lg) dashed var(--color-stroke-primary-button);
+      border-radius: var(--radius-md);
+      background: var(--color-background-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.02em;
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__deal-copy {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-4);
+      min-height: calc(var(--spacing-24) + var(--spacing-4));
+      padding: var(--spacing-4) var(--spacing-12);
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--color-button-productfilledhover);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .hotels-detail__deal-copy-check,
+    .hotels-widget__deal-check {
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      flex-shrink: 0;
+    }
+    .hotels-detail__deal-copy:hover {
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+    }
+    .hotels-detail__deal-copy:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .hotels-detail__deal-reminder {
+      display: none;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      margin-top: var(--spacing-8);
+      padding: var(--spacing-12);
+      border-radius: var(--radius-lg);
+      background: var(--color-button-productfilled);
+    }
+    .hotels-detail__deal-reminder.is-visible {
+      display: flex;
+    }
+    .hotels-detail__deal-reminder[hidden] {
+      display: none !important;
+    }
+    .hotels-detail__deal-reminder-text {
+      margin: 0;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
+    }
+    .hotels-detail__deal-reminder-text strong {
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.04em;
+    }
+
     .hotels-detail__section-title {
       margin: 0;
       font-size: var(--font-body-lg);
@@ -2923,7 +3062,7 @@
     .hotels-detail__more {
       color: var(--color-text-link);
       text-decoration: none;
-      font-weight: var(--font-weight-semibold);
+      font-weight: var(--font-weight-regular);
     }
     .hotels-detail__more:hover {
       text-decoration: underline;
@@ -2933,7 +3072,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--spacing-12) var(--spacing-16);
       list-style: none;
-      margin: 0;
+      margin: var(--spacing-8) 0 0;
       padding: 0;
     }
     .hotels-detail__amenity {
@@ -3054,6 +3193,7 @@
       background: var(--color-background-secondary);
     }
     .hotels-detail__related-name {
+      display: block;
       margin: 0;
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
@@ -3070,10 +3210,15 @@
       line-height: var(--font-body-xs-lh);
       color: var(--color-text-tertiary);
     }
+    .hotels-detail__related-meta .hotels-widget__star {
+      width: var(--spacing-12);
+      height: var(--spacing-12);
+    }
     .hotels-detail__around {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: var(--spacing-8);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: var(--spacing-16) var(--spacing-20);
       list-style: none;
       margin: 0;
       padding: 0;
@@ -3083,6 +3228,7 @@
       flex-direction: column;
       align-items: center;
       gap: var(--spacing-8);
+      width: calc(var(--spacing-48) + var(--spacing-24));
       text-align: center;
     }
     .hotels-detail__around-icon {
@@ -5412,18 +5558,18 @@
       <aside class="serp-rail" id="serpRail" aria-label="Hotel booking">
         <section class="hotels-widget" id="hotelsWidget" aria-label="Hotels in Miami">
           <div class="hotels-widget__map-wrap">
-            <img class="hotels-widget__map" src="assets/hotels/miami-map.png" width="430" height="240" alt="Map of hotels in Miami" loading="lazy" decoding="async">
+            <img class="hotels-widget__map" src="assets/hotels/map-generic.svg" width="430" height="240" alt="Map of hotels in Miami" loading="lazy" decoding="async">
             <div class="hotels-widget__map-pins" aria-hidden="true">
-              <span class="hotels-widget__map-pin" style="--pin-x: 31%; --pin-y: 28%">
-                <svg viewBox="0 0 20 27" fill="none" aria-hidden="true"><path d="M10 0C4.477 0 0 4.477 0 10c0 7.5 10 17 10 17s10-9.5 10-17c0-5.523-4.477-10-10-10Z" fill="var(--color-text-error)"/></svg>
+              <span class="hotels-widget__map-pin" data-map-pin="1" style="--pin-x: 34%; --pin-y: 42%">
+                <svg viewBox="0 0 20 27" fill="none" aria-hidden="true"><path d="M10 0C4.477 0 0 4.477 0 10c0 7.5 10 17 10 17s10-9.5 10-17c0-5.523-4.477-10-10-10Z"/></svg>
                 <span class="hotels-widget__map-pin-num">1</span>
               </span>
-              <span class="hotels-widget__map-pin" style="--pin-x: 42%; --pin-y: 68%">
-                <svg viewBox="0 0 20 27" fill="none" aria-hidden="true"><path d="M10 0C4.477 0 0 4.477 0 10c0 7.5 10 17 10 17s10-9.5 10-17c0-5.523-4.477-10-10-10Z" fill="var(--color-text-error)"/></svg>
+              <span class="hotels-widget__map-pin" data-map-pin="2" style="--pin-x: 48%; --pin-y: 58%">
+                <svg viewBox="0 0 20 27" fill="none" aria-hidden="true"><path d="M10 0C4.477 0 0 4.477 0 10c0 7.5 10 17 10 17s10-9.5 10-17c0-5.523-4.477-10-10-10Z"/></svg>
                 <span class="hotels-widget__map-pin-num">2</span>
               </span>
-              <span class="hotels-widget__map-pin" style="--pin-x: 69%; --pin-y: 61%">
-                <svg viewBox="0 0 20 27" fill="none" aria-hidden="true"><path d="M10 0C4.477 0 0 4.477 0 10c0 7.5 10 17 10 17s10-9.5 10-17c0-5.523-4.477-10-10-10Z" fill="var(--color-text-error)"/></svg>
+              <span class="hotels-widget__map-pin" data-map-pin="3" style="--pin-x: 66%; --pin-y: 50%">
+                <svg viewBox="0 0 20 27" fill="none" aria-hidden="true"><path d="M10 0C4.477 0 0 4.477 0 10c0 7.5 10 17 10 17s10-9.5 10-17c0-5.523-4.477-10-10-10Z"/></svg>
                 <span class="hotels-widget__map-pin-num">3</span>
               </span>
             </div>
@@ -5437,89 +5583,10 @@
             <p class="hotels-widget__map-attribution">Terms of use · ©1987–2025 HERE</p>
           </div>
 
-          <div class="hotels-widget__booking">
-            <div class="hotels-widget__dates">
-              <div class="hotels-widget__date" data-date-field="checkin">
-                <button
-                  type="button"
-                  class="hotels-widget__field"
-                  id="hotelCheckInBtn"
-                  aria-haspopup="dialog"
-                  aria-expanded="false"
-                  aria-controls="hotelCheckInCal"
-                >
-                  <svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  <div class="hotels-widget__field-text">
-                    <span class="hotels-widget__field-label">Check-in</span>
-                    <span class="hotels-widget__field-value" data-date-value>05/09/25</span>
-                  </div>
-                </button>
-                <div class="hotels-widget__calendar" id="hotelCheckInCal" role="dialog" aria-label="Select check-in date" hidden></div>
-              </div>
-              <div class="hotels-widget__date" data-date-field="checkout">
-                <button
-                  type="button"
-                  class="hotels-widget__field"
-                  id="hotelCheckOutBtn"
-                  aria-haspopup="dialog"
-                  aria-expanded="false"
-                  aria-controls="hotelCheckOutCal"
-                >
-                  <svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  <div class="hotels-widget__field-text">
-                    <span class="hotels-widget__field-label">Check-out</span>
-                    <span class="hotels-widget__field-value" data-date-value>05/12/25</span>
-                  </div>
-                </button>
-                <div class="hotels-widget__calendar" id="hotelCheckOutCal" role="dialog" aria-label="Select check-out date" hidden></div>
-              </div>
-            </div>
-            <div class="hotels-widget__guests" id="hotelGuests">
-              <button
-                type="button"
-                class="hotels-widget__field hotels-widget__field--full"
-                id="hotelGuestsBtn"
-                aria-haspopup="dialog"
-                aria-expanded="false"
-                aria-controls="hotelGuestsPanel"
-              >
-                <svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                <div class="hotels-widget__field-text">
-                  <span class="hotels-widget__field-label">Guests</span>
-                  <span class="hotels-widget__field-value" data-guests-value>2 adults</span>
-                </div>
-              </button>
-              <div class="hotels-widget__guests-panel" id="hotelGuestsPanel" role="dialog" aria-label="Select guests" hidden>
-                <div class="hotels-widget__guests-row">
-                  <div class="hotels-widget__guests-info">
-                    <span class="hotels-widget__guests-label">Adults</span>
-                    <span class="hotels-widget__guests-hint">Ages 18+</span>
-                  </div>
-                  <div class="hotels-widget__guests-stepper" data-guest-type="adults">
-                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="dec" aria-label="Fewer adults">−</button>
-                    <span class="hotels-widget__guests-count" data-guest-count>2</span>
-                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="inc" aria-label="More adults">+</button>
-                  </div>
-                </div>
-                <div class="hotels-widget__guests-row">
-                  <div class="hotels-widget__guests-info">
-                    <span class="hotels-widget__guests-label">Children</span>
-                    <span class="hotels-widget__guests-hint">Ages 0–17</span>
-                  </div>
-                  <div class="hotels-widget__guests-stepper" data-guest-type="children">
-                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="dec" aria-label="Fewer children">−</button>
-                    <span class="hotels-widget__guests-count" data-guest-count>0</span>
-                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="inc" aria-label="More children">+</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="hotels-widget__list">
             <hr class="hotels-widget__rule">
 
-            <article class="hotels-widget__item" data-hotel-id="intercontinental" tabindex="0" role="button" aria-label="View details for Intercontinental Miami by Ihg">
+            <article class="hotels-widget__item" data-hotel-id="intercontinental" data-map-pin="1" tabindex="0" role="button" aria-label="View details for Intercontinental Miami by Ihg">
               <div class="hotels-widget__item-head">
                 <div class="hotels-widget__item-title-row">
                   <h2 class="hotels-widget__item-title">1. Intercontinental Miami by Ihg</h2>
@@ -5538,6 +5605,9 @@
                   <span class="hotels-widget__meta-text">Priceline (8,945 reviews)</span>
                 </div>
                 <p class="hotels-widget__address">100 Chopin Plaza, Miami, FL 33131</p>
+              <button type="button" class="hotels-widget__deal" data-hotel-deal-chip aria-label="Copy Coupon Follow code for up to 20% off">
+                Coupon Follow · Up to 20% off
+              </button>
               </div>
               <div class="hotels-widget__photos">
                 <div class="hotels-widget__photos-viewport">
@@ -5565,15 +5635,11 @@
                   </span>
                 </button>
               </div>
-              <div class="hotels-widget__actions">
-                <button type="button" class="hotels-widget__btn">Check Availability</button>
-                <button type="button" class="hotels-widget__btn">Get Directions<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5L14.5 8 8 14.5 1.5 8 8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 8h4.5M9.5 8L7.5 6M9.5 8L7.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-              </div>
             </article>
 
             <hr class="hotels-widget__rule">
 
-            <article class="hotels-widget__item" data-hotel-id="sheraton" tabindex="0" role="button" aria-label="View details for Sheraton Miami Airport Hotel">
+            <article class="hotels-widget__item" data-hotel-id="sheraton" data-map-pin="2" tabindex="0" role="button" aria-label="View details for Sheraton Miami Airport Hotel">
               <div class="hotels-widget__item-head">
                 <div class="hotels-widget__item-title-row">
                   <h2 class="hotels-widget__item-title">2. Sheraton Miami Airport Hotel &amp; Executive Meeting Center</h2>
@@ -5592,6 +5658,9 @@
                   <span class="hotels-widget__meta-text">Priceline (5,244 reviews)</span>
                 </div>
                 <p class="hotels-widget__address">3900 NW 21st St, Miami, FL 33142</p>
+              <button type="button" class="hotels-widget__deal" data-hotel-deal-chip aria-label="Copy Coupon Follow code for up to 20% off">
+                Coupon Follow · Up to 20% off
+              </button>
               </div>
               <div class="hotels-widget__photos">
                 <div class="hotels-widget__photos-viewport">
@@ -5619,15 +5688,11 @@
                   </span>
                 </button>
               </div>
-              <div class="hotels-widget__actions">
-                <button type="button" class="hotels-widget__btn">Check Availability</button>
-                <button type="button" class="hotels-widget__btn">Get Directions<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5L14.5 8 8 14.5 1.5 8 8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 8h4.5M9.5 8L7.5 6M9.5 8L7.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-              </div>
             </article>
 
             <hr class="hotels-widget__rule">
 
-            <article class="hotels-widget__item" data-hotel-id="hampton" tabindex="0" role="button" aria-label="View details for Hampton Inn Brickell-Downtown">
+            <article class="hotels-widget__item" data-hotel-id="hampton" data-map-pin="3" tabindex="0" role="button" aria-label="View details for Hampton Inn Brickell-Downtown">
               <div class="hotels-widget__item-head">
                 <div class="hotels-widget__item-title-row">
                   <h2 class="hotels-widget__item-title">3. Hampton Inn &amp; Suites Miami / Brickell-Downtown</h2>
@@ -5646,6 +5711,9 @@
                   <span class="hotels-widget__meta-text">Priceline (5,076 reviews)</span>
                 </div>
                 <p class="hotels-widget__address">50 SW 12th St, Miami, FL 33130</p>
+              <button type="button" class="hotels-widget__deal" data-hotel-deal-chip aria-label="Copy Coupon Follow code for up to 20% off">
+                Coupon Follow · Up to 20% off
+              </button>
               </div>
               <div class="hotels-widget__photos">
                 <div class="hotels-widget__photos-viewport">
@@ -5672,10 +5740,6 @@
                     </svg>
                   </span>
                 </button>
-              </div>
-              <div class="hotels-widget__actions">
-                <button type="button" class="hotels-widget__btn">Check Availability</button>
-                <button type="button" class="hotels-widget__btn">Get Directions<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5L14.5 8 8 14.5 1.5 8 8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 8h4.5M9.5 8L7.5 6M9.5 8L7.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
               </div>
             </article>
           </div>
@@ -7510,6 +7574,44 @@
         pool: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.75a2.1 2.1 0 012.15 2.25c0 1.85-2.15 3.35-2.15 3.35S5.85 6.85 5.85 5A2.1 2.1 0 018 2.75z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M2.25 11.25c.95 0 1.05-.9 2.1-.9s1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9M2.25 13.5c.95 0 1.05-.9 2.1-.9s1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>',
       };
 
+      const HOTEL_DEAL = {
+        code: 'STAY20',
+        label: 'Coupon Follow · Up to 20% off',
+        title: 'Up to 20% off your next stay',
+      };
+      let hotelDealCopied = false;
+
+      function dealCopyCheckSvg(isChip) {
+        const checkClass = isChip ? 'hotels-widget__deal-check' : 'hotels-detail__deal-copy-check';
+        return `<svg class="${checkClass}" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.2l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      }
+
+      function markDealCopyButton(btn) {
+        if (!btn) return;
+        const isChip = btn.classList.contains('hotels-widget__deal');
+        btn.dataset.busy = 'true';
+        btn.innerHTML = isChip
+          ? `${dealCopyCheckSvg(true)}<span>Code copied</span>`
+          : `${dealCopyCheckSvg(false)}<span>Copied</span>`;
+        btn.setAttribute('aria-label', isChip ? 'Code copied' : 'Copied');
+      }
+
+      function syncHotelDealCopiedState(root) {
+        if (!hotelDealCopied) return;
+        const scope = root || document;
+        scope.querySelectorAll('[data-deal-copy], [data-hotel-deal-chip]').forEach(markDealCopyButton);
+      }
+
+      async function copyHotelDealCode(triggerBtn) {
+        if (!triggerBtn || triggerBtn.dataset.busy === 'true') return;
+        const code = HOTEL_DEAL.code;
+        try {
+          if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(code);
+        } catch (_) { /* prototype: ignore clipboard failures */ }
+        hotelDealCopied = true;
+        syncHotelDealCopiedState(document);
+      }
+
       function starsMarkup(count, labelPrefix) {
         const bits = [];
         for (let i = 1; i <= 5; i += 1) {
@@ -7519,38 +7621,304 @@
         return `<span class="hotels-widget__rating" aria-label="${labelPrefix || `${count} out of 5`}">${bits.join('')}</span>`;
       }
 
-      function bookingMirrorHtml() {
-        const checkIn = widget.querySelector('[data-date-field="checkin"] [data-date-value]')?.textContent?.trim() || '05/09/25';
-        const checkOut = widget.querySelector('[data-date-field="checkout"] [data-date-value]')?.textContent?.trim() || '05/12/25';
-        const guests = widget.querySelector('[data-guests-value]')?.textContent?.trim() || '2 adults';
-        const calIcon = '<svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
-        const guestIcon = '<svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+      const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+      const MONTHS = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December',
+      ];
+      const dates = {
+        checkin: new Date(2026, 7, 28),
+        checkout: new Date(2026, 7, 31),
+      };
+      const viewMonth = {
+        checkin: new Date(2026, 7, 1),
+        checkout: new Date(2026, 7, 1),
+      };
+      const guests = { adults: 2, children: 0 };
+      const GUEST_LIMITS = { adults: { min: 1, max: 8 }, children: { min: 0, max: 6 } };
+
+      function parseDisplayDate(text) {
+        const m = String(text || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2})$/);
+        if (!m) return null;
+        const year = 2000 + parseInt(m[3], 10);
+        return new Date(year, parseInt(m[1], 10) - 1, parseInt(m[2], 10));
+      }
+
+      function formatDisplayDate(date) {
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const yy = String(date.getFullYear()).slice(-2);
+        return `${mm}/${dd}/${yy}`;
+      }
+
+      function formatGuestsLabel() {
+        const adultLabel = guests.adults === 1 ? '1 adult' : `${guests.adults} adults`;
+        if (guests.children <= 0) return adultLabel;
+        const childLabel = guests.children === 1 ? '1 child' : `${guests.children} children`;
+        return `${adultLabel}, ${childLabel}`;
+      }
+
+      function sameDay(a, b) {
+        return a && b
+          && a.getFullYear() === b.getFullYear()
+          && a.getMonth() === b.getMonth()
+          && a.getDate() === b.getDate();
+      }
+
+      function startOfDay(d) {
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      }
+
+      function addDays(d, n) {
+        const next = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        next.setDate(next.getDate() + n);
+        return next;
+      }
+
+      function getBookingRoot() {
+        return detail.querySelector('[data-hotel-booking]') || null;
+      }
+
+      function getDateField(fieldKey) {
+        return getBookingRoot()?.querySelector(`[data-date-field="${fieldKey}"]`) || null;
+      }
+
+      function closeAllCalendars() {
+        const root = getBookingRoot();
+        if (!root) return;
+        root.querySelectorAll('[data-date-field]').forEach((wrap) => {
+          const btn = wrap.querySelector('.hotels-widget__field');
+          const cal = wrap.querySelector('.hotels-widget__calendar');
+          if (btn) btn.setAttribute('aria-expanded', 'false');
+          if (cal) cal.hidden = true;
+        });
+      }
+
+      function closeGuestsPanel() {
+        const root = getBookingRoot();
+        if (!root) return;
+        const btn = root.querySelector('#hotelGuestsBtn');
+        const panel = root.querySelector('#hotelGuestsPanel');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+        if (panel) panel.hidden = true;
+      }
+
+      function closeAllHotelPopovers() {
+        closeAllCalendars();
+        closeGuestsPanel();
+      }
+
+      function syncFieldLabels() {
+        const checkin = getDateField('checkin');
+        const checkout = getDateField('checkout');
+        const checkinVal = checkin?.querySelector('[data-date-value]');
+        const checkoutVal = checkout?.querySelector('[data-date-value]');
+        if (checkinVal) checkinVal.textContent = formatDisplayDate(dates.checkin);
+        if (checkoutVal) checkoutVal.textContent = formatDisplayDate(dates.checkout);
+      }
+
+      function syncGuestsUI() {
+        const root = getBookingRoot();
+        if (!root) return;
+        const guestsValue = root.querySelector('[data-guests-value]');
+        if (guestsValue) guestsValue.textContent = formatGuestsLabel();
+        root.querySelectorAll('[data-guest-type]').forEach((stepper) => {
+          const type = stepper.getAttribute('data-guest-type');
+          const countEl = stepper.querySelector('[data-guest-count]');
+          const decBtn = stepper.querySelector('[data-guest-action="dec"]');
+          const incBtn = stepper.querySelector('[data-guest-action="inc"]');
+          const limits = GUEST_LIMITS[type];
+          if (countEl) countEl.textContent = String(guests[type]);
+          if (decBtn) decBtn.disabled = guests[type] <= limits.min;
+          if (incBtn) incBtn.disabled = guests[type] >= limits.max;
+        });
+      }
+
+      function syncBookingUI() {
+        syncFieldLabels();
+        syncGuestsUI();
+      }
+
+      function renderCalendar(fieldKey) {
+        const wrap = getDateField(fieldKey);
+        const cal = wrap?.querySelector('.hotels-widget__calendar');
+        if (!wrap || !cal) return;
+        const selected = dates[fieldKey];
+        const cursor = viewMonth[fieldKey];
+        const year = cursor.getFullYear();
+        const month = cursor.getMonth();
+        const firstDow = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrev = new Date(year, month, 0).getDate();
+        const today = startOfDay(new Date());
+        const minDate = fieldKey === 'checkout' ? addDays(dates.checkin, 1) : null;
+
+        const cells = [];
+        for (let i = 0; i < 42; i += 1) {
+          let dayNum;
+          let cellDate;
+          let muted = false;
+          if (i < firstDow) {
+            dayNum = daysInPrev - firstDow + i + 1;
+            cellDate = new Date(year, month - 1, dayNum);
+            muted = true;
+          } else if (i >= firstDow + daysInMonth) {
+            dayNum = i - firstDow - daysInMonth + 1;
+            cellDate = new Date(year, month + 1, dayNum);
+            muted = true;
+          } else {
+            dayNum = i - firstDow + 1;
+            cellDate = new Date(year, month, dayNum);
+          }
+
+          const disabled = minDate ? startOfDay(cellDate) < startOfDay(minDate) : false;
+          const classes = ['hotels-widget__calendar-day'];
+          if (muted) classes.push('hotels-widget__calendar-day--muted');
+          if (sameDay(cellDate, selected)) classes.push('hotels-widget__calendar-day--selected');
+          if (sameDay(cellDate, today)) classes.push('hotels-widget__calendar-day--today');
+
+          cells.push(`<button
+            type="button"
+            class="${classes.join(' ')}"
+            data-date="${cellDate.getFullYear()}-${cellDate.getMonth() + 1}-${cellDate.getDate()}"
+            ${disabled ? 'disabled' : ''}
+            aria-label="${MONTHS[cellDate.getMonth()]} ${cellDate.getDate()}, ${cellDate.getFullYear()}"
+            ${sameDay(cellDate, selected) ? 'aria-current="date"' : ''}
+          >${dayNum}</button>`);
+        }
+
+        cal.innerHTML = `
+          <div class="hotels-widget__calendar-header">
+            <button type="button" class="hotels-widget__calendar-nav" data-cal-nav="-1" aria-label="Previous month">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <p class="hotels-widget__calendar-title">${MONTHS[month]} ${year}</p>
+            <button type="button" class="hotels-widget__calendar-nav" data-cal-nav="1" aria-label="Next month">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div class="hotels-widget__calendar-weekdays" aria-hidden="true">
+            ${WEEKDAYS.map((d) => `<span class="hotels-widget__calendar-weekday">${d}</span>`).join('')}
+          </div>
+          <div class="hotels-widget__calendar-grid">
+            ${cells.join('')}
+          </div>
+        `;
+      }
+
+      function openCalendar(fieldKey) {
+        closeAllHotelPopovers();
+        viewMonth[fieldKey] = new Date(dates[fieldKey].getFullYear(), dates[fieldKey].getMonth(), 1);
+        renderCalendar(fieldKey);
+        const wrap = getDateField(fieldKey);
+        if (!wrap) return;
+        wrap.querySelector('.hotels-widget__field')?.setAttribute('aria-expanded', 'true');
+        const cal = wrap.querySelector('.hotels-widget__calendar');
+        if (cal) cal.hidden = false;
+      }
+
+      function selectDate(fieldKey, date) {
+        dates[fieldKey] = startOfDay(date);
+        if (fieldKey === 'checkin' && dates.checkout <= dates.checkin) {
+          dates.checkout = addDays(dates.checkin, 1);
+          viewMonth.checkout = new Date(dates.checkout.getFullYear(), dates.checkout.getMonth(), 1);
+        }
+        if (fieldKey === 'checkout' && dates.checkout <= dates.checkin) {
+          dates.checkout = addDays(dates.checkin, 1);
+        }
+        syncFieldLabels();
+        closeAllHotelPopovers();
+      }
+
+      function openGuestsPanel() {
+        closeAllHotelPopovers();
+        const root = getBookingRoot();
+        if (!root) return;
+        root.querySelector('#hotelGuestsBtn')?.setAttribute('aria-expanded', 'true');
+        const panel = root.querySelector('#hotelGuestsPanel');
+        if (panel) panel.hidden = false;
+      }
+
+      const CAL_ICON = '<svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+      const GUEST_ICON = '<svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+
+      function bookingInteractiveHtml() {
         return `
-          <div class="hotels-detail__booking">
+          <div class="hotels-detail__booking" data-hotel-booking>
             <div class="hotels-detail__booking-dates">
-              <div class="hotels-widget__field hotels-detail__field-mirror" tabindex="-1">
-                ${calIcon}
-                <div class="hotels-widget__field-text">
-                  <span class="hotels-widget__field-label">Check-in</span>
-                  <span class="hotels-widget__field-value">${checkIn}</span>
-                </div>
+              <div class="hotels-widget__date" data-date-field="checkin">
+                <button type="button" class="hotels-widget__field" id="hotelCheckInBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="hotelCheckInCal">
+                  ${CAL_ICON}
+                  <div class="hotels-widget__field-text">
+                    <span class="hotels-widget__field-label">Check-in</span>
+                    <span class="hotels-widget__field-value" data-date-value>${formatDisplayDate(dates.checkin)}</span>
+                  </div>
+                </button>
+                <div class="hotels-widget__calendar" id="hotelCheckInCal" role="dialog" aria-label="Select check-in date" hidden></div>
               </div>
-              <div class="hotels-widget__field hotels-detail__field-mirror" tabindex="-1">
-                ${calIcon}
+              <div class="hotels-widget__date" data-date-field="checkout">
+                <button type="button" class="hotels-widget__field" id="hotelCheckOutBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="hotelCheckOutCal">
+                  ${CAL_ICON}
+                  <div class="hotels-widget__field-text">
+                    <span class="hotels-widget__field-label">Check-out</span>
+                    <span class="hotels-widget__field-value" data-date-value>${formatDisplayDate(dates.checkout)}</span>
+                  </div>
+                </button>
+                <div class="hotels-widget__calendar" id="hotelCheckOutCal" role="dialog" aria-label="Select check-out date" hidden></div>
+              </div>
+            </div>
+            <div class="hotels-widget__guests" id="hotelGuests">
+              <button type="button" class="hotels-widget__field hotels-widget__field--full" id="hotelGuestsBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="hotelGuestsPanel">
+                ${GUEST_ICON}
                 <div class="hotels-widget__field-text">
-                  <span class="hotels-widget__field-label">Check-out</span>
-                  <span class="hotels-widget__field-value">${checkOut}</span>
+                  <span class="hotels-widget__field-label">Guests</span>
+                  <span class="hotels-widget__field-value" data-guests-value>${formatGuestsLabel()}</span>
+                </div>
+              </button>
+              <div class="hotels-widget__guests-panel" id="hotelGuestsPanel" role="dialog" aria-label="Select guests" hidden>
+                <div class="hotels-widget__guests-row">
+                  <div class="hotels-widget__guests-info">
+                    <span class="hotels-widget__guests-label">Adults</span>
+                    <span class="hotels-widget__guests-hint">Ages 18+</span>
+                  </div>
+                  <div class="hotels-widget__guests-stepper" data-guest-type="adults">
+                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="dec" aria-label="Fewer adults">−</button>
+                    <span class="hotels-widget__guests-count" data-guest-count>2</span>
+                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="inc" aria-label="More adults">+</button>
+                  </div>
+                </div>
+                <div class="hotels-widget__guests-row">
+                  <div class="hotels-widget__guests-info">
+                    <span class="hotels-widget__guests-label">Children</span>
+                    <span class="hotels-widget__guests-hint">Ages 0–17</span>
+                  </div>
+                  <div class="hotels-widget__guests-stepper" data-guest-type="children">
+                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="dec" aria-label="Fewer children">−</button>
+                    <span class="hotels-widget__guests-count" data-guest-count>0</span>
+                    <button type="button" class="hotels-widget__guests-btn" data-guest-action="inc" aria-label="More children">+</button>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="hotels-widget__field hotels-widget__field--full hotels-detail__field-mirror" tabindex="-1">
-              ${guestIcon}
-              <div class="hotels-widget__field-text">
-                <span class="hotels-widget__field-label">Guests</span>
-                <span class="hotels-widget__field-value">${guests}</span>
+            <div class="hotels-detail__deal" data-hotel-deal>
+              <img class="hotels-detail__deal-logo" src="assets/hotels/couponfollow-logo.svg" width="100" height="14" alt="Coupon Follow">
+              <p class="hotels-detail__deal-title">Up to 20% off your next stay</p>
+              <p class="hotels-detail__deal-note">Partner deal for Booking.com bookings. Copy and apply code at checkout. Terms apply.</p>
+              <div class="hotels-detail__deal-row">
+                <span class="hotels-detail__deal-code" data-deal-code>STAY20</span>
+                <button type="button" class="hotels-detail__deal-copy" data-deal-copy>Copy code</button>
               </div>
             </div>
-            <button type="button" class="hotels-detail__cta">Compare Prices</button>
+            <div class="hotels-detail__actions">
+              <button type="button" class="hotels-detail__cta" data-check-availability>Check Availability</button>
+              <button type="button" class="hotels-detail__cta">Get Directions<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5L14.5 8 8 14.5 1.5 8 8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 8h4.5M9.5 8L7.5 6M9.5 8L7.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+            <div class="hotels-detail__deal-reminder" data-deal-reminder hidden>
+              <p class="hotels-detail__deal-reminder-text">Apply <strong>STAY20</strong> at Booking.com checkout for up to 20% off.</p>
+              <div class="hotels-detail__deal-row">
+                <button type="button" class="hotels-detail__deal-copy" data-deal-copy>Copy code</button>
+              </div>
+            </div>
           </div>`;
       }
 
@@ -7559,8 +7927,8 @@
           <li>
             <button type="button" class="hotels-detail__related-card" data-related-hotel="${h.id}" aria-label="View details for ${h.name}">
               <img class="hotels-detail__related-img" src="${h.img}" alt="" loading="lazy" decoding="async">
-              <p class="hotels-detail__related-name">${h.name}</p>
-              <p class="hotels-detail__related-meta">${starsMarkup(h.stars)} ${h.reviews} reviews</p>
+              <span class="hotels-detail__related-name">${h.name}</span>
+              <span class="hotels-detail__related-meta">${starsMarkup(h.stars)}<span>${h.reviews} reviews</span></span>
             </button>
           </li>`).join('');
       }
@@ -7576,23 +7944,23 @@
         detail.innerHTML = `
           <button type="button" class="hotels-detail__back" id="hotelsDetailBack">
             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Back to hotels
+            Back
           </button>
           <div class="hotels-detail__hero">
             <img class="hotels-detail__hero-photo" src="${hotel.hero}" alt="" loading="lazy" decoding="async">
-            <img class="hotels-detail__hero-map" src="assets/hotels/miami-map.png" alt="" loading="lazy" decoding="async">
           </div>
-          <h2 class="hotels-detail__title">${hotel.name}</h2>
-          <hr class="hotels-detail__rule">
-          <div class="hotels-detail__meta">
-            ${starsMarkup(hotel.stars, `${hotel.stars} out of 5 on Priceline`)}
-            <span class="hotels-widget__meta-text">Priceline (${hotel.reviews} reviews) · Hotel</span>
+          <div class="hotels-detail__summary">
+            <h2 class="hotels-detail__title">${hotel.name}</h2>
+            <div class="hotels-detail__meta">
+              ${starsMarkup(hotel.stars, `${hotel.stars} out of 5 on Priceline`)}
+              <span class="hotels-widget__meta-text">Priceline (${hotel.reviews} reviews) · Hotel</span>
+            </div>
+            <div class="hotels-detail__contacts">
+              <p class="hotels-detail__contact"><span class="hotels-detail__contact-label">Address:</span> ${hotel.address}</p>
+              <p class="hotels-detail__contact"><span class="hotels-detail__contact-label">Phone:</span> ${hotel.phone}</p>
+            </div>
           </div>
-          <div class="hotels-detail__contacts">
-            <p class="hotels-detail__contact"><span class="hotels-detail__contact-label">Address:</span> ${hotel.address}</p>
-            <p class="hotels-detail__contact"><span class="hotels-detail__contact-label">Phone:</span> ${hotel.phone}</p>
-          </div>
-          ${bookingMirrorHtml()}
+          ${bookingInteractiveHtml()}
           <hr class="hotels-detail__rule">
           <div class="hotels-detail__stack">
             <h3 class="hotels-detail__section-title">Hotel Details</h3>
@@ -7665,6 +8033,8 @@
         renderHotelDetail(hotelId);
         widget.hidden = true;
         detail.hidden = false;
+        syncBookingUI();
+        syncHotelDealCopiedState(detail);
         rail.scrollTop = 0;
         detail.querySelector('#hotelsDetailBack')?.focus();
       }
@@ -7677,9 +8047,21 @@
       }
 
       rail.querySelectorAll('.hotels-widget__item[data-hotel-id]').forEach((item) => {
-        item.querySelectorAll('.hotels-widget__btn').forEach((btn) => {
-          btn.addEventListener('click', (e) => {
+        const pinId = item.getAttribute('data-map-pin');
+        const pin = pinId ? widget.querySelector(`.hotels-widget__map-pin[data-map-pin="${pinId}"]`) : null;
+        const setPinActive = (on) => {
+          if (!pin) return;
+          pin.classList.toggle('is-active', on);
+        };
+        item.addEventListener('mouseenter', () => setPinActive(true));
+        item.addEventListener('mouseleave', () => setPinActive(false));
+        item.addEventListener('focusin', () => setPinActive(true));
+        item.addEventListener('focusout', () => setPinActive(false));
+        item.querySelectorAll('[data-hotel-deal-chip]').forEach((chip) => {
+          chip.addEventListener('click', (e) => {
+            e.preventDefault();
             e.stopPropagation();
+            copyHotelDealCode(chip);
           });
         });
         item.addEventListener('click', (e) => {
@@ -7701,6 +8083,24 @@
         }
         if (e.target.closest('[data-hide-hotels]')) {
           rail.hidden = true;
+          return;
+        }
+        const copyBtn = e.target.closest('[data-deal-copy]');
+        if (copyBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          copyHotelDealCode(copyBtn);
+          return;
+        }
+        if (e.target.closest('[data-check-availability]')) {
+          e.preventDefault();
+          e.stopPropagation();
+          const reminder = detail.querySelector('[data-deal-reminder]');
+          if (reminder) {
+            reminder.hidden = false;
+            reminder.classList.add('is-visible');
+            reminder.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
           return;
         }
         const related = e.target.closest('[data-related-hotel]');
@@ -7754,190 +8154,24 @@
         rail.querySelectorAll('.hotels-widget__photos').forEach(syncHotelPhotosCarousel);
       });
 
-      /* ── Check-in / check-out date calendars ── */
-      const dateFields = {
-        checkin: rail.querySelector('[data-date-field="checkin"]'),
-        checkout: rail.querySelector('[data-date-field="checkout"]'),
-      };
-      if (!dateFields.checkin || !dateFields.checkout) return;
-
-      const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-      const MONTHS = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December',
-      ];
-
-      const dates = {
-        checkin: parseDisplayDate(dateFields.checkin.querySelector('[data-date-value]')?.textContent) || new Date(2025, 4, 9),
-        checkout: parseDisplayDate(dateFields.checkout.querySelector('[data-date-value]')?.textContent) || new Date(2025, 4, 12),
-      };
-      const viewMonth = {
-        checkin: new Date(dates.checkin.getFullYear(), dates.checkin.getMonth(), 1),
-        checkout: new Date(dates.checkout.getFullYear(), dates.checkout.getMonth(), 1),
-      };
-
-      function parseDisplayDate(text) {
-        const m = String(text || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2})$/);
-        if (!m) return null;
-        const year = 2000 + parseInt(m[3], 10);
-        return new Date(year, parseInt(m[1], 10) - 1, parseInt(m[2], 10));
-      }
-
-      function formatDisplayDate(date) {
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-        const yy = String(date.getFullYear()).slice(-2);
-        return `${mm}/${dd}/${yy}`;
-      }
-
-      function sameDay(a, b) {
-        return a && b
-          && a.getFullYear() === b.getFullYear()
-          && a.getMonth() === b.getMonth()
-          && a.getDate() === b.getDate();
-      }
-
-      function startOfDay(d) {
-        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-      }
-
-      function addDays(d, n) {
-        const next = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-        next.setDate(next.getDate() + n);
-        return next;
-      }
-
-      function syncFieldLabels() {
-        dateFields.checkin.querySelector('[data-date-value]').textContent = formatDisplayDate(dates.checkin);
-        dateFields.checkout.querySelector('[data-date-value]').textContent = formatDisplayDate(dates.checkout);
-      }
-
-      function closeAllCalendars() {
-        Object.keys(dateFields).forEach((key) => {
-          const wrap = dateFields[key];
-          const btn = wrap.querySelector('.hotels-widget__field');
-          const cal = wrap.querySelector('.hotels-widget__calendar');
-          if (btn) btn.setAttribute('aria-expanded', 'false');
-          if (cal) cal.hidden = true;
-        });
-      }
-
-      function closeGuestsPanel() {
-        const guestsWrap = rail.querySelector('#hotelGuests');
-        if (!guestsWrap) return;
-        const btn = guestsWrap.querySelector('#hotelGuestsBtn');
-        const panel = guestsWrap.querySelector('#hotelGuestsPanel');
-        if (btn) btn.setAttribute('aria-expanded', 'false');
-        if (panel) panel.hidden = true;
-      }
-
-      function closeAllHotelPopovers() {
-        closeAllCalendars();
-        closeGuestsPanel();
-      }
-
-      function renderCalendar(fieldKey) {
-        const wrap = dateFields[fieldKey];
-        const cal = wrap.querySelector('.hotels-widget__calendar');
-        const selected = dates[fieldKey];
-        const cursor = viewMonth[fieldKey];
-        const year = cursor.getFullYear();
-        const month = cursor.getMonth();
-        const firstDow = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const daysInPrev = new Date(year, month, 0).getDate();
-        const today = startOfDay(new Date());
-        const minDate = fieldKey === 'checkout' ? addDays(dates.checkin, 1) : null;
-
-        const cells = [];
-        for (let i = 0; i < 42; i += 1) {
-          let dayNum;
-          let cellDate;
-          let muted = false;
-          if (i < firstDow) {
-            dayNum = daysInPrev - firstDow + i + 1;
-            cellDate = new Date(year, month - 1, dayNum);
-            muted = true;
-          } else if (i >= firstDow + daysInMonth) {
-            dayNum = i - firstDow - daysInMonth + 1;
-            cellDate = new Date(year, month + 1, dayNum);
-            muted = true;
-          } else {
-            dayNum = i - firstDow + 1;
-            cellDate = new Date(year, month, dayNum);
-          }
-
-          const disabled = minDate ? startOfDay(cellDate) < startOfDay(minDate) : false;
-          const classes = ['hotels-widget__calendar-day'];
-          if (muted) classes.push('hotels-widget__calendar-day--muted');
-          if (sameDay(cellDate, selected)) classes.push('hotels-widget__calendar-day--selected');
-          if (sameDay(cellDate, today)) classes.push('hotels-widget__calendar-day--today');
-
-          cells.push(`<button
-            type="button"
-            class="${classes.join(' ')}"
-            data-date="${cellDate.getFullYear()}-${cellDate.getMonth() + 1}-${cellDate.getDate()}"
-            ${disabled ? 'disabled' : ''}
-            aria-label="${MONTHS[cellDate.getMonth()]} ${cellDate.getDate()}, ${cellDate.getFullYear()}"
-            ${sameDay(cellDate, selected) ? 'aria-current="date"' : ''}
-          >${dayNum}</button>`);
-        }
-
-        cal.innerHTML = `
-          <div class="hotels-widget__calendar-header">
-            <button type="button" class="hotels-widget__calendar-nav" data-cal-nav="-1" aria-label="Previous month">
-              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <p class="hotels-widget__calendar-title">${MONTHS[month]} ${year}</p>
-            <button type="button" class="hotels-widget__calendar-nav" data-cal-nav="1" aria-label="Next month">
-              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-          <div class="hotels-widget__calendar-weekdays" aria-hidden="true">
-            ${WEEKDAYS.map((d) => `<span class="hotels-widget__calendar-weekday">${d}</span>`).join('')}
-          </div>
-          <div class="hotels-widget__calendar-grid">
-            ${cells.join('')}
-          </div>
-        `;
-      }
-
-      function openCalendar(fieldKey) {
-        closeAllHotelPopovers();
-        viewMonth[fieldKey] = new Date(dates[fieldKey].getFullYear(), dates[fieldKey].getMonth(), 1);
-        renderCalendar(fieldKey);
-        const wrap = dateFields[fieldKey];
-        wrap.querySelector('.hotels-widget__field').setAttribute('aria-expanded', 'true');
-        wrap.querySelector('.hotels-widget__calendar').hidden = false;
-      }
-
-      function selectDate(fieldKey, date) {
-        dates[fieldKey] = startOfDay(date);
-        if (fieldKey === 'checkin' && dates.checkout <= dates.checkin) {
-          dates.checkout = addDays(dates.checkin, 1);
-          viewMonth.checkout = new Date(dates.checkout.getFullYear(), dates.checkout.getMonth(), 1);
-        }
-        if (fieldKey === 'checkout' && dates.checkout <= dates.checkin) {
-          dates.checkout = addDays(dates.checkin, 1);
-        }
-        syncFieldLabels();
-        closeAllHotelPopovers();
-      }
-
-      Object.keys(dateFields).forEach((fieldKey) => {
-        const wrap = dateFields[fieldKey];
-        const btn = wrap.querySelector('.hotels-widget__field');
-        const cal = wrap.querySelector('.hotels-widget__calendar');
-
-        btn.addEventListener('click', (e) => {
+      /* ── Booking controls (date + guests) — live in quick view ── */
+      detail.addEventListener('click', (e) => {
+        const dateWrap = e.target.closest('[data-date-field]');
+        if (dateWrap && e.target.closest('.hotels-widget__field') && !e.target.closest('.hotels-widget__calendar')) {
           e.stopPropagation();
-          const open = btn.getAttribute('aria-expanded') === 'true';
+          const fieldKey = dateWrap.getAttribute('data-date-field');
+          const btn = dateWrap.querySelector('.hotels-widget__field');
+          const open = btn?.getAttribute('aria-expanded') === 'true';
           if (open) closeAllHotelPopovers();
           else openCalendar(fieldKey);
-        });
+          return;
+        }
 
-        cal.addEventListener('click', (e) => {
+        const cal = e.target.closest('.hotels-widget__calendar');
+        if (cal) {
           e.stopPropagation();
+          const fieldKey = cal.closest('[data-date-field]')?.getAttribute('data-date-field');
+          if (!fieldKey) return;
           const nav = e.target.closest('[data-cal-nav]');
           if (nav) {
             const dir = parseInt(nav.getAttribute('data-cal-nav'), 10);
@@ -7953,53 +8187,20 @@
           if (!dayBtn || dayBtn.disabled) return;
           const [y, m, d] = dayBtn.getAttribute('data-date').split('-').map(Number);
           selectDate(fieldKey, new Date(y, m - 1, d));
-        });
-      });
+          return;
+        }
 
-      /* ── Guests: adults + children steppers ── */
-      const guestsWrap = rail.querySelector('#hotelGuests');
-      const guestsBtn = guestsWrap?.querySelector('#hotelGuestsBtn');
-      const guestsPanel = guestsWrap?.querySelector('#hotelGuestsPanel');
-      const guestsValue = guestsWrap?.querySelector('[data-guests-value]');
-      const guests = { adults: 2, children: 0 };
-      const GUEST_LIMITS = { adults: { min: 1, max: 8 }, children: { min: 0, max: 6 } };
-
-      function formatGuestsLabel() {
-        const adultLabel = guests.adults === 1 ? '1 adult' : `${guests.adults} adults`;
-        if (guests.children <= 0) return adultLabel;
-        const childLabel = guests.children === 1 ? '1 child' : `${guests.children} children`;
-        return `${adultLabel}, ${childLabel}`;
-      }
-
-      function syncGuestsUI() {
-        if (guestsValue) guestsValue.textContent = formatGuestsLabel();
-        guestsPanel?.querySelectorAll('[data-guest-type]').forEach((stepper) => {
-          const type = stepper.getAttribute('data-guest-type');
-          const countEl = stepper.querySelector('[data-guest-count]');
-          const decBtn = stepper.querySelector('[data-guest-action="dec"]');
-          const incBtn = stepper.querySelector('[data-guest-action="inc"]');
-          const limits = GUEST_LIMITS[type];
-          if (countEl) countEl.textContent = String(guests[type]);
-          if (decBtn) decBtn.disabled = guests[type] <= limits.min;
-          if (incBtn) incBtn.disabled = guests[type] >= limits.max;
-        });
-      }
-
-      function openGuestsPanel() {
-        closeAllHotelPopovers();
-        if (guestsBtn) guestsBtn.setAttribute('aria-expanded', 'true');
-        if (guestsPanel) guestsPanel.hidden = false;
-      }
-
-      if (guestsWrap && guestsBtn && guestsPanel) {
-        guestsBtn.addEventListener('click', (e) => {
+        if (e.target.closest('#hotelGuestsBtn')) {
           e.stopPropagation();
-          const open = guestsBtn.getAttribute('aria-expanded') === 'true';
+          const btn = detail.querySelector('#hotelGuestsBtn');
+          const open = btn?.getAttribute('aria-expanded') === 'true';
           if (open) closeGuestsPanel();
           else openGuestsPanel();
-        });
+          return;
+        }
 
-        guestsPanel.addEventListener('click', (e) => {
+        const guestsPanel = e.target.closest('#hotelGuestsPanel');
+        if (guestsPanel) {
           e.stopPropagation();
           const actionBtn = e.target.closest('[data-guest-action]');
           if (!actionBtn || actionBtn.disabled) return;
@@ -8010,13 +8211,11 @@
           const next = guests[type] + (action === 'inc' ? 1 : -1);
           guests[type] = Math.min(GUEST_LIMITS[type].max, Math.max(GUEST_LIMITS[type].min, next));
           syncGuestsUI();
-        });
-
-        syncGuestsUI();
-      }
+        }
+      });
 
       document.addEventListener('click', (e) => {
-        if (!e.target.closest('.hotels-widget__date') && !e.target.closest('.hotels-widget__guests')) {
+        if (!e.target.closest('[data-hotel-booking]')) {
           closeAllHotelPopovers();
         }
       });
@@ -8024,6 +8223,7 @@
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeAllHotelPopovers();
       });
+
     })();
 
     function getWebResultsPage(q) {
