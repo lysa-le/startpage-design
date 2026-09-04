@@ -38,7 +38,6 @@
       background: var(--color-background-primary);
       color: var(--color-text-primary);
       min-height: 100vh;
-      overflow-x: hidden;
     }
 
     .proto-chrome {
@@ -143,7 +142,6 @@
     /* ── Hero ── */
     .faq-hero {
       position: relative;
-      overflow: visible;
       background: var(--color-background-primary);
       padding: var(--spacing-64) var(--spacing-32) var(--spacing-96);
       text-align: center;
@@ -193,17 +191,6 @@
       display: block;
       width: 100%;
       height: auto;
-    }
-
-    .faq-hero__squiggle {
-      position: absolute;
-      top: calc(var(--spacing-48) * -1);
-      right: calc((var(--spacing-96) + var(--spacing-64)) * -1);
-      width: calc(var(--spacing-96) + var(--spacing-64) + var(--spacing-48));
-      height: auto;
-      pointer-events: none;
-      transform: translateX(var(--spacing-80)) rotate(-15deg);
-      transform-origin: center;
     }
 
     /* ── FAQ content ── */
@@ -301,7 +288,6 @@
       }
 
       .faq-hero {
-        overflow: hidden;
         padding: var(--spacing-40) var(--spacing-16) var(--spacing-64);
       }
       .faq-hero__title {
@@ -312,15 +298,7 @@
         max-width: none;
       }
       .faq-hero__art {
-        /* Match Figma mobile: squiggle mostly off-canvas, clipped to art */
-        overflow: hidden;
         max-width: calc(var(--spacing-24) * 13.75); /* ~330px */
-      }
-      .faq-hero__squiggle {
-        width: calc(var(--spacing-96) + var(--spacing-4));
-        right: calc(var(--spacing-24) * -1);
-        top: calc(var(--spacing-32) * -1);
-        transform: rotate(165deg);
       }
 
       .faq-main {
@@ -375,7 +353,6 @@
     </h1>
     <div class="faq-hero__art">
       <img class="faq-hero__couple" src="assets/couple.svg" width="515" height="273" alt="" />
-      <img class="faq-hero__squiggle" src="assets/squiggle.svg" width="212" height="308" alt="" />
     </div>
   </section>
 
