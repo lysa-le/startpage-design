@@ -309,6 +309,22 @@
       font-weight: var(--font-weight-bold);
     }
 
+    .faq-contact {
+      max-width: calc(var(--spacing-24) * 32.5);
+      width: 100%;
+      margin: var(--spacing-48) auto 0;
+      text-align: center;
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      color: var(--color-text-primary);
+    }
+
+    .faq-contact__email {
+      color: var(--color-text-link);
+      text-decoration: underline;
+      text-underline-offset: 0.12em;
+    }
+
     @media (max-width: 960px) {
       .faq-header {
         grid-template-columns: 1fr auto 1fr;
@@ -490,15 +506,11 @@
           <p>Startpage and StartMail are separate products, and our ad-free and their personal and business subscriptions are unrelated. You are welcome to use your StartMail email to sign up for an account on Startpage.</p>
         </div>
       </details>
-
-      <details class="faq-item">
-        <summary class="faq-item__q"><span class="faq-item__q-text">Questions?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
-        <div class="faq-item__a">
-          <p>Email us at:</p>
-          <p><a href="mailto:subscribers@startpage.com">subscribers@startpage.com</a></p>
-        </div>
-      </details>
     </div>
+
+    <aside class="faq-contact">
+      <p>Questions? Email us at: <a class="faq-contact__email" href="mailto:subscribers@startpage.com">subscribers@startpage.com</a></p>
+    </aside>
   </main>
 
 
