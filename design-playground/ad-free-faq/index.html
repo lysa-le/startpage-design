@@ -197,32 +197,72 @@
     .faq-main {
       position: relative;
       z-index: 1;
-      max-width: calc(var(--spacing-24) * 42.666); /* ~1024px */
-      margin: 0 auto;
-      padding: var(--spacing-16) var(--spacing-32) var(--spacing-96);
+      padding: var(--spacing-64) var(--spacing-32) var(--spacing-96);
     }
 
     .faq-list {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-40);
+      gap: var(--spacing-12);
+      max-width: calc(var(--spacing-24) * 32.5); /* 780px — Figma FAQ width */
+      width: 100%;
+      margin: 0 auto;
     }
 
     .faq-item {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-12);
+      background: var(--color-background-quaternary);
+      border-radius: var(--radius-2xl);
+      padding: var(--spacing-24);
     }
 
     .faq-item__q {
-      font-size: var(--font-heading-xs);
-      line-height: var(--font-heading-xs-lh);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      list-style: none;
+      cursor: pointer;
+      font-size: var(--font-body-xl);
+      line-height: var(--font-body-xl-lh);
+      font-weight: var(--font-weight-regular);
       color: var(--color-text-primary);
     }
 
+    .faq-item__q::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item__q::marker {
+      content: "";
+    }
+
+    .faq-item__q-text {
+      flex: 1;
+      min-width: 0;
+      text-align: left;
+    }
+
+    .faq-item__chevron {
+      flex-shrink: 0;
+      width: var(--spacing-24);
+      height: var(--spacing-24);
+      color: var(--color-icon-primary);
+      transition: transform 0.2s ease;
+    }
+
+    .faq-item[open] .faq-item__chevron {
+      transform: rotate(180deg);
+    }
+
+    .faq-item__q:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-sm);
+    }
+
     .faq-item__a {
+      margin-top: var(--spacing-16);
+      padding-right: var(--spacing-40);
       font-size: var(--font-body-md);
       line-height: var(--font-body-md-lh);
       color: var(--color-text-primary);
@@ -302,10 +342,8 @@
       }
 
       .faq-main {
-        max-width: none;
-        padding: var(--spacing-24) var(--spacing-16) var(--spacing-64);
+        padding: var(--spacing-40) var(--spacing-16) var(--spacing-64);
       }
-
 
       .proto-chrome {
         right: var(--spacing-16);
@@ -358,8 +396,8 @@
 
   <main class="faq-main">
     <div class="faq-list">
-      <article class="faq-item">
-        <h2 class="faq-item__q">How does Startpage Ad-Free work?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">How does Startpage Ad-Free work?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>Startpage Ad-Free is a paid subscription that removes ads and sponsored results from your private search, so you get straight to the answers you came for. Here’s how it works:</p>
           <ul>
@@ -368,10 +406,10 @@
             <li>Cancel or re-start your subscription at any time</li>
           </ul>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">Are Startpage accounts private?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">Are Startpage accounts private?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>Yes. Creating a Startpage account doesn’t change how we protect you:</p>
           <ul>
@@ -380,32 +418,32 @@
             <li>Your account holds only what’s needed to run your subscription: your email address and billing status</li>
           </ul>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">Where is Ad-Free available?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">Where is Ad-Free available?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>Startpage Ad-Free isn’t available everywhere just yet. We’re starting in select regions and hope to expand soon.</p>
           <p>We do not recommend using VPNs from countries other than your own while trying to purchase a subscription or create an account. You may experience errors and be unable to check out, as the experience is being rolled out in phases in certain countries.</p>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">Can I activate my Startpage Ad-Free Subscription on the Startpage Mobile App on Android/iOS?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">Can I activate my Startpage Ad-Free Subscription on the Startpage Mobile App on Android/iOS?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>We are rolling out mobile activation in phases. More information coming soon.</p>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">I made an account, but I can’t sign up for an Ad-free subscription. Why?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">I made an account, but I can’t sign up for an Ad-free subscription. Why?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>Startpage Ad-Free isn’t available everywhere just yet. If you made an account without buying a subscription, you are not being charged for anything, and we’ll alert you when ad-free is available in your area.</p>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">What third parties do you work with for Startpage accounts?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">What third parties do you work with for Startpage accounts?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>Two third parties help run Ad-Free:</p>
           <ul>
@@ -415,51 +453,51 @@
           <p>Neither has access to your Startpage searches.</p>
           <p>For full details, see our <a href="https://www.startpage.com/en/privacy-policy">privacy policy</a>.</p>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">I deleted my account, but I’m still able to log-in using the email of my old account. What’s going on?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">I deleted my account, but I’m still able to log-in using the email of my old account. What’s going on?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>WorkOS (Our partner for log-in + sign-up) treats logging in and signing up as the same action. If you try to log-in on Startpage.com using this email address + the “email sign in code” option, it will automatically sign you up for a brand new account under this email. You are not accessing your recently deleted account.</p>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">I cancelled my subscription on Stripe but I still cannot delete my Startpage account. Why?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">I cancelled my subscription on Stripe but I still cannot delete my Startpage account. Why?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>If you cancel your subscription on Stripe, it may still be active through the billing period. While it is still active, you cannot delete your Startpage account from your portal. You will be able to delete your account once the subscription is no longer active. If you would like to delete your account sooner, please reach out to us.</p>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">I am getting billing and account emails on different addresses. I can’t sign in to my Stripe billing portal with my Startpage account email.</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">I am getting billing and account emails on different addresses. I can’t sign in to my Stripe billing portal with my Startpage account email.</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>Your Startpage account and your Stripe billing account do not have to be set up with the same email address. Your Startpage email will be visible on your Account Settings page, and your Stripe email will be visible in your Billing portal, also accessible from your Account Settings page.</p>
           <p><strong>Can I change either of these emails?</strong> We currently do not support changing email addresses through the Startpage or Stripe portals. Please reach out to us with any concerns.</p>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">Can students get a free Ad-free subscription?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">Can students get a free Ad-free subscription?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>Yes. Students with a .edu email address get one year free of Ad-free Startpage. We do not use any third parties to verify student status, we only check if you have a valid .edu email. We currently cannot offer ad-free subscriptions to students without a .edu email. If you believe you should have gotten a free subscription and did not, email <a href="mailto:subscribers@startpage.com">subscribers@startpage.com</a> for help.</p>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">Can I use my StartMail account to sign in to Startpage?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">Can I use my StartMail account to sign in to Startpage?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>Startpage and StartMail are separate products, and our ad-free and their personal and business subscriptions are unrelated. You are welcome to use your StartMail email to sign up for an account on Startpage.</p>
         </div>
-      </article>
+      </details>
 
-      <article class="faq-item">
-        <h2 class="faq-item__q">Questions?</h2>
+      <details class="faq-item">
+        <summary class="faq-item__q"><span class="faq-item__q-text">Questions?</span><svg class="faq-item__chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3.5 8L12 16L20.5 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></summary>
         <div class="faq-item__a">
           <p>Email us at:</p>
           <p><a href="mailto:subscribers@startpage.com">subscribers@startpage.com</a></p>
         </div>
-      </article>
+      </details>
     </div>
   </main>
 
