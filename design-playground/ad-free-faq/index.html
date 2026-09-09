@@ -43,7 +43,8 @@
     .proto-chrome {
       position: fixed;
       bottom: var(--spacing-24);
-      right: var(--spacing-24);
+      left: var(--spacing-24);
+      right: auto;
       z-index: 100;
       display: flex;
       align-items: center;
@@ -137,6 +138,113 @@
       display: block;
       width: var(--spacing-20);
       height: var(--spacing-20);
+    }
+
+    .site-nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: flex;
+      justify-content: flex-end;
+      background: rgba(30, 34, 45, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .site-nav-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .site-nav {
+      width: min(100%, 294px);
+      height: 100%;
+      margin: 0;
+      padding: 56px 32px 24px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      background: var(--color-background-primary);
+      transform: translateX(100%);
+      transition: transform 0.2s ease;
+    }
+    .site-nav-overlay.is-open .site-nav {
+      transform: translateX(0);
+    }
+    .site-nav__close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+    }
+    .site-nav__close:hover {
+      color: var(--color-text-primary);
+    }
+    .site-nav {
+      position: relative;
+    }
+    .site-nav__section + .site-nav__section {
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+    }
+    .site-nav__heading {
+      margin: 0 0 16px;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+    .site-nav__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .site-nav__link {
+      color: var(--color-text-primary);
+      text-decoration: none;
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+    }
+    .site-nav__link:hover {
+      color: var(--color-text-brandblue);
+    }
+    .site-nav__link--icon {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .site-nav__icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .site-nav__icon-img {
+      display: block;
+      width: 20px;
+      height: 20px;
+    }
+    .site-nav__icon-img--dark {
+      display: none;
+    }
+    [data-theme="dark"] .site-nav__icon-img--light {
+      display: none;
+    }
+    [data-theme="dark"] .site-nav__icon-img--dark {
+      display: block;
+    }
+    body.site-nav-open {
+      overflow: hidden;
     }
 
     /* ── Hero ── */
@@ -369,6 +477,8 @@
       line-height: 20px;
     }
     .about-footer__social {
+      position: relative;
+      z-index: 2;
       display: flex;
     }
     .about-footer__social a {
@@ -455,7 +565,8 @@
       }
 
       .proto-chrome {
-        right: var(--spacing-16);
+        left: var(--spacing-16);
+        right: auto;
         bottom: var(--spacing-16);
       }
     }
@@ -481,7 +592,7 @@
 </svg>
     </a>
     <p class="faq-header__title">FAQ</p>
-    <button type="button" class="faq-header__menu" aria-label="Open menu">
+    <button type="button" class="faq-header__menu" id="siteNavOpen" aria-label="Open menu" aria-expanded="false" aria-controls="siteNavOverlay">
       <svg class="faq-header__menu-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
         <path d="M1 2H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         <path d="M1 10H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -489,6 +600,74 @@
       </svg>
     </button>
   </header>
+
+  <div class="site-nav-overlay" id="siteNavOverlay" hidden>
+    <nav class="site-nav" id="siteNav" role="dialog" aria-modal="true" aria-label="Site menu">
+      <button type="button" class="site-nav__close" id="siteNavClose" aria-label="Close menu">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="16" height="16">
+          <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="site-nav__sections">
+        <section class="site-nav__section">
+          <h2 class="site-nav__heading">Search</h2>
+          <ul class="site-nav__list">
+            <li>
+              <a class="site-nav__link site-nav__link--icon" href="https://www.startpage.com/do/settings" target="_blank" rel="noopener noreferrer">
+                <span class="site-nav__icon" aria-hidden="true">
+                  <img class="site-nav__icon-img site-nav__icon-img--light" src="https://www.datocms-assets.com/4799/1775520575-frame-1171277863-1.svg" width="20" height="20" alt="" />
+                  <img class="site-nav__icon-img site-nav__icon-img--dark" src="https://www.datocms-assets.com/4799/1775520389-frame-1171277863.svg" width="20" height="20" alt="" />
+                </span>
+                Settings
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="site-nav__section">
+          <h2 class="site-nav__heading">Products</h2>
+          <ul class="site-nav__list">
+            <li>
+              <a class="site-nav__link site-nav__link--icon" href="https://www.startpage.com" target="_blank" rel="noopener noreferrer">
+                <span class="site-nav__icon" aria-hidden="true">
+                  <img class="site-nav__icon-img site-nav__icon-img--light" src="https://www.datocms-assets.com/4799/1775520608-frame.svg" width="20" height="20" alt="" />
+                  <img class="site-nav__icon-img site-nav__icon-img--dark" src="https://www.datocms-assets.com/4799/1775520624-frame-1.svg" width="20" height="20" alt="" />
+                </span>
+                Startpage Search
+              </a>
+            </li>
+            <li>
+              <a class="site-nav__link site-nav__link--icon" href="https://app.startpage.com?source=home-hamburger" target="_blank" rel="noopener noreferrer">
+                <span class="site-nav__icon" aria-hidden="true">
+                  <img class="site-nav__icon-img site-nav__icon-img--light" src="https://www.datocms-assets.com/4799/1775520732-frame-1171277919.svg" width="20" height="20" alt="" />
+                  <img class="site-nav__icon-img site-nav__icon-img--dark" src="https://www.datocms-assets.com/4799/1775520771-frame-1171277919-1.svg" width="20" height="20" alt="" />
+                </span>
+                Mobile Browser
+              </a>
+            </li>
+            <li>
+              <a class="site-nav__link site-nav__link--icon" href="https://www.startpage.com/en/download/" target="_blank" rel="noopener noreferrer">
+                <span class="site-nav__icon" aria-hidden="true">
+                  <img class="site-nav__icon-img site-nav__icon-img--light" src="https://www.datocms-assets.com/4799/1775520976-desktop.svg" width="20" height="20" alt="" />
+                  <img class="site-nav__icon-img site-nav__icon-img--dark" src="https://www.datocms-assets.com/4799/1775521000-desktop-1.svg" width="20" height="20" alt="" />
+                </span>
+                Browser Extension
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="site-nav__section">
+          <h2 class="site-nav__heading">Resources</h2>
+          <ul class="site-nav__list">
+            <li><a class="site-nav__link" href="https://www.startpage.com/en/about-us/" target="_blank" rel="noopener noreferrer">About Us</a></li>
+            <li><a class="site-nav__link" href="https://www.startpage.com/en/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
+            <li><a class="site-nav__link" href="https://www.startpage.com/privacy-please/press/" target="_blank" rel="noopener noreferrer">Press</a></li>
+            <li><a class="site-nav__link" href="https://support.startpage.com/hc/en-us" target="_blank" rel="noopener noreferrer">Support</a></li>
+            <li><a class="site-nav__link" href="https://support.startpage.com/hc/en-us/articles/4521527855636-Impressum" target="_blank" rel="noopener noreferrer">Imprint</a></li>
+          </ul>
+        </section>
+      </div>
+    </nav>
+  </div>
 
   <section class="faq-hero" aria-labelledby="faqHeroTitle">
     <svg class="faq-hero__wave" viewBox="0 -62 1440 684" preserveAspectRatio="none" aria-hidden="true">
@@ -620,6 +799,7 @@
       </svg>
     </div>
     <div class="about-footer__bar">
+      <a class="about-footer__logo-link" href="https://www.startpage.com/" aria-label="Startpage home">
       <svg class="about-footer__logo" width="113" height="25" viewBox="0 0 113 25" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <g clip-path="url(#about-footer-logo-clip)">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M0.50884 22.3776C0.782827 21.9891 1.23295 21.7366 1.83963 21.6394C18.9442 18.8617 36.2837 18.8422 53.3883 21.5617C53.858 21.6394 54.1515 21.7754 54.3081 21.9308C54.4451 22.0668 54.5038 22.2416 54.4647 22.4941C54.4255 22.7078 54.3277 22.8438 54.1711 22.9215C53.9754 23.0186 53.6623 23.0575 53.1926 22.9992C36.2445 20.9596 19.1791 21.62 2.46589 24.9806C2.30932 25 2.15276 25.0194 2.01577 25.0194H1.87877C1.46779 25 1.17424 24.864 0.998102 24.7474C0.606692 24.4949 0.352276 24.087 0.254424 23.6208C0.195712 23.1546 0.273994 22.7078 0.50884 22.3776Z" fill="url(#about-footer-logo-grad)"/>
@@ -635,6 +815,7 @@
           </clipPath>
         </defs>
       </svg>
+      </a>
       <nav class="about-footer__links" aria-label="Footer">
         <a href="https://www.startpage.com/en/privacy-policy">Privacy Policy</a>
         <a href="https://www.startpage.com/en/about-us/">About Us</a>
@@ -642,20 +823,20 @@
         <a href="https://www.startpage.com/privacy-please/">Blog</a>
       </nav>
       <div class="about-footer__social">
-        <a href="https://twitter.com/startpage" rel="noopener nofollow" aria-label="twitter">
-          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="20"/><path d="M28 15.5c-.6.3-1.2.5-1.9.6.7-.4 1.2-1 1.5-1.9-.7.4-1.4.7-2.1.8a3.3 3.3 0 00-5.6 3 9.3 9.3 0 01-6.8-3.4 3.3 3.3 0 001 4.4c-.5 0-1-.2-1.5-.4 0 1.6 1.2 3 2.7 3.2a3.3 3.3 0 01-1.5.1 3.3 3.3 0 003 2.3 6.6 6.6 0 01-4.8 1.3 9.3 9.3 0 0014.4-8.3c.6-.4 1.2-1 1.6-1.7z"/></svg>
+        <a href="https://twitter.com/startpage" target="_blank" rel="noopener noreferrer" aria-label="twitter">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="20"/><path d="M28 15.5c-.6.3-1.2.5-1.9.6.7-.4 1.2-1 1.5-1.9-.7.4-1.4.7-2.1.8a3.3 3.3 0 00-5.6 3 9.3 9.3 0 01-6.8-3.4 3.3 3.3 0 001 4.4c-.5 0-1-.2-1.5-.4 0 1.6 1.2 3 2.7 3.2a3.3 3.3 0 01-1.5.1 3.3 3.3 0 003 2.3 6.6 6.6 0 01-4.8 1.3 9.3 9.3 0 0014.4-8.3c.6-.4 1.2-1 1.6-1.7z"/></svg>
         </a>
-        <a href="https://www.reddit.com/r/StartpageSearch/" rel="noopener nofollow" aria-label="reddit">
-          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="20"/><path d="M14.2 18.4a1.8 1.8 0 11.1 3.6c.2 1.5 1.6 2.7 4.1 3l-.9 2.2c-.1.2 0 .4.2.5l.4.1c.1 0 .3-.1.4-.2l1.6-2.1h1.8l1.6 2.1c.1.1.3.2.4.2l.4-.1c.2-.1.3-.3.2-.5l-.9-2.2c2.5-.3 3.9-1.5 4.1-3a1.8 1.8 0 11.6-3.4 3.5 3.5 0 00-3.3-2.2c-.4 0-.8.1-1.1.2-1-.6-2.2-1-3.5-1.1l.6-2.8 2 .4a1.5 1.5 0 101-.9l-2.5-.5c-.2 0-.4.1-.5.3l-.7 3.4c-1.2.1-2.4.5-3.4 1.1-.3-.1-.7-.2-1.1-.2a3.5 3.5 0 00-3.3 2.2 1.8 1.8 0 01-.3-.2zm3.6 3.2a1.1 1.1 0 110-2.2 1.1 1.1 0 010 2.2zm4.4 0a1.1 1.1 0 110-2.2 1.1 1.1 0 010 2.2z"/></svg>
+        <a href="https://www.reddit.com/r/StartpageSearch/" target="_blank" rel="noopener noreferrer" aria-label="reddit">
+          <svg width="41" height="40" viewBox="0 0 41 40" fill="none" aria-hidden="true"><circle cx="20.5" cy="20" r="20"/><path d="M28.5 20.1a1.8 1.8 0 00-3-1.4 9.2 9.2 0 00-4.7-1.3l1.1-3.7 2.7.5a1.2 1.2 0 10.1-.6l-3.2-.6-1.3 4.4c-1.8 0-3.4.6-4.7 1.3-.3-.3-.7-.4-1.2-.4a1.8 1.8 0 00-1 3.4v.5c0 2.7 3.2 4.9 7.2 4.9s7.2-2.2 7.2-4.9v-.5c.5-.3.8-1 .8-1.6zm-11.4 1.3a1.1 1.1 0 112.2 0 1.1 1.1 0 01-2.2 0zm6 3s-.8 1-2.6 1c-1.9 0-2.6-1-2.6-1a.3.3 0 01.4-.3s.6.6 2.2.6c1.5 0 2.2-.6 2.2-.7a.3.3 0 01.5.4zm-.2-1.9a1.1 1.1 0 110-2.2 1.1 1.1 0 010 2.2z"/></svg>
         </a>
-        <a href="https://www.instagram.com/startpage/" rel="noopener nofollow" aria-label="instagram">
-          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="20"/><path d="M20 14.2a5.8 5.8 0 100 11.6 5.8 5.8 0 000-11.6zm0 9.6a3.8 3.8 0 110-7.6 3.8 3.8 0 010 7.6zm7.4-9.8a1.4 1.4 0 11-2.8 0 1.4 1.4 0 012.8 0zm2.5 1.4c-.1-1.8-.5-3.4-1.8-4.7s-2.9-1.7-4.7-1.8c-1.9-.1-7.4-.1-9.3 0-1.8.1-3.4.5-4.7 1.8s-1.7 2.9-1.8 4.7c-.1 1.9-.1 7.4 0 9.3.1 1.8.5 3.4 1.8 4.7s2.9 1.7 4.7 1.8c1.9.1 7.4.1 9.3 0 1.8-.1 3.4-.5 4.7-1.8s1.7-2.9 1.8-4.7c.1-1.9.1-7.4 0-9.3zm-2.3 11.3a3.9 3.9 0 01-2.2 2.2c-1.5.6-5.1.5-6.8.5s-5.3.1-6.8-.5a3.9 3.9 0 01-2.2-2.2c-.6-1.5-.5-5.1-.5-6.8s-.1-5.3.5-6.8a3.9 3.9 0 012.2-2.2c1.5-.6 5.1-.5 6.8-.5s5.3-.1 6.8.5a3.9 3.9 0 012.2 2.2c.6 1.5.5 5.1.5 6.8s.1 5.3-.5 6.8z"/></svg>
+        <a href="https://www.instagram.com/startpage/" target="_blank" rel="noopener noreferrer" aria-label="instagram">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="20"/><path d="M20 15.8a4.1 4.1 0 000 8.3 4.1 4.1 0 000-8.3zm0 6.8a2.7 2.7 0 01-2.6-2.6c0-1.5 1.1-2.7 2.6-2.7s2.6 1.2 2.6 2.7c0 1.4-1.1 2.6-2.6 2.6zM24.3 16.7a1 1 0 100-1.9 1 1 0 000 1.9z"/><path d="M26.7 13.3c-.8-.8-2-1.3-3.4-1.3h-6.6c-2.8 0-4.7 1.9-4.7 4.7v6.6c0 1.4.5 2.6 1.4 3.4.8.9 2 1.3 3.3 1.3h6.6c1.4 0 2.5-.4 3.4-1.3.8-.8 1.3-2 1.3-3.4v-6.6c0-1.4-.5-2.5-1.3-3.4zm-.1 10c0 1-.4 1.8-1 2.4-.5.5-1.3.8-2.3.8h-6.6c-1 0-1.8-.3-2.3-.8-.6-.6-1-1.4-1-2.4v-6.6c0-1 .4-1.8 1-2.4.5-.5 1.3-.8 2.3-.8h6.7c1 0 1.7.3 2.3.9.6.5.9 1.3.9 2.3v6.6z"/></svg>
         </a>
-        <a href="https://www.facebook.com/startpagesearch/" rel="noopener nofollow" aria-label="facebook">
-          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="20"/><path d="M22.6 20.9h3l.5-3.2h-3.5v-2c0-.9.3-1.6 1.6-1.6H26V11.3c-.5-.1-1.6-.2-2.9-.2-2.9 0-4.8 1.8-4.8 5v2.6h-3.2v3.2h3.2V29h3.7v-8.1z"/></svg>
+        <a href="https://www.facebook.com/startpagesearch/" target="_blank" rel="noopener noreferrer" aria-label="facebook">
+          <svg width="41" height="40" viewBox="0 0 41 40" fill="none" aria-hidden="true"><circle cx="20.5" cy="20" r="20"/><path d="M24 17.2h-2.6v-1.7c0-.6.4-.7.7-.7h1.8V12h-2.5c-2.7 0-3.3 2-3.3 3.4v1.8h-1.6V20h1.6v8h3.3v-8h2.2l.3-2.8z"/></svg>
         </a>
-        <a href="https://mastodon.social/@StartpageSearch" rel="noopener nofollow" aria-label="mastodon">
-          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="20"/><path d="M27.8 16.6c0-3.2-2.1-4.1-2.1-4.1-1.1-.5-2.9-.7-4.8-.7h-.1c-1.9 0-3.7.2-4.8.7 0 0-2.1.9-2.1 4.1 0 .7 0 1.6.1 2.5.2 2.7.6 5.4 3.5 6.1 1.3.3 2.5.4 3.7.3 2.1-.1 3.3-.7 3.3-.7l-.1-1.5s-1.5.5-3.2.4c-1.6-.1-3.4-.2-3.6-2.5v-.1c0 0 1.6.4 3.6.5 1.2 0 2.4-.1 3.6-.4 2.2-.4 3.9-2.6 4-4.8.1-.6.1-1.2.1-1.7zm-3.1 3.4h-1.6v-4.2c0-.9-.4-1.3-1.1-1.3-.8 0-1.3.5-1.3 1.6v2.3h-1.6v-2.3c0-1.1-.4-1.6-1.3-1.6-.8 0-1.1.5-1.1 1.3v4.2h-1.6v-4.3c0-.9.2-1.6.7-2.1.5-.5 1.1-.7 1.9-.7.9 0 1.6.3 2.1 1l.4.7.4-.7c.5-.7 1.2-1 2.1-1 .8 0 1.4.2 1.9.7.5.5.7 1.2.7 2.1v4.3z"/></svg>
+        <a href="https://mastodon.social/@StartpageSearch" target="_blank" rel="noopener noreferrer" aria-label="mastodon">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="20"/><path fill-rule="evenodd" clip-rule="evenodd" d="M20.477 12h-.928c-.126.005-.251.012-.376.018l-.26.013c-1.062.049-2.118.15-3.153.407-.348.087-.695.186-1.013.353-.551.29-.98.718-1.333 1.225-.444.638-.7 1.351-.825 2.114a7.271 7.271 0 0 0-.09 1.198l.001.68c.001.679.002 1.359.013 2.038.016.943.079 1.883.235 2.815.143.86.363 1.7.77 2.48.49.936 1.202 1.639 2.197 2.041.434.176.889.276 1.346.37.88.185 1.78.267 2.681.243.91-.026 1.801-.161 2.66-.464.127-.045.25-.099.373-.153l.04-.018a.09.09 0 0 0 .048-.065c-.014-.346-.03-.691-.047-1.043l-.011-.224-.028.007a9.393 9.393 0 0 1-3.116.332c-.448-.03-.895-.06-1.33-.179-.428-.117-.811-.31-1.095-.662a2 2 0 0 1-.41-.985c-.018-.13-.03-.26-.042-.395-.005-.062-.01-.126-.017-.19l.1.02.378.076a19.78 19.78 0 0 0 1.983.277c.572.052 1.14.087 1.714.058.573-.03 1.146-.076 1.717-.132.384-.035.765-.09 1.143-.165.905-.191 1.733-.558 2.454-1.142.34-.274.633-.592.827-.99.11-.226.147-.47.184-.713l.01-.056c.109-.737.18-1.479.21-2.222a.615.615 0 0 1 .013-.077v-2.36l-.026-.165c-.017-.114-.034-.228-.054-.341-.171-.942-.547-1.785-1.2-2.501-.493-.54-1.104-.872-1.81-1.051a12.27 12.27 0 0 0-2.011-.345 47.797 47.797 0 0 0-1.256-.082 96.13 96.13 0 0 1-.588-.034c-.018-.001-.036-.004-.054-.007a.885.885 0 0 0-.024-.004zm4.347 9.716h-1.672v-4.071c0-.235-.024-.466-.11-.686-.139-.36-.406-.552-.789-.6a1.427 1.427 0 0 0-.685.068c-.364.136-.559.422-.643.78a2.868 2.868 0 0 0-.079.614c-.006.535-.005 1.07-.004 1.606v.688h-1.658V19.44c.001-.537.002-1.073-.002-1.61a2.222 2.222 0 0 0-.121-.756c-.154-.42-.448-.663-.9-.714a1.459 1.459 0 0 0-.588.04c-.378.113-.57.388-.648.752a2.17 2.17 0 0 0-.048.447l-.003 4.023v.096H15.202v-1.314c-.002-1.003-.002-2.005.003-3.008.002-.467.085-.924.292-1.35.338-.7.884-1.138 1.658-1.283.42-.08.854-.06 1.265.058.566.162.973.52 1.26 1.024.072.128.15.255.229.386l.1.166.065-.107c.049-.082.096-.16.146-.237l.096-.154c.085-.14.171-.279.272-.406a1.962 1.962 0 0 1 1.211-.721c.26-.05.518-.07.775-.052.216.016.43.059.642.132.648.226 1.09.67 1.356 1.293.148.352.228.729.237 1.11.01.312.014.625.014.937v3.525z"/></svg>
         </a>
       </div>
     </div>
@@ -687,6 +868,29 @@
       applyTheme(next);
       localStorage.setItem('theme', next);
     });
+
+    (function siteNav() {
+      const overlay = document.getElementById('siteNavOverlay');
+      const openBtn = document.getElementById('siteNavOpen');
+      const closeBtn = document.getElementById('siteNavClose');
+      if (!overlay || !openBtn || !closeBtn) return;
+
+      const setOpen = (open) => {
+        overlay.classList.toggle('is-open', open);
+        overlay.hidden = !open;
+        document.body.classList.toggle('site-nav-open', open);
+        openBtn.setAttribute('aria-expanded', String(open));
+      };
+
+      openBtn.addEventListener('click', () => setOpen(true));
+      closeBtn.addEventListener('click', () => setOpen(false));
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) setOpen(false);
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) setOpen(false);
+      });
+    })();
 
     (function fixPlaygroundBack() {
       const link = document.getElementById('playgroundBack');
