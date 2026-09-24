@@ -465,12 +465,13 @@
       height: auto;
     }
 
-    .compare__layer--free {
+    .compare__layer--ads {
       z-index: 0;
     }
 
-    .compare__layer--ads {
+    .compare__layer--free {
       z-index: 1;
+      /* Ad-Free on the left (top layer); With ads shows on the right */
       clip-path: inset(0 calc(100% - var(--compare-pos)) 0 0);
     }
 
@@ -491,11 +492,11 @@
       pointer-events: none;
     }
 
-    .compare__label--ads {
+    .compare__label--free {
       left: var(--spacing-16);
     }
 
-    .compare__label--free {
+    .compare__label--ads {
       right: var(--spacing-16);
     }
 
@@ -522,14 +523,14 @@
       width: var(--spacing-48);
       height: var(--spacing-48);
       border-radius: var(--radius-full);
-      background: var(--color-background-primary);
-      border: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      background: var(--color-button-brandblue);
+      border: var(--border-stroke-lg) solid var(--color-background-primary);
       box-shadow: var(--shadow-dropdown);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: var(--spacing-4);
-      color: var(--color-icon-secondary);
+      color: var(--color-text-inverted);
     }
 
     .compare__handle-knob svg {
@@ -645,11 +646,11 @@
         padding: var(--spacing-4) var(--spacing-8);
       }
 
-      .compare__label--ads {
+      .compare__label--free {
         left: var(--spacing-12);
       }
 
-      .compare__label--free {
+      .compare__label--ads {
         right: var(--spacing-12);
       }
 
@@ -759,36 +760,36 @@
       </div>
       <div class="compare" data-compare style="--compare-pos: 50%">
         <div class="compare__media" data-compare-media>
-          <div class="compare__layer compare__layer--free">
+          <div class="compare__layer compare__layer--ads">
             <img
-              src="assets/serp-ad-free.png?v=3"
-              alt="Startpage search results without sponsored results"
+              src="assets/serp-with-ads.png?v=3"
+              alt="Startpage search results with sponsored results"
               width="1024"
               height="883"
               draggable="false"
             />
           </div>
-          <div class="compare__layer compare__layer--ads" aria-hidden="true">
+          <div class="compare__layer compare__layer--free" aria-hidden="true">
             <img
-              src="assets/serp-with-ads.png?v=3"
+              src="assets/serp-ad-free.png?v=3"
               alt=""
               width="1024"
               height="883"
               draggable="false"
             />
           </div>
-          <span class="compare__label compare__label--ads">With ads</span>
           <span class="compare__label compare__label--free">Ad-Free</span>
+          <span class="compare__label compare__label--ads">With ads</span>
           <button
             type="button"
             class="compare__handle"
             data-compare-handle
             role="slider"
-            aria-label="Compare with ads versus Ad-Free"
+            aria-label="Compare Ad-Free versus with ads"
             aria-valuemin="0"
             aria-valuemax="100"
             aria-valuenow="50"
-            aria-valuetext="Showing 50 percent with ads"
+            aria-valuetext="Showing 50 percent Ad-Free"
           >
             <span class="compare__handle-knob" aria-hidden="true">
               <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -942,7 +943,7 @@
         handle.setAttribute('aria-valuenow', String(Math.round(pos)));
         handle.setAttribute(
           'aria-valuetext',
-          `Showing ${Math.round(pos)} percent with ads`
+          `Showing ${Math.round(pos)} percent Ad-Free`
         );
       }
 
