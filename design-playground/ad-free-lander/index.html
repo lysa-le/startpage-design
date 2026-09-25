@@ -757,7 +757,7 @@
       .compare__layer img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         object-position: top center;
       }
 
@@ -928,11 +928,11 @@
           <div class="compare__layer compare__layer--ads">
             <img
               data-compare-img="ads"
-              data-src-light="assets/serp-with-ads.png?v=3"
-              data-src-dark="assets/serp-with-ads-dark.png?v=2"
-              data-src-light-mobile="assets/serp-with-ads-mobile.png?v=1"
-              data-src-dark-mobile="assets/serp-with-ads-mobile-dark.png?v=1"
-              src="assets/serp-with-ads.png?v=3"
+              data-src-light="assets/serp-with-ads.png?v=4"
+              data-src-dark="assets/serp-with-ads-dark.png?v=3"
+              data-src-light-mobile="assets/serp-with-ads-mobile.png?v=4"
+              data-src-dark-mobile="assets/serp-with-ads-mobile-dark.png?v=4"
+              src="assets/serp-with-ads.png?v=4"
               alt="Startpage search results with sponsored results"
               width="1024"
               height="883"
@@ -944,8 +944,8 @@
               data-compare-img="free"
               data-src-light="assets/serp-ad-free.png?v=3"
               data-src-dark="assets/serp-ad-free-dark.png?v=2"
-              data-src-light-mobile="assets/serp-ad-free-mobile.png?v=1"
-              data-src-dark-mobile="assets/serp-ad-free-mobile-dark.png?v=1"
+              data-src-light-mobile="assets/serp-ad-free-mobile.png?v=3"
+              data-src-dark-mobile="assets/serp-ad-free-mobile-dark.png?v=3"
               src="assets/serp-ad-free.png?v=3"
               alt=""
               width="1024"
@@ -1121,8 +1121,8 @@
       if (!media || !handle) return;
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const minPos = 12;
-      const maxPos = 88;
+      const minPos = 0;
+      const maxPos = 100;
       let pos = 50;
       let dir = 1;
       let dragging = false;
