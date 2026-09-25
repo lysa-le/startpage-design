@@ -26,6 +26,8 @@
       --color-stroke-primary:        var(--color-black-400);
       --color-stroke-secondary:      var(--color-black-550);
       --color-stroke-primary-button: var(--color-brand-blue-100);
+      --color-button-brandblue:      var(--color-brand-blue-100);
+      --color-button-brandbluehover: var(--color-brand-blue-300);
       --color-button-inactive:       var(--color-black-600);
       --color-button-productfilled:  var(--color-black-550);
       --color-button-productfilledhover: var(--color-black-400);
@@ -97,6 +99,8 @@
 
     .lander-header__logo {
       display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
       color: var(--color-text-primary);
       text-decoration: none;
     }
@@ -104,6 +108,20 @@
       display: block;
       width: calc(var(--spacing-96) + var(--spacing-16) + 1px); /* 113px */
       height: calc(var(--spacing-24) + 1px); /* 25px */
+      flex-shrink: 0;
+    }
+    .lander-header__product {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-semibold);
+      white-space: nowrap;
+      transform: translateY(calc(var(--spacing-4) / -2)); /* -2px */
+    }
+    .lander-header__product-divider {
+      font-weight: var(--font-weight-regular);
     }
 
     .lander-header__menu {
@@ -177,7 +195,7 @@
       flex-wrap: nowrap;
       gap: var(--spacing-12);
       justify-content: center;
-      padding-top: var(--spacing-12); /* room for Best Deal badge */
+      padding-top: var(--spacing-16); /* room for Best Deal badge */
     }
 
     .plan-picker--centered {
@@ -188,7 +206,7 @@
       position: relative;
       width: calc(var(--spacing-96) * 3 + var(--spacing-8) + var(--spacing-4) + 2px); /* 302px */
       min-height: var(--spacing-96);
-      padding: var(--spacing-16);
+      padding: var(--spacing-24) var(--spacing-16) var(--spacing-16);
       border: var(--border-stroke-lg) solid var(--color-stroke-primary);
       border-radius: var(--radius-xl);
       background: var(--color-background-primary);
@@ -274,6 +292,14 @@
       stroke: var(--color-whisper-0);
     }
 
+    [data-theme="dark"] .plan-card__badge {
+      color: var(--color-text-inverted);
+    }
+
+    [data-theme="dark"] .plan-card__mark-check path {
+      stroke: var(--color-text-inverted);
+    }
+
     .plan-card__mark .plan-card__mark-check { display: none; }
     .plan-card__mark .plan-card__mark-empty { display: block; }
     .plan-card[aria-checked="true"] .plan-card__mark-check { display: block; }
@@ -281,9 +307,9 @@
 
     .plan-card__row {
       display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: var(--spacing-8);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-4);
       width: 100%;
     }
 
@@ -308,20 +334,11 @@
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
       color: var(--color-text-secondary);
-      white-space: nowrap;
-      text-align: right;
     }
 
-    /* ── CTA button ── */
-    @keyframes cta-wiggle {
-      0%, 100% { transform: rotate(0deg); }
-      20% { transform: rotate(-2.5deg); }
-      40% { transform: rotate(2.5deg); }
-      60% { transform: rotate(-1.5deg); }
-      80% { transform: rotate(1deg); }
-    }
-
+    /* ── CTA button (liquid fill hover, matches design-system teal CTA) ── */
     .cta-btn {
+      --btn-wave-color: var(--color-button-tealhover);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -338,12 +355,29 @@
       font-weight: var(--font-weight-bold);
       cursor: pointer;
       text-decoration: none;
-      transform-origin: center;
-      transition: background-color 0.15s ease;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
     }
-    .cta-btn:hover {
-      background: var(--color-button-tealhover);
-      animation: cta-wiggle 0.45s ease;
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -10%;
+      width: 120%;
+      height: 200%;
+      border-radius: 50% 50% 0 0 / 30px 30px 0 0;
+      transform: translateY(105%);
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+      background: var(--btn-wave-color);
+    }
+    .cta-btn:hover::before {
+      transform: translateY(0%);
+    }
+    .cta-btn__label {
+      position: relative;
+      z-index: 1;
     }
     .cta-btn:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
@@ -353,8 +387,11 @@
       color: var(--color-text-inverted);
     }
     @media (prefers-reduced-motion: reduce) {
-      .cta-btn:hover {
-        animation: none;
+      .cta-btn::before {
+        transition: none;
+      }
+      .cta-btn:hover::before {
+        transform: translateY(0%);
       }
     }
 
@@ -374,17 +411,38 @@
     .feature-card {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-8);
-      padding: var(--spacing-16);
+      align-items: center;
+      gap: var(--spacing-4);
+      padding: var(--spacing-20) var(--spacing-16);
       border: none;
       border-radius: var(--radius-xl);
       background: var(--color-background-tertiary);
       text-align: center;
     }
 
+    .feature-card__icon {
+      display: block;
+      width: var(--spacing-40);
+      height: var(--spacing-40);
+      flex-shrink: 0;
+      margin-bottom: var(--spacing-8);
+      color: var(--color-button-brandblue);
+    }
+    .feature-card__icon-bg {
+      fill: var(--color-background-secondary);
+    }
+    .feature-card__icon-glyph {
+      stroke: currentColor;
+      fill: none;
+    }
+    .feature-card__icon-glyph--fill {
+      fill: currentColor;
+      stroke: none;
+    }
+
     .feature-card__title {
       font-size: var(--font-heading-xxs);
-      line-height: var(--font-heading-xxs-lh);
+      line-height: var(--font-body-md-lh); /* tighter than heading-xxs-lh (28 → 24) */
       font-weight: var(--font-weight-bold);
       letter-spacing: -0.02em;
       color: var(--color-text-primary);
@@ -494,6 +552,8 @@
 
     .compare__label--free {
       left: var(--spacing-16);
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
     }
 
     .compare__label--ads {
@@ -556,8 +616,8 @@
     }
 
     .bottom-cta__title {
-      font-size: var(--font-heading-xs);
-      line-height: var(--font-heading-xs-lh);
+      font-size: calc(var(--font-heading-xs) + var(--spacing-8));
+      line-height: calc(var(--font-heading-xs-lh) + var(--spacing-8));
       font-weight: var(--font-weight-bold);
       letter-spacing: -0.02em;
       color: var(--color-text-primary);
@@ -569,6 +629,10 @@
       line-height: var(--font-body-md-lh);
       color: var(--color-text-tertiary);
       margin-bottom: var(--spacing-40);
+    }
+
+    .bottom-cta__break {
+      display: none;
     }
 
     .bottom-cta__offer {
@@ -597,7 +661,22 @@
 
     @media (max-width: 960px) {
       .lander-header {
-        padding: var(--spacing-24) var(--spacing-16);
+        padding: var(--spacing-16);
+        min-height: var(--spacing-64);
+      }
+
+      .lander-header__logo {
+        gap: var(--spacing-4);
+        min-width: 0;
+      }
+
+      .lander-header__logo svg {
+        width: calc(var(--spacing-80) + var(--spacing-16)); /* 96px */
+        height: calc(var(--spacing-20) + 1px);
+      }
+
+      .lander-header__product {
+        gap: var(--spacing-4);
       }
 
       .lander-main {
@@ -606,39 +685,80 @@
 
       .hero {
         gap: var(--spacing-32);
-        padding-top: var(--spacing-32);
-        padding-bottom: var(--spacing-64);
+        padding-top: var(--spacing-24);
+        padding-bottom: var(--spacing-48);
+      }
+
+      .hero__title {
+        font-size: var(--font-heading-sm);
+        line-height: var(--font-heading-sm-lh);
       }
 
       .hero__offer {
         align-items: stretch;
         width: 100%;
+        gap: var(--spacing-20);
       }
 
       .plan-picker,
       .plan-picker--centered {
+        flex-direction: row;
         justify-content: stretch;
-        flex-direction: column;
+        width: 100%;
+        gap: var(--spacing-8);
       }
 
       .plan-card {
-        width: 100%;
+        flex: 1 1 0;
+        width: auto;
+        min-width: 0;
       }
 
       .hero__offer .cta-btn,
       .bottom-cta .cta-btn {
         width: 100%;
         align-self: stretch;
+        min-width: 0;
       }
 
       .features {
-        grid-template-columns: 1fr;
-        margin-bottom: var(--spacing-80);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--spacing-8);
+        margin-bottom: var(--spacing-64);
         max-width: none;
       }
 
       .explain {
-        margin-bottom: var(--spacing-80);
+        margin-bottom: var(--spacing-64);
+      }
+
+      .explain__title {
+        margin-bottom: var(--spacing-16);
+      }
+
+      .explain__body {
+        margin-bottom: var(--spacing-32);
+      }
+
+      .compare {
+        max-width: calc(var(--spacing-96) * 3 + var(--spacing-40)); /* 328px phone frame */
+      }
+
+      .compare__media {
+        height: auto;
+        aspect-ratio: 402 / 806;
+        border-radius: calc(var(--radius-xl) + var(--spacing-8));
+      }
+
+      .compare__layer {
+        height: 100%;
+      }
+
+      .compare__layer img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
       }
 
       .compare__label {
@@ -659,16 +779,40 @@
         height: var(--spacing-40);
       }
 
+      .bottom-cta {
+        padding-top: var(--spacing-48);
+      }
+
+      .bottom-cta__sub {
+        margin-bottom: var(--spacing-32);
+      }
+
+      .bottom-cta__break {
+        display: inline;
+      }
+
+      .bottom-cta__offer {
+        width: 100%;
+        align-items: stretch;
+      }
+
       .proto-chrome {
         left: var(--spacing-16);
         bottom: var(--spacing-16);
       }
+
+      .theme-toggle {
+        top: var(--spacing-12);
+        right: var(--spacing-12);
+      }
     }
+
+
   </style>
 </head>
 <body>
   <header class="lander-header">
-    <a class="lander-header__logo" href="https://www.startpage.com/" aria-label="Startpage home">
+    <a class="lander-header__logo" href="https://www.startpage.com/" aria-label="Startpage Ad-Free home">
       <svg aria-hidden="true" overflow="visible" width="113" height="25" viewBox="0 0 113 25" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#lander-logo-clip)">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M0.50884 22.3776C0.782827 21.9891 1.23295 21.7366 1.83963 21.6394C18.9442 18.8617 36.2837 18.8422 53.3883 21.5617C53.858 21.6394 54.1515 21.7754 54.3081 21.9308C54.4451 22.0668 54.5038 22.2416 54.4647 22.4941C54.4255 22.7078 54.3277 22.8438 54.1711 22.9215C53.9754 23.0186 53.6623 23.0575 53.1926 22.9992C36.2445 20.9596 19.1791 21.62 2.46589 24.9806C2.30932 25 2.15276 25.0194 2.01577 25.0194H1.87877C1.46779 25 1.17424 24.864 0.998102 24.7474C0.606692 24.4949 0.352276 24.087 0.254424 23.6208C0.195712 23.1546 0.273994 22.7078 0.50884 22.3776Z" fill="url(#lander-logo-grad)"/>
@@ -684,6 +828,7 @@
           </clipPath>
         </defs>
       </svg>
+      <span class="lander-header__product"><span class="lander-header__product-divider" aria-hidden="true">|</span> Ad-Free</span>
     </a>
     <button type="button" class="lander-header__menu" aria-label="Open menu">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -730,38 +875,63 @@
             </div>
           </button>
         </div>
-        <a class="cta-btn" href="#">Go Ad-Free</a>
+        <a class="cta-btn" href="#"><span class="cta-btn__label">Go Ad-Free</span></a>
       </div>
     </section>
 
     <section class="features" aria-label="Ad-Free benefits">
       <article class="feature-card">
+        <svg class="feature-card__icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle class="feature-card__icon-bg" cx="20" cy="20" r="20"/>
+          <path class="feature-card__icon-glyph" d="M29 19.1771V20.0051C28.9989 21.9459 28.3704 23.8344 27.2084 25.3888C26.0463 26.9432 24.413 28.0804 22.5518 28.6307C20.6907 29.1809 18.7015 29.1149 16.881 28.4423C15.0605 27.7697 13.5062 26.5266 12.4499 24.8985C11.3935 23.2704 10.8918 21.3444 11.0195 19.4078C11.1472 17.4713 11.8975 15.6278 13.1585 14.1525C14.4194 12.6772 16.1235 11.649 18.0166 11.2213C19.9096 10.7936 21.8902 10.9893 23.663 11.7792M16.625 18.125L19.5795 21.0795C20.0188 21.5188 20.7312 21.5188 21.1705 21.0795L27.875 14.375" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
         <h2 class="feature-card__title">No Sponsored Results</h2>
         <p class="feature-card__body">Just the answers you came for.</p>
       </article>
       <article class="feature-card">
+        <svg class="feature-card__icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle class="feature-card__icon-bg" cx="20" cy="20" r="20"/>
+          <rect class="feature-card__icon-glyph" x="11.5" y="17.6934" width="17" height="12.3063" rx="2.51022" stroke-width="2"/>
+          <path class="feature-card__icon-glyph--fill" d="M20.8584 25.682V23.8217C21.0994 23.6786 21.2997 23.4731 21.4393 23.2256C21.5789 22.978 21.6529 22.6972 21.6538 22.4111C21.6549 22.1609 21.6001 21.9138 21.4936 21.6889C21.3872 21.4639 21.232 21.267 21.0399 21.1134C20.8478 20.9597 20.624 20.8535 20.3857 20.8027C20.1474 20.752 19.9009 20.7581 19.6653 20.8207C19.3859 20.8912 19.1303 21.0384 18.9258 21.2465C18.7213 21.4545 18.5755 21.7157 18.504 22.0023C18.4186 22.3479 18.4455 22.7127 18.5805 23.0411C18.7155 23.3696 18.9512 23.6437 19.2517 23.8217V25.682C19.2517 25.8988 19.3355 26.1068 19.4847 26.2602C19.6338 26.4135 19.8361 26.4997 20.0471 26.4997C20.1529 26.5019 20.258 26.4823 20.3564 26.4422C20.4547 26.4021 20.5443 26.3422 20.6199 26.266C20.6954 26.1899 20.7554 26.099 20.7964 25.9987C20.8374 25.8984 20.8585 25.7907 20.8584 25.682Z"/>
+          <path class="feature-card__icon-glyph" d="M15.3633 16.9228V14.6367C15.3633 12.0759 17.4392 10 20 10C22.5608 10 24.6367 12.0759 24.6367 14.6367V16.9228" stroke-width="2" stroke-linecap="round"/>
+        </svg>
         <h2 class="feature-card__title">Cross-Browser Access</h2>
         <p class="feature-card__body">Coming soon in the Startpage mobile app.</p>
       </article>
       <article class="feature-card">
+        <svg class="feature-card__icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle class="feature-card__icon-bg" cx="20" cy="20" r="20"/>
+          <circle class="feature-card__icon-glyph" cx="20" cy="20" r="11" stroke-width="2"/>
+          <path class="feature-card__icon-glyph" d="M21.8 20H21.4645C21.0185 20.2459 20.5223 20.3857 20 20.3857C19.4777 20.3857 18.9835 20.2459 18.5355 20H18.2C16.7094 20 15.5 21.4512 15.5 23.24V24.2429C15.5 24.8817 15.9319 25.4 16.4643 25.4H23.5357C24.0681 25.4 24.5 24.8817 24.5 24.2429V23.24C24.5 21.4512 23.2906 20 21.8 20Z" stroke-width="2"/>
+          <path class="feature-card__icon-glyph" d="M22.6998 17.2996C22.6998 18.7909 21.4911 19.9996 19.9998 19.9996C18.5085 19.9996 17.2998 18.7909 17.2998 17.2996C17.2998 15.8083 18.5085 14.5996 19.9998 14.5996C21.4911 14.5996 22.6998 15.8083 22.6998 17.2996Z" stroke-width="2"/>
+        </svg>
         <h2 class="feature-card__title">Private Accounts</h2>
         <p class="feature-card__body">Your account is never linked to your searches. <a href="../ad-free-faq/">Learn how</a></p>
       </article>
       <article class="feature-card">
+        <svg class="feature-card__icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle class="feature-card__icon-bg" cx="20" cy="20" r="20"/>
+          <path class="feature-card__icon-glyph" d="M17.4544 17.4544L20 20M20 20L22.5456 22.5456M20 20L22.5456 17.4544M20 20L17.4544 22.5456M11 25.625C11 27.489 12.511 29 14.375 29H25.625C27.489 29 29 27.489 29 25.625V14.375C29 12.511 27.489 11 25.625 11H14.375C12.511 11 11 12.511 11 14.375L11 25.625Z" stroke-width="2" stroke-linecap="round"/>
+        </svg>
         <h2 class="feature-card__title">Cancel Anytime</h2>
         <p class="feature-card__body">Switch back to free search whenever you want.</p>
       </article>
     </section>
 
     <section class="explain" aria-labelledby="explainTitle">
-      <h2 class="explain__title" id="explainTitle">Our ads are always private, but Ad-Free removes them entirely.</h2>
+      <h2 class="explain__title" id="explainTitle">Keep the privacy. Lose the ads.</h2>
       <div class="explain__body">
-        <p>Free Startpage is supported by contextual sponsored results. They’re based on your search rather than a profile of you, and keep Startpage free. With Ad-Free, they disappear.</p>
+        <p>Free Startpage is supported by contextual sponsored results. They’re based on your search term rather than a profile of you, and they keep Startpage free. With Ad-Free, they disappear and get you straight to your results.</p>
       </div>
       <div class="compare" data-compare style="--compare-pos: 50%">
         <div class="compare__media" data-compare-media>
           <div class="compare__layer compare__layer--ads">
             <img
+              data-compare-img="ads"
+              data-src-light="assets/serp-with-ads.png?v=3"
+              data-src-dark="assets/serp-with-ads-dark.png?v=2"
+              data-src-light-mobile="assets/serp-with-ads-mobile.png?v=1"
+              data-src-dark-mobile="assets/serp-with-ads-mobile-dark.png?v=1"
               src="assets/serp-with-ads.png?v=3"
               alt="Startpage search results with sponsored results"
               width="1024"
@@ -771,6 +941,11 @@
           </div>
           <div class="compare__layer compare__layer--free" aria-hidden="true">
             <img
+              data-compare-img="free"
+              data-src-light="assets/serp-ad-free.png?v=3"
+              data-src-dark="assets/serp-ad-free-dark.png?v=2"
+              data-src-light-mobile="assets/serp-ad-free-mobile.png?v=1"
+              data-src-dark-mobile="assets/serp-ad-free-mobile-dark.png?v=1"
               src="assets/serp-ad-free.png?v=3"
               alt=""
               width="1024"
@@ -806,7 +981,7 @@
 
     <section class="bottom-cta" aria-labelledby="bottomCtaTitle">
       <h2 class="bottom-cta__title" id="bottomCtaTitle">Ready to lose the ads?</h2>
-      <p class="bottom-cta__sub">Get Ad-Free Startpage and get straight to your results.</p>
+      <p class="bottom-cta__sub">Get Ad-Free Startpage and get <br class="bottom-cta__break">straight to your results.</p>
       <div class="bottom-cta__offer">
         <div class="plan-picker plan-picker--centered" role="radiogroup" aria-label="Choose a plan" data-plan-group>
           <button type="button" class="plan-card" role="radio" aria-checked="false" data-plan="monthly">
@@ -837,7 +1012,7 @@
             </div>
           </button>
         </div>
-        <a class="cta-btn" href="#">Go Ad-Free</a>
+        <a class="cta-btn" href="#"><span class="cta-btn__label">Go Ad-Free</span></a>
       </div>
     </section>
   </main>
@@ -856,10 +1031,25 @@
     const themeIcon = document.getElementById('themeIcon');
     const themeLabel = document.getElementById('themeLabel');
 
+    function syncCompareTheme(theme) {
+      const mobile = window.matchMedia('(max-width: 960px)').matches;
+      document.querySelectorAll('[data-compare-img]').forEach((img) => {
+        let next;
+        if (mobile) {
+          next = theme === 'dark' ? img.dataset.srcDarkMobile : img.dataset.srcLightMobile;
+        }
+        if (!next) {
+          next = theme === 'dark' ? img.dataset.srcDark : img.dataset.srcLight;
+        }
+        if (next && img.getAttribute('src') !== next) img.src = next;
+      });
+    }
+
     function applyTheme(theme) {
       html.dataset.theme = theme;
       themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
       themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+      syncCompareTheme(theme);
     }
 
     applyTheme(localStorage.getItem('theme') || 'light');
@@ -867,6 +1057,10 @@
       const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
       applyTheme(next);
       localStorage.setItem('theme', next);
+    });
+
+    window.matchMedia('(max-width: 960px)').addEventListener('change', () => {
+      syncCompareTheme(html.dataset.theme || 'light');
     });
 
     (function fixPlaygroundBack() {
