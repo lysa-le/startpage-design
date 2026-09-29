@@ -35,6 +35,18 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     body {
       font-family: var(--font-family);
       background: var(--color-background-primary);
@@ -196,6 +208,203 @@
       flex-direction: column;
       align-items: center;
       gap: var(--spacing-24);
+      width: 100%;
+    }
+
+    /* ── Audience switch (Individual / Student) ── */
+    .audience-switch {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+      align-self: center;
+      width: calc(var(--spacing-96) + var(--spacing-96) + var(--spacing-24)); /* 216px — Figma */
+      min-height: calc(var(--spacing-48) + var(--spacing-4) + 2px); /* 54px */
+      padding: var(--spacing-8);
+      border-radius: calc(var(--radius-xl) + var(--spacing-8)); /* 24px */
+      background: var(--color-background-secondary);
+    }
+
+    .audience-switch__pill {
+      position: absolute;
+      top: var(--spacing-8);
+      left: var(--spacing-8);
+      width: calc(50% - var(--spacing-8));
+      height: calc(100% - var(--spacing-16));
+      border-radius: var(--radius-xl);
+      background: var(--color-button-brandblue);
+      transition: transform 0.2s ease;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .audience-switch[data-audience="student"] .audience-switch__pill {
+      transform: translateX(100%);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .audience-switch__pill { transition: none; }
+    }
+
+    .audience-switch__option {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      min-width: 0;
+      padding: var(--spacing-4);
+      border: none;
+      background: transparent;
+      font-family: var(--font-family);
+      cursor: pointer;
+      color: var(--color-text-primary);
+    }
+    .audience-switch__option:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-xl);
+    }
+    .audience-switch__option[aria-selected="true"] {
+      color: var(--color-text-inverted);
+    }
+
+    .audience-switch__label {
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+    }
+
+    .audience-switch__perk {
+      font-size: 0.6875rem; /* 11px — Figma student callout */
+      line-height: 0.625rem; /* 10px */
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-text-brandblue);
+      white-space: nowrap;
+    }
+    .audience-switch__option[aria-selected="true"] .audience-switch__perk {
+      color: var(--color-text-inverted);
+    }
+
+    .offer-panel {
+      --offer-body-min: calc(var(--spacing-16) + var(--spacing-96) + var(--spacing-32) + var(--spacing-4)); /* ~148px — match plan-picker */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-24);
+      width: 100%;
+    }
+    .offer-panel[hidden] {
+      display: none;
+    }
+
+    /* Shared top slot so Individual + Student CTAs share the same Y */
+    .offer-panel__body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      min-height: var(--offer-body-min);
+    }
+
+    /* ── Student offer ── */
+    .offer-panel__body--student {
+      justify-content: flex-end;
+      gap: var(--spacing-24);
+    }
+
+    .student-offer__above {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 0;
+    }
+
+    .student-offer__pitch {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-16);
+      max-width: calc(var(--spacing-96) * 4); /* ~384px */
+    }
+
+    .student-offer__icon {
+      flex-shrink: 0;
+      width: calc(var(--spacing-48) + var(--spacing-8)); /* 56px */
+      height: calc(var(--spacing-48) + var(--spacing-8));
+      object-fit: contain;
+    }
+
+    .student-offer__copy {
+      margin: 0;
+      font-size: var(--font-body-lg);
+      line-height: 1.625rem; /* 26px — Figma student pitch */
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-text-primary);
+      text-align: left;
+    }
+
+    .student-offer__free {
+      color: var(--color-text-brandblue);
+    }
+
+    .student-offer__field {
+      display: block;
+      width: 100%;
+      max-width: calc(var(--spacing-96) * 4 + var(--spacing-20)); /* ~404px — Figma 402 */
+    }
+
+    .student-offer__input {
+      box-sizing: border-box;
+      width: 100%;
+      height: var(--spacing-48);
+      padding: var(--spacing-16) var(--spacing-16);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+    }
+    .student-offer__input::placeholder {
+      color: var(--color-text-primary);
+      opacity: 1;
+    }
+    .student-offer__input:focus {
+      outline: none;
+      border-color: var(--color-stroke-primary-button);
+      box-shadow: 0 0 0 var(--border-stroke-sm) var(--color-stroke-primary-button);
+    }
+
+    .student-offer__note {
+      margin: 0;
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-tertiary);
+      text-align: center;
+      max-width: calc(var(--spacing-96) * 5);
+    }
+    .student-offer__note strong {
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-tertiary);
+    }
+
+    .offer-login {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      color: var(--color-text-primary);
+      text-align: center;
+    }
+    .offer-login a {
+      color: var(--color-text-link);
+      text-decoration: underline;
+      text-underline-offset: 0.12em;
     }
 
     /* ── Plan picker ── */
@@ -351,7 +560,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: calc(var(--spacing-96) + var(--spacing-96) + var(--spacing-24) + var(--spacing-4)); /* 219px */
+      min-width: calc(var(--spacing-96) + var(--spacing-96) + var(--spacing-64) + var(--spacing-8)); /* 264px */
       height: calc(var(--spacing-48));
       padding: var(--spacing-16) var(--spacing-40);
       border: none;
@@ -406,6 +615,12 @@
 
     .hero__offer .cta-btn {
       align-self: center;
+    }
+
+    .cta-btn--student {
+      padding-left: var(--spacing-24);
+      padding-right: var(--spacing-24);
+      white-space: nowrap;
     }
 
     /* ── Feature cards ── */
@@ -657,6 +872,14 @@
       z-index: 1;
     }
 
+    .bottom-cta__offer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-24);
+      width: 100%;
+    }
+
     .bottom-cta__title {
       font-size: var(--font-heading-sm);
       line-height: var(--font-heading-sm-lh);
@@ -675,13 +898,6 @@
 
     .bottom-cta__break {
       display: none;
-    }
-
-    .bottom-cta__offer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--spacing-24);
     }
 
     @media (max-width: 1100px) {
@@ -745,6 +961,15 @@
         align-items: stretch;
         width: 100%;
         gap: var(--spacing-20);
+      }
+
+      .student-offer__pitch {
+        max-width: none;
+        width: 100%;
+      }
+
+      .student-offer__field {
+        max-width: none;
       }
 
       .plan-picker,
@@ -903,37 +1128,120 @@
         <h1 class="hero__title" id="heroTitle">Same private search. Zero ads.</h1>
         <p class="hero__sub">Skip sponsored results and get straight to what you searched for.</p>
       </div>
-      <div class="hero__offer">
-        <div class="plan-picker" role="radiogroup" aria-label="Choose a plan" data-plan-group>
-          <button type="button" class="plan-card" role="radio" aria-checked="false" data-plan="monthly">
-            <div class="plan-card__top">
-              <span class="plan-card__name">Monthly</span>
-              <span class="plan-card__mark" aria-hidden="true">
-                <svg class="plan-card__mark-empty" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke-width="2"/></svg>
-                <svg class="plan-card__mark-check" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10"/><path d="M5.625 10.3125L8.61029 13.125L14.375 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </div>
-            <div class="plan-card__row">
-              <span class="plan-card__price">$3.99/mo</span>
-              <span class="plan-card__meta">Billed Monthly</span>
-            </div>
+      <div class="hero__offer" data-offer>
+        <div class="audience-switch" role="tablist" aria-label="Account type" data-audience-switch data-audience="individual">
+          <span class="audience-switch__pill" aria-hidden="true"></span>
+          <button
+            type="button"
+            class="audience-switch__option"
+            role="tab"
+            id="heroTabIndividual"
+            aria-selected="true"
+            aria-controls="heroPanelIndividual"
+            data-audience="individual"
+          >
+            <span class="audience-switch__label">Individual</span>
           </button>
-          <button type="button" class="plan-card plan-card--best" role="radio" aria-checked="true" data-plan="yearly">
-            <span class="plan-card__badge">Best Deal</span>
-            <div class="plan-card__top">
-              <span class="plan-card__name">Yearly</span>
-              <span class="plan-card__mark" aria-hidden="true">
-                <svg class="plan-card__mark-empty" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke-width="2"/></svg>
-                <svg class="plan-card__mark-check" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10"/><path d="M5.625 10.3125L8.61029 13.125L14.375 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </div>
-            <div class="plan-card__row">
-              <span class="plan-card__price"><span class="plan-card__price-was">$3.99</span>$3.00/mo</span>
-              <span class="plan-card__meta">$35.99 Billed Yearly</span>
-            </div>
+          <button
+            type="button"
+            class="audience-switch__option"
+            role="tab"
+            id="heroTabStudent"
+            aria-selected="false"
+            aria-controls="heroPanelStudent"
+            data-audience="student"
+          >
+            <span class="audience-switch__label">Student</span>
+            <span class="audience-switch__perk">1 Year Free</span>
           </button>
         </div>
-        <a class="cta-btn" href="#"><span class="cta-btn__label">Go Ad-Free</span></a>
+
+        <div
+          class="offer-panel"
+          role="tabpanel"
+          id="heroPanelIndividual"
+          aria-labelledby="heroTabIndividual"
+          data-offer-panel="individual"
+        >
+          <div class="offer-panel__body">
+            <div class="plan-picker" role="radiogroup" aria-label="Choose a plan" data-plan-group>
+              <button type="button" class="plan-card" role="radio" aria-checked="false" data-plan="monthly">
+                <div class="plan-card__top">
+                  <span class="plan-card__name">Monthly</span>
+                  <span class="plan-card__mark" aria-hidden="true">
+                    <svg class="plan-card__mark-empty" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke-width="2"/></svg>
+                    <svg class="plan-card__mark-check" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10"/><path d="M5.625 10.3125L8.61029 13.125L14.375 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+                <div class="plan-card__row">
+                  <span class="plan-card__price">$3.99/mo</span>
+                  <span class="plan-card__meta">Billed Monthly</span>
+                </div>
+              </button>
+              <button type="button" class="plan-card plan-card--best" role="radio" aria-checked="true" data-plan="yearly">
+                <span class="plan-card__badge">25% Off</span>
+                <div class="plan-card__top">
+                  <span class="plan-card__name">Yearly</span>
+                  <span class="plan-card__mark" aria-hidden="true">
+                    <svg class="plan-card__mark-empty" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke-width="2"/></svg>
+                    <svg class="plan-card__mark-check" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10"/><path d="M5.625 10.3125L8.61029 13.125L14.375 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+                <div class="plan-card__row">
+                  <span class="plan-card__price"><span class="plan-card__price-was">$3.99</span>$3.00/mo</span>
+                  <span class="plan-card__meta">$35.99 Billed Yearly</span>
+                </div>
+              </button>
+            </div>
+          </div>
+          <a class="cta-btn" href="#"><span class="cta-btn__label">Subscribe</span></a>
+          <p class="offer-login">Already a subscriber? <a href="#">Log in.</a></p>
+        </div>
+
+        <div
+          class="offer-panel"
+          role="tabpanel"
+          id="heroPanelStudent"
+          aria-labelledby="heroTabStudent"
+          data-offer-panel="student"
+          hidden
+        >
+          <div class="offer-panel__body offer-panel__body--student">
+            <div class="student-offer__above">
+              <div class="student-offer__pitch">
+                <img
+                  class="student-offer__icon"
+                  src="assets/student-books.png"
+                  alt=""
+                  width="56"
+                  height="56"
+                  decoding="async"
+                />
+                <p class="student-offer__copy">
+                  Students with a .edu email get<br />
+                  1 year of Ad-Free Startpage <span class="student-offer__free">FREE</span>.
+                </p>
+              </div>
+            </div>
+            <label class="student-offer__field">
+              <span class="visually-hidden">Student email</span>
+              <input
+                type="email"
+                class="student-offer__input"
+                name="student-email"
+                placeholder="Enter your .edu email"
+                autocomplete="email"
+                inputmode="email"
+              />
+            </label>
+          </div>
+          <button type="button" class="cta-btn cta-btn--student">
+            <span class="cta-btn__label">Verify your student email</span>
+          </button>
+          <p class="student-offer__note">
+            <strong>.edu</strong> email required. First-time subscribers only. One free year per account.
+          </p>
+        </div>
       </div>
     </section>
 
@@ -1045,37 +1353,120 @@
       </div>
       <h2 class="bottom-cta__title" id="bottomCtaTitle">Ready to go Ad-Free?</h2>
       <p class="bottom-cta__sub">Get Ad-Free Startpage and get <br class="bottom-cta__break">straight to your results.</p>
-      <div class="bottom-cta__offer">
-        <div class="plan-picker plan-picker--centered" role="radiogroup" aria-label="Choose a plan" data-plan-group>
-          <button type="button" class="plan-card" role="radio" aria-checked="false" data-plan="monthly">
-            <div class="plan-card__top">
-              <span class="plan-card__name">Monthly</span>
-              <span class="plan-card__mark" aria-hidden="true">
-                <svg class="plan-card__mark-empty" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke-width="2"/></svg>
-                <svg class="plan-card__mark-check" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10"/><path d="M5.625 10.3125L8.61029 13.125L14.375 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </div>
-            <div class="plan-card__row">
-              <span class="plan-card__price">$3.99/mo</span>
-              <span class="plan-card__meta">Billed Monthly</span>
-            </div>
+      <div class="bottom-cta__offer" data-offer>
+        <div class="audience-switch" role="tablist" aria-label="Account type" data-audience-switch data-audience="individual">
+          <span class="audience-switch__pill" aria-hidden="true"></span>
+          <button
+            type="button"
+            class="audience-switch__option"
+            role="tab"
+            id="bottomTabIndividual"
+            aria-selected="true"
+            aria-controls="bottomPanelIndividual"
+            data-audience="individual"
+          >
+            <span class="audience-switch__label">Individual</span>
           </button>
-          <button type="button" class="plan-card plan-card--best" role="radio" aria-checked="true" data-plan="yearly">
-            <span class="plan-card__badge">Best Deal</span>
-            <div class="plan-card__top">
-              <span class="plan-card__name">Yearly</span>
-              <span class="plan-card__mark" aria-hidden="true">
-                <svg class="plan-card__mark-empty" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke-width="2"/></svg>
-                <svg class="plan-card__mark-check" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10"/><path d="M5.625 10.3125L8.61029 13.125L14.375 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </div>
-            <div class="plan-card__row">
-              <span class="plan-card__price"><span class="plan-card__price-was">$3.99</span>$3.00/mo</span>
-              <span class="plan-card__meta">$35.99 Billed Yearly</span>
-            </div>
+          <button
+            type="button"
+            class="audience-switch__option"
+            role="tab"
+            id="bottomTabStudent"
+            aria-selected="false"
+            aria-controls="bottomPanelStudent"
+            data-audience="student"
+          >
+            <span class="audience-switch__label">Student</span>
+            <span class="audience-switch__perk">1 Year Free</span>
           </button>
         </div>
-        <a class="cta-btn" href="#"><span class="cta-btn__label">Go Ad-Free</span></a>
+
+        <div
+          class="offer-panel"
+          role="tabpanel"
+          id="bottomPanelIndividual"
+          aria-labelledby="bottomTabIndividual"
+          data-offer-panel="individual"
+        >
+          <div class="offer-panel__body">
+            <div class="plan-picker plan-picker--centered" role="radiogroup" aria-label="Choose a plan" data-plan-group>
+              <button type="button" class="plan-card" role="radio" aria-checked="false" data-plan="monthly">
+                <div class="plan-card__top">
+                  <span class="plan-card__name">Monthly</span>
+                  <span class="plan-card__mark" aria-hidden="true">
+                    <svg class="plan-card__mark-empty" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke-width="2"/></svg>
+                    <svg class="plan-card__mark-check" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10"/><path d="M5.625 10.3125L8.61029 13.125L14.375 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+                <div class="plan-card__row">
+                  <span class="plan-card__price">$3.99/mo</span>
+                  <span class="plan-card__meta">Billed Monthly</span>
+                </div>
+              </button>
+              <button type="button" class="plan-card plan-card--best" role="radio" aria-checked="true" data-plan="yearly">
+                <span class="plan-card__badge">25% Off</span>
+                <div class="plan-card__top">
+                  <span class="plan-card__name">Yearly</span>
+                  <span class="plan-card__mark" aria-hidden="true">
+                    <svg class="plan-card__mark-empty" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke-width="2"/></svg>
+                    <svg class="plan-card__mark-check" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10"/><path d="M5.625 10.3125L8.61029 13.125L14.375 7.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+                <div class="plan-card__row">
+                  <span class="plan-card__price"><span class="plan-card__price-was">$3.99</span>$3.00/mo</span>
+                  <span class="plan-card__meta">$35.99 Billed Yearly</span>
+                </div>
+              </button>
+            </div>
+          </div>
+          <a class="cta-btn" href="#"><span class="cta-btn__label">Subscribe</span></a>
+          <p class="offer-login">Already a subscriber? <a href="#">Log in.</a></p>
+        </div>
+
+        <div
+          class="offer-panel"
+          role="tabpanel"
+          id="bottomPanelStudent"
+          aria-labelledby="bottomTabStudent"
+          data-offer-panel="student"
+          hidden
+        >
+          <div class="offer-panel__body offer-panel__body--student">
+            <div class="student-offer__above">
+              <div class="student-offer__pitch">
+                <img
+                  class="student-offer__icon"
+                  src="assets/student-books.png"
+                  alt=""
+                  width="56"
+                  height="56"
+                  decoding="async"
+                />
+                <p class="student-offer__copy">
+                  Students with a .edu email get<br />
+                  1 year of Ad-Free Startpage <span class="student-offer__free">FREE</span>.
+                </p>
+              </div>
+            </div>
+            <label class="student-offer__field">
+              <span class="visually-hidden">Student email</span>
+              <input
+                type="email"
+                class="student-offer__input"
+                name="student-email-bottom"
+                placeholder="Enter your .edu email"
+                autocomplete="email"
+                inputmode="email"
+              />
+            </label>
+          </div>
+          <button type="button" class="cta-btn cta-btn--student">
+            <span class="cta-btn__label">Verify your student email</span>
+          </button>
+          <p class="student-offer__note">
+            <strong>.edu</strong> email required. First-time subscribers only. One free year per account.
+          </p>
+        </div>
       </div>
     </section>
   </main>
@@ -1176,6 +1567,66 @@
             selected = cards[(idx - 1 + cards.length) % cards.length].dataset.plan;
             render();
             cards.find((c) => c.dataset.plan === selected)?.focus();
+          }
+        });
+      });
+
+      render();
+    })();
+
+    /* Individual / Student audience switch — keep hero + bottom in sync */
+    (function syncAudienceSwitch() {
+      let audience = 'individual';
+
+      function render() {
+        document.querySelectorAll('[data-audience-switch]').forEach((switchEl) => {
+          switchEl.dataset.audience = audience;
+          switchEl.querySelectorAll('[data-audience]').forEach((tab) => {
+            const on = tab.dataset.audience === audience;
+            tab.setAttribute('aria-selected', on ? 'true' : 'false');
+            tab.tabIndex = on ? 0 : -1;
+          });
+        });
+
+        document.querySelectorAll('[data-offer]').forEach((offer) => {
+          offer.querySelectorAll('[data-offer-panel]').forEach((panel) => {
+            const on = panel.dataset.offerPanel === audience;
+            panel.hidden = !on;
+          });
+        });
+      }
+
+      document.querySelectorAll('[data-audience-switch]').forEach((switchEl) => {
+        switchEl.addEventListener('click', (e) => {
+          const tab = e.target.closest('[data-audience]');
+          if (!tab || !switchEl.contains(tab)) return;
+          audience = tab.dataset.audience;
+          render();
+        });
+
+        switchEl.addEventListener('keydown', (e) => {
+          const tabs = [...switchEl.querySelectorAll('[data-audience]')];
+          const idx = tabs.findIndex((t) => t.dataset.audience === audience);
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            audience = tabs[(idx + 1) % tabs.length].dataset.audience;
+            render();
+            tabs.find((t) => t.dataset.audience === audience)?.focus();
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            audience = tabs[(idx - 1 + tabs.length) % tabs.length].dataset.audience;
+            render();
+            tabs.find((t) => t.dataset.audience === audience)?.focus();
+          } else if (e.key === 'Home') {
+            e.preventDefault();
+            audience = tabs[0].dataset.audience;
+            render();
+            tabs[0].focus();
+          } else if (e.key === 'End') {
+            e.preventDefault();
+            audience = tabs[tabs.length - 1].dataset.audience;
+            render();
+            tabs[tabs.length - 1].focus();
           }
         });
       });
