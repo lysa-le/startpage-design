@@ -168,6 +168,13 @@
       max-width: calc(var(--spacing-24) * 30);
     }
 
+    .hero__illustration {
+      display: block;
+      width: min(100%, 350px);
+      height: auto;
+      margin-bottom: var(--spacing-24);
+    }
+
     .hero__title {
       font-size: var(--font-heading-lg);
       line-height: var(--font-heading-lg-lh);
@@ -724,6 +731,11 @@
         padding-bottom: var(--spacing-48);
       }
 
+      .hero__illustration {
+        width: min(100%, calc(var(--spacing-96) * 2 + var(--spacing-80))); /* ~272px */
+        margin-bottom: var(--spacing-16);
+      }
+
       .hero__title {
         font-size: var(--font-heading-sm);
         line-height: var(--font-heading-sm-lh);
@@ -877,6 +889,17 @@
   <main class="lander-main">
     <section class="hero" aria-labelledby="heroTitle">
       <div class="hero__copy">
+        <img
+          class="hero__illustration"
+          data-hero-illustration
+          data-src-light="assets/hero-illustration.svg"
+          data-src-dark="assets/hero-illustration-dark.svg"
+          src="assets/hero-illustration.svg"
+          alt=""
+          width="350"
+          height="235"
+          decoding="async"
+        />
         <h1 class="hero__title" id="heroTitle">Same private search. Zero ads.</h1>
         <p class="hero__sub">Skip sponsored results and get straight to what you searched for.</p>
       </div>
@@ -1085,11 +1108,19 @@
       });
     }
 
+    function syncHeroIllustration(theme) {
+      const img = document.querySelector('[data-hero-illustration]');
+      if (!img) return;
+      const next = theme === 'dark' ? img.dataset.srcDark : img.dataset.srcLight;
+      if (next && img.getAttribute('src') !== next) img.src = next;
+    }
+
     function applyTheme(theme) {
       html.dataset.theme = theme;
       themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
       themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
       syncCompareTheme(theme);
+      syncHeroIllustration(theme);
     }
 
     applyTheme(localStorage.getItem('theme') || 'light');
