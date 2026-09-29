@@ -143,9 +143,11 @@
 
     /* ── Layout shell ── */
     .lander-main {
+      --compare-height: 550px;
       max-width: calc(var(--spacing-24) * 60);
       margin: 0 auto;
       padding: 0 var(--spacing-96) var(--spacing-96);
+      overflow: visible;
     }
 
     /* ── Hero ── */
@@ -316,7 +318,7 @@
     .plan-card__price {
       font-size: var(--font-heading-xxs);
       line-height: var(--font-heading-xxs-lh);
-      font-weight: var(--font-weight-bold);
+      font-weight: var(--font-weight-extrabold);
       letter-spacing: -0.02em;
       color: var(--color-text-brandblue);
     }
@@ -324,7 +326,7 @@
     .plan-card__price-was {
       font-size: var(--font-body-md);
       line-height: var(--font-heading-xxs-lh);
-      font-weight: var(--font-weight-bold);
+      font-weight: var(--font-weight-semibold);
       color: var(--color-text-secondary);
       text-decoration: line-through;
       margin-right: var(--spacing-4);
@@ -333,7 +335,7 @@
     .plan-card__meta {
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
-      color: var(--color-text-secondary);
+      color: var(--color-text-tertiary);
     }
 
     /* ── CTA button (liquid fill hover, matches design-system teal CTA) ── */
@@ -422,8 +424,8 @@
 
     .feature-card__icon {
       display: block;
-      width: var(--spacing-40);
-      height: var(--spacing-40);
+      width: var(--spacing-48);
+      height: var(--spacing-48);
       flex-shrink: 0;
       margin-bottom: var(--spacing-8);
       color: var(--color-button-brandblue);
@@ -462,14 +464,15 @@
 
     /* ── Explain section ── */
     .explain {
+      position: relative;
+      z-index: 1;
       text-align: center;
       margin-bottom: var(--spacing-96);
     }
 
     .explain__title {
-      /* Between heading-xs (24) and heading-sm (48); matches Figma 32/40 */
-      font-size: calc(var(--font-heading-xs) + var(--spacing-8));
-      line-height: calc(var(--font-heading-xs-lh) + var(--spacing-8));
+      font-size: var(--font-heading-sm);
+      line-height: var(--font-heading-sm-lh);
       font-weight: var(--font-weight-bold);
       letter-spacing: -0.02em;
       color: var(--color-text-primary);
@@ -489,7 +492,6 @@
 
     /* ── Ads vs Ad-Free comparison (auto wipe) ── */
     .compare {
-      --compare-height: 550px;
       --compare-pos: 50%;
       width: 100%;
       max-width: calc(var(--spacing-24) * 40); /* 960px */
@@ -507,6 +509,11 @@
       touch-action: none;
       user-select: none;
       cursor: ew-resize;
+    }
+    [data-theme="dark"] .compare__media {
+      box-shadow:
+        0 var(--spacing-4) var(--spacing-20) 0 rgba(0, 0, 0, 0.4),
+        0 var(--spacing-8) var(--spacing-32) 0 rgba(0, 0, 0, 0.22);
     }
 
     .compare__layer {
@@ -610,14 +617,42 @@
 
     /* ── Bottom CTA ── */
     .bottom-cta {
+      position: relative;
+      z-index: 0;
       text-align: center;
-      padding-top: var(--spacing-16);
+      padding-top: var(--spacing-64);
       padding-bottom: var(--spacing-96);
     }
 
+    .bottom-cta__wave {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      z-index: 0;
+      width: 100vw;
+      max-width: none;
+      /* Bottom-aligned; tall enough to sit behind ~half the compare slider */
+      height: calc(100% + (var(--compare-height) * 0.5) + var(--spacing-96));
+      margin-left: -50vw;
+      pointer-events: none;
+      color: var(--color-background-tertiary);
+    }
+    .bottom-cta__wave svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .bottom-cta__title,
+    .bottom-cta__sub,
+    .bottom-cta__offer {
+      position: relative;
+      z-index: 1;
+    }
+
     .bottom-cta__title {
-      font-size: calc(var(--font-heading-xs) + var(--spacing-8));
-      line-height: calc(var(--font-heading-xs-lh) + var(--spacing-8));
+      font-size: var(--font-heading-sm);
+      line-height: var(--font-heading-sm-lh);
       font-weight: var(--font-weight-bold);
       letter-spacing: -0.02em;
       color: var(--color-text-primary);
@@ -881,7 +916,7 @@
 
     <section class="features" aria-label="Ad-Free benefits">
       <article class="feature-card">
-        <svg class="feature-card__icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg class="feature-card__icon" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle class="feature-card__icon-bg" cx="20" cy="20" r="20"/>
           <path class="feature-card__icon-glyph" d="M29 19.1771V20.0051C28.9989 21.9459 28.3704 23.8344 27.2084 25.3888C26.0463 26.9432 24.413 28.0804 22.5518 28.6307C20.6907 29.1809 18.7015 29.1149 16.881 28.4423C15.0605 27.7697 13.5062 26.5266 12.4499 24.8985C11.3935 23.2704 10.8918 21.3444 11.0195 19.4078C11.1472 17.4713 11.8975 15.6278 13.1585 14.1525C14.4194 12.6772 16.1235 11.649 18.0166 11.2213C19.9096 10.7936 21.8902 10.9893 23.663 11.7792M16.625 18.125L19.5795 21.0795C20.0188 21.5188 20.7312 21.5188 21.1705 21.0795L27.875 14.375" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -889,7 +924,7 @@
         <p class="feature-card__body">Just the answers you came for.</p>
       </article>
       <article class="feature-card">
-        <svg class="feature-card__icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg class="feature-card__icon" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle class="feature-card__icon-bg" cx="20" cy="20" r="20"/>
           <rect class="feature-card__icon-glyph" x="11.5" y="17.6934" width="17" height="12.3063" rx="2.51022" stroke-width="2"/>
           <path class="feature-card__icon-glyph--fill" d="M20.8584 25.682V23.8217C21.0994 23.6786 21.2997 23.4731 21.4393 23.2256C21.5789 22.978 21.6529 22.6972 21.6538 22.4111C21.6549 22.1609 21.6001 21.9138 21.4936 21.6889C21.3872 21.4639 21.232 21.267 21.0399 21.1134C20.8478 20.9597 20.624 20.8535 20.3857 20.8027C20.1474 20.752 19.9009 20.7581 19.6653 20.8207C19.3859 20.8912 19.1303 21.0384 18.9258 21.2465C18.7213 21.4545 18.5755 21.7157 18.504 22.0023C18.4186 22.3479 18.4455 22.7127 18.5805 23.0411C18.7155 23.3696 18.9512 23.6437 19.2517 23.8217V25.682C19.2517 25.8988 19.3355 26.1068 19.4847 26.2602C19.6338 26.4135 19.8361 26.4997 20.0471 26.4997C20.1529 26.5019 20.258 26.4823 20.3564 26.4422C20.4547 26.4021 20.5443 26.3422 20.6199 26.266C20.6954 26.1899 20.7554 26.099 20.7964 25.9987C20.8374 25.8984 20.8585 25.7907 20.8584 25.682Z"/>
@@ -899,7 +934,7 @@
         <p class="feature-card__body">Coming soon in the Startpage mobile app.</p>
       </article>
       <article class="feature-card">
-        <svg class="feature-card__icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg class="feature-card__icon" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle class="feature-card__icon-bg" cx="20" cy="20" r="20"/>
           <circle class="feature-card__icon-glyph" cx="20" cy="20" r="11" stroke-width="2"/>
           <path class="feature-card__icon-glyph" d="M21.8 20H21.4645C21.0185 20.2459 20.5223 20.3857 20 20.3857C19.4777 20.3857 18.9835 20.2459 18.5355 20H18.2C16.7094 20 15.5 21.4512 15.5 23.24V24.2429C15.5 24.8817 15.9319 25.4 16.4643 25.4H23.5357C24.0681 25.4 24.5 24.8817 24.5 24.2429V23.24C24.5 21.4512 23.2906 20 21.8 20Z" stroke-width="2"/>
@@ -909,7 +944,7 @@
         <p class="feature-card__body">Your account is never linked to your searches. <a href="../ad-free-faq/">Learn how</a></p>
       </article>
       <article class="feature-card">
-        <svg class="feature-card__icon" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg class="feature-card__icon" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle class="feature-card__icon-bg" cx="20" cy="20" r="20"/>
           <path class="feature-card__icon-glyph" d="M17.4544 17.4544L20 20M20 20L22.5456 22.5456M20 20L22.5456 17.4544M20 20L17.4544 22.5456M11 25.625C11 27.489 12.511 29 14.375 29H25.625C27.489 29 29 27.489 29 25.625V14.375C29 12.511 27.489 11 25.625 11H14.375C12.511 11 11 12.511 11 14.375L11 25.625Z" stroke-width="2" stroke-linecap="round"/>
         </svg>
@@ -980,7 +1015,12 @@
     </section>
 
     <section class="bottom-cta" aria-labelledby="bottomCtaTitle">
-      <h2 class="bottom-cta__title" id="bottomCtaTitle">Ready to lose the ads?</h2>
+      <div class="bottom-cta__wave" aria-hidden="true">
+        <svg preserveAspectRatio="none" width="1440" height="990" viewBox="0 0 1440 990" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M619.945 92.0531C359.411 135.569 98.0926 76.7109 0 0V990H1440V133.895C1169.26 -29.2896 905 44.4415 619.945 92.0531Z" fill="currentColor"/>
+        </svg>
+      </div>
+      <h2 class="bottom-cta__title" id="bottomCtaTitle">Ready to go ad-free?</h2>
       <p class="bottom-cta__sub">Get Ad-Free Startpage and get <br class="bottom-cta__break">straight to your results.</p>
       <div class="bottom-cta__offer">
         <div class="plan-picker plan-picker--centered" role="radiogroup" aria-label="Choose a plan" data-plan-group>
