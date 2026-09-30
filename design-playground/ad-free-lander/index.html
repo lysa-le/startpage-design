@@ -155,7 +155,7 @@
 
     /* ── Layout shell ── */
     .lander-main {
-      --compare-height: 550px;
+      --serp-demo-height: calc(389px * 1.35); /* scaled card */
       max-width: calc(var(--spacing-24) * 60);
       margin: 0 auto;
       padding: 0 var(--spacing-96) var(--spacing-96);
@@ -712,129 +712,254 @@
       margin: 0 auto var(--spacing-48);
     }
 
-    /* ── Ads vs Ad-Free comparison (auto wipe) ── */
-    .compare {
-      --compare-pos: 50%;
+    /* ── SERP demo — Figma 6102:14433 / 14510 (345×389), display ~1.35× ── */
+    .serp-demo {
+      --serp-base-w: calc(var(--spacing-96) * 3 + var(--spacing-48) + var(--spacing-8) + 1px); /* 345px */
+      --serp-base-h: 389px;
+      --serp-scale: 1.35;
+      --serp-row-h: calc(var(--spacing-48) + var(--spacing-4) + 1px); /* 53px */
+      --serp-row-gap: calc(var(--spacing-4) + 2px); /* 6px */
+      --serp-ad-bg: var(--color-purple-100);
+      --serp-ad-line: var(--color-purple-500);
+      --serp-ad-line-soft: color-mix(in srgb, var(--color-purple-500) 50%, transparent);
+      --serp-hit-title: var(--color-text-link);
+      --serp-hit-body: var(--color-stroke-primary);
+      --serp-chrome-bg: var(--color-background-tertiary);
+      --serp-card-bg: var(--color-background-quaternary);
+      --serp-search-bg: var(--color-background-primary);
+      --serp-traffic-red: #FF5F57;
+      --serp-traffic-yellow: #FEBC2E;
+      --serp-traffic-green: #28C840;
       width: 100%;
-      max-width: calc(var(--spacing-24) * 40); /* 960px */
+      max-width: calc(var(--serp-base-w) * var(--serp-scale));
       margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-16);
+    }
+    [data-theme="dark"] .serp-demo {
+      --serp-ad-bg: #38264F; /* Figma dark sponsored fill */
+      --serp-chrome-bg: var(--color-black-900);
+      --serp-card-bg: var(--color-background-primary);
+      --serp-search-bg: var(--color-background-secondary);
     }
 
-    .compare__media {
+    .serp-demo__card {
       position: relative;
-      width: 100%;
-      height: var(--compare-height);
-      border-radius: calc(var(--radius-xl) + var(--spacing-4));
+      width: var(--serp-base-w);
+      height: var(--serp-base-h);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-xl);
+      background: var(--serp-card-bg);
+      box-shadow: 0 0 var(--spacing-16) 0 rgba(0, 0, 0, 0.1);
       overflow: hidden;
-      background: var(--color-button-inactive);
-      box-shadow: var(--shadow-search);
-      touch-action: none;
-      user-select: none;
-      cursor: ew-resize;
+      text-align: left;
+      transform: scale(var(--serp-scale));
+      transform-origin: top center;
+      margin-bottom: calc(var(--serp-base-h) * (var(--serp-scale) - 1));
     }
-    [data-theme="dark"] .compare__media {
+    [data-theme="dark"] .serp-demo__card {
       box-shadow:
         0 var(--spacing-4) var(--spacing-20) 0 rgba(0, 0, 0, 0.4),
         0 var(--spacing-8) var(--spacing-32) 0 rgba(0, 0, 0, 0.22);
     }
 
-    .compare__layer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      pointer-events: none;
+    .serp-demo__chrome {
+      display: flex;
+      align-items: center;
+      height: var(--spacing-24);
+      padding: 0 var(--spacing-16);
+      background: var(--serp-chrome-bg);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
 
-    .compare__layer img {
+    .serp-demo__traffic {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-4);
+    }
+
+    .serp-demo__dot {
+      width: var(--spacing-8);
+      height: var(--spacing-8);
+      border-radius: var(--radius-full);
+    }
+    .serp-demo__dot--red { background: var(--serp-traffic-red); }
+    .serp-demo__dot--yellow { background: var(--serp-traffic-yellow); }
+    .serp-demo__dot--green { background: var(--serp-traffic-green); }
+
+    .serp-demo__toolbar {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      margin-top: calc(var(--spacing-16) - 1px); /* 15px — Figma y=39 after 24px chrome */
+      padding: 0 var(--spacing-16);
+    }
+
+    .serp-demo__logo {
+      flex-shrink: 0;
+      width: calc(var(--spacing-64) + var(--spacing-8) + 2px); /* ~74px */
+      height: calc(var(--spacing-16) + 1px);
+      color: var(--color-text-primary);
+    }
+    .serp-demo__logo img {
       display: block;
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: contain;
+      object-position: left center;
+    }
+    [data-theme="dark"] .serp-demo__logo img {
+      filter: invert(1) hue-rotate(180deg);
     }
 
-    .compare__layer--ads {
-      z-index: 0;
+    .serp-demo__search {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-8);
+      height: calc(var(--spacing-24) + var(--spacing-4) - 1px); /* 27px */
+      padding: 0 var(--spacing-12);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-full);
+      background: var(--serp-search-bg);
+      color: var(--color-text-primary);
+      font-size: 0.625rem; /* 10px — Figma */
+      line-height: 0.6875rem; /* 11px */
+      font-weight: var(--font-weight-medium);
+    }
+    [data-theme="dark"] .serp-demo__search {
+      border-color: transparent;
     }
 
-    .compare__layer--free {
-      z-index: 1;
-      /* Ad-Free on the left (top layer); With ads shows on the right */
-      clip-path: inset(0 calc(100% - var(--compare-pos)) 0 0);
+    .serp-demo__search-icon {
+      flex-shrink: 0;
+      width: calc(var(--spacing-12) - 1px);
+      height: calc(var(--spacing-12) - 1px);
+      color: var(--color-icon-tertiary);
     }
 
-    .compare__label {
-      position: absolute;
-      bottom: var(--spacing-16);
-      z-index: 3;
+    .serp-demo__results {
+      display: flex;
+      flex-direction: column;
+      gap: var(--serp-row-gap);
+      margin-top: var(--spacing-16); /* 82 − 39 − 27 = 16 */
+      padding: 0 var(--spacing-16);
+    }
+
+    .serp-demo__ads {
+      display: flex;
+      flex-direction: column;
+      gap: var(--serp-row-gap);
+      max-height: calc(var(--serp-row-h) * 4 + var(--serp-row-gap) * 3);
+      overflow: hidden;
+      transition:
+        max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+        gap 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.35s ease;
+    }
+    .serp-demo[data-state="free"] .serp-demo__ads {
+      max-height: 0;
+      gap: 0;
+      opacity: 0;
+    }
+
+    .serp-demo__ad {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: var(--spacing-4);
+      height: var(--serp-row-h);
+      max-height: var(--serp-row-h);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: calc(var(--radius-md) - 1px); /* 7px */
+      background: var(--serp-ad-bg);
+      overflow: hidden;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transform-origin: top center;
+      transition:
+        max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.35s ease,
+        padding 0.45s ease,
+        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .serp-demo__ad-label {
+      font-size: 0.625rem;
+      line-height: 0.6875rem;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+
+    .serp-demo__line {
+      display: block;
+      height: var(--spacing-4);
+      border-radius: var(--radius-full);
+      background: var(--serp-hit-body);
+      flex-shrink: 0;
+    }
+    .serp-demo__line--title { background: var(--serp-hit-title); }
+    .serp-demo__line--ad { background: var(--serp-ad-line); }
+    .serp-demo__line--ad-soft { background: var(--serp-ad-line-soft); }
+    .serp-demo__line--sm { width: calc(97 / 313 * 100%); }
+    .serp-demo__line--md { width: calc(171 / 313 * 100%); }
+    .serp-demo__line--lg { width: calc(205 / 313 * 100%); }
+    .serp-demo__line--lg-soft { width: calc(185 / 313 * 100%); }
+    .serp-demo__line--xl { width: calc(283 / 313 * 100%); }
+
+    .serp-demo__hit {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--spacing-4) + 2px); /* 6px between 4px lines */
+      height: var(--serp-row-h);
+      padding: calc(var(--spacing-8) + 2px) var(--spacing-16) 0;
+      box-sizing: border-box;
+    }
+
+    .serp-demo[data-state="free"] .serp-demo__ad {
+      max-height: 0;
+      height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      transform: translateY(calc(var(--spacing-8) * -1)) scale(0.98);
+    }
+    .serp-demo[data-state="free"] .serp-demo__ad:nth-child(1) { transition-delay: 0ms; }
+    .serp-demo[data-state="free"] .serp-demo__ad:nth-child(2) { transition-delay: 90ms; }
+    .serp-demo[data-state="free"] .serp-demo__ad:nth-child(3) { transition-delay: 180ms; }
+    .serp-demo[data-state="free"] .serp-demo__ad:nth-child(4) { transition-delay: 270ms; }
+
+    .serp-demo__badge {
       display: inline-flex;
       align-items: center;
-      padding: var(--spacing-8) var(--spacing-12);
+      min-height: var(--spacing-32);
+      padding: var(--spacing-4) var(--spacing-12);
       border-radius: var(--radius-full);
-      background: var(--color-background-primary);
+      background: var(--color-background-secondary);
       color: var(--color-text-primary);
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
-      font-weight: var(--font-weight-semibold);
-      box-shadow: var(--shadow-card);
-      pointer-events: none;
+      font-weight: var(--font-weight-bold);
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-
-    .compare__label--free {
-      left: var(--spacing-16);
+    .serp-demo[data-state="free"] .serp-demo__badge {
       background: var(--color-button-brandblue);
       color: var(--color-text-inverted);
     }
 
-    .compare__label--ads {
-      right: var(--spacing-16);
-    }
-
-    .compare__handle {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: var(--compare-pos);
-      z-index: 4;
-      width: var(--spacing-4);
-      transform: translateX(-50%);
-      background: var(--color-background-primary);
-      box-shadow: var(--shadow-card);
-      border: none;
-      padding: 0;
-      cursor: ew-resize;
-    }
-
-    .compare__handle-knob {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: var(--spacing-48);
-      height: var(--spacing-48);
-      border-radius: var(--radius-full);
-      background: var(--color-button-brandblue);
-      border: var(--border-stroke-lg) solid var(--color-background-primary);
-      box-shadow: var(--shadow-dropdown);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-4);
-      color: var(--color-text-inverted);
-    }
-
-    .compare__handle-knob svg {
-      width: var(--spacing-12);
-      height: var(--spacing-12);
-      display: block;
-    }
-
-    .compare__handle:focus-visible {
-      outline: none;
-    }
-
-    .compare__handle:focus-visible .compare__handle-knob {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: var(--spacing-4);
+    @media (prefers-reduced-motion: reduce) {
+      .serp-demo__ad,
+      .serp-demo__ads,
+      .serp-demo__badge {
+        transition: none;
+      }
+      .serp-demo[data-state="free"] .serp-demo__ad {
+        transition-delay: 0ms;
+      }
     }
 
     /* ── Bottom CTA ── */
@@ -853,8 +978,8 @@
       z-index: 0;
       width: 100vw;
       max-width: none;
-      /* Bottom-aligned; tall enough to sit behind ~half the compare slider */
-      height: calc(100% + (var(--compare-height) * 0.5) + var(--spacing-96));
+      /* Bottom-aligned; tall enough to sit behind ~half the SERP demo */
+      height: calc(100% + (var(--serp-demo-height) * 0.5) + var(--spacing-96));
       margin-left: -50vw;
       pointer-events: none;
       color: var(--color-background-tertiary);
@@ -1037,43 +1162,9 @@
         margin-bottom: var(--spacing-32);
       }
 
-      .compare {
-        max-width: calc(var(--spacing-96) * 3 + var(--spacing-40)); /* 328px phone frame */
-      }
-
-      .compare__media {
-        height: auto;
-        aspect-ratio: 402 / 806;
-        border-radius: calc(var(--radius-xl) + var(--spacing-8));
-      }
-
-      .compare__layer {
-        height: 100%;
-      }
-
-      .compare__layer img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        object-position: top center;
-      }
-
-      .compare__label {
-        bottom: var(--spacing-12);
-        padding: var(--spacing-4) var(--spacing-8);
-      }
-
-      .compare__label--free {
-        left: var(--spacing-12);
-      }
-
-      .compare__label--ads {
-        right: var(--spacing-12);
-      }
-
-      .compare__handle-knob {
-        width: var(--spacing-40);
-        height: var(--spacing-40);
+      .serp-demo {
+        --serp-scale: 1;
+        max-width: min(100%, var(--serp-base-w));
       }
 
       .bottom-cta {
@@ -1369,59 +1460,84 @@
       <div class="explain__body">
         <p>Startpage uses contextual sponsored ads that keep our search engine free. They’re based on your search terms, not a profile of you. Ad-Free removes them so there’s nothing between you and your results.</p>
       </div>
-      <div class="compare" data-compare style="--compare-pos: 50%">
-        <div class="compare__media" data-compare-media>
-          <div class="compare__layer compare__layer--ads">
-            <img
-              data-compare-img="ads"
-              data-src-light="assets/serp-with-ads.png?v=4"
-              data-src-dark="assets/serp-with-ads-dark.png?v=3"
-              data-src-light-mobile="assets/serp-with-ads-mobile.png?v=4"
-              data-src-dark-mobile="assets/serp-with-ads-mobile-dark.png?v=4"
-              src="assets/serp-with-ads.png?v=4"
-              alt="Startpage search results with sponsored results"
-              width="1024"
-              height="883"
-              draggable="false"
-            />
+      <div class="serp-demo" data-serp-demo data-state="ads">
+        <div class="serp-demo__card" aria-hidden="true">
+          <div class="serp-demo__chrome">
+            <div class="serp-demo__traffic">
+              <span class="serp-demo__dot serp-demo__dot--red"></span>
+              <span class="serp-demo__dot serp-demo__dot--yellow"></span>
+              <span class="serp-demo__dot serp-demo__dot--green"></span>
+            </div>
           </div>
-          <div class="compare__layer compare__layer--free" aria-hidden="true">
-            <img
-              data-compare-img="free"
-              data-src-light="assets/serp-ad-free.png?v=3"
-              data-src-dark="assets/serp-ad-free-dark.png?v=2"
-              data-src-light-mobile="assets/serp-ad-free-mobile.png?v=3"
-              data-src-dark-mobile="assets/serp-ad-free-mobile-dark.png?v=3"
-              src="assets/serp-ad-free.png?v=3"
-              alt=""
-              width="1024"
-              height="883"
-              draggable="false"
-            />
+          <div class="serp-demo__toolbar">
+            <div class="serp-demo__logo">
+              <img src="assets/logo-header.svg" alt="" width="74" height="16" decoding="async" draggable="false" />
+            </div>
+            <div class="serp-demo__search">
+              <span>best hiking trails</span>
+              <svg class="serp-demo__search-icon" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="5.25" cy="5.25" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M7.75 7.75L10.25 10.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
           </div>
-          <span class="compare__label compare__label--free">Ad-Free</span>
-          <span class="compare__label compare__label--ads">With ads</span>
-          <button
-            type="button"
-            class="compare__handle"
-            data-compare-handle
-            role="slider"
-            aria-label="Compare Ad-Free versus with ads"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            aria-valuenow="50"
-            aria-valuetext="Showing 50 percent Ad-Free"
-          >
-            <span class="compare__handle-knob" aria-hidden="true">
-              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7.5 2.5L4 6l3.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4.5 2.5L8 6l-3.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </button>
+          <div class="serp-demo__results">
+            <div class="serp-demo__ads" data-serp-ads>
+              <article class="serp-demo__ad">
+                <span class="serp-demo__ad-label">Sponsored</span>
+                <span class="serp-demo__line serp-demo__line--lg serp-demo__line--ad"></span>
+                <span class="serp-demo__line serp-demo__line--lg-soft serp-demo__line--ad-soft"></span>
+              </article>
+              <article class="serp-demo__ad">
+                <span class="serp-demo__ad-label">Sponsored</span>
+                <span class="serp-demo__line serp-demo__line--lg serp-demo__line--ad"></span>
+                <span class="serp-demo__line serp-demo__line--lg-soft serp-demo__line--ad-soft"></span>
+              </article>
+              <article class="serp-demo__ad">
+                <span class="serp-demo__ad-label">Sponsored</span>
+                <span class="serp-demo__line serp-demo__line--lg serp-demo__line--ad"></span>
+                <span class="serp-demo__line serp-demo__line--lg-soft serp-demo__line--ad-soft"></span>
+              </article>
+              <article class="serp-demo__ad">
+                <span class="serp-demo__ad-label">Sponsored</span>
+                <span class="serp-demo__line serp-demo__line--lg serp-demo__line--ad"></span>
+                <span class="serp-demo__line serp-demo__line--lg-soft serp-demo__line--ad-soft"></span>
+              </article>
+            </div>
+            <div class="serp-demo__hit">
+              <span class="serp-demo__line serp-demo__line--sm serp-demo__line--title"></span>
+              <span class="serp-demo__line serp-demo__line--md serp-demo__line--title"></span>
+              <span class="serp-demo__line serp-demo__line--xl"></span>
+              <span class="serp-demo__line serp-demo__line--md"></span>
+            </div>
+            <div class="serp-demo__hit">
+              <span class="serp-demo__line serp-demo__line--sm serp-demo__line--title"></span>
+              <span class="serp-demo__line serp-demo__line--md serp-demo__line--title"></span>
+              <span class="serp-demo__line serp-demo__line--xl"></span>
+              <span class="serp-demo__line serp-demo__line--md"></span>
+            </div>
+            <div class="serp-demo__hit">
+              <span class="serp-demo__line serp-demo__line--sm serp-demo__line--title"></span>
+              <span class="serp-demo__line serp-demo__line--md serp-demo__line--title"></span>
+              <span class="serp-demo__line serp-demo__line--xl"></span>
+              <span class="serp-demo__line serp-demo__line--md"></span>
+            </div>
+            <div class="serp-demo__hit">
+              <span class="serp-demo__line serp-demo__line--sm serp-demo__line--title"></span>
+              <span class="serp-demo__line serp-demo__line--md serp-demo__line--title"></span>
+              <span class="serp-demo__line serp-demo__line--xl"></span>
+              <span class="serp-demo__line serp-demo__line--md"></span>
+            </div>
+            <div class="serp-demo__hit">
+              <span class="serp-demo__line serp-demo__line--sm serp-demo__line--title"></span>
+              <span class="serp-demo__line serp-demo__line--md serp-demo__line--title"></span>
+              <span class="serp-demo__line serp-demo__line--xl"></span>
+              <span class="serp-demo__line serp-demo__line--md"></span>
+            </div>
+          </div>
         </div>
+        <span class="serp-demo__badge" data-serp-badge>With ads</span>
+        <p class="visually-hidden" data-serp-live aria-live="polite">Showing search results with sponsored listings.</p>
       </div>
     </section>
 
@@ -1578,20 +1694,6 @@
     const themeIcon = document.getElementById('themeIcon');
     const themeLabel = document.getElementById('themeLabel');
 
-    function syncCompareTheme(theme) {
-      const mobile = window.matchMedia('(max-width: 960px)').matches;
-      document.querySelectorAll('[data-compare-img]').forEach((img) => {
-        let next;
-        if (mobile) {
-          next = theme === 'dark' ? img.dataset.srcDarkMobile : img.dataset.srcLightMobile;
-        }
-        if (!next) {
-          next = theme === 'dark' ? img.dataset.srcDark : img.dataset.srcLight;
-        }
-        if (next && img.getAttribute('src') !== next) img.src = next;
-      });
-    }
-
     function syncHeroIllustration(theme) {
       const img = document.querySelector('[data-hero-illustration]');
       if (!img) return;
@@ -1603,7 +1705,6 @@
       html.dataset.theme = theme;
       themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
       themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
-      syncCompareTheme(theme);
       syncHeroIllustration(theme);
     }
 
@@ -1615,7 +1716,7 @@
     });
 
     window.matchMedia('(max-width: 960px)').addEventListener('change', () => {
-      syncCompareTheme(html.dataset.theme || 'light');
+      syncHeroIllustration(html.dataset.theme || 'light');
     });
 
     /* Floating scroll cue — fades once the page is scrolled */
@@ -1770,129 +1871,83 @@
       render();
     })();
 
-    /* Ads vs Ad-Free auto-playing wipe */
-    (function initCompareWipe() {
-      const root = document.querySelector('[data-compare]');
+    /* Sponsored → Ad-Free SERP demo */
+    (function initSerpDemo() {
+      const root = document.querySelector('[data-serp-demo]');
       if (!root) return;
-      const media = root.querySelector('[data-compare-media]');
-      const handle = root.querySelector('[data-compare-handle]');
-      if (!media || !handle) return;
 
+      const badge = root.querySelector('[data-serp-badge]');
+      const live = root.querySelector('[data-serp-live]');
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const minPos = 0;
-      const maxPos = 100;
-      let pos = 50;
-      let dir = 1;
-      let dragging = false;
-      let autoplay = !reduceMotion;
       let inView = false;
-      let resumeTimer = null;
-      let lastTs = 0;
+      let timer = null;
+      let step = 0; // 0 ads-hold, 1 free-hold
 
-      function setPos(next) {
-        pos = Math.min(100, Math.max(0, next));
-        root.style.setProperty('--compare-pos', `${pos}%`);
-        handle.setAttribute('aria-valuenow', String(Math.round(pos)));
-        handle.setAttribute(
-          'aria-valuetext',
-          `Showing ${Math.round(pos)} percent Ad-Free`
-        );
-      }
-
-      function posFromClientX(clientX) {
-        const rect = media.getBoundingClientRect();
-        if (!rect.width) return pos;
-        return ((clientX - rect.left) / rect.width) * 100;
-      }
-
-      function pauseAutoplay() {
-        autoplay = false;
-        clearTimeout(resumeTimer);
-        if (reduceMotion) return;
-        resumeTimer = setTimeout(() => {
-          autoplay = true;
-          dir = pos < 50 ? 1 : -1;
-        }, 4000);
-      }
-
-      function onPointerDown(e) {
-        dragging = true;
-        pauseAutoplay();
-        media.setPointerCapture?.(e.pointerId);
-        setPos(posFromClientX(e.clientX));
-        e.preventDefault();
-      }
-
-      function onPointerMove(e) {
-        if (!dragging) return;
-        setPos(posFromClientX(e.clientX));
-      }
-
-      function onPointerUp(e) {
-        if (!dragging) return;
-        dragging = false;
-        try { media.releasePointerCapture(e.pointerId); } catch (_) { /* noop */ }
-      }
-
-      media.addEventListener('pointerdown', onPointerDown);
-      media.addEventListener('pointermove', onPointerMove);
-      media.addEventListener('pointerup', onPointerUp);
-      media.addEventListener('pointercancel', onPointerUp);
-
-      handle.addEventListener('keydown', (e) => {
-        const step = e.shiftKey ? 10 : 2;
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-          e.preventDefault();
-          pauseAutoplay();
-          setPos(pos - step);
-        } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-          e.preventDefault();
-          pauseAutoplay();
-          setPos(pos + step);
-        } else if (e.key === 'Home') {
-          e.preventDefault();
-          pauseAutoplay();
-          setPos(0);
-        } else if (e.key === 'End') {
-          e.preventDefault();
-          pauseAutoplay();
-          setPos(100);
+      function setState(state) {
+        root.dataset.state = state;
+        if (badge) badge.textContent = state === 'ads' ? 'With ads' : 'Ad-Free';
+        if (live) {
+          live.textContent =
+            state === 'ads'
+              ? 'Showing search results with sponsored listings.'
+              : 'Sponsored listings removed. Showing Ad-Free results.';
         }
-      });
+      }
+
+      function clearTimer() {
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
+      }
+
+      function tick() {
+        if (!inView) return;
+        clearTimer();
+
+        if (step === 0) {
+          setState('ads');
+          timer = setTimeout(() => {
+            step = 1;
+            tick();
+          }, reduceMotion ? 2000 : 2400);
+        } else {
+          setState('free');
+          timer = setTimeout(() => {
+            step = 0;
+            tick();
+          }, reduceMotion ? 2000 : 3200);
+        }
+      }
+
+      function start() {
+        step = 0;
+        tick();
+      }
+
+      function stop() {
+        clearTimer();
+      }
+
+      function updateVisibility(visible) {
+        const was = inView;
+        inView = visible;
+        if (inView && !was) start();
+        if (!inView && was) stop();
+      }
 
       if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver(
-          ([entry]) => { inView = entry.isIntersecting; },
-          { threshold: 0.35 }
+          ([entry]) => updateVisibility(entry.isIntersecting),
+          { threshold: 0.2 }
         );
         io.observe(root);
-      } else {
-        inView = true;
       }
 
-      function tick(ts) {
-        if (!lastTs) lastTs = ts;
-        const dt = Math.min(32, ts - lastTs);
-        lastTs = ts;
-
-        if (autoplay && inView && !dragging) {
-          // ~12% of range per second
-          pos += dir * (12 / 1000) * dt;
-          if (pos >= maxPos) {
-            pos = maxPos;
-            dir = -1;
-          } else if (pos <= minPos) {
-            pos = minPos;
-            dir = 1;
-          }
-          setPos(pos);
-        }
-
-        requestAnimationFrame(tick);
+      const rect = root.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        updateVisibility(true);
       }
-
-      setPos(reduceMotion ? 50 : minPos);
-      if (!reduceMotion) requestAnimationFrame(tick);
     })();
   </script>
 </body>
