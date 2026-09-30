@@ -1105,6 +1105,60 @@
       }
     }
 
+    /* ── Scroll cue ── */
+    .scroll-cue {
+      position: fixed;
+      left: 50%;
+      bottom: var(--spacing-24);
+      z-index: 40;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-40);
+      height: var(--spacing-40);
+      margin: 0;
+      padding: 0;
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-full);
+      background: var(--color-background-primary);
+      color: var(--color-icon-secondary);
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+      transform: translateX(-50%);
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.25s ease, visibility 0.25s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    .scroll-cue:hover {
+      border-color: var(--color-stroke-primary-button);
+      color: var(--color-text-brandblue);
+    }
+    .scroll-cue:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+    }
+    .scroll-cue.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .scroll-cue__icon {
+      display: block;
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+    }
+    .scroll-cue__bob {
+      display: block;
+      animation: scroll-cue-bob 1.6s ease-in-out infinite;
+    }
+    @keyframes scroll-cue-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(var(--spacing-4)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-cue { transition: none; }
+      .scroll-cue__bob { animation: none; }
+    }
 
   </style>
 </head>
@@ -1271,7 +1325,7 @@
       </div>
     </section>
 
-    <section class="features" aria-label="Ad-Free benefits">
+    <section class="features" id="benefits" aria-label="Ad-Free benefits">
       <article class="feature-card">
         <svg class="feature-card__icon" width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <circle class="feature-card__icon-bg" cx="20" cy="20" r="20"/>
@@ -1497,6 +1551,19 @@
     </section>
   </main>
 
+  <button
+    type="button"
+    class="scroll-cue"
+    id="scrollCue"
+    aria-label="Scroll to see more"
+  >
+    <span class="scroll-cue__bob" aria-hidden="true">
+      <svg class="scroll-cue__icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3.5 6.25L8 10.75L12.5 6.25" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </button>
+
   <div class="proto-chrome">
     <a class="proto-back" id="playgroundBack" href="../">← Playground</a>
     <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -1550,6 +1617,49 @@
     window.matchMedia('(max-width: 960px)').addEventListener('change', () => {
       syncCompareTheme(html.dataset.theme || 'light');
     });
+
+    /* Floating scroll cue — fades once the page is scrolled */
+    (function initScrollCue() {
+      const cue = document.getElementById('scrollCue');
+      if (!cue) return;
+
+      const hideAfter = 48;
+      let ticking = false;
+
+      function pageCanScroll() {
+        return document.documentElement.scrollHeight > window.innerHeight + 8;
+      }
+
+      function sync() {
+        const scrolled = window.scrollY > hideAfter;
+        const show = pageCanScroll() && !scrolled;
+        cue.classList.toggle('is-hidden', !show);
+        cue.tabIndex = show ? 0 : -1;
+        cue.setAttribute('aria-hidden', show ? 'false' : 'true');
+      }
+
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          sync();
+          ticking = false;
+        });
+      }
+
+      cue.addEventListener('click', () => {
+        const target = document.getElementById('benefits');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          window.scrollBy({ top: Math.round(window.innerHeight * 0.75), behavior: 'smooth' });
+        }
+      });
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      sync();
+    })();
 
     (function fixPlaygroundBack() {
       const link = document.getElementById('playgroundBack');
