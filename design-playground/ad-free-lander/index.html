@@ -1118,20 +1118,20 @@
       height: var(--spacing-40);
       margin: 0;
       padding: 0;
-      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border: none;
       border-radius: var(--radius-full);
-      background: var(--color-background-primary);
-      color: var(--color-icon-secondary);
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
       box-shadow: var(--shadow-card);
       cursor: pointer;
       transform: translateX(-50%);
       opacity: 1;
       visibility: visible;
-      transition: opacity 0.25s ease, visibility 0.25s ease, border-color 0.15s ease, color 0.15s ease;
+      transition: opacity 0.25s ease, visibility 0.25s ease, background-color 0.15s ease;
     }
     .scroll-cue:hover {
-      border-color: var(--color-stroke-primary-button);
-      color: var(--color-text-brandblue);
+      background: var(--color-button-brandbluehover);
+      color: var(--color-text-inverted);
     }
     .scroll-cue:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
