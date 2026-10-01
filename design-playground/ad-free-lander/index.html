@@ -758,6 +758,11 @@
       transform: scale(var(--serp-scale));
       transform-origin: top center;
       margin-bottom: calc(var(--serp-base-h) * (var(--serp-scale) - 1));
+      cursor: pointer;
+    }
+    .serp-demo__card:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
     }
     [data-theme="dark"] .serp-demo__card {
       box-shadow:
@@ -936,15 +941,23 @@
     .serp-demo__badge {
       display: inline-flex;
       align-items: center;
+      gap: var(--spacing-8);
       min-height: var(--spacing-32);
       padding: var(--spacing-4) var(--spacing-12);
+      border: none;
       border-radius: var(--radius-full);
       background: var(--color-background-secondary);
       color: var(--color-text-primary);
+      font-family: var(--font-family);
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
       font-weight: var(--font-weight-bold);
+      cursor: pointer;
       transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .serp-demo__badge:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: 2px;
     }
     .serp-demo[data-state="free"] .serp-demo__badge {
       background: var(--color-button-brandblue);
@@ -1460,16 +1473,22 @@
       <div class="explain__body">
         <p>Startpage uses contextual sponsored ads that keep our search engine free. They’re based on your search terms, not a profile of you. Ad-Free removes them so there’s nothing between you and your results.</p>
       </div>
-      <div class="serp-demo" data-serp-demo data-state="ads">
-        <div class="serp-demo__card" aria-hidden="true">
-          <div class="serp-demo__chrome">
+      <div class="serp-demo" data-serp-demo data-state="ads" data-playing="true">
+        <div
+          class="serp-demo__card"
+          data-serp-card
+          role="button"
+          tabindex="0"
+          aria-label="Pause animation"
+        >
+          <div class="serp-demo__chrome" aria-hidden="true">
             <div class="serp-demo__traffic">
               <span class="serp-demo__dot serp-demo__dot--red"></span>
               <span class="serp-demo__dot serp-demo__dot--yellow"></span>
               <span class="serp-demo__dot serp-demo__dot--green"></span>
             </div>
           </div>
-          <div class="serp-demo__toolbar">
+          <div class="serp-demo__toolbar" aria-hidden="true">
             <div class="serp-demo__logo">
               <img src="assets/logo-header.svg" alt="" width="74" height="16" decoding="async" draggable="false" />
             </div>
@@ -1481,7 +1500,7 @@
               </svg>
             </div>
           </div>
-          <div class="serp-demo__results">
+          <div class="serp-demo__results" aria-hidden="true">
             <div class="serp-demo__ads" data-serp-ads>
               <article class="serp-demo__ad">
                 <span class="serp-demo__ad-label">Sponsored</span>
@@ -1536,7 +1555,15 @@
             </div>
           </div>
         </div>
-        <span class="serp-demo__badge" data-serp-badge>With ads</span>
+        <button
+          type="button"
+          class="serp-demo__badge"
+          data-serp-badge
+          aria-pressed="true"
+          aria-label="Pause animation"
+        >
+          <span data-serp-badge-label>With ads</span>
+        </button>
         <p class="visually-hidden" data-serp-live aria-live="polite">Showing search results with sponsored listings.</p>
       </div>
     </section>
@@ -1877,20 +1904,39 @@
       if (!root) return;
 
       const badge = root.querySelector('[data-serp-badge]');
+      const badgeLabel = root.querySelector('[data-serp-badge-label]');
+      const card = root.querySelector('[data-serp-card]');
       const live = root.querySelector('[data-serp-live]');
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let inView = false;
+      let playing = true;
       let timer = null;
       let step = 0; // 0 ads-hold, 1 free-hold
 
       function setState(state) {
         root.dataset.state = state;
-        if (badge) badge.textContent = state === 'ads' ? 'With ads' : 'Ad-Free';
+        if (badgeLabel) badgeLabel.textContent = state === 'ads' ? 'With ads' : 'Ad-Free';
         if (live) {
           live.textContent =
             state === 'ads'
               ? 'Showing search results with sponsored listings.'
               : 'Sponsored listings removed. Showing Ad-Free results.';
+        }
+        syncControls();
+      }
+
+      function syncControls() {
+        root.dataset.playing = playing ? 'true' : 'false';
+        const action = playing ? 'Pause animation' : 'Play animation';
+        if (badge) {
+          badge.setAttribute('aria-pressed', playing ? 'true' : 'false');
+          badge.setAttribute('aria-label', action);
+        }
+        if (card) {
+          card.setAttribute(
+            'aria-label',
+            playing ? 'Pause animation' : 'Show next search state'
+          );
         }
       }
 
@@ -1902,7 +1948,7 @@
       }
 
       function tick() {
-        if (!inView) return;
+        if (!inView || !playing) return;
         clearTimer();
 
         if (step === 0) {
@@ -1920,21 +1966,58 @@
         }
       }
 
-      function start() {
-        step = 0;
-        tick();
+      function setPlaying(next) {
+        playing = next;
+        syncControls();
+        if (playing && inView) {
+          tick();
+        } else {
+          clearTimer();
+        }
       }
 
-      function stop() {
-        clearTimer();
+      function togglePlaying() {
+        setPlaying(!playing);
+      }
+
+      function flipState() {
+        step = step === 0 ? 1 : 0;
+        setState(step === 0 ? 'ads' : 'free');
+      }
+
+      function onCardActivate() {
+        if (playing) {
+          setPlaying(false);
+        } else {
+          flipState();
+        }
+      }
+
+      if (badge) {
+        badge.addEventListener('click', (e) => {
+          e.stopPropagation();
+          togglePlaying();
+        });
+      }
+
+      if (card) {
+        card.addEventListener('click', onCardActivate);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onCardActivate();
+          }
+        });
       }
 
       function updateVisibility(visible) {
         const was = inView;
         inView = visible;
-        if (inView && !was) start();
-        if (!inView && was) stop();
+        if (inView && !was && playing) tick();
+        if (!inView && was) clearTimer();
       }
+
+      syncControls();
 
       if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver(
