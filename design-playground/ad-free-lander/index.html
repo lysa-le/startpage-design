@@ -856,9 +856,9 @@
       max-height: calc(var(--serp-row-h) * 4 + var(--serp-row-gap) * 3);
       overflow: hidden;
       transition:
-        max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-        gap 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-        opacity 0.35s ease;
+        max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        gap 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.28s ease;
     }
     .serp-demo[data-state="free"] .serp-demo__ads {
       max-height: 0;
@@ -881,11 +881,11 @@
       transform: translateY(0) scale(1);
       transform-origin: top center;
       transition:
-        max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-        height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-        opacity 0.35s ease,
-        padding 0.45s ease,
-        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.28s ease,
+        padding 0.35s ease,
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .serp-demo__ad-label {
@@ -929,9 +929,9 @@
       transform: translateY(calc(var(--spacing-8) * -1)) scale(0.98);
     }
     .serp-demo[data-state="free"] .serp-demo__ad:nth-child(1) { transition-delay: 0ms; }
-    .serp-demo[data-state="free"] .serp-demo__ad:nth-child(2) { transition-delay: 90ms; }
-    .serp-demo[data-state="free"] .serp-demo__ad:nth-child(3) { transition-delay: 180ms; }
-    .serp-demo[data-state="free"] .serp-demo__ad:nth-child(4) { transition-delay: 270ms; }
+    .serp-demo[data-state="free"] .serp-demo__ad:nth-child(2) { transition-delay: 60ms; }
+    .serp-demo[data-state="free"] .serp-demo__ad:nth-child(3) { transition-delay: 120ms; }
+    .serp-demo[data-state="free"] .serp-demo__ad:nth-child(4) { transition-delay: 180ms; }
 
     .serp-demo__badge {
       display: inline-flex;
@@ -1910,13 +1910,13 @@
           timer = setTimeout(() => {
             step = 1;
             tick();
-          }, reduceMotion ? 2000 : 2400);
+          }, 1400);
         } else {
           setState('free');
           timer = setTimeout(() => {
             step = 0;
             tick();
-          }, reduceMotion ? 2000 : 3200);
+          }, reduceMotion ? 1600 : 2400);
         }
       }
 
