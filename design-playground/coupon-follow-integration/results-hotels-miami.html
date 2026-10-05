@@ -2043,7 +2043,7 @@
     .hotels-widget {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-24);
+      gap: var(--spacing-16);
       width: 100%;
     }
     .hotels-widget[hidden] {
@@ -2456,21 +2456,22 @@
     .hotels-widget__list {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-12);
+      gap: 0;
     }
     .hotels-widget__rule {
       display: block;
       width: 100%;
-      margin: 0;
+      margin-block: var(--spacing-8);
+      margin-inline: 0;
       border: none;
       border-top: var(--border-stroke-sm) solid var(--color-stroke-secondary);
     }
     .hotels-widget__item {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-12);
+      gap: var(--spacing-16);
+      /* Equal inset so hover ring matches on all sides; rules keep ~40px between cards */
       padding: var(--spacing-12);
-      /* Keep hover ring inside the rail — negative margins get clipped by overflow */
       margin-inline: 0;
       border: var(--border-stroke-lg) solid transparent;
       border-radius: var(--radius-lg);
@@ -2489,7 +2490,7 @@
     .hotels-widget__item-head {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-4);
+      gap: var(--spacing-8);
     }
     .hotels-widget__item-title-row {
       display: flex;
@@ -2502,7 +2503,7 @@
       flex: 1 1 auto;
       min-width: 0;
       font-size: var(--font-body-lg);
-      line-height: var(--font-body-lg-lh);
+      line-height: var(--spacing-24);
       font-weight: var(--font-weight-bold);
       letter-spacing: 0.01em;
       color: var(--color-text-primary);
@@ -2511,6 +2512,11 @@
       -webkit-line-clamp: 2;
       overflow: hidden;
     }
+    .hotels-widget__item-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+    }
     .hotels-widget__item-meta {
       display: flex;
       flex-wrap: wrap;
@@ -2518,6 +2524,7 @@
       gap: var(--spacing-8);
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
+      color: var(--color-text-primary);
     }
     .hotels-widget__address {
       margin: 0;
@@ -2526,7 +2533,7 @@
       color: var(--color-text-primary);
     }
     .hotels-widget__meta-text {
-      color: var(--color-text-tertiary);
+      color: var(--color-text-primary);
     }
     .hotels-widget__rating {
       display: inline-flex;
@@ -2547,17 +2554,16 @@
     }
     .hotels-widget__price {
       display: flex;
-      align-items: baseline;
+      align-items: flex-start;
       justify-content: flex-end;
       flex-shrink: 0;
-      gap: var(--spacing-4);
       margin: 0;
       text-align: right;
       white-space: nowrap;
     }
     .hotels-widget__price-amount {
       font-size: var(--font-body-lg);
-      line-height: var(--font-body-lg-lh);
+      line-height: var(--spacing-24);
       font-weight: var(--font-weight-bold);
       color: var(--color-text-teal);
     }
@@ -2907,117 +2913,142 @@
       outline-offset: var(--spacing-4);
     }
 
-    /* ── Coupon Follow hotel deal ── */
+    /* ── Coupon Follow hotel deal (Figma 10:113) ── */
     .hotels-widget__deal {
-      align-self: flex-start;
-      display: inline-flex;
+      align-self: stretch;
+      box-sizing: border-box;
+      display: flex;
       align-items: center;
-      gap: var(--spacing-4);
-      margin-top: var(--spacing-4);
-      padding: var(--spacing-4) var(--spacing-8);
+      justify-content: space-between;
+      gap: var(--spacing-12);
+      min-height: calc(var(--spacing-48) + var(--spacing-16) - var(--spacing-4));
+      padding: var(--spacing-12);
       border: var(--border-stroke-lg) dashed var(--color-stroke-primary-button);
-      border-radius: var(--radius-md);
-      background: var(--color-background-primary);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-quaternary);
       font-family: var(--font-family);
-      font-size: var(--font-body-xs);
-      line-height: var(--font-body-xs-lh);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-link);
-      white-space: nowrap;
       cursor: pointer;
       transition: background-color 0.15s ease;
       position: relative;
       z-index: 1;
     }
+    .hotels-widget__deal-main {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: var(--spacing-8);
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+    .hotels-widget__deal-logo {
+      display: block;
+      width: calc(var(--spacing-96) + var(--spacing-8));
+      height: auto;
+      flex-shrink: 0;
+    }
+    .hotels-widget__deal-copyline {
+      display: inline-flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--spacing-4);
+      min-width: 0;
+      font-size: var(--font-body-md);
+      line-height: var(--spacing-16);
+      letter-spacing: -0.02em;
+    }
+    .hotels-widget__deal-offer {
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-brandblue);
+    }
+    .hotels-widget__deal-with {
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+    }
+    .hotels-widget__deal-code {
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.02em;
+      color: var(--color-text-primary);
+    }
+    .hotels-widget__deal-action {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: calc(var(--spacing-96) + var(--spacing-8));
+      min-height: calc(var(--spacing-32) + var(--spacing-8));
+      padding: var(--spacing-8) var(--spacing-12);
+      border-radius: var(--radius-lg);
+      background: var(--color-button-brandblue);
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-inverted);
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
     .hotels-widget__deal:hover {
-      background: var(--color-background-secondary);
+      background: var(--color-background-tertiary);
+    }
+    .hotels-widget__deal:hover .hotels-widget__deal-action {
+      background: var(--color-button-brandbluehover);
     }
     .hotels-widget__deal:focus-visible {
       outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
       outline-offset: var(--spacing-4);
     }
-    .hotels-detail__deal {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-12);
-      padding: var(--spacing-16);
-      border: none;
-      border-radius: var(--radius-lg);
-      background: var(--color-background-tertiary);
+    .hotels-widget__deal[data-busy="true"] {
+      justify-content: flex-start;
+      cursor: default;
     }
-    .hotels-detail__deal-logo {
-      display: block;
-      width: calc(var(--spacing-96) + var(--spacing-4));
-      height: auto;
+    .hotels-widget__deal[data-busy="true"] .hotels-widget__deal-action {
+      display: none;
     }
-    .hotels-detail__deal-title {
-      margin: 0;
-      font-size: var(--font-body-lg);
-      line-height: var(--font-body-sm-lh);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: -0.02em;
-      color: var(--color-text-primary);
-    }
-    .hotels-detail__deal-note {
-      margin: 0;
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-sm-lh);
-      color: var(--color-text-tertiary);
-    }
-    .hotels-detail__deal-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--spacing-8);
-    }
-    .hotels-detail__deal-code {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: calc(var(--spacing-64) + var(--spacing-12));
-      min-height: calc(var(--spacing-24) + var(--spacing-4));
-      padding: var(--spacing-4) var(--spacing-12);
-      border: var(--border-stroke-lg) dashed var(--color-stroke-primary-button);
-      border-radius: var(--radius-md);
-      background: var(--color-background-primary);
-      font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-xs-lh);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: 0.02em;
-      color: var(--color-text-primary);
-    }
-    .hotels-detail__deal-copy {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-4);
-      min-height: calc(var(--spacing-24) + var(--spacing-4));
-      padding: var(--spacing-4) var(--spacing-12);
-      border: none;
-      border-radius: var(--radius-md);
-      background: var(--color-button-productfilledhover);
-      font-family: var(--font-family);
-      font-size: var(--font-body-sm);
-      line-height: var(--font-body-xs-lh);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-primary);
-      cursor: pointer;
-      transition: background-color 0.15s ease, color 0.15s ease;
-    }
-    .hotels-detail__deal-copy-check,
     .hotels-widget__deal-check {
-      width: var(--spacing-16);
-      height: var(--spacing-16);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-20);
+      height: var(--spacing-20);
       flex-shrink: 0;
-    }
-    .hotels-detail__deal-copy:hover {
+      border-radius: var(--radius-full);
       background: var(--color-button-brandblue);
       color: var(--color-text-inverted);
     }
-    .hotels-detail__deal-copy:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: var(--spacing-4);
+    .hotels-widget__deal-check svg {
+      display: block;
+      width: var(--spacing-12);
+      height: var(--spacing-12);
+    }
+    .hotels-widget__deal[data-busy="true"] .hotels-widget__deal-offer {
+      color: var(--color-text-brandblue);
+      font-weight: var(--font-weight-extrabold);
+    }
+    .hotels-widget__deal-main:has(.hotels-widget__deal-check) {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--spacing-8);
+    }
+    .hotels-detail__deal-row {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-8);
+      width: 100%;
+    }
+    .hotels-detail__booking > .hotels-widget__deal,
+    .hotels-detail__deal-row > .hotels-widget__deal {
+      width: 100%;
+    }
+    .hotels-detail__summary-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+    }
+    .hotels-detail__summary-top .hotels-detail__title {
+      flex: 1 1 auto;
+      min-width: 0;
     }
     .hotels-detail__deal-reminder {
       display: none;
@@ -5591,23 +5622,22 @@
                 <div class="hotels-widget__item-title-row">
                   <h2 class="hotels-widget__item-title">1. Intercontinental Miami by Ihg</h2>
                   <p class="hotels-widget__price">
-                    <span class="hotels-widget__price-amount">$289</span>
+                    <span class="hotels-widget__price-amount">$231</span>
                   </p>
                 </div>
-                <div class="hotels-widget__item-meta">
-                  <span class="hotels-widget__rating" aria-label="5 out of 5 on Priceline">
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                  </span>
-                  <span class="hotels-widget__meta-text">Priceline (8,945 reviews)</span>
+                <div class="hotels-widget__item-info">
+                  <p class="hotels-widget__address">100 Chopin Plaza, Miami, FL 33131</p>
+                  <div class="hotels-widget__item-meta">
+                    <span class="hotels-widget__rating" aria-label="5 out of 5 on Booking.com">
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    </span>
+                    <span class="hotels-widget__meta-text">Booking.com(8,945 reviews)</span>
+                  </div>
                 </div>
-                <p class="hotels-widget__address">100 Chopin Plaza, Miami, FL 33131</p>
-              <button type="button" class="hotels-widget__deal" data-hotel-deal-chip aria-label="Copy Coupon Follow code for up to 20% off">
-                Coupon Follow · Up to 20% off
-              </button>
               </div>
               <div class="hotels-widget__photos">
                 <div class="hotels-widget__photos-viewport">
@@ -5635,6 +5665,17 @@
                   </span>
                 </button>
               </div>
+              <button type="button" class="hotels-widget__deal" data-hotel-deal-chip data-deal-id="intercontinental" data-deal-code="STAY20" data-deal-offer="20% off" aria-label="Copy Coupon Follow code STAY20 for 20% off">
+                <span class="hotels-widget__deal-main">
+                  <img class="hotels-widget__deal-logo" src="assets/hotels/couponfollow-logo.svg" width="104" height="14" alt="Coupon Follow" decoding="async">
+                  <span class="hotels-widget__deal-copyline">
+                    <span class="hotels-widget__deal-offer">20% off</span>
+                    <span class="hotels-widget__deal-with">with code</span>
+                    <span class="hotels-widget__deal-code">STAY20</span>
+                  </span>
+                </span>
+                <span class="hotels-widget__deal-action">Copy code</span>
+              </button>
             </article>
 
             <hr class="hotels-widget__rule">
@@ -5644,23 +5685,22 @@
                 <div class="hotels-widget__item-title-row">
                   <h2 class="hotels-widget__item-title">2. Sheraton Miami Airport Hotel &amp; Executive Meeting Center</h2>
                   <p class="hotels-widget__price">
-                    <span class="hotels-widget__price-amount">$179</span>
+                    <span class="hotels-widget__price-amount">$360</span>
                   </p>
                 </div>
-                <div class="hotels-widget__item-meta">
-                  <span class="hotels-widget__rating" aria-label="4 out of 5 on Priceline">
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--empty" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                  </span>
-                  <span class="hotels-widget__meta-text">Priceline (5,244 reviews)</span>
+                <div class="hotels-widget__item-info">
+                  <p class="hotels-widget__address">3900 NW 21st St, Miami, FL 33142</p>
+                  <div class="hotels-widget__item-meta">
+                    <span class="hotels-widget__rating" aria-label="5 out of 5 on Booking.com">
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    </span>
+                    <span class="hotels-widget__meta-text">Booking.com(5,244 reviews)</span>
+                  </div>
                 </div>
-                <p class="hotels-widget__address">3900 NW 21st St, Miami, FL 33142</p>
-              <button type="button" class="hotels-widget__deal" data-hotel-deal-chip aria-label="Copy Coupon Follow code for up to 20% off">
-                Coupon Follow · Up to 20% off
-              </button>
               </div>
               <div class="hotels-widget__photos">
                 <div class="hotels-widget__photos-viewport">
@@ -5697,23 +5737,22 @@
                 <div class="hotels-widget__item-title-row">
                   <h2 class="hotels-widget__item-title">3. Hampton Inn &amp; Suites Miami / Brickell-Downtown</h2>
                   <p class="hotels-widget__price">
-                    <span class="hotels-widget__price-amount">$159</span>
+                    <span class="hotels-widget__price-amount">$264</span>
                   </p>
                 </div>
-                <div class="hotels-widget__item-meta">
-                  <span class="hotels-widget__rating" aria-label="4 out of 5 on Priceline">
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                    <svg class="hotels-widget__star hotels-widget__star--empty" aria-hidden="true"><use href="#icon-star-filled"/></svg>
-                  </span>
-                  <span class="hotels-widget__meta-text">Priceline (5,076 reviews)</span>
+                <div class="hotels-widget__item-info">
+                  <p class="hotels-widget__address">50 SW 12th St, Miami, FL 33130</p>
+                  <div class="hotels-widget__item-meta">
+                    <span class="hotels-widget__rating" aria-label="5 out of 5 on Booking.com">
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                      <svg class="hotels-widget__star hotels-widget__star--filled" aria-hidden="true"><use href="#icon-star-filled"/></svg>
+                    </span>
+                    <span class="hotels-widget__meta-text">Booking.com(5,076 reviews)</span>
+                  </div>
                 </div>
-                <p class="hotels-widget__address">50 SW 12th St, Miami, FL 33130</p>
-              <button type="button" class="hotels-widget__deal" data-hotel-deal-chip aria-label="Copy Coupon Follow code for up to 20% off">
-                Coupon Follow · Up to 20% off
-              </button>
               </div>
               <div class="hotels-widget__photos">
                 <div class="hotels-widget__photos-viewport">
@@ -5741,6 +5780,17 @@
                   </span>
                 </button>
               </div>
+              <button type="button" class="hotels-widget__deal" data-hotel-deal-chip data-deal-id="hampton" data-deal-code="HOLIDAY15" data-deal-offer="15% off" aria-label="Copy Coupon Follow code HOLIDAY15 for 15% off">
+                <span class="hotels-widget__deal-main">
+                  <img class="hotels-widget__deal-logo" src="assets/hotels/couponfollow-logo.svg" width="104" height="14" alt="Coupon Follow" decoding="async">
+                  <span class="hotels-widget__deal-copyline">
+                    <span class="hotels-widget__deal-offer">15% off</span>
+                    <span class="hotels-widget__deal-with">with code</span>
+                    <span class="hotels-widget__deal-code">HOLIDAY15</span>
+                  </span>
+                </span>
+                <span class="hotels-widget__deal-action">Copy code</span>
+              </button>
             </article>
           </div>
 
@@ -7475,6 +7525,8 @@
           name: 'Intercontinental Miami by Ihg',
           stars: 5,
           reviews: '8,945',
+          price: 231,
+          deal: { code: 'STAY20', offer: '20% off' },
           address: '100 Chopin Plaza, Miami, FL 33131',
           phone: '+1 305-577-1000',
           hero: 'assets/hotels/hotel-intercontinental.jpg',
@@ -7486,9 +7538,9 @@
           ],
           blurb: 'Discover a new dimension of worldly travels paired with unrivaled hospitality at InterContinental Miami. Set in the heart of Miami, our hotel offers richly appointed accommodations with breathtaking views along Biscayne Bay. From dramatic digital artscapes, 653 luxury guestrooms &…',
           amenities: [
-            { icon: 'check', label: 'Hair dryer' },
+            { icon: 'hairdryer', label: 'Hair dryer' },
             { icon: 'parking', label: 'Valet parking' },
-            { icon: 'check', label: 'Additional bathroom' },
+            { icon: 'bathroom', label: 'Additional bathroom' },
             { icon: 'wifi', label: 'Free High Speed Internet (WiFi)' },
             { icon: 'gym', label: 'Fitness Center with Gym / Workout Room' },
             { icon: 'pool', label: 'Pool' },
@@ -7502,8 +7554,10 @@
         },
         sheraton: {
           name: 'Sheraton Miami Airport Hotel & Executive Meeting Center',
-          stars: 4,
+          stars: 5,
           reviews: '5,244',
+          price: 360,
+          deal: null,
           address: '3900 NW 21st St, Miami, FL 33142',
           phone: '+1 305-871-3800',
           hero: 'assets/hotels/hotel-sheraton.jpg',
@@ -7515,12 +7569,12 @@
           ],
           blurb: 'Stay close to Miami International Airport with easy access to meeting spaces, a seasonal pool, and complimentary shuttle service. Rooms include work-friendly desks and soft landing beds for late-night arrivals &…',
           amenities: [
-            { icon: 'check', label: 'Airport shuttle' },
+            { icon: 'airport-shuttle', label: 'Airport shuttle' },
             { icon: 'parking', label: 'Self parking' },
             { icon: 'wifi', label: 'Free High Speed Internet (WiFi)' },
             { icon: 'gym', label: 'Fitness Center' },
             { icon: 'pool', label: 'Pool' },
-            { icon: 'check', label: 'Business center' },
+            { icon: 'business-center', label: 'Business center' },
           ],
           qa: {
             q: 'Is there a free airport shuttle?',
@@ -7531,8 +7585,10 @@
         },
         hampton: {
           name: 'Hampton Inn & Suites Miami / Brickell-Downtown',
-          stars: 4,
+          stars: 5,
           reviews: '5,076',
+          price: 264,
+          deal: { code: 'HOLIDAY15', offer: '15% off' },
           address: '50 SW 12th St, Miami, FL 33130',
           phone: '+1 305-377-7700',
           hero: 'assets/hotels/hotel-hampton.jpg',
@@ -7568,48 +7624,73 @@
 
       const AMENITY_ICONS = {
         check: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.2l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-        parking: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.25" y="2.25" width="11.5" height="11.5" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M6.1 11.5V4.5h2.55c1.55 0 2.55.85 2.55 2.2S10.2 8.9 8.65 8.9H6.1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-        wifi: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 6.4c3.5-3.2 7.5-3.2 11 0M4.4 8.6c2.4-2.2 4.8-2.2 7.2 0M6.3 10.8a3.1 3.1 0 013.4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="13" r="1" fill="currentColor"/></svg>',
-        gym: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.25 4.75v6.5M10.75 4.75v6.5M3.5 6v4M12.5 6v4M5.25 8h5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-        pool: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.75a2.1 2.1 0 012.15 2.25c0 1.85-2.15 3.35-2.15 3.35S5.85 6.85 5.85 5A2.1 2.1 0 018 2.75z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M2.25 11.25c.95 0 1.05-.9 2.1-.9s1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9M2.25 13.5c.95 0 1.05-.9 2.1-.9s1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9 1.05-.9 2.1-.9 1.15.9 2.1.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>',
+        parking: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><g> <path d="M8 0.5C12.0643 0.5 15.5 3.93597 15.5 8C15.5 12.064 12.064 15.5 8 15.5C3.93598 15.5 0.5 12.064 0.5 8C0.5 3.93598 3.93598 0.5 8 0.5Z" stroke="currentColor"/> <path d="M11.1542 5.66448C10.8933 4.60423 10.1045 4.00243 9.01243 4H5.81818V12H7.30568V9.16455H7.56626C8.09619 9.16455 8.62926 9.2062 9.15604 9.15552C10.2877 9.04863 10.9129 8.54644 11.1693 7.49625C11.3167 6.8948 11.302 6.26697 11.1542 5.66448ZM9.71643 6.79068C9.6793 7.34701 9.30909 7.76071 8.80018 7.7784C8.31299 7.79506 7.82475 7.78188 7.31969 7.78188V5.45174C7.88324 5.45174 8.43207 5.39586 8.9683 5.46666C9.53886 5.54267 9.76827 6.0164 9.71643 6.79068Z" fill="currentColor"/> </g></svg>',
+        wifi: '<svg viewBox="0 0 15 11.4565" fill="none" aria-hidden="true"><g> <path d="M7.49999 11.4565C8.00425 11.4565 8.41303 11.0477 8.41303 10.5435C8.41303 10.0392 8.00425 9.63043 7.49999 9.63043C6.99573 9.63043 6.58695 10.0392 6.58695 10.5435C6.58695 11.0477 6.99573 11.4565 7.49999 11.4565Z" fill="currentColor"/> <path d="M10.2392 8.41303C8.72516 6.78984 6.27489 6.78984 4.7609 8.41303" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/> <path d="M12.0652 5.97825C9.54188 3.54347 5.45814 3.54347 2.93479 5.97825" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/> <path d="M14.5 3.54348C10.6309 -0.514493 4.36912 -0.514493 0.500001 3.54348" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/> </g></svg>',
+        gym: '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><g transform="translate(8 8) rotate(-45) translate(-4.61164 -10.21305)"><g> <path d="M5.83947 7.00149L5.33948 7.00463L5.2987 13.4879L5.79869 13.4848L6.29868 13.4816L6.33946 6.99835L5.83947 7.00149Z" fill="currentColor"/> <path d="M3.28284 13.5006L3.78283 13.4975L3.8236 7.01418L3.32361 7.01732L2.82362 7.02047L2.78285 13.5038L3.28284 13.5006Z" fill="currentColor"/> <path d="M1.21601 4.94819L7.97369 4.90569C8.36017 4.90339 8.6719 5.21495 8.66947 5.60147L8.66129 6.90125L0.503251 6.95256L0.511425 5.65278C0.513857 5.26619 0.829419 4.95062 1.21601 4.94819Z" stroke="currentColor"/> <path d="M8.00738 15.4779L1.24971 15.5204C0.863221 15.5227 0.551497 15.2111 0.553928 14.8246L0.562103 13.5248L8.72014 13.4735L8.71197 14.7733C8.70954 15.1599 8.39398 15.4754 8.00738 15.4779Z" stroke="currentColor"/> <path d="M6.17471 1.69245L5.67472 1.6956L5.66835 2.70955L6.16834 2.7064L6.66833 2.70326L6.6747 1.68931L6.17471 1.69245ZM3.04872 2.72602L3.54871 2.72288L3.55508 1.70893L3.05509 1.71207L2.5551 1.71522L2.54873 2.72917L3.04872 2.72602ZM4.26262 0.504551L4.25947 1.00454L4.97914 1.00001L4.98228 0.500024L4.98543 3.43335e-05L4.26576 0.00456056L4.26262 0.504551ZM3.05509 1.71207L3.55508 1.70893C3.55752 1.32234 3.87288 1.00697 4.25947 1.00454L4.26262 0.504551L4.26576 0.00456056C3.3269 0.0104654 2.56101 0.776354 2.5551 1.71522L3.05509 1.71207ZM6.17471 1.69245L6.6747 1.68931C6.68061 0.750443 5.92429 -0.0058705 4.98543 3.43335e-05L4.98228 0.500024L4.97914 1.00001C5.36573 0.997583 5.67716 1.30901 5.67472 1.6956L6.17471 1.69245Z" fill="currentColor"/> <path d="M3.04868 18.7336L3.54867 18.7305L3.55505 17.7166L3.05506 17.7197L2.55507 17.7228L2.54869 18.7368L3.04868 18.7336ZM6.17468 17.7001L5.67469 17.7032L5.66831 18.7172L6.1683 18.714L6.66829 18.7109L6.67467 17.6969L6.17468 17.7001ZM4.96078 19.9215L4.96392 19.4216L4.24425 19.4261L4.24111 19.9261L4.23796 20.4261L4.95763 20.4215L4.96078 19.9215ZM6.1683 18.714L5.66831 18.7172C5.66588 19.1038 5.35051 19.4191 4.96392 19.4216L4.96078 19.9215L4.95763 20.4215C5.8965 20.4156 6.66239 19.6497 6.66829 18.7109L6.1683 18.714ZM3.04868 18.7336L2.54869 18.7368C2.54279 19.6757 3.2991 20.432 4.23796 20.4261L4.24111 19.9261L4.24425 19.4261C3.85766 19.4285 3.54624 19.1171 3.54867 18.7305L3.04868 18.7336Z" fill="currentColor"/> <path d="M7.77093 3.89623L7.27094 3.89938L7.26583 4.71206L7.76582 4.70892L8.26581 4.70577L8.27092 3.89309L7.77093 3.89623ZM1.42595 4.74879L1.92594 4.74565L1.93105 3.93296L1.43106 3.93611L0.931067 3.93925L0.925956 4.75194L1.42595 4.74879ZM2.63858 2.72859L2.63544 3.22858L6.57536 3.2038L6.5785 2.70381L6.58164 2.20382L2.64172 2.2286L2.63858 2.72859ZM1.43106 3.93611L1.93105 3.93296C1.93348 3.54637 2.24884 3.23101 2.63544 3.22858L2.63858 2.72859L2.64172 2.2286C1.70286 2.2345 0.936972 3.00039 0.931067 3.93925L1.43106 3.93611ZM7.77093 3.89623L8.27092 3.89309C8.27682 2.95422 7.52051 2.19791 6.58164 2.20382L6.5785 2.70381L6.57536 3.2038C6.96195 3.20136 7.27337 3.51279 7.27094 3.89938L7.77093 3.89623Z" fill="currentColor"/> <path d="M1.45246 16.5298L1.95245 16.5267L1.95757 15.714L1.45758 15.7171L0.957586 15.7203L0.952475 16.533L1.45246 16.5298ZM7.79745 15.6773L7.29746 15.6804L7.29235 16.4931L7.79234 16.49L8.29233 16.4868L8.29744 15.6741L7.79745 15.6773ZM6.58481 17.6975L6.58796 17.1975L2.64804 17.2223L2.64489 17.7223L2.64175 18.2222L6.58167 18.1975L6.58481 17.6975ZM7.79234 16.49L7.29235 16.4931C7.28992 16.8797 6.97455 17.1951 6.58796 17.1975L6.58481 17.6975L6.58167 18.1975C7.52054 18.1916 8.28642 17.4257 8.29233 16.4868L7.79234 16.49ZM1.45246 16.5298L0.952475 16.533C0.94657 17.4718 1.70289 18.2281 2.64175 18.2222L2.64489 17.7223L2.64804 17.2223C2.26145 17.2247 1.95002 16.9133 1.95245 16.5267L1.45246 16.5298Z" fill="currentColor"/> </g></g></svg>',
+        pool: '<svg viewBox="0 0 16 13.5018" fill="none" aria-hidden="true"><g> <path d="M0.500012 7.5039C0.656752 7.49589 1.22885 7.5039 1.84014 7.04744C2.58724 6.48955 3.06271 7.16756 3.46239 7.33573C3.86208 7.5039 4.47337 7.64805 5.41381 7.04744C6.35424 6.44682 6.895 7.16756 7.24766 7.33573C7.60033 7.5039 8.1881 7.74415 8.94045 7.19158C9.6928 6.63902 10.4216 6.87927 10.8448 7.19158C11.268 7.5039 11.9028 7.76817 12.4906 7.33573C13.0784 6.90329 13.5486 6.59097 14.2304 7.04744C14.7759 7.41261 15.3041 7.51992 15.5 7.52793" stroke="currentColor" stroke-linecap="round"/> <path d="M0.500012 10.1289C0.656752 10.1209 1.22885 10.1289 1.84014 9.67242C2.58724 9.11454 3.06271 9.79255 3.46239 9.96072C3.86208 10.1289 4.47337 10.273 5.41381 9.67242C6.35424 9.07181 6.895 9.79255 7.24766 9.96072C7.60033 10.1289 8.1881 10.3691 8.94045 9.81657C9.6928 9.26401 10.4216 9.50425 10.8448 9.81657C11.268 10.1289 11.9028 10.3932 12.4906 9.96072C13.0784 9.52828 13.5486 9.21596 14.2304 9.67242C14.7759 10.0376 15.3041 10.1449 15.5 10.1529" stroke="currentColor" stroke-linecap="round"/> <path d="M0.500012 12.9414C0.656752 12.9334 1.22885 12.9414 1.84014 12.4849C2.58724 11.927 3.06271 12.605 3.46239 12.7732C3.86208 12.9414 4.47337 13.0855 5.41381 12.4849C6.35424 11.8843 6.895 12.605 7.24766 12.7732C7.60033 12.9414 8.1881 13.1816 8.94045 12.6291C9.6928 12.0765 10.4216 12.3168 10.8448 12.6291C11.268 12.9414 11.9028 13.2057 12.4906 12.7732C13.0784 12.3408 13.5486 12.0285 14.2304 12.4849C14.7759 12.8501 15.3041 12.9574 15.5 12.9654" stroke="currentColor" stroke-linecap="round"/> <path d="M3.87503 7.46875L7.53128 3.625L6.96486 2.72947L4.12564 4.13824C3.78638 4.30658 3.37474 4.18909 3.17544 3.86704C2.94745 3.49861 3.0866 3.01389 3.4753 2.8225L6.4902 1.33805C6.89726 1.13763 7.38769 1.22933 7.69483 1.56328L12.7813 7.09375" stroke="currentColor" stroke-linecap="round"/> <path d="M13.1563 0.5C14.239 0.5 15.0625 1.42632 15.0625 2.5C15.0625 3.57368 14.239 4.5 13.1563 4.5C12.0736 4.5 11.25 3.57368 11.25 2.5C11.25 1.42632 12.0736 0.5 13.1563 0.5Z" stroke="currentColor"/> </g></svg>',
+        bathroom: '<svg viewBox="0 0 14.2316 16" fill="none" aria-hidden="true"><g> <path d="M2.30001 8.98574C2.87143 9.90002 3.82572 12.4829 3.07143 15.5" stroke="currentColor"/> <path d="M4.87143 7.35713H12.7889C13.309 7.35713 13.7554 7.74678 13.7305 8.26622C13.6266 10.4401 12.2637 13.4754 7.27002 13.1964C7.17718 13.1912 7.09282 13.2592 7.08662 13.352C7.04398 13.9905 7.06648 15.0609 7.44286 15.5" stroke="currentColor"/> <path d="M5.18749 8.93749V2.04285C5.18749 1.19076 4.49673 0.5 3.64464 0.5H2.04286C1.19076 0.5 0.5 1.19076 0.5 2.04285V8.93749" stroke="currentColor"/> <path d="M1.9572 15.5H8.38576" stroke="currentColor" stroke-linecap="round"/> <path d="M4.87143 10.9571C4.98572 11.3 5.40286 12.0714 6.15715 12.4143" stroke="currentColor" stroke-linecap="round"/> <path d="M0.500025 8.9375L13.625 8.9375" stroke="currentColor" stroke-linecap="round"/> </g></svg>',
+        hairdryer: '<svg viewBox="0 0 15.6552 12.0672" fill="none" aria-hidden="true"><g> <path d="M4.08619 6.56897C6.0724 6.56897 10.8908 5.83333 12.9138 5.46552V1.87931C10.3391 1.41954 5.13447 0.5 3.81033 0.5C1.87928 0.5 0.5 1.87931 0.5 3.25862C0.5 4.93662 1.60343 6.56897 4.08619 6.56897Z" stroke="currentColor" stroke-linecap="round"/> <path d="M2.14635 6.42412C2.07181 6.87134 2.0569 8.03412 2.59357 9.10746C3.13024 10.1808 3.41348 11.1945 3.48802 11.5672C4.08432 11.5672 5.36636 11.433 5.72414 10.8964L5.20846 8.83366C5.14749 8.58978 5.50053 8.24079 5.50053 7.9894C5.50053 7.54218 5.0533 7.31857 5.27691 6.64773" stroke="currentColor" stroke-linecap="round"/> <circle cx="3.53448" cy="3.53448" r="1.15517" stroke="currentColor"/> <g> <path d="M14.1552 2.7069H15.1552" stroke="currentColor" stroke-linecap="round"/> <path d="M14.1552 3.90692H15.1552" stroke="currentColor" stroke-linecap="round"/> <path d="M14.1552 5.10693H15.1552" stroke="currentColor" stroke-linecap="round"/> </g> </g></svg>',
+        'business-center': '<svg aria-hidden="true" viewBox="0 0 16 16" fill="none"><g><path d="M6.86047 8.82355L1 7.36013V4.76472C1 4.24493 1.42138 3.82355 1.94118 3.82355H14.0588C14.5786 3.82355 15 4.24493 15 4.76472V7.36013L9.24806 8.82355" stroke="currentColor" stroke-linecap="round"/><path d="M1 7.82355V13.6471C1 14.2968 1.52672 14.8235 2.17647 14.8235H14.0588C14.5786 14.8235 15 14.4022 15 13.8824V7.82355" stroke="currentColor" stroke-linecap="round"/><rect x="6.58826" y="8" width="2.82353" height="2.58824" rx="0.470588" stroke="currentColor" fill="none"/><path d="M5.41174 2.58824C5.41174 2.56928 5.41174 2.52772 5.41174 2.47087C5.41174 1.95107 5.83312 1.52942 6.35292 1.52942H9.52939C10.0492 1.52942 10.4706 1.9508 10.4706 2.4706V2.58824" stroke="currentColor" stroke-linecap="round"/></g></svg>',
+        'airport-shuttle': '<svg aria-hidden="true" viewBox="0 0 15.6093 15.026" fill="none"> <g> <path d="M8.26201 0.548363C8.4779 0.46231 8.72063 0.493468 8.90654 0.625511L8.98271 0.688011L10.9417 2.55813L11.5794 2.30422L11.6946 2.26418C11.9692 2.18 12.2774 2.16756 12.5472 2.21535C12.7907 2.25853 13.1386 2.37833 13.3372 2.67532L13.4124 2.81399L13.4583 2.95071C13.535 3.27107 13.4111 3.58815 13.262 3.81203C13.0749 4.09313 12.7887 4.33198 12.4759 4.45657L11.8538 4.70364L11.8431 7.32766C11.8419 7.60508 11.6729 7.85455 11.4153 7.95754C11.0719 8.09466 10.6816 7.93229 10.5364 7.59231L9.64482 5.50051L8.304 5.86282L8.23857 6.38528C8.20669 6.64008 8.03755 6.85686 7.79814 6.94973C7.39655 7.10533 6.95136 6.86436 6.86259 6.44289L6.67021 5.52785L6.11162 4.70364C5.86379 4.33706 6.02052 3.83491 6.4329 3.67434C6.63217 3.59676 6.85445 3.61662 7.03544 3.72414L7.11064 3.7759L7.58622 4.1509L8.78447 3.50442L7.89091 1.44973C7.73814 1.09852 7.90636 0.690357 8.26201 0.548363Z" stroke="currentColor"/> <path d="M5.44469 5.53565H2.29807C1.92347 5.49819 1.12932 5.64803 0.949517 6.54707C0.724759 7.67086 0.5 10.8175 0.5 11.8289C0.5 12.8403 0.654498 13.2055 1.21639 13.2055" stroke="currentColor" stroke-linecap="round"/> <path d="M0.612362 10.4803H3.67364C4.26008 10.4803 4.7793 10.8594 4.95803 11.4179L5.55705 13.2898" stroke="currentColor" stroke-linecap="round"/> <path d="M15.0082 10.4803H11.9469C11.3604 10.4803 10.8412 10.8594 10.6625 11.4179L10.0635 13.2898" stroke="currentColor" stroke-linecap="round"/> <path d="M4.60461 13.2898H10.9105" stroke="currentColor" stroke-linecap="round"/> <circle cx="3.08472" cy="13.0651" r="1.46093" stroke="currentColor"/> <circle cx="12.5246" cy="13.0651" r="1.46093" stroke="currentColor"/> <path d="M4.77039 5.53567V9.46894" stroke="currentColor" stroke-linecap="round"/> <path d="M7.91699 8.68227V13.1774" stroke="currentColor" stroke-linecap="round"/> <path d="M13.3112 5.54082C13.6858 5.50336 14.4799 5.6532 14.6597 6.55224C14.8845 7.67603 15.1093 10.8227 15.1093 11.8341C15.1093 12.8455 14.9548 13.2055 14.3929 13.2055" stroke="currentColor" stroke-linecap="round"/> </g> </svg>',
       };
 
-      const HOTEL_DEAL = {
-        code: 'STAY20',
-        label: 'Coupon Follow · Up to 20% off',
-        title: 'Up to 20% off your next stay',
-      };
-      let hotelDealCopied = false;
+      const hotelDealCopiedIds = new Set();
 
-      function dealCopyCheckSvg(isChip) {
-        const checkClass = isChip ? 'hotels-widget__deal-check' : 'hotels-detail__deal-copy-check';
-        return `<svg class="${checkClass}" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.2l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      function dealCopyCheckSvg() {
+        return `<span class="hotels-widget__deal-check" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.2l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+      }
+
+      function hotelDealButtonHtml(deal, dealId, extraAttrs) {
+        if (!deal || !dealId) return '';
+        const attrs = extraAttrs ? ` ${extraAttrs}` : '';
+        return `
+          <button type="button" class="hotels-widget__deal" data-deal-id="${dealId}" data-deal-code="${deal.code}" data-deal-offer="${deal.offer}"${attrs} aria-label="Copy Coupon Follow code ${deal.code} for ${deal.offer}">
+            <span class="hotels-widget__deal-main">
+              <img class="hotels-widget__deal-logo" src="assets/hotels/couponfollow-logo.svg" width="104" height="14" alt="Coupon Follow" decoding="async">
+              <span class="hotels-widget__deal-copyline">
+                <span class="hotels-widget__deal-offer">${deal.offer}</span>
+                <span class="hotels-widget__deal-with">with code</span>
+                <span class="hotels-widget__deal-code">${deal.code}</span>
+              </span>
+            </span>
+            <span class="hotels-widget__deal-action">Copy code</span>
+          </button>`;
+      }
+
+      function hotelPriceMarkup(hotel) {
+        if (!hotel?.price) return '';
+        return `
+          <p class="hotels-widget__price">
+            <span class="hotels-widget__price-amount">$${hotel.price}</span>
+          </p>`;
       }
 
       function markDealCopyButton(btn) {
-        if (!btn) return;
-        const isChip = btn.classList.contains('hotels-widget__deal');
+        if (!btn || btn.dataset.busy === 'true') return;
         btn.dataset.busy = 'true';
-        btn.innerHTML = isChip
-          ? `${dealCopyCheckSvg(true)}<span>Code copied</span>`
-          : `${dealCopyCheckSvg(false)}<span>Copied</span>`;
-        btn.setAttribute('aria-label', isChip ? 'Code copied' : 'Copied');
+        btn.innerHTML = `<span class="hotels-widget__deal-main">${dealCopyCheckSvg()}<span class="hotels-widget__deal-offer">Code copied</span></span>`;
+        btn.setAttribute('aria-label', 'Code copied');
       }
 
       function syncHotelDealCopiedState(root) {
-        if (!hotelDealCopied) return;
+        if (!hotelDealCopiedIds.size) return;
         const scope = root || document;
-        scope.querySelectorAll('[data-deal-copy], [data-hotel-deal-chip]').forEach(markDealCopyButton);
+        scope.querySelectorAll('[data-deal-copy], [data-hotel-deal-chip]').forEach((btn) => {
+          const id = btn.dataset.dealId;
+          if (id && hotelDealCopiedIds.has(id)) markDealCopyButton(btn);
+        });
       }
 
       async function copyHotelDealCode(triggerBtn) {
         if (!triggerBtn || triggerBtn.dataset.busy === 'true') return;
-        const code = HOTEL_DEAL.code;
+        const code = triggerBtn.dataset.dealCode;
+        const dealId = triggerBtn.dataset.dealId;
+        if (!code || !dealId) return;
         try {
           if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(code);
         } catch (_) { /* prototype: ignore clipboard failures */ }
-        hotelDealCopied = true;
-        syncHotelDealCopiedState(document);
+        hotelDealCopiedIds.add(dealId);
+        document.querySelectorAll(`[data-deal-id="${dealId}"]`).forEach(markDealCopyButton);
       }
 
       function starsMarkup(count, labelPrefix) {
@@ -7842,7 +7923,16 @@
       const CAL_ICON = '<svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
       const GUEST_ICON = '<svg class="hotels-widget__field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
 
-      function bookingInteractiveHtml() {
+      function bookingInteractiveHtml(hotel, hotelId) {
+        const deal = hotel?.deal;
+        const dealBlock = deal ? `
+            ${hotelDealButtonHtml(deal, hotelId, 'data-deal-copy')}
+            <div class="hotels-detail__deal-reminder" data-deal-reminder hidden>
+              <p class="hotels-detail__deal-reminder-text">Apply <strong>${deal.code}</strong> at Booking.com checkout for ${deal.offer}.</p>
+              <div class="hotels-detail__deal-row">
+                ${hotelDealButtonHtml(deal, hotelId, 'data-deal-copy')}
+              </div>
+            </div>` : '';
         return `
           <div class="hotels-detail__booking" data-hotel-booking>
             <div class="hotels-detail__booking-dates">
@@ -7900,24 +7990,10 @@
                 </div>
               </div>
             </div>
-            <div class="hotels-detail__deal" data-hotel-deal>
-              <img class="hotels-detail__deal-logo" src="assets/hotels/couponfollow-logo.svg" width="100" height="14" alt="Coupon Follow">
-              <p class="hotels-detail__deal-title">Up to 20% off your next stay</p>
-              <p class="hotels-detail__deal-note">Partner deal for Booking.com bookings. Copy and apply code at checkout. Terms apply.</p>
-              <div class="hotels-detail__deal-row">
-                <span class="hotels-detail__deal-code" data-deal-code>STAY20</span>
-                <button type="button" class="hotels-detail__deal-copy" data-deal-copy>Copy code</button>
-              </div>
-            </div>
+            ${dealBlock}
             <div class="hotels-detail__actions">
               <button type="button" class="hotels-detail__cta" data-check-availability>Check Availability</button>
               <button type="button" class="hotels-detail__cta">Get Directions<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.5L14.5 8 8 14.5 1.5 8 8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 8h4.5M9.5 8L7.5 6M9.5 8L7.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            </div>
-            <div class="hotels-detail__deal-reminder" data-deal-reminder hidden>
-              <p class="hotels-detail__deal-reminder-text">Apply <strong>STAY20</strong> at Booking.com checkout for up to 20% off.</p>
-              <div class="hotels-detail__deal-row">
-                <button type="button" class="hotels-detail__deal-copy" data-deal-copy>Copy code</button>
-              </div>
             </div>
           </div>`;
       }
@@ -7950,17 +8026,20 @@
             <img class="hotels-detail__hero-photo" src="${hotel.hero}" alt="" loading="lazy" decoding="async">
           </div>
           <div class="hotels-detail__summary">
-            <h2 class="hotels-detail__title">${hotel.name}</h2>
+            <div class="hotels-detail__summary-top">
+              <h2 class="hotels-detail__title">${hotel.name}</h2>
+              ${hotelPriceMarkup(hotel)}
+            </div>
             <div class="hotels-detail__meta">
-              ${starsMarkup(hotel.stars, `${hotel.stars} out of 5 on Priceline`)}
-              <span class="hotels-widget__meta-text">Priceline (${hotel.reviews} reviews) · Hotel</span>
+              ${starsMarkup(hotel.stars, `${hotel.stars} out of 5 on Booking.com`)}
+              <span class="hotels-widget__meta-text">Booking.com(${hotel.reviews} reviews) · Hotel</span>
             </div>
             <div class="hotels-detail__contacts">
               <p class="hotels-detail__contact"><span class="hotels-detail__contact-label">Address:</span> ${hotel.address}</p>
               <p class="hotels-detail__contact"><span class="hotels-detail__contact-label">Phone:</span> ${hotel.phone}</p>
             </div>
           </div>
-          ${bookingInteractiveHtml()}
+          ${bookingInteractiveHtml(hotel, hotelId)}
           <hr class="hotels-detail__rule">
           <div class="hotels-detail__stack">
             <h3 class="hotels-detail__section-title">Hotel Details</h3>
@@ -7970,7 +8049,7 @@
           <div class="hotels-detail__stack">
             <div class="hotels-detail__photos-head">
               <h3 class="hotels-detail__section-title">Photos</h3>
-              <p class="hotels-detail__photos-source">Priceline</p>
+              <p class="hotels-detail__photos-source">Booking.com</p>
             </div>
             <div class="hotels-detail__photos">${photos}</div>
           </div>
