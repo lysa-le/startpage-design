@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New homepage design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+  <style>
+    [data-theme="dark"] {
+      --color-background-primary:    var(--color-black-900);
+      --color-background-secondary:  var(--color-black-550);
+      --color-background-tertiary:   var(--color-black-800);
+      --color-background-quaternary: var(--color-black-650);
+      --color-text-primary:          var(--color-whisper-100);
+      --color-text-secondary:        var(--color-midnight-200);
+      --color-text-tertiary:         var(--color-midnight-100);
+      --color-text-inverted:         var(--color-black-800);
+      --color-text-brandblue:        var(--color-brand-blue-100);
+      --color-text-link:             var(--color-brand-blue-100);
+      --color-icon-primary:          var(--color-whisper-200);
+      --color-icon-secondary:        var(--color-brand-blue-100);
+      --color-stroke-primary:        var(--color-black-400);
+      --color-stroke-secondary:      var(--color-black-550);
+      --color-stroke-primary-button: var(--color-brand-blue-100);
+      --color-button-inactive:       var(--color-black-600);
+      --color-button-productfilled:  var(--color-black-550);
+      --color-button-productfilledhover: var(--color-black-400);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+
+    .proto-chrome {
+      position: fixed;
+      bottom: var(--spacing-24);
+      right: var(--spacing-24);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+    }
+    .proto-back {
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+    .proto-back:hover { text-decoration: underline; }
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      background: var(--color-background-primary);
+      color: var(--color-text-secondary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-xs);
+      font-weight: var(--font-weight-bold);
+      cursor: pointer;
+    }
+
+    .hp-header {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: var(--spacing-16);
+      max-width: calc(var(--spacing-24) * 60);
+      margin: 0 auto;
+      padding: var(--spacing-40) calc(var(--spacing-24) * 7 + var(--spacing-12)) var(--spacing-16);
+      background: var(--color-background-primary);
+      transition: padding 0.2s ease;
+    }
+    .hp-header::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 100vw;
+      transform: translateX(-50%);
+      background: var(--color-background-primary);
+      transition: box-shadow 0.2s ease;
+    }
+    .hp-header.is-scrolled {
+      padding-top: var(--spacing-12);
+      padding-bottom: var(--spacing-12);
+    }
+    .hp-header.is-scrolled::before {
+      box-shadow: var(--shadow-search);
+    }
+    .hp-logo {
+      position: relative;
+      justify-self: start;
+      width: calc(var(--spacing-96) + var(--spacing-32) + var(--spacing-4));
+      aspect-ratio: 132 / 29.5625;
+      transform: translateX(calc(var(--spacing-40) * -1));
+    }
+    .hp-logo__word {
+      width: 100%;
+      height: auto;
+      max-width: none;
+    }
+    /* First “t” is a separate Figma layer; place it in the gap in the wordmark. */
+    .hp-logo__mark {
+      position: absolute;
+      left: 13.86%;
+      top: 4.7%;
+      width: 6%;
+      height: auto;
+      max-width: none;
+    }
+
+    .search-field {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: calc(var(--spacing-24) * 26 + var(--spacing-16));
+      height: calc(var(--spacing-48) + var(--spacing-4));
+      background: var(--color-background-primary);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-search);
+    }
+    .search-field:focus-within {
+      border-color: var(--color-stroke-primary-button);
+    }
+    .search-field__input {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      padding: 0 var(--spacing-20);
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      color: var(--color-text-primary);
+      caret-color: var(--color-text-primary);
+    }
+    .search-field__input:placeholder-shown {
+      caret-color: transparent;
+    }
+    .search-field__input::placeholder {
+      color: var(--color-text-secondary);
+      opacity: 1;
+    }
+    .search-field:focus-within .search-field__input::placeholder {
+      color: transparent;
+    }
+    .search-field__caret {
+      position: absolute;
+      left: var(--spacing-20);
+      top: 50%;
+      width: var(--border-stroke-sm);
+      height: var(--font-body-md);
+      transform: translateY(-50%);
+      background: var(--color-text-primary);
+      pointer-events: none;
+      opacity: 0;
+    }
+    .search-field:focus-within:has(.search-field__input:placeholder-shown) .search-field__caret {
+      animation: search-caret 1s steps(1) infinite;
+    }
+    @keyframes search-caret {
+      0%, 45% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .search-field__submit {
+      position: relative;
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      margin-right: var(--spacing-24);
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      flex-shrink: 0;
+      transform: scale(0.85);
+    }
+    .search-field__circle {
+      position: absolute;
+      left: 0;
+      top: 0;
+      max-width: none;
+    }
+    .search-field__handle {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      max-width: none;
+    }
+
+    .hp-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      justify-self: end;
+      gap: var(--spacing-24);
+      transform: translateX(var(--spacing-40));
+    }
+    .hp-settings {
+      display: flex;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--color-icon-primary);
+    }
+    .hp-settings svg { width: var(--spacing-16); height: var(--spacing-16); }
+    .hp-settings:hover,
+    .hp-settings:focus-visible { color: var(--color-icon-secondary); }
+    .hp-login {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--spacing-32);
+      padding: 0 var(--spacing-24);
+      white-space: nowrap;
+      border: none;
+      border-radius: var(--radius-lg);
+      background: var(--color-button-productfilled);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-button-xs);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--font-label-xs-lh);
+      cursor: pointer;
+    }
+    .hp-login:hover { background: var(--color-button-productfilledhover); }
+    .hp-menu {
+      display: flex;
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--color-text-primary);
+      cursor: pointer;
+    }
+    .hp-menu svg { width: var(--spacing-20); height: var(--spacing-20); }
+
+    .site-nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: flex;
+      justify-content: flex-end;
+      background: color-mix(in srgb, var(--color-midnight-500) 40%, transparent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .site-nav-overlay.is-open { opacity: 1; pointer-events: auto; }
+    .site-nav {
+      position: relative;
+      width: min(100%, calc(var(--spacing-24) * 13));
+      height: 100%;
+      padding: var(--spacing-24) var(--spacing-32) var(--spacing-48);
+      overflow-y: auto;
+      background: var(--color-background-primary);
+      border-left: var(--border-stroke-sm) solid var(--color-stroke-secondary);
+      box-shadow: var(--shadow-dropdown);
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+    }
+    .site-nav-overlay.is-open .site-nav { transform: translateX(0); }
+    .site-nav__close {
+      position: absolute;
+      top: var(--spacing-20);
+      right: var(--spacing-20);
+      width: var(--spacing-32);
+      height: var(--spacing-32);
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+    }
+    .site-nav__section { padding: var(--spacing-16) 0; }
+    .site-nav__section + .site-nav__section {
+      border-top: var(--border-stroke-sm) solid var(--color-stroke-primary);
+    }
+    .site-nav__heading {
+      margin-bottom: var(--spacing-12);
+      font-size: var(--font-body-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+    .site-nav__list { list-style: none; display: flex; flex-direction: column; gap: var(--spacing-4); }
+    .site-nav__link {
+      display: block;
+      padding: var(--spacing-8) 0;
+      color: var(--color-text-primary);
+      text-decoration: none;
+      font-size: var(--font-body-sm);
+    }
+    .site-nav__link:hover { color: var(--color-text-brandblue); }
+    body.site-nav-open { overflow: hidden; }
+
+    .hero {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: var(--spacing-40);
+      /* Keep the lock and headline centered, with the purple swoop and
+         the illustration only peeking above the bottom of the viewport. */
+      min-height: calc(
+        100vh
+        - var(--spacing-40)
+        - var(--spacing-40) - var(--spacing-48) - var(--spacing-8) - var(--spacing-16)
+        + var(--spacing-24)
+      );
+      padding: var(--spacing-104) var(--spacing-24) calc(var(--spacing-48) + var(--spacing-24));
+    }
+    .hero__intro {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(calc(var(--spacing-24) * -1));
+    }
+    .hero__lock {
+      display: grid;
+      place-items: center;
+      width: calc(var(--spacing-48) + var(--spacing-32));
+      height: calc(var(--spacing-48) + var(--spacing-32));
+      margin-bottom: var(--spacing-24);
+      border-radius: var(--radius-full);
+      background: var(--color-background-tertiary);
+    }
+    .hero__lock img {
+      max-width: none;
+      transform: scaleY(-1);
+    }
+    .hero__title {
+      font-size: var(--font-heading-lg);
+      line-height: var(--font-heading-lg-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+    }
+    .hero__title span { color: var(--color-text-brandblue); }
+    .hero__lede {
+      margin-top: var(--spacing-24);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+    }
+    .hero__promo {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+      margin-top: calc(var(--spacing-96) + var(--spacing-48));
+      padding: var(--spacing-12);
+      border-radius: var(--radius-xl);
+      background: var(--color-background-tertiary);
+    }
+    .hero__promo-icon {
+      display: grid;
+      place-items: center;
+      width: calc(var(--spacing-48) + var(--spacing-4) - 2px);
+      height: calc(var(--spacing-48) + var(--spacing-4) - 2px);
+      border-radius: calc(var(--radius-lg) + var(--spacing-4) / 2);
+      background: var(--color-background-primary);
+    }
+    .hero__promo-icon img { max-width: none; }
+    .hero__promo p {
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      text-align: left;
+    }
+    .hero__install {
+      margin-left: var(--spacing-24);
+      padding: var(--spacing-12) var(--spacing-24);
+      border: none;
+      border-radius: calc(var(--radius-lg) + var(--spacing-4) / 2);
+      background: var(--color-button-teal);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      font-weight: var(--font-weight-bold);
+      cursor: pointer;
+    }
+    [data-theme="dark"] .hero__install { color: var(--color-text-inverted); }
+
+    .band {
+      position: relative;
+      overflow: hidden;
+    }
+    .band__wave {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: calc(var(--spacing-24) * 60);
+      max-width: none;
+      height: auto;
+      pointer-events: none;
+    }
+    .band__inner {
+      position: relative;
+      z-index: 1;
+      max-width: calc(var(--spacing-24) * 60);
+      margin: 0 auto;
+      padding-inline: calc(var(--spacing-24) * 7 + var(--spacing-12));
+    }
+
+    .features {
+      color: var(--color-whisper-0);
+      background: transparent;
+      overflow: visible;
+      margin-top: calc(var(--spacing-48) * -1);
+    }
+    /* Lift the curve beside the install promo, and stretch it to both edges. */
+    .features .band__wave {
+      left: 0;
+      transform: none;
+      width: 100%;
+      height: calc(100% + 11vh - var(--spacing-24) + var(--spacing-40));
+      object-fit: fill;
+      top: calc(var(--spacing-24) - 11vh - var(--spacing-40));
+    }
+    /* The dark wave's left edge is transparent for ~18% of its height.
+       Keep this fill behind that curve without stretching the swoop. */
+    .features::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: calc(var(--spacing-96) * 2);
+      background: var(--color-brand-blue-400);
+      pointer-events: none;
+    }
+    .features__art {
+      position: relative;
+      width: calc(var(--spacing-40) * 7);
+      height: calc(var(--spacing-24) * 14);
+      margin: var(--spacing-24) auto;
+      overflow: visible;
+    }
+    .features__art img {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 100%;
+      height: auto;
+      transform: translateX(-50%);
+      max-width: none;
+    }
+    .features__title,
+    .features__lede { text-align: center; }
+    .features__title {
+      font-size: var(--font-heading-lg);
+      line-height: var(--font-heading-lg-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+    }
+    .features__lede {
+      margin: var(--spacing-24) auto var(--spacing-48);
+      max-width: calc(var(--spacing-24) * 28);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+    }
+    .scribble {
+      position: absolute;
+      pointer-events: none;
+      max-width: none;
+    }
+    .scribble--left {
+      left: calc(var(--spacing-24) * -2 - var(--spacing-48));
+      top: calc(var(--spacing-96) * 2 - var(--spacing-24) - var(--spacing-48));
+    }
+    .scribble--right {
+      right: 0;
+      bottom: calc(var(--spacing-24) * -1);
+      z-index: 0;
+      transform: rotate(-12deg);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-24);
+      padding-bottom: calc(var(--spacing-96) * 2 + var(--spacing-48));
+    }
+    .feature-card {
+      position: relative;
+      min-height: calc(var(--spacing-96) * 2 + var(--spacing-40));
+      padding: var(--spacing-24);
+      border-radius: calc(var(--radius-2xl) + var(--radius-md));
+      color: var(--color-text-primary);
+    }
+    .feature-card h3 {
+      margin-top: calc(var(--spacing-48) + var(--spacing-8));
+      font-size: calc(var(--font-size-16) * 2);
+      line-height: calc(var(--font-size-20) * 2);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+    }
+    .feature-card p {
+      margin-top: var(--spacing-16);
+      max-width: calc(var(--spacing-24) * 11);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+    }
+    .feature-card__icon {
+      position: absolute;
+      top: var(--spacing-24);
+      right: var(--spacing-24);
+      width: var(--spacing-48);
+      height: var(--spacing-48);
+    }
+    .feature-card__icon img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      max-width: none;
+    }
+    .feature-card--history { background: var(--color-red-400); }
+    .feature-card--unbiased { background: var(--color-brand-blue-100); }
+    .feature-card--gdpr { background: var(--color-teal-200); }
+    .feature-card--ai { background: var(--color-whisper-0); }
+    .feature-card--ai h3 { color: var(--color-text-brandblue); }
+    .feature-card--tracker { background: var(--color-gold-500); }
+    .feature-card--local {
+      background: var(--color-purple-500);
+      color: var(--color-whisper-0);
+    }
+
+    .stats {
+      overflow: visible;
+      margin-top: calc(var(--spacing-48) * -1);
+      color: var(--color-whisper-0);
+      background: transparent;
+    }
+    .stats .band__inner { z-index: 3; }
+    .stats .band__wave {
+      left: 0;
+      transform: none;
+      width: 100%;
+      height: calc(var(--spacing-96) * 10 + var(--spacing-80));
+      object-fit: fill;
+      top: calc(var(--spacing-80) * -1);
+    }
+    .stats__head {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--spacing-24);
+    }
+    .stats__copy { flex: 0 1 auto; min-width: min-content; }
+    .stats__row {
+      display: flex;
+      justify-content: flex-start;
+      gap: var(--spacing-32);
+      padding: calc(var(--spacing-96) + var(--spacing-48)) 0 0;
+      text-align: center;
+    }
+    .stats__row > div {
+      flex: 0 0 auto;
+      min-width: calc(var(--spacing-96) + var(--spacing-64));
+    }
+    .stats__value {
+      font-size: var(--font-heading-lg);
+      line-height: var(--font-heading-lg-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .stats__label {
+      margin-top: var(--spacing-16);
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .stats__label--red { color: var(--color-red-400); }
+    .stats__label--teal { color: var(--color-teal-200); }
+    .stats__label--purple { color: var(--color-purple-500); }
+    .stats__pill {
+      position: relative;
+      z-index: 3;
+      display: inline-flex;
+      margin-top: calc(var(--spacing-96) + var(--spacing-40) + var(--spacing-16));
+      margin-bottom: var(--spacing-64);
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      background: var(--color-black-600);
+      color: var(--color-text-inverted);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+    }
+    .stats__guy {
+      position: relative;
+      z-index: 5;
+      flex: 0 0 calc(var(--spacing-96) * 3 + var(--spacing-80) + var(--spacing-4) / 2);
+      width: calc(var(--spacing-96) * 3 + var(--spacing-80) + var(--spacing-4) / 2);
+      aspect-ratio: 413 / 548;
+      margin-top: 0;
+      margin-bottom: calc(var(--spacing-48) * -1);
+      margin-left: var(--spacing-16);
+      transform-origin: bottom center;
+      transform: translate(var(--spacing-32), calc(var(--spacing-24) * -1));
+      pointer-events: none;
+    }
+    .stats__guy img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      object-fit: contain;
+      object-position: top center;
+    }
+    .stats__guy img + img { mix-blend-mode: multiply; }
+
+    .products {
+      overflow: hidden;
+      margin-top: calc(var(--spacing-64) * -1);
+      padding-bottom: calc(var(--spacing-96) + var(--spacing-32));
+      background: transparent;
+    }
+    /* Curve crosses the lower half of the cards; the rest of the art
+       stays tall so its lower edge doesn't open a gap above the heading. */
+    .products .band__wave {
+      left: 0;
+      transform: none;
+      width: 100%;
+      top: calc(var(--spacing-96) + var(--spacing-8));
+      height: calc(var(--spacing-96) * 15);
+      object-fit: fill;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-24);
+      padding-top: var(--spacing-24);
+    }
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(var(--spacing-96) * 3 + var(--spacing-80));
+      padding: var(--spacing-24);
+      border-radius: var(--radius-2xl);
+      background: var(--color-background-tertiary);
+      color: var(--color-text-primary);
+    }
+    .product-card__icon {
+      position: relative;
+      width: calc(var(--spacing-48) + var(--spacing-16));
+      height: calc(var(--spacing-48) + var(--spacing-16));
+      margin-bottom: var(--spacing-16);
+    }
+    .product-card__icon img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); max-width: none; }
+    .product-card__icon--app {
+      overflow: hidden;
+      border-radius: calc(var(--radius-xl) + var(--spacing-4) / 2);
+    }
+    .product-card__plate {
+      position: absolute;
+      inset: 0;
+      border-radius: calc(var(--radius-xl) + var(--spacing-4) / 2);
+      background: var(--color-background-primary);
+    }
+    .product-card h3 {
+      font-size: calc(var(--font-size-16) * 2);
+      line-height: calc(var(--font-size-20) * 2);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+    }
+    .product-card ul {
+      margin: var(--spacing-16) 0 var(--spacing-16);
+      padding-left: var(--spacing-20);
+      font-size: var(--font-body-md);
+      line-height: 1.625;
+    }
+    .product-card__cta {
+      margin-top: auto;
+      height: calc(var(--spacing-48) + var(--spacing-8));
+      border: none;
+      border-radius: calc(var(--radius-lg) + var(--spacing-4) / 2);
+      background: var(--color-button-brandblue);
+      color: var(--color-text-inverted);
+      font-family: var(--font-family);
+      font-size: var(--font-body-lg);
+      font-weight: var(--font-weight-bold);
+      cursor: pointer;
+    }
+
+    .difference {
+      overflow: visible;
+      background: var(--color-teal-400);
+      padding-bottom: var(--spacing-8);
+    }
+    /* The section ends at the high side of the wave. The low side hangs
+       below it, so the bottom reads as a curve instead of a straight edge. */
+    .difference__swoop {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: calc(var(--spacing-96) * -4);
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .difference__swoop .band__wave {
+      left: 0;
+      top: auto;
+      bottom: 0;
+      transform: scaleX(-1);
+      width: 100%;
+      height: calc(var(--spacing-96) * 15);
+      object-fit: fill;
+    }
+    .difference h2 {
+      margin-bottom: var(--spacing-48);
+      text-align: center;
+      font-size: var(--font-heading-lg);
+      line-height: var(--font-heading-lg-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--color-text-primary);
+    }
+    .compare { display: flex; flex-direction: column; gap: var(--spacing-4); }
+    .compare__row {
+      display: grid;
+      grid-template-columns: 1fr calc(var(--spacing-96) + var(--spacing-48)) calc(var(--spacing-96) + var(--spacing-48)) calc(var(--spacing-96) + var(--spacing-48));
+      align-items: center;
+      min-height: calc(var(--spacing-48) + var(--spacing-4));
+      padding: 0 var(--spacing-32);
+      border-radius: var(--radius-xl);
+      background: var(--color-whisper-0);
+      color: var(--color-text-primary);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+    }
+    .compare__row--alt { background: var(--color-teal-100); }
+    .compare__mark {
+      display: flex;
+      justify-content: center;
+    }
+    .compare__mark img {
+      width: auto;
+      height: var(--spacing-20);
+      max-width: none;
+    }
+    .compare__logos { display: contents; }
+    .compare__logo {
+      display: flex;
+      justify-content: center;
+    }
+    .compare__logo img { max-width: none; }
+
+    .press {
+      position: relative;
+      z-index: 1;
+      margin-top: calc(var(--spacing-96) * 3 - var(--spacing-8));
+      background: var(--color-background-primary);
+      padding: var(--spacing-16) 0 calc(var(--spacing-96) + var(--spacing-24));
+    }
+    .press__pill {
+      display: inline-flex;
+      padding: var(--spacing-8) var(--spacing-16);
+      border-radius: var(--radius-full);
+      background: var(--color-background-tertiary);
+      color: var(--color-text-brandblue);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+    }
+    .press__marquee {
+      margin-top: var(--spacing-24);
+      overflow: hidden;
+    }
+    .press__track {
+      display: flex;
+      width: max-content;
+      animation: press-conveyor 48s linear infinite;
+    }
+    .press__row {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--spacing-48) + var(--spacing-24));
+      padding-inline-end: calc(var(--spacing-48) + var(--spacing-24));
+      flex: none;
+    }
+    .press__row img { max-width: none; flex: none; height: auto; }
+    @keyframes press-conveyor {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .press__track,
+      .search-field__caret,
+      .hp-header,
+      .hp-header::before { animation: none; transition: none; }
+      .search-field:focus-within:has(.search-field__input:placeholder-shown) .search-field__caret {
+        opacity: 1;
+      }
+    }
+
+    .hp-footer { background: var(--color-black-800); color: var(--color-whisper-100); }
+    .hp-footer__wave {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: none;
+      transform: rotate(180deg);
+      margin-bottom: calc(var(--spacing-48) * -1);
+    }
+    .hp-footer__bar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: var(--spacing-24);
+      max-width: calc(var(--spacing-24) * 60);
+      margin: 0 auto;
+      padding: var(--spacing-48) calc(var(--spacing-24) * 4) var(--spacing-40);
+    }
+    .hp-footer__logo { max-width: none; }
+    .hp-footer__links {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-32);
+      list-style: none;
+      font-size: var(--font-body-sm);
+      line-height: var(--font-body-sm-lh);
+    }
+    .hp-footer__links a { color: inherit; text-decoration: none; }
+    .hp-footer__links a:hover { text-decoration: underline; }
+    .hp-footer__social { display: flex; gap: var(--spacing-12); list-style: none; }
+    .hp-footer__social a { position: relative; display: block; width: var(--spacing-32); height: var(--spacing-32); }
+    .hp-footer__social img { max-width: none; }
+    .hp-footer__mastodon img:last-child {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @media (max-width: 1100px) {
+      .hp-header,
+      .band__inner,
+      .hp-footer__bar { padding-inline: var(--spacing-24); }
+      .hp-header { grid-template-columns: auto 1fr auto; }
+      .search-field { width: 100%; }
+      .feature-grid,
+      .product-grid,
+      .stats__row { grid-template-columns: 1fr; }
+      .stats__guy { display: none; }
+      .compare__row { grid-template-columns: 1fr repeat(3, var(--spacing-48)); padding-inline: var(--spacing-16); }
+      .press__row {
+        gap: var(--spacing-24);
+        padding-inline-end: var(--spacing-24);
+      }
+      .hp-footer__bar { grid-template-columns: 1fr; justify-items: center; }
+      .proto-chrome { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto-chrome">
+    <a class="proto-back" id="playgroundLink" href="../">← Playground</a>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <span id="themeIcon" aria-hidden="true">☀️</span>
+      <span id="themeLabel">Light</span>
+    </button>
+  </div>
+
+  <header class="hp-header">
+    <a class="hp-logo" href="#" aria-label="Startpage">
+      <img class="hp-logo__word" src="assets/logo-header.svg" width="132" height="30" alt="" />
+      <img class="hp-logo__mark" src="assets/logo-mark.svg" width="8" height="19" alt="" />
+    </a>
+    <form class="search-field" id="homeSearchForm" role="search">
+      <input class="search-field__input" type="search" name="q" placeholder="Search privately" aria-label="Search" autocomplete="off" spellcheck="false" autofocus />
+      <span class="search-field__caret" aria-hidden="true"></span>
+      <button type="submit" class="search-field__submit" aria-label="Submit search">
+        <img class="search-field__circle" src="assets/search-circle.svg" width="16" height="16" alt="" />
+        <img class="search-field__handle" src="assets/search-handle.svg" width="8" height="8" alt="" />
+      </button>
+    </form>
+    <div class="hp-actions">
+      <button type="button" class="hp-settings" aria-label="Settings">
+        <svg viewBox="0 0 16.1667 16.1667" fill="none" aria-hidden="true">
+          <path d="M8.08335 10.0834C9.18792 10.0834 10.0833 9.18794 10.0833 8.08337C10.0833 6.9788 9.18792 6.08337 8.08335 6.08337C6.97878 6.08337 6.08335 6.9788 6.08335 8.08337C6.08335 9.18794 6.97878 10.0834 8.08335 10.0834Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M13.0167 10.0833C12.9279 10.2844 12.9015 10.5075 12.9407 10.7237C12.9799 10.94 13.083 11.1395 13.2367 11.2967L13.2767 11.3367C13.4006 11.4605 13.499 11.6075 13.5661 11.7694C13.6332 11.9313 13.6677 12.1048 13.6677 12.28C13.6677 12.4552 13.6332 12.6287 13.5661 12.7906C13.499 12.9525 13.4006 13.0995 13.2767 13.2233C13.1528 13.3473 13.0058 13.4456 12.8439 13.5127C12.6821 13.5798 12.5086 13.6144 12.3333 13.6144C12.1581 13.6144 11.9846 13.5798 11.8227 13.5127C11.6609 13.4456 11.5138 13.3473 11.39 13.2233L11.35 13.1833C11.1929 13.0296 10.9933 12.9265 10.7771 12.8873C10.5608 12.8481 10.3377 12.8746 10.1367 12.9633C9.93949 13.0478 9.77132 13.1882 9.65287 13.367C9.53442 13.5459 9.47086 13.7555 9.47 13.97V14.0833C9.47 14.437 9.32952 14.7761 9.07948 15.0261C8.82943 15.2762 8.49029 15.4167 8.13667 15.4167C7.78305 15.4167 7.44391 15.2762 7.19386 15.0261C6.94381 14.7761 6.80333 14.437 6.80333 14.0833V14.0233C6.79817 13.8027 6.72675 13.5887 6.59834 13.4091C6.46994 13.2296 6.29049 13.0929 6.08333 13.0167C5.88226 12.9279 5.65921 12.9015 5.44294 12.9407C5.22668 12.9799 5.02712 13.083 4.87 13.2367L4.83 13.2767C4.70617 13.4006 4.55912 13.499 4.39725 13.5661C4.23539 13.6332 4.06189 13.6677 3.88667 13.6677C3.71145 13.6677 3.53794 13.6332 3.37608 13.5661C3.21422 13.499 3.06716 13.4006 2.94333 13.2767C2.81936 13.1528 2.72102 13.0058 2.65392 12.8439C2.58682 12.6821 2.55228 12.5086 2.55228 12.3333C2.55228 12.1581 2.58682 11.9846 2.65392 11.8227C2.72102 11.6609 2.81936 11.5138 2.94333 11.39L2.98333 11.35C3.13702 11.1929 3.24012 10.9933 3.27934 10.7771C3.31855 10.5608 3.29208 10.3377 3.20333 10.1367C3.11882 9.93949 2.9785 9.77132 2.79964 9.65287C2.62078 9.53442 2.41119 9.47086 2.19667 9.47H2.08333C1.72971 9.47 1.39057 9.32952 1.14052 9.07947C0.890476 8.82943 0.75 8.49029 0.75 8.13667C0.75 7.78304 0.890476 7.44391 1.14052 7.19386C1.39057 6.94381 1.72971 6.80333 2.08333 6.80333H2.14333C2.364 6.79817 2.578 6.72675 2.75753 6.59834C2.93706 6.46993 3.07381 6.29049 3.15 6.08333C3.23874 5.88226 3.26522 5.6592 3.226 5.44294C3.18679 5.22668 3.08369 5.02712 2.93 4.87L2.89 4.83C2.76603 4.70617 2.66769 4.55912 2.60059 4.39725C2.53349 4.23539 2.49895 4.06189 2.49895 3.88667C2.49895 3.71145 2.53349 3.53794 2.60059 3.37608C2.66769 3.21422 2.76603 3.06716 2.89 2.94333C3.01383 2.81936 3.16088 2.72102 3.32275 2.65392C3.48461 2.58682 3.65811 2.55228 3.83333 2.55228C4.00855 2.55228 4.18206 2.58682 4.34392 2.65392C4.50578 2.72102 4.65284 2.81936 4.77667 2.94333L4.81667 2.98333C4.97379 3.13702 5.17334 3.24012 5.38961 3.27934C5.60587 3.31855 5.82892 3.29208 6.03 3.20333H6.08333C6.28051 3.11882 6.44868 2.9785 6.56713 2.79964C6.68558 2.62078 6.74915 2.41119 6.75 2.19667V2.08333C6.75 1.72971 6.89048 1.39057 7.14053 1.14052C7.39057 0.890476 7.72971 0.75 8.08333 0.75C8.43696 0.75 8.77609 0.890476 9.02614 1.14052C9.27619 1.39057 9.41667 1.72971 9.41667 2.08333V2.14333C9.41752 2.35786 9.48109 2.56745 9.59954 2.74631C9.71799 2.92517 9.88615 3.06549 10.0833 3.15C10.2844 3.23874 10.5075 3.26522 10.7237 3.226C10.94 3.18679 11.1395 3.08369 11.2967 2.93L11.3367 2.89C11.4605 2.76603 11.6076 2.66769 11.7694 2.60059C11.9313 2.53349 12.1048 2.49895 12.28 2.49895C12.4552 2.49895 12.6287 2.53349 12.7906 2.60059C12.9525 2.66769 13.0995 2.76603 13.2233 2.89C13.3473 3.01383 13.4456 3.16088 13.5127 3.32275C13.5798 3.48461 13.6144 3.65811 13.6144 3.83333C13.6144 4.00855 13.5798 4.18206 13.5127 4.34392C13.4456 4.50578 13.3473 4.65284 13.2233 4.77667L13.1833 4.81667C13.0296 4.97379 12.9265 5.17334 12.8873 5.38961C12.8481 5.60587 12.8746 5.82892 12.9633 6.03V6.08333C13.0478 6.28051 13.1882 6.44868 13.367 6.56713C13.5459 6.68558 13.7555 6.74914 13.97 6.75H14.0833C14.437 6.75 14.7761 6.89048 15.0261 7.14052C15.2762 7.39057 15.4167 7.72971 15.4167 8.08333C15.4167 8.43695 15.2762 8.77609 15.0261 9.02614C14.7761 9.27619 14.437 9.41667 14.0833 9.41667H14.0233C13.8088 9.41752 13.5992 9.48109 13.4204 9.59954C13.2415 9.71799 13.1012 9.88615 13.0167 10.0833V10.0833Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button type="button" class="hp-login">Log In</button>
+      <button type="button" class="hp-menu" id="siteNavToggle" aria-label="Open menu" aria-haspopup="dialog" aria-expanded="false" aria-controls="siteNav">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M1 4H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M1 10H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M1 16H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="site-nav-overlay" id="siteNavOverlay" hidden>
+    <nav class="site-nav" id="siteNav" role="dialog" aria-modal="true" aria-label="Site menu">
+      <button type="button" class="site-nav__close" id="siteNavClose" aria-label="Close menu">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" aria-hidden="true">
+          <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="site-nav__section">
+        <h2 class="site-nav__heading">Search</h2>
+        <ul class="site-nav__list">
+          <li><a class="site-nav__link" href="#">Settings</a></li>
+          <li><a class="site-nav__link" href="#">Customize Startpage</a></li>
+        </ul>
+      </div>
+      <div class="site-nav__section">
+        <h2 class="site-nav__heading">Products</h2>
+        <ul class="site-nav__list">
+          <li><a class="site-nav__link" href="#">Startpage Search</a></li>
+          <li><a class="site-nav__link" href="#">Mobile Browser</a></li>
+          <li><a class="site-nav__link" href="#">Browser Extension</a></li>
+        </ul>
+      </div>
+      <div class="site-nav__section">
+        <h2 class="site-nav__heading">Resources</h2>
+        <ul class="site-nav__list">
+          <li><a class="site-nav__link" href="#">About Us</a></li>
+          <li><a class="site-nav__link" href="#">Privacy Policy</a></li>
+          <li><a class="site-nav__link" href="#">Press</a></li>
+          <li><a class="site-nav__link" href="#">Support</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <main>
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero__intro">
+        <div class="hero__lock" aria-hidden="true">
+          <img src="assets/lock.svg" width="40" height="46" alt="" />
+        </div>
+        <h1 class="hero__title" id="heroTitle">Privacy starts <span>here</span>.</h1>
+        <p class="hero__lede">Startpage gives you the answers you need, without collecting your data.</p>
+      </div>
+      <div class="hero__promo">
+        <div class="hero__promo-icon" aria-hidden="true">
+          <img src="assets/icon-chrome.svg" width="27" height="33" alt="" />
+        </div>
+        <p>Make Startpage your<br />default search engine.</p>
+        <button type="button" class="hero__install">Install on Chrome</button>
+      </div>
+    </section>
+
+    <section class="band features" aria-labelledby="featuresTitle">
+      <img class="band__wave" src="assets/wave-purple.svg" width="1440" height="1485" alt="" />
+      <img class="scribble scribble--left" src="assets/scribble-left.svg" width="267" height="313" alt="" />
+      <div class="band__inner">
+        <div class="features__art" aria-hidden="true">
+          <img src="assets/girl-phone.svg" width="277" height="308" alt="" />
+          <img src="assets/girl-phone-lines.svg" width="279" height="310" alt="" />
+        </div>
+        <h2 class="features__title" id="featuresTitle">Search, without surveillance.</h2>
+        <p class="features__lede">Quality search results without tracking, profiling, or storing personal information.</p>
+        <div class="feature-grid">
+          <article class="feature-card feature-card--history">
+            <div class="feature-card__icon" aria-hidden="true">
+              <img src="assets/icon-history-bg.svg" width="48" height="48" alt="" />
+              <img src="assets/icon-history.svg" width="21" height="22" alt="" />
+            </div>
+            <h3>No search<br>history</h3>
+            <p>Searches aren’t stored or tied to you.</p>
+          </article>
+          <article class="feature-card feature-card--unbiased">
+            <div class="feature-card__icon" aria-hidden="true">
+              <img src="assets/icon-circle.svg" width="48" height="48" alt="" />
+              <img src="assets/icon-unbiased.svg" width="23" height="23" alt="" />
+            </div>
+            <h3>Unbiased<br>results</h3>
+            <p>Results based on your query, not your search history.</p>
+          </article>
+          <article class="feature-card feature-card--gdpr">
+            <div class="feature-card__icon" aria-hidden="true">
+              <img src="assets/icon-gdpr-bg.svg" width="48" height="48" alt="" />
+              <img src="assets/icon-gdpr.svg" width="19" height="22" alt="" />
+            </div>
+            <h3>GDPR<br>privacy</h3>
+            <p>Protected by strict European privacy laws.</p>
+          </article>
+          <article class="feature-card feature-card--ai">
+            <div class="feature-card__icon" aria-hidden="true">
+              <img src="assets/icon-ai-bg.svg" width="48" height="48" alt="" />
+            </div>
+            <h3>AI is<br>optional</h3>
+            <p>All AI features are a choice.</p>
+          </article>
+          <article class="feature-card feature-card--tracker">
+            <div class="feature-card__icon" aria-hidden="true">
+              <img src="assets/icon-circle.svg" width="48" height="48" alt="" />
+              <img src="assets/icon-tracker.svg" width="18" height="22" alt="" />
+            </div>
+            <h3>Tracker<br>protection</h3>
+            <p>We won’t let ads follow you around the internet.</p>
+          </article>
+          <article class="feature-card feature-card--local">
+            <div class="feature-card__icon" aria-hidden="true">
+              <img src="assets/icon-local.svg" width="48" height="48" alt="" />
+            </div>
+            <h3>Private<br>local results</h3>
+            <p>Local results without precise location sharing.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band stats" aria-label="Startpage by the numbers">
+      <img class="band__wave" src="assets/wave-dark.svg" width="1607" height="1276" alt="" />
+      <div class="band__inner">
+        <div class="stats__head">
+          <div class="stats__copy">
+            <div class="stats__row">
+              <div>
+                <p class="stats__value">1B+</p>
+                <p class="stats__label stats__label--red">Private searches</p>
+              </div>
+              <div>
+                <p class="stats__value">4.8</p>
+                <p class="stats__label stats__label--teal">Star rating</p>
+              </div>
+              <div>
+                <p class="stats__value">24/7</p>
+                <p class="stats__label stats__label--purple">Privacy protection</p>
+              </div>
+            </div>
+            <p class="stats__pill">Our Products</p>
+          </div>
+          <div class="stats__guy" aria-hidden="true">
+            <img src="assets/guy.svg" width="413" height="548" alt="" />
+            <img src="assets/guy-lines.svg" width="415" height="550" alt="" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band products" aria-label="Products">
+      <img class="band__wave" src="assets/wave-teal.svg" width="1440" height="1437" alt="" />
+      <div class="band__inner">
+        <div class="product-grid">
+          <article class="product-card">
+            <div class="product-card__icon" aria-hidden="true">
+              <span class="product-card__plate"></span>
+              <img src="assets/icon-chrome-lg.svg" width="35" height="43" alt="" />
+            </div>
+            <h3>Desktop<br>Extension</h3>
+            <ul>
+              <li>Private, untracked searches</li>
+              <li>No search data stored or shared</li>
+              <li>No third-party trackers</li>
+            </ul>
+            <button type="button" class="product-card__cta">Get the Extension</button>
+          </article>
+          <article class="product-card">
+            <div class="product-card__icon product-card__icon--app" aria-hidden="true">
+              <img src="assets/icon-app.svg" width="64" height="64" alt="" />
+            </div>
+            <h3>Private<br>Browser App</h3>
+            <ul>
+              <li>Private search and browsing</li>
+              <li>Unbiased, un-profiled results</li>
+              <li>Effortless mobile browsing</li>
+            </ul>
+            <button type="button" class="product-card__cta">Get the App</button>
+          </article>
+          <article class="product-card">
+            <div class="product-card__icon" aria-hidden="true">
+              <span class="product-card__plate"></span>
+              <img src="assets/icon-adfree.svg" width="42" height="42" alt="" />
+              <img src="assets/icon-user.svg" width="21" height="21" alt="" />
+            </div>
+            <h3>Ad-Free<br>Subscription</h3>
+            <ul>
+              <li>No sponsored results</li>
+              <li>Cross-device access</li>
+              <li>Private accounts</li>
+            </ul>
+            <button type="button" class="product-card__cta">Go Ad-Free</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band difference" aria-labelledby="differenceTitle">
+      <div class="difference__swoop" aria-hidden="true">
+        <img class="band__wave" src="assets/wave-teal.svg" width="1440" height="1437" alt="" />
+      </div>
+      <img class="scribble scribble--right" src="assets/scribble-right.svg" width="453" height="169" alt="" />
+      <div class="band__inner">
+        <h2 id="differenceTitle">The Startpage difference</h2>
+        <div class="compare" role="table" aria-label="Startpage compared with Google and Brave">
+          <div class="compare__row" role="row">
+            <span role="columnheader"></span>
+            <span class="compare__logo" role="columnheader"><img src="assets/logo-wordmark.svg" width="90" height="20" alt="Startpage" /></span>
+            <span class="compare__logo" role="columnheader"><img src="assets/logo-google.svg" width="32" height="32" alt="Google" /></span>
+            <span class="compare__logo" role="columnheader"><img src="assets/brave.png" width="25" height="30" alt="Brave" /></span>
+          </div>
+          <div class="compare__row compare__row--alt" role="row">
+            <span role="cell">Blocks price trackers</span>
+            <span class="compare__mark" role="cell"><img src="assets/check-green.svg" width="29" height="29" alt="Yes" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/warn-yellow.svg" width="30" height="25" alt="Partial" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/warn-alt.svg" width="30" height="25" alt="Partial" /></span>
+          </div>
+          <div class="compare__row" role="row">
+            <span role="cell">Never records personal data or search history</span>
+            <span class="compare__mark" role="cell"><img src="assets/check-green-2.svg" width="29" height="29" alt="Yes" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/check-green-2.svg" width="29" height="29" alt="Yes" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/warn-alt.svg" width="30" height="25" alt="Partial" /></span>
+          </div>
+          <div class="compare__row compare__row--alt" role="row">
+            <span role="cell">Protects your IP address</span>
+            <span class="compare__mark" role="cell"><img src="assets/check-green-2.svg" width="29" height="29" alt="Yes" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/warn-yellow.svg" width="30" height="25" alt="Partial" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/check-green-2.svg" width="29" height="29" alt="Yes" /></span>
+          </div>
+          <div class="compare__row" role="row">
+            <span role="cell">Prevents third-party retargeting ads</span>
+            <span class="compare__mark" role="cell"><img src="assets/check-green-2.svg" width="29" height="29" alt="Yes" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/warn-yellow.svg" width="30" height="25" alt="Partial" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/warn-yellow.svg" width="30" height="25" alt="Partial" /></span>
+          </div>
+          <div class="compare__row compare__row--alt" role="row">
+            <span role="cell">Delivers unprofiled search results</span>
+            <span class="compare__mark" role="cell"><img src="assets/check-green-2.svg" width="29" height="29" alt="Yes" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/warn-yellow.svg" width="30" height="25" alt="Partial" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/warn-yellow.svg" width="30" height="25" alt="Partial" /></span>
+          </div>
+          <div class="compare__row" role="row">
+            <span role="cell">Lets you visit websites anonymously</span>
+            <span class="compare__mark" role="cell"><img src="assets/check-green-3.svg" width="29" height="29" alt="Yes" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/warn-yellow.svg" width="30" height="25" alt="Partial" /></span>
+            <span class="compare__mark" role="cell"><img src="assets/warn-alt.svg" width="30" height="25" alt="Partial" /></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="press" aria-label="Featured in">
+      <div class="band__inner">
+        <p class="press__pill">Featured in</p>
+      </div>
+      <div class="press__marquee">
+        <div class="press__track">
+          <div class="press__row">
+            <img src="assets/logo-bloomberg.svg" width="244" height="45" alt="Bloomberg" />
+            <img src="assets/logo-nyt.svg" width="366" height="52" alt="The New York Times" />
+            <img src="assets/logo-zdnet.svg" width="218" height="88" alt="ZDNet" />
+            <img src="assets/logo-techradar.svg" width="273" height="88" alt="techradar" />
+            <img src="assets/logo-fastcompany.svg" width="244" height="35" alt="Fast Company" />
+          </div>
+          <div class="press__row" aria-hidden="true">
+            <img src="assets/logo-bloomberg.svg" width="244" height="45" alt="" />
+            <img src="assets/logo-nyt.svg" width="366" height="52" alt="" />
+            <img src="assets/logo-zdnet.svg" width="218" height="88" alt="" />
+            <img src="assets/logo-techradar.svg" width="273" height="88" alt="" />
+            <img src="assets/logo-fastcompany.svg" width="244" height="35" alt="" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="hp-footer">
+    <img class="hp-footer__wave" src="assets/wave-footer.svg" width="1440" height="79" alt="" />
+    <div class="hp-footer__bar">
+      <img class="hp-footer__logo" src="assets/logo-footer.svg" width="104" height="23" alt="Startpage" />
+      <ul class="hp-footer__links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+      <ul class="hp-footer__social">
+        <li><a href="#" aria-label="Twitter"><img src="assets/social-twitter.svg" width="32" height="32" alt="" /></a></li>
+        <li><a href="#" aria-label="Reddit"><img src="assets/social-reddit.svg" width="32" height="32" alt="" /></a></li>
+        <li><a href="#" aria-label="Instagram"><img src="assets/social-instagram.svg" width="32" height="32" alt="" /></a></li>
+        <li><a href="#" aria-label="Facebook"><img src="assets/social-facebook.svg" width="32" height="32" alt="" /></a></li>
+        <li><a class="hp-footer__mastodon" href="#" aria-label="Mastodon">
+          <img src="assets/social-mastodon-circle.svg" width="32" height="32" alt="" />
+          <img src="assets/social-mastodon.svg" width="12" height="13" alt="" />
+        </a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    const html = document.documentElement;
+    document.querySelector('.search-field__input')?.focus();
+
+    const header = document.querySelector('.hp-header');
+    function updateHeader() {
+      header?.classList.toggle('is-scrolled', window.scrollY > 8);
+    }
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    const toggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
+      themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    applyTheme(localStorage.getItem('theme') || 'light');
+    toggle.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+
+    (function siteNav() {
+      const navToggle = document.getElementById('siteNavToggle');
+      const overlay = document.getElementById('siteNavOverlay');
+      const closeBtn = document.getElementById('siteNavClose');
+      if (!navToggle || !overlay) return;
+
+      function openNav() {
+        overlay.hidden = false;
+        document.body.classList.add('site-nav-open');
+        navToggle.setAttribute('aria-expanded', 'true');
+        requestAnimationFrame(() => {
+          overlay.classList.add('is-open');
+          closeBtn?.focus();
+        });
+      }
+
+      function closeNav() {
+        overlay.classList.remove('is-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('site-nav-open');
+        const finish = (e) => {
+          if (e && e.target !== overlay) return;
+          overlay.hidden = true;
+          overlay.removeEventListener('transitionend', finish);
+          navToggle.focus();
+        };
+        overlay.addEventListener('transitionend', finish);
+      }
+
+      navToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (overlay.classList.contains('is-open')) closeNav();
+        else openNav();
+      });
+      closeBtn?.addEventListener('click', closeNav);
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeNav();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeNav();
+      });
+    })();
+
+    document.getElementById('homeSearchForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+    });
+
+    (function fixPlaygroundLink() {
+      const link = document.getElementById('playgroundLink');
+      if (!link) return;
+      const marker = '/design-playground';
+      const i = location.pathname.indexOf(marker);
+      link.href = i >= 0
+        ? `${location.pathname.slice(0, i + marker.length)}/`
+        : '../';
+    })();
+  </script>
+</body>
+</html>
