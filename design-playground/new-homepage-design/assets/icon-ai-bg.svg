@@ -1,6 +1,6 @@
 <svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Group 1171277912">
-<circle id="Ellipse 567" cx="24" cy="24" r="24" fill="#1B1D21"/>
+<circle id="Ellipse 567" cx="24" cy="24" r="23.5" fill="#1B1D21"/>
 <path id="Star 4" d="M23.9996 13.7139C25.7629 18.4791 29.52 22.2363 34.2853 23.9996C29.52 25.7629 25.7629 29.52 23.9996 34.2853C22.2363 29.52 18.4791 25.7629 13.7139 23.9996C18.4791 22.2363 22.2363 18.4791 23.9996 13.7139Z" stroke="white" stroke-width="1.875" stroke-linejoin="round"/>
 <path id="Star 5" d="M33.4277 13.9763C33.6088 14.1906 33.8073 14.3889 34.0215 14.5701C33.8073 14.7511 33.6088 14.9497 33.4277 15.1638C33.2466 14.9497 33.0482 14.7511 32.834 14.5701C33.0482 14.389 33.2466 14.1906 33.4277 13.9763Z" stroke="white" stroke-width="2.57143" stroke-linejoin="round"/>
 </g>
