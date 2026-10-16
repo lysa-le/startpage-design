@@ -35,7 +35,7 @@
 
     body {
       font-family: var(--font-family);
-      background: var(--color-background-primary);
+      background: var(--color-background-quaternary);
       color: var(--color-text-primary);
       min-height: 100vh;
     }
@@ -84,7 +84,7 @@
       max-width: calc(var(--spacing-24) * 60);
       margin: 0 auto;
       padding: var(--spacing-40) calc(var(--spacing-24) * 7 + var(--spacing-12)) var(--spacing-16);
-      background: var(--color-background-primary);
+      background: var(--color-background-quaternary);
       transition: padding 0.2s ease;
     }
     .hp-header::before {
@@ -96,7 +96,7 @@
       left: 50%;
       width: 100vw;
       transform: translateX(-50%);
-      background: var(--color-background-primary);
+      background: var(--color-background-quaternary);
       transition: box-shadow 0.2s ease;
     }
     .hp-header.is-scrolled {
@@ -163,9 +163,6 @@
     .search-field__input::placeholder {
       color: var(--color-text-secondary);
       opacity: 1;
-    }
-    .search-field:focus-within .search-field__input::placeholder {
-      color: transparent;
     }
     .search-field__caret {
       position: absolute;
@@ -366,7 +363,150 @@
       transition: color 0.15s ease;
     }
     .site-nav__link:hover { color: var(--color-text-brandblue); }
-    body.site-nav-open { overflow: hidden; }
+    body.site-nav-open,
+    body.login-open { overflow: hidden; }
+
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 240;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-24);
+      background: color-mix(in srgb, var(--color-midnight-500) 40%, transparent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .login-overlay.is-open { opacity: 1; pointer-events: auto; }
+    .login-modal {
+      position: relative;
+      width: min(100%, calc(var(--spacing-96) * 3 + var(--spacing-48) + var(--spacing-16) + var(--spacing-4) + var(--spacing-4) / 2));
+      padding: var(--spacing-40) calc(var(--spacing-24) + var(--spacing-4)) var(--spacing-32);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary);
+      border-radius: var(--radius-2xl);
+      background: var(--color-background-primary);
+      box-shadow: var(--shadow-dropdown);
+      color: var(--color-text-primary);
+      text-align: center;
+    }
+    .login-modal__close {
+      position: absolute;
+      top: var(--spacing-16);
+      right: var(--spacing-16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-16);
+      height: var(--spacing-16);
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--color-icon-primary);
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+    .login-modal__close:hover,
+    .login-modal__close:focus-visible { color: var(--color-icon-secondary); }
+    .login-modal__close svg { display: block; width: 10px; height: 10px; }
+    .login-modal__title {
+      font-size: calc(var(--font-size-14) * 2);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: -0.02em;
+    }
+    .login-modal__lede {
+      margin-top: var(--spacing-16);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      font-weight: var(--font-weight-regular);
+    }
+    .login-modal__form {
+      display: flex;
+      flex-direction: column;
+      margin-top: var(--spacing-24);
+      text-align: left;
+    }
+    .login-modal__label {
+      font-size: var(--font-utility-caption);
+      line-height: var(--font-size-12);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .login-modal__field {
+      position: relative;
+      margin-top: var(--spacing-12);
+    }
+    .login-modal__input {
+      width: 100%;
+      height: var(--spacing-48);
+      padding: 0 var(--spacing-16);
+      border: var(--border-stroke-sm) solid var(--color-stroke-primary-button);
+      border-radius: var(--radius-lg);
+      background: var(--color-background-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-body-md);
+      line-height: var(--font-body-md-lh);
+      caret-color: var(--color-text-primary);
+      outline: none;
+    }
+    .login-modal__input:placeholder-shown { caret-color: transparent; }
+    .login-modal__input::placeholder { color: transparent; }
+    .login-modal__caret {
+      position: absolute;
+      left: var(--spacing-16);
+      top: 50%;
+      width: var(--border-stroke-sm);
+      height: var(--font-body-md);
+      transform: translateY(-50%);
+      background: var(--color-text-primary);
+      pointer-events: none;
+      opacity: 0;
+    }
+    .login-modal__field:focus-within:has(.login-modal__input:placeholder-shown) .login-modal__caret {
+      animation: search-caret 1s steps(1) infinite;
+    }
+    .login-modal__continue {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--spacing-48);
+      margin-top: var(--spacing-16);
+      border: none;
+      border-radius: var(--radius-lg);
+      background: var(--color-button-teal);
+      color: var(--color-text-primary);
+      font-family: var(--font-family);
+      font-size: var(--font-button-sm);
+      font-weight: var(--font-weight-bold);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .login-modal__continue:hover,
+    .login-modal__continue:focus-visible { background: var(--color-button-tealhover); }
+    [data-theme="dark"] .login-modal__continue { color: var(--color-text-inverted); }
+    .login-modal__signup {
+      margin-top: var(--spacing-24);
+      font-size: var(--font-body-md);
+      line-height: calc(var(--font-body-md-lh) + var(--spacing-4) / 2);
+    }
+    .login-modal__signup-link {
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--color-text-brandblue);
+      font-family: var(--font-family);
+      font-size: inherit;
+      font-weight: var(--font-weight-semibold);
+      line-height: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .login-modal__signup-link:hover,
+    .login-modal__signup-link:focus-visible { text-decoration: underline; }
 
     .hero {
       position: relative;
@@ -402,7 +542,7 @@
       height: calc(var(--spacing-48) + var(--spacing-32));
       margin-bottom: var(--spacing-24);
       border-radius: var(--radius-full);
-      background: var(--color-background-tertiary);
+      background: var(--color-button-inactive);
       animation: hero-in 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
     }
     /* Drawn at 2× and scaled down so the shake stays on a sharper bitmap. */
@@ -439,8 +579,14 @@
       margin-top: calc(var(--spacing-96) + var(--spacing-48));
       padding: var(--spacing-12);
       border-radius: var(--radius-xl);
-      background: var(--color-background-tertiary);
+      background: var(--color-button-inactive);
       animation: hero-in 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.28s both;
+      transition: translate 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+    }
+    .hero__promo:hover,
+    .hero__promo:focus-within {
+      translate: 0 calc(var(--spacing-4) * -1);
+      box-shadow: var(--shadow-dropdown);
     }
     .hero__promo-icon {
       display: grid;
@@ -566,6 +712,17 @@
       bottom: calc(var(--spacing-24) * -1);
       z-index: 0;
       transform: rotate(-12deg);
+    }
+    .js-motion .scribble path {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+    .js-motion .scribble.is-in path {
+      animation: scribble-draw 2.4s cubic-bezier(0.4, 0, 0.15, 1) forwards;
+    }
+    .js-motion .scribble--right.is-in path { animation-duration: 2s; }
+    @keyframes scribble-draw {
+      to { stroke-dashoffset: 0; }
     }
 
     .feature-grid {
@@ -873,14 +1030,14 @@
       position: relative;
       z-index: 1;
       margin-top: calc(var(--spacing-96) * 3 - var(--spacing-8));
-      background: var(--color-background-primary);
+      background: var(--color-background-quaternary);
       padding: var(--spacing-16) 0 calc(var(--spacing-96) + var(--spacing-24));
     }
     .press__pill {
       display: inline-flex;
       padding: var(--spacing-8) var(--spacing-16);
       border-radius: var(--radius-full);
-      background: var(--color-background-tertiary);
+      background: var(--color-button-inactive);
       color: var(--color-text-brandblue);
       font-size: var(--font-body-md);
       line-height: var(--font-body-md-lh);
@@ -980,17 +1137,32 @@
     @media (prefers-reduced-motion: reduce) {
       .press__track,
       .search-field__caret,
+      .login-modal__caret,
       .hp-header,
       .hp-header::before,
+      .login-overlay,
       .hero__lock,
       .hero__lock svg,
       .hero__title,
       .hero__lede,
-      .hero__promo {
+      .hero__promo,
+      .hero__install {
         animation: none;
         transition: none;
       }
-      .search-field:focus-within:has(.search-field__input:placeholder-shown) .search-field__caret {
+      .hero__promo:hover,
+      .hero__promo:focus-within {
+        translate: none;
+        box-shadow: none;
+      }
+      .scribble path,
+      .js-motion .scribble path,
+      .js-motion .scribble.is-in path {
+        stroke-dashoffset: 0;
+        animation: none;
+      }
+      .search-field:focus-within:has(.search-field__input:placeholder-shown) .search-field__caret,
+      .login-modal__field:focus-within:has(.login-modal__input:placeholder-shown) .login-modal__caret {
         opacity: 1;
       }
       .js-motion .features__title,
@@ -1008,14 +1180,10 @@
       .js-motion .stats__pill { translate: 0 var(--pill-lift); }
     }
 
-    .hp-footer { background: var(--color-black-800); color: var(--color-whisper-100); }
-    .hp-footer__wave {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-width: none;
-      transform: rotate(180deg);
-      margin-bottom: calc(var(--spacing-48) * -1);
+    .hp-footer {
+      height: calc(var(--spacing-96) + var(--spacing-24));
+      background: var(--color-black-800);
+      color: var(--color-whisper-100);
     }
     .hp-footer__bar {
       display: grid;
@@ -1023,8 +1191,9 @@
       align-items: center;
       gap: var(--spacing-24);
       max-width: calc(var(--spacing-24) * 60);
+      height: 100%;
       margin: 0 auto;
-      padding: var(--spacing-48) calc(var(--spacing-24) * 4) var(--spacing-40);
+      padding: 0 calc(var(--spacing-24) * 4);
     }
     .hp-footer__logo { max-width: none; }
     .hp-footer__links {
@@ -1062,7 +1231,13 @@
         gap: var(--spacing-24);
         padding-inline-end: var(--spacing-24);
       }
-      .hp-footer__bar { grid-template-columns: 1fr; justify-items: center; }
+      .hp-footer { height: auto; }
+      .hp-footer__bar {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        height: auto;
+        padding-block: var(--spacing-24);
+      }
       .proto-chrome { display: none; }
     }
   </style>
@@ -1102,7 +1277,7 @@
           <path d="M13.0167 10.0833C12.9279 10.2844 12.9015 10.5075 12.9407 10.7237C12.9799 10.94 13.083 11.1395 13.2367 11.2967L13.2767 11.3367C13.4006 11.4605 13.499 11.6075 13.5661 11.7694C13.6332 11.9313 13.6677 12.1048 13.6677 12.28C13.6677 12.4552 13.6332 12.6287 13.5661 12.7906C13.499 12.9525 13.4006 13.0995 13.2767 13.2233C13.1528 13.3473 13.0058 13.4456 12.8439 13.5127C12.6821 13.5798 12.5086 13.6144 12.3333 13.6144C12.1581 13.6144 11.9846 13.5798 11.8227 13.5127C11.6609 13.4456 11.5138 13.3473 11.39 13.2233L11.35 13.1833C11.1929 13.0296 10.9933 12.9265 10.7771 12.8873C10.5608 12.8481 10.3377 12.8746 10.1367 12.9633C9.93949 13.0478 9.77132 13.1882 9.65287 13.367C9.53442 13.5459 9.47086 13.7555 9.47 13.97V14.0833C9.47 14.437 9.32952 14.7761 9.07948 15.0261C8.82943 15.2762 8.49029 15.4167 8.13667 15.4167C7.78305 15.4167 7.44391 15.2762 7.19386 15.0261C6.94381 14.7761 6.80333 14.437 6.80333 14.0833V14.0233C6.79817 13.8027 6.72675 13.5887 6.59834 13.4091C6.46994 13.2296 6.29049 13.0929 6.08333 13.0167C5.88226 12.9279 5.65921 12.9015 5.44294 12.9407C5.22668 12.9799 5.02712 13.083 4.87 13.2367L4.83 13.2767C4.70617 13.4006 4.55912 13.499 4.39725 13.5661C4.23539 13.6332 4.06189 13.6677 3.88667 13.6677C3.71145 13.6677 3.53794 13.6332 3.37608 13.5661C3.21422 13.499 3.06716 13.4006 2.94333 13.2767C2.81936 13.1528 2.72102 13.0058 2.65392 12.8439C2.58682 12.6821 2.55228 12.5086 2.55228 12.3333C2.55228 12.1581 2.58682 11.9846 2.65392 11.8227C2.72102 11.6609 2.81936 11.5138 2.94333 11.39L2.98333 11.35C3.13702 11.1929 3.24012 10.9933 3.27934 10.7771C3.31855 10.5608 3.29208 10.3377 3.20333 10.1367C3.11882 9.93949 2.9785 9.77132 2.79964 9.65287C2.62078 9.53442 2.41119 9.47086 2.19667 9.47H2.08333C1.72971 9.47 1.39057 9.32952 1.14052 9.07947C0.890476 8.82943 0.75 8.49029 0.75 8.13667C0.75 7.78304 0.890476 7.44391 1.14052 7.19386C1.39057 6.94381 1.72971 6.80333 2.08333 6.80333H2.14333C2.364 6.79817 2.578 6.72675 2.75753 6.59834C2.93706 6.46993 3.07381 6.29049 3.15 6.08333C3.23874 5.88226 3.26522 5.6592 3.226 5.44294C3.18679 5.22668 3.08369 5.02712 2.93 4.87L2.89 4.83C2.76603 4.70617 2.66769 4.55912 2.60059 4.39725C2.53349 4.23539 2.49895 4.06189 2.49895 3.88667C2.49895 3.71145 2.53349 3.53794 2.60059 3.37608C2.66769 3.21422 2.76603 3.06716 2.89 2.94333C3.01383 2.81936 3.16088 2.72102 3.32275 2.65392C3.48461 2.58682 3.65811 2.55228 3.83333 2.55228C4.00855 2.55228 4.18206 2.58682 4.34392 2.65392C4.50578 2.72102 4.65284 2.81936 4.77667 2.94333L4.81667 2.98333C4.97379 3.13702 5.17334 3.24012 5.38961 3.27934C5.60587 3.31855 5.82892 3.29208 6.03 3.20333H6.08333C6.28051 3.11882 6.44868 2.9785 6.56713 2.79964C6.68558 2.62078 6.74915 2.41119 6.75 2.19667V2.08333C6.75 1.72971 6.89048 1.39057 7.14053 1.14052C7.39057 0.890476 7.72971 0.75 8.08333 0.75C8.43696 0.75 8.77609 0.890476 9.02614 1.14052C9.27619 1.39057 9.41667 1.72971 9.41667 2.08333V2.14333C9.41752 2.35786 9.48109 2.56745 9.59954 2.74631C9.71799 2.92517 9.88615 3.06549 10.0833 3.15C10.2844 3.23874 10.5075 3.26522 10.7237 3.226C10.94 3.18679 11.1395 3.08369 11.2967 2.93L11.3367 2.89C11.4605 2.76603 11.6076 2.66769 11.7694 2.60059C11.9313 2.53349 12.1048 2.49895 12.28 2.49895C12.4552 2.49895 12.6287 2.53349 12.7906 2.60059C12.9525 2.66769 13.0995 2.76603 13.2233 2.89C13.3473 3.01383 13.4456 3.16088 13.5127 3.32275C13.5798 3.48461 13.6144 3.65811 13.6144 3.83333C13.6144 4.00855 13.5798 4.18206 13.5127 4.34392C13.4456 4.50578 13.3473 4.65284 13.2233 4.77667L13.1833 4.81667C13.0296 4.97379 12.9265 5.17334 12.8873 5.38961C12.8481 5.60587 12.8746 5.82892 12.9633 6.03V6.08333C13.0478 6.28051 13.1882 6.44868 13.367 6.56713C13.5459 6.68558 13.7555 6.74914 13.97 6.75H14.0833C14.437 6.75 14.7761 6.89048 15.0261 7.14052C15.2762 7.39057 15.4167 7.72971 15.4167 8.08333C15.4167 8.43695 15.2762 8.77609 15.0261 9.02614C14.7761 9.27619 14.437 9.41667 14.0833 9.41667H14.0233C13.8088 9.41752 13.5992 9.48109 13.4204 9.59954C13.2415 9.71799 13.1012 9.88615 13.0167 10.0833V10.0833Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <button type="button" class="hp-login">Log In</button>
+      <button type="button" class="hp-login" id="loginToggle" aria-haspopup="dialog" aria-expanded="false" aria-controls="loginModal">Log In</button>
       <button type="button" class="hp-menu" id="siteNavToggle" aria-label="Open menu" aria-haspopup="dialog" aria-expanded="false" aria-controls="siteNav">
         <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
           <path d="M1 4H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -1147,6 +1322,28 @@
     </nav>
   </div>
 
+  <div class="login-overlay" id="loginOverlay" hidden>
+    <div class="login-modal" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <button type="button" class="login-modal__close" id="loginClose" aria-label="Close">
+        <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+          <line x1="1" y1="1" x2="9" y2="9"/>
+          <line x1="9" y1="1" x2="1" y2="9"/>
+        </svg>
+      </button>
+      <h2 class="login-modal__title" id="loginTitle">Startpage Ad-Free</h2>
+      <p class="login-modal__lede">Enter your email to log in to your Startpage account</p>
+      <form class="login-modal__form" id="loginForm">
+        <label class="login-modal__label" for="loginEmail">Email</label>
+        <div class="login-modal__field">
+          <input class="login-modal__input" id="loginEmail" type="email" name="email" placeholder=" " autocomplete="email" />
+          <span class="login-modal__caret" aria-hidden="true"></span>
+        </div>
+        <button type="submit" class="login-modal__continue">Continue</button>
+      </form>
+      <p class="login-modal__signup">Don’t have an account?<br /><a class="login-modal__signup-link" id="signupLink" href="../ad-free-lander/">Sign up</a></p>
+    </div>
+  </div>
+
   <main>
     <section class="hero" aria-labelledby="heroTitle">
       <div class="hero__intro">
@@ -1171,7 +1368,9 @@
 
     <section class="band features" aria-labelledby="featuresTitle">
       <img class="band__wave" src="assets/wave-purple.svg" width="1440" height="1485" alt="" />
-      <img class="scribble scribble--left" src="assets/scribble-left.svg" width="267" height="313" alt="" />
+      <svg class="scribble scribble--left" width="267" height="313" viewBox="0 0 267.411 313.27" fill="none" overflow="visible" aria-hidden="true">
+        <path pathLength="1" d="M2.50062 2.50062C42.1673 13.0736 124.501 52.2597 136.501 124.42C151.501 214.621 120.501 251.296 92.5006 247.331C64.5006 243.366 73.5006 151.183 173.501 142.262C273.501 133.341 278.501 245.349 249.501 310.769" stroke="#7282FB" stroke-width="3" stroke-linecap="round"/>
+      </svg>
       <div class="band__inner">
         <div class="features__art" aria-hidden="true">
           <img src="assets/girl-phone.svg" width="277" height="308" alt="" />
@@ -1310,7 +1509,9 @@
       <div class="difference__swoop" aria-hidden="true">
         <img class="band__wave" src="assets/wave-teal.svg" width="1440" height="1437" alt="" />
       </div>
-      <img class="scribble scribble--right" src="assets/scribble-right.svg" width="453" height="169" alt="" />
+      <svg class="scribble scribble--right" width="453" height="169" viewBox="0 0 453.001 168.999" fill="none" overflow="visible" aria-hidden="true">
+        <path pathLength="1" d="M450.5 73.666C379.048 92.2859 343.321 61.2527 347.981 25.5645C352.641 -10.1236 416.327 -2.3653 402.347 34.8745C388.367 72.1143 297.474 131.465 208.183 104.699C104.657 73.666 110.059 140.514 61.3885 158.099C50.4127 164.439 23.2689 173.313 2.50017 158.099" stroke="#6EF5E8" stroke-width="3" stroke-linecap="round"/>
+      </svg>
       <div class="band__inner">
         <h2 id="differenceTitle">The Startpage difference</h2>
         <div class="compare" role="table" aria-label="Startpage compared with Google and Brave">
@@ -1386,7 +1587,6 @@
   </main>
 
   <footer class="hp-footer">
-    <img class="hp-footer__wave" src="assets/wave-footer.svg" width="1440" height="79" alt="" />
     <div class="hp-footer__bar">
       <img class="hp-footer__logo" src="assets/logo-footer.svg" width="104" height="23" alt="Startpage" />
       <ul class="hp-footer__links">
@@ -1492,13 +1692,56 @@
       });
     })();
 
+    (function loginModal() {
+      const toggle = document.getElementById('loginToggle');
+      const overlay = document.getElementById('loginOverlay');
+      const dialog = document.getElementById('loginModal');
+      const email = document.getElementById('loginEmail');
+      const form = document.getElementById('loginForm');
+      const closeBtn = document.getElementById('loginClose');
+      if (!toggle || !overlay || !dialog) return;
+
+      function openLogin() {
+        overlay.hidden = false;
+        document.body.classList.add('login-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        requestAnimationFrame(() => {
+          overlay.classList.add('is-open');
+          email?.focus();
+        });
+      }
+
+      function closeLogin() {
+        overlay.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('login-open');
+        const finish = (e) => {
+          if (e && e.target !== overlay) return;
+          overlay.hidden = true;
+          overlay.removeEventListener('transitionend', finish);
+          toggle.focus();
+        };
+        overlay.addEventListener('transitionend', finish);
+      }
+
+      toggle.addEventListener('click', openLogin);
+      closeBtn?.addEventListener('click', closeLogin);
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeLogin();
+      });
+      form?.addEventListener('submit', (e) => e.preventDefault());
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeLogin();
+      });
+    })();
+
     document.getElementById('homeSearchForm')?.addEventListener('submit', (e) => {
       e.preventDefault();
     });
 
     (function revealOnScroll() {
       const nodes = document.querySelectorAll(
-        '.features__title, .features__lede, .feature-card, .stats__row > div, .stats__pill, .product-card, #differenceTitle, .compare__row'
+        '.features__title, .features__lede, .feature-card, .stats__row > div, .stats__pill, .product-card, #differenceTitle, .compare__row, .scribble'
       );
       if (!nodes.length || !('IntersectionObserver' in window)) {
         nodes.forEach((node) => node.classList.add('is-in'));
@@ -1516,12 +1759,12 @@
 
     (function fixPlaygroundLink() {
       const link = document.getElementById('playgroundLink');
-      if (!link) return;
       const marker = '/design-playground';
       const i = location.pathname.indexOf(marker);
-      link.href = i >= 0
-        ? `${location.pathname.slice(0, i + marker.length)}/`
-        : '../';
+      const root = i >= 0 ? `${location.pathname.slice(0, i + marker.length)}/` : '../';
+      if (link) link.href = root;
+      const signup = document.getElementById('signupLink');
+      if (signup) signup.href = `${root}ad-free-lander/`;
     })();
   </script>
 </body>

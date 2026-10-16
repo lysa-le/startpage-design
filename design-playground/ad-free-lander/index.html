@@ -109,6 +109,31 @@
       margin: 0 auto;
     }
 
+    .lander-header__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-16);
+      min-width: 0;
+    }
+    .lander-header__back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--spacing-24);
+      height: var(--spacing-24);
+      flex-shrink: 0;
+      color: var(--color-icon-primary);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .lander-header__back:hover,
+    .lander-header__back:focus-visible { color: var(--color-icon-secondary); }
+    .lander-header__back svg {
+      display: block;
+      width: var(--spacing-20);
+      height: var(--spacing-20);
+    }
+
     .lander-header__logo {
       display: inline-flex;
       align-items: center;
@@ -1209,66 +1234,17 @@
       }
     }
 
-    /* ── Scroll cue ── */
-    .scroll-cue {
-      position: fixed;
-      left: 50%;
-      bottom: var(--spacing-24);
-      z-index: 40;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: var(--spacing-40);
-      height: var(--spacing-40);
-      margin: 0;
-      padding: 0;
-      border: none;
-      border-radius: var(--radius-full);
-      background: var(--color-button-brandblue);
-      color: var(--color-text-inverted);
-      box-shadow: var(--shadow-card);
-      cursor: pointer;
-      transform: translateX(-50%);
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.25s ease, visibility 0.25s ease, background-color 0.15s ease;
-    }
-    .scroll-cue:hover {
-      background: var(--color-button-brandbluehover);
-      color: var(--color-text-inverted);
-    }
-    .scroll-cue:focus-visible {
-      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
-      outline-offset: var(--spacing-4);
-    }
-    .scroll-cue.is-hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .scroll-cue__icon {
-      display: block;
-      width: var(--spacing-16);
-      height: var(--spacing-16);
-    }
-    .scroll-cue__bob {
-      display: block;
-      animation: scroll-cue-bob 1.6s ease-in-out infinite;
-    }
-    @keyframes scroll-cue-bob {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(var(--spacing-4)); }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .scroll-cue { transition: none; }
-      .scroll-cue__bob { animation: none; }
-    }
-
   </style>
 </head>
 <body>
   <header class="lander-header">
-    <a class="lander-header__logo" href="https://www.startpage.com/" aria-label="Startpage Ad-Free home">
+    <div class="lander-header__brand">
+      <a class="lander-header__back" id="homeBack" href="../new-homepage-design/" aria-label="Back to homepage">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M16 10H4M4 10L9 5M4 10L9 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a class="lander-header__logo" href="https://www.startpage.com/" aria-label="Startpage Ad-Free home">
       <svg aria-hidden="true" overflow="visible" width="113" height="25" viewBox="0 0 113 25" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#lander-logo-clip)">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M0.50884 22.3776C0.782827 21.9891 1.23295 21.7366 1.83963 21.6394C18.9442 18.8617 36.2837 18.8422 53.3883 21.5617C53.858 21.6394 54.1515 21.7754 54.3081 21.9308C54.4451 22.0668 54.5038 22.2416 54.4647 22.4941C54.4255 22.7078 54.3277 22.8438 54.1711 22.9215C53.9754 23.0186 53.6623 23.0575 53.1926 22.9992C36.2445 20.9596 19.1791 21.62 2.46589 24.9806C2.30932 25 2.15276 25.0194 2.01577 25.0194H1.87877C1.46779 25 1.17424 24.864 0.998102 24.7474C0.606692 24.4949 0.352276 24.087 0.254424 23.6208C0.195712 23.1546 0.273994 22.7078 0.50884 22.3776Z" fill="url(#lander-logo-grad)"/>
@@ -1286,6 +1262,7 @@
       </svg>
       <span class="lander-header__product"><span class="lander-header__product-divider" aria-hidden="true">|</span> Ad-Free</span>
     </a>
+    </div>
     <button type="button" class="lander-header__menu" aria-label="Open menu">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M1 4H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -1694,19 +1671,6 @@
     </section>
   </main>
 
-  <button
-    type="button"
-    class="scroll-cue"
-    id="scrollCue"
-    aria-label="Scroll to see more"
-  >
-    <span class="scroll-cue__bob" aria-hidden="true">
-      <svg class="scroll-cue__icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3.5 6.25L8 10.75L12.5 6.25" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </span>
-  </button>
-
   <div class="proto-chrome">
     <a class="proto-back" id="playgroundBack" href="../">← Playground</a>
     <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -1746,55 +1710,14 @@
       syncHeroIllustration(html.dataset.theme || 'light');
     });
 
-    /* Floating scroll cue — fades once the page is scrolled */
-    (function initScrollCue() {
-      const cue = document.getElementById('scrollCue');
-      if (!cue) return;
-
-      const hideAfter = 48;
-      let ticking = false;
-
-      function pageCanScroll() {
-        return document.documentElement.scrollHeight > window.innerHeight + 8;
-      }
-
-      function sync() {
-        const scrolled = window.scrollY > hideAfter;
-        const show = pageCanScroll() && !scrolled;
-        cue.classList.toggle('is-hidden', !show);
-        cue.tabIndex = show ? 0 : -1;
-        cue.setAttribute('aria-hidden', show ? 'false' : 'true');
-      }
-
-      function onScroll() {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-          sync();
-          ticking = false;
-        });
-      }
-
-      cue.addEventListener('click', () => {
-        const target = document.getElementById('benefits');
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-          window.scrollBy({ top: Math.round(window.innerHeight * 0.75), behavior: 'smooth' });
-        }
-      });
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll);
-      sync();
-    })();
-
     (function fixPlaygroundBack() {
       const link = document.getElementById('playgroundBack');
-      if (!link) return;
+      const home = document.getElementById('homeBack');
       const marker = '/design-playground';
       const i = location.pathname.indexOf(marker);
-      if (i >= 0) link.href = `${location.pathname.slice(0, i + marker.length)}/`;
+      const root = i >= 0 ? `${location.pathname.slice(0, i + marker.length)}/` : '../';
+      if (link) link.href = root;
+      if (home) home.href = `${root}new-homepage-design/`;
     })();
 
     /* Keep both plan pickers in sync */
