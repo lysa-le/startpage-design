@@ -562,6 +562,10 @@
       transform-origin: center;
       animation: lock-shake 2.2s ease-in-out 1;
     }
+    .hero__lock.is-settled svg { animation: none; }
+    .hero__lock.is-settled:hover svg {
+      animation: lock-shake 2.2s ease-in-out;
+    }
     .hero__title {
       font-size: var(--font-heading-lg);
       line-height: var(--font-heading-lg-lh);
@@ -1198,9 +1202,6 @@
     .compare__row:nth-child(6) { --reveal-delay: 0.22s; }
     .compare__row:nth-child(7) { --reveal-delay: 0.26s; }
 
-    .hp-footer__social a { transition: transform 0.2s ease; }
-    .hp-footer__social a:hover { transform: translateY(calc(var(--spacing-4) * -1)); }
-
     @media (prefers-reduced-motion: reduce) {
       .press__track,
       .search-field__caret,
@@ -1210,6 +1211,7 @@
       .login-overlay,
       .hero__lock,
       .hero__lock svg,
+      .hero__lock.is-settled:hover svg,
       .hero__title,
       .hero__lede,
       .hero__promo,
@@ -1253,51 +1255,74 @@
     }
 
     .hp-footer {
-      height: calc(var(--spacing-96) + var(--spacing-24));
       background: var(--color-black-800);
-      color: var(--color-whisper-100);
+      color: var(--color-whisper-300);
     }
     .hp-footer__bar {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      grid-template-areas:
-        "logo links social"
-        "legal . .";
-      align-items: center;
-      align-content: center;
-      column-gap: var(--spacing-24);
-      row-gap: var(--spacing-12);
       max-width: calc(var(--spacing-24) * 60);
-      height: 100%;
       margin: 0 auto;
-      padding: 0 calc(var(--spacing-24) * 4);
+      padding: var(--spacing-48) calc(var(--spacing-24) * 7 + var(--spacing-12));
     }
-    .hp-footer__logo { grid-area: logo; max-width: none; }
+    .hp-footer__top {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: var(--spacing-48);
+    }
+    .hp-footer__brand {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .hp-footer__logo { max-width: none; flex: none; }
     .hp-footer__legal {
-      grid-area: legal;
       font-size: var(--font-body-xs);
       line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-regular);
+      letter-spacing: 0.01em;
+      color: var(--color-midnight-100);
       white-space: nowrap;
     }
-    .hp-footer__links {
-      grid-area: links;
+    .hp-footer__columns {
       display: flex;
-      justify-content: center;
-      gap: var(--spacing-32);
+      align-items: flex-start;
+      gap: var(--spacing-64);
+      min-width: 0;
+    }
+    .hp-footer__col {
+      display: flex;
+      flex: none;
+      flex-direction: column;
+      gap: var(--spacing-16);
+    }
+    .hp-footer__heading {
+      font-size: var(--font-body-xs);
+      line-height: var(--font-body-xs-lh);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--color-midnight-200);
+    }
+    .hp-footer__links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
       list-style: none;
       font-size: var(--font-body-sm);
       line-height: var(--font-body-sm-lh);
+      font-weight: var(--font-weight-regular);
+      white-space: nowrap;
     }
-    .hp-footer__links a { color: inherit; text-decoration: none; }
-    .hp-footer__links a:hover { text-decoration: underline; }
-    .hp-footer__social { grid-area: social; display: flex; gap: var(--spacing-12); list-style: none; }
-    .hp-footer__social a { position: relative; display: block; width: var(--spacing-32); height: var(--spacing-32); }
-    .hp-footer__social img { max-width: none; }
-    .hp-footer__mastodon img:last-child {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+    .hp-footer__links a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .hp-footer__links a:hover { color: var(--color-whisper-0); }
+    .hp-footer__links a:focus-visible {
+      outline: var(--border-stroke-lg) solid var(--color-stroke-primary-button);
+      outline-offset: var(--spacing-4);
+      border-radius: var(--radius-sm);
     }
 
     @media (max-width: 1100px) {
@@ -1319,21 +1344,6 @@
         gap: var(--spacing-24);
         padding-inline-end: var(--spacing-24);
       }
-      .hp-footer { height: auto; }
-      .hp-footer__bar {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-          "logo"
-          "links"
-          "social"
-          "legal";
-        justify-items: center;
-        row-gap: var(--spacing-24);
-        height: auto;
-        padding-block: var(--spacing-24);
-      }
-      .hp-footer__legal { text-align: center; }
-      .hp-footer__links { flex-wrap: wrap; justify-content: center; }
       .proto-chrome { display: none; }
     }
 
@@ -1584,23 +1594,30 @@
         width: auto;
       }
       .hp-footer__bar {
-        gap: calc(var(--spacing-64) + var(--spacing-8));
-        padding: calc(var(--spacing-64) + var(--spacing-8)) var(--spacing-16);
+        padding: var(--spacing-48) var(--spacing-16);
+      }
+      .hp-footer__top {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-40);
+      }
+      .hp-footer__brand { display: contents; }
+      .hp-footer__logo { order: 1; align-self: flex-start; }
+      .hp-footer__columns {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-32);
+        order: 2;
+      }
+      .hp-footer__legal {
+        order: 3;
+        align-self: flex-start;
+        line-height: var(--font-body-xs-lh);
+        white-space: normal;
       }
       .hp-footer__links {
-        flex-direction: column;
-        align-items: center;
-        gap: var(--spacing-40);
         font-size: var(--font-body-md);
         line-height: var(--font-body-md-lh);
-      }
-      .hp-footer__links li:nth-child(1) { order: 2; }
-      .hp-footer__links li:nth-child(2) { order: 1; }
-      .hp-footer__links li:nth-child(3) { order: 3; }
-      .hp-footer__links li:nth-child(4) { order: 4; }
-      .hp-footer__social { gap: var(--spacing-24); flex-wrap: wrap; justify-content: center; }
-      .hp-footer__legal {
-        margin-top: calc(var(--spacing-40) - (var(--spacing-64) + var(--spacing-8)));
       }
     }
   </style>
@@ -1966,24 +1983,42 @@
 
   <footer class="hp-footer">
     <div class="hp-footer__bar">
-      <img class="hp-footer__logo" src="assets/logo-footer.svg" width="104" height="23" alt="Startpage" />
-      <ul class="hp-footer__links">
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Press</a></li>
-        <li><a href="#">Blog</a></li>
-      </ul>
-      <ul class="hp-footer__social">
-        <li><a href="#" aria-label="Twitter"><img src="assets/social-twitter.svg" width="32" height="32" alt="" /></a></li>
-        <li><a href="#" aria-label="Reddit"><img src="assets/social-reddit.svg" width="32" height="32" alt="" /></a></li>
-        <li><a href="#" aria-label="Instagram"><img src="assets/social-instagram.svg" width="32" height="32" alt="" /></a></li>
-        <li><a href="#" aria-label="Facebook"><img src="assets/social-facebook.svg" width="32" height="32" alt="" /></a></li>
-        <li><a class="hp-footer__mastodon" href="#" aria-label="Mastodon">
-          <img src="assets/social-mastodon-circle.svg" width="32" height="32" alt="" />
-          <img src="assets/social-mastodon.svg" width="12" height="13" alt="" />
-        </a></li>
-      </ul>
-      <p class="hp-footer__legal">© 2026 Startpage</p>
+      <div class="hp-footer__top">
+        <div class="hp-footer__brand">
+          <img class="hp-footer__logo" src="assets/logo-footer.svg" width="104" height="23" alt="Startpage" />
+          <p class="hp-footer__legal">© 2026 Startpage</p>
+        </div>
+        <div class="hp-footer__columns">
+          <nav class="hp-footer__col" aria-label="Products">
+            <h2 class="hp-footer__heading">Products</h2>
+            <ul class="hp-footer__links">
+              <li><a href="#">Ad-Free Subscription</a></li>
+              <li><a href="#">Mobile App</a></li>
+              <li><a href="#">Desktop Extension</a></li>
+            </ul>
+          </nav>
+          <nav class="hp-footer__col" aria-label="Social Media">
+            <h2 class="hp-footer__heading">Social Media</h2>
+            <ul class="hp-footer__links">
+              <li><a href="#">X</a></li>
+              <li><a href="#">Reddit</a></li>
+              <li><a href="#">Instagram</a></li>
+              <li><a href="#">Facebook</a></li>
+              <li><a href="#">Mastodon</a></li>
+            </ul>
+          </nav>
+          <nav class="hp-footer__col" aria-label="Resources">
+            <h2 class="hp-footer__heading">Resources</h2>
+            <ul class="hp-footer__links">
+              <li><a href="#">About Startpage</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Press</a></li>
+              <li><a href="#">Support</a></li>
+              <li><a href="#">Blog</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
     </div>
   </footer>
 
@@ -2068,6 +2103,15 @@
       });
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeNav();
+      });
+    })();
+
+    (function settleLock() {
+      const lock = document.querySelector('.hero__lock');
+      const svg = lock?.querySelector('svg');
+      if (!lock || !svg) return;
+      svg.addEventListener('animationend', (e) => {
+        if (e.animationName === 'lock-shake' && e.target === svg) lock.classList.add('is-settled');
       });
     })();
 
