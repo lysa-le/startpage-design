@@ -1507,7 +1507,7 @@
         z-index: 0;
         top: calc(
           var(--spacing-24)
-          + (var(--spacing-96) * 3 + var(--spacing-40) - var(--spacing-64) - 1px) * 2
+          + (var(--spacing-96) * 3 + var(--spacing-40) - var(--spacing-64) + var(--spacing-8) - 1px) * 2
           + var(--spacing-24) * 2
           + var(--spacing-48) + var(--spacing-32)
         );
@@ -1516,12 +1516,12 @@
       .product-card {
         position: relative;
         min-height: 0;
-        padding: var(--spacing-16);
+        padding: var(--spacing-20);
       }
       .product-card__icon {
         position: absolute;
-        top: calc(var(--spacing-16) + var(--spacing-4));
-        right: var(--spacing-16);
+        top: calc(var(--spacing-20) + var(--spacing-4));
+        right: var(--spacing-20);
         margin-bottom: 0;
       }
       .product-card h3 {
@@ -1546,7 +1546,6 @@
       }
       .difference h2 { margin-bottom: var(--spacing-32); }
       .difference__swoop { display: none; }
-      .compare { gap: 0; }
       .compare__row {
         grid-template-columns: minmax(0, 1fr) repeat(3, var(--spacing-64));
         column-gap: var(--spacing-12);
@@ -1569,7 +1568,7 @@
       }
 
       .press {
-        margin-top: calc(var(--spacing-96) * 2);
+        margin-top: calc(var(--spacing-40) + var(--spacing-4));
         padding-bottom: var(--spacing-32);
         text-align: center;
         background: transparent;
@@ -1837,7 +1836,7 @@
 
     <section class="band products" aria-label="Products">
       <img class="band__wave" src="assets/wave-teal.svg" width="1440" height="1437" alt="" />
-      <img class="band__wave band__wave--mobile" src="assets/wave-teal-mobile.svg?v=9" width="402" height="1154" alt="" />
+      <img class="band__wave band__wave--mobile" src="assets/wave-teal-mobile.svg?v=11" width="402" height="1162" alt="" />
       <div class="band__inner">
         <div class="product-grid">
           <article class="product-card">
@@ -2142,7 +2141,7 @@
       const pill = document.querySelector('.press__pill');
       if (!press || !wave || !pill) return;
 
-      let tealRatio = 1097 / 1154;
+      let tealRatio = 1105 / 1162;
 
       function readTealRatio() {
         const w = wave.naturalWidth;
@@ -2165,19 +2164,22 @@
       function place() {
         press.style.marginTop = '';
         press.style.paddingBottom = '';
-        if (window.innerWidth > 720) return;
+        if (window.innerWidth > 720) {
+          wave.style.top = '';
+          return;
+        }
         const root = getComputedStyle(document.documentElement);
         const raw = root.getPropertyValue('--spacing-32').trim();
         const base = raw.endsWith('rem')
           ? parseFloat(raw) * parseFloat(root.fontSize)
           : (parseFloat(raw) || 32);
         const gap = base + 50;
-        const waveRect = wave.getBoundingClientRect();
-        const tealEnd = waveRect.top + waveRect.height * tealRatio;
+        const products = wave.closest('.products');
+        const productsTop = products.getBoundingClientRect().top;
         const pillTop = pill.getBoundingClientRect().top;
-        const marginTop = parseFloat(getComputedStyle(press).marginTop) || 0;
-        press.style.marginTop = `${marginTop + (tealEnd + gap - pillTop)}px`;
-        press.style.paddingBottom = `${gap}px`;
+        const waveHeight = wave.getBoundingClientRect().height;
+        const top = pillTop - gap - productsTop - waveHeight * tealRatio;
+        wave.style.top = `${top}px`;
       }
 
       function ready() {
