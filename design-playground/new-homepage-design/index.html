@@ -1438,7 +1438,8 @@
       .feature-card {
         display: flex;
         flex-direction: column;
-        height: calc(var(--spacing-80) * 3);
+        min-height: 0;
+        height: calc(var(--spacing-80) * 3 - var(--spacing-20));
         padding: var(--spacing-24);
       }
       .feature-card__icon {
@@ -1531,7 +1532,7 @@
         font-size: calc(var(--font-size-14) * 2);
         line-height: calc(var(--font-size-18) * 2);
       }
-      .product-card ul { margin: var(--spacing-8) 0 var(--spacing-16); }
+      .product-card ul { margin: var(--spacing-8) 0 var(--spacing-24); }
       .product-card__cta {
         width: 100%;
         height: calc(var(--spacing-48) + var(--spacing-8) + 1px);
@@ -2139,9 +2140,11 @@
       const press = document.querySelector('.press');
       const wave = document.querySelector('.products .band__wave--mobile');
       const pill = document.querySelector('.press__pill');
-      if (!press || !wave || !pill) return;
+      const lastRow = document.querySelector('.compare__row:last-child');
+      if (!press || !wave || !pill || !lastRow) return;
 
-      let tealRatio = 1105 / 1162;
+      const curveTopRatio = 1059.8 / 1162;
+      let tealRatio = 1132 / 1162;
 
       function readTealRatio() {
         const w = wave.naturalWidth;
@@ -2152,11 +2155,14 @@
         canvas.height = h;
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         ctx.drawImage(wave, 0, 0);
-        const data = ctx.getImageData(Math.floor(w / 2), 0, 1, h).data;
+        const data = ctx.getImageData(0, 0, w, h).data;
         for (let y = h - 1; y >= 0; y -= 1) {
-          if (data[y * 4 + 3] > 16) {
-            tealRatio = y / h;
-            return;
+          const row = y * w * 4;
+          for (let x = 0; x < w; x += 1) {
+            if (data[row + x * 4 + 3] > 16) {
+              tealRatio = y / h;
+              return;
+            }
           }
         }
       }
@@ -2169,17 +2175,20 @@
           return;
         }
         const root = getComputedStyle(document.documentElement);
-        const raw = root.getPropertyValue('--spacing-32').trim();
-        const base = raw.endsWith('rem')
+        const raw = root.getPropertyValue('--spacing-16').trim();
+        const clearance = raw.endsWith('rem')
           ? parseFloat(raw) * parseFloat(root.fontSize)
-          : (parseFloat(raw) || 32);
-        const gap = base + 50;
+          : (parseFloat(raw) || 16);
         const products = wave.closest('.products');
         const productsTop = products.getBoundingClientRect().top;
-        const pillTop = pill.getBoundingClientRect().top;
+        const lastBottom = lastRow.getBoundingClientRect().bottom;
         const waveHeight = wave.getBoundingClientRect().height;
-        const top = pillTop - gap - productsTop - waveHeight * tealRatio;
-        wave.style.top = `${top}px`;
+        const waveTop = lastBottom + clearance - waveHeight * curveTopRatio;
+        wave.style.top = `${waveTop - productsTop}px`;
+        const tealBottom = waveTop + waveHeight * tealRatio;
+        const pillTop = pill.getBoundingClientRect().top;
+        const marginTop = parseFloat(getComputedStyle(press).marginTop) || 0;
+        press.style.marginTop = `${marginTop + (tealBottom + clearance - pillTop)}px`;
       }
 
       function ready() {
