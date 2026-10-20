@@ -1432,18 +1432,29 @@
         margin-bottom: var(--spacing-48);
       }
       .feature-grid {
-        gap: var(--spacing-24);
+        gap: var(--spacing-16);
         padding-bottom: var(--spacing-48);
       }
       .feature-card {
-        min-height: calc(var(--spacing-80) * 2 + var(--spacing-48) + var(--spacing-24) + var(--spacing-4));
+        display: flex;
+        flex-direction: column;
+        height: calc(var(--spacing-80) * 3);
+        padding: var(--spacing-24);
+      }
+      .feature-card__icon {
+        position: static;
+        align-self: flex-end;
       }
       .feature-card h3 {
-        margin-top: var(--spacing-48);
-        font-size: calc(var(--font-size-14) * 2);
+        margin-top: auto;
+        font-size: calc(var(--font-size-16) * 2);
         line-height: calc(var(--font-size-18) * 2);
       }
-      .feature-card p { max-width: none; }
+      .feature-card h3 br { display: none; }
+      .feature-card p {
+        max-width: none;
+        margin-top: var(--spacing-12);
+      }
 
       .stats {
         --stats-lift: 0;
@@ -1496,18 +1507,27 @@
         z-index: 0;
         top: calc(
           var(--spacing-24)
-          + (var(--spacing-96) * 3 + var(--spacing-40) + var(--spacing-8) - 1px) * 2
+          + (var(--spacing-96) * 3 + var(--spacing-40) - var(--spacing-64) - 1px) * 2
           + var(--spacing-24) * 2
           + var(--spacing-48) + var(--spacing-32)
         );
       }
       .product-grid { gap: var(--spacing-24); }
       .product-card {
+        position: relative;
         min-height: 0;
         padding: var(--spacing-16);
       }
-      .product-card__icon { margin-bottom: var(--spacing-8); }
+      .product-card__icon {
+        position: absolute;
+        top: calc(var(--spacing-16) + var(--spacing-4));
+        right: var(--spacing-16);
+        margin-bottom: 0;
+      }
       .product-card h3 {
+        min-height: calc(var(--spacing-48) + var(--spacing-16));
+        padding-right: calc(var(--spacing-64) + var(--spacing-8));
+        text-align: left;
         font-size: calc(var(--font-size-14) * 2);
         line-height: calc(var(--font-size-18) * 2);
       }
@@ -1526,6 +1546,7 @@
       }
       .difference h2 { margin-bottom: var(--spacing-32); }
       .difference__swoop { display: none; }
+      .compare { gap: 0; }
       .compare__row {
         grid-template-columns: minmax(0, 1fr) repeat(3, var(--spacing-64));
         column-gap: var(--spacing-12);
@@ -1716,7 +1737,7 @@
         </button>
       </div>
       <a class="hero__store" href="#">
-        <img src="assets/app-store-badge.png" width="169" height="56" alt="Download on the App Store" />
+        <img src="assets/app-store-badge.svg" width="170" height="57" alt="Download on the App Store" />
       </a>
     </section>
 
@@ -1739,7 +1760,7 @@
               <img src="assets/icon-history-bg.svg" alt="" />
               <img src="assets/icon-history.svg" alt="" />
             </div>
-            <h3>No search<br>history</h3>
+            <h3>No search <br>history</h3>
             <p>Searches aren’t stored or tied to you.</p>
           </article>
           <article class="feature-card feature-card--unbiased">
@@ -1747,7 +1768,7 @@
               <img src="assets/icon-circle.svg" alt="" />
               <img src="assets/icon-unbiased.svg" alt="" />
             </div>
-            <h3>Unbiased<br>results</h3>
+            <h3>Unbiased <br>results</h3>
             <p>Results based on your query, not your search history.</p>
           </article>
           <article class="feature-card feature-card--gdpr">
@@ -1755,14 +1776,14 @@
               <img src="assets/icon-gdpr-bg.svg" alt="" />
               <img src="assets/icon-gdpr.svg" alt="" />
             </div>
-            <h3>GDPR<br>privacy</h3>
+            <h3>GDPR <br>privacy</h3>
             <p>Protected by strict European privacy laws.</p>
           </article>
           <article class="feature-card feature-card--ai">
             <div class="feature-card__icon" aria-hidden="true">
               <img src="assets/icon-ai-bg.svg" alt="" />
             </div>
-            <h3>AI is<br>optional</h3>
+            <h3>AI is <br>optional</h3>
             <p>All AI features are a choice.</p>
           </article>
           <article class="feature-card feature-card--tracker">
@@ -1770,14 +1791,14 @@
               <img src="assets/icon-circle.svg" alt="" />
               <img src="assets/icon-tracker.svg" alt="" />
             </div>
-            <h3>Tracker<br>protection</h3>
+            <h3>Tracker <br>protection</h3>
             <p>We won’t let ads follow you around the internet.</p>
           </article>
           <article class="feature-card feature-card--local">
             <div class="feature-card__icon" aria-hidden="true">
               <img src="assets/icon-local.svg" alt="" />
             </div>
-            <h3>Private<br>local results</h3>
+            <h3>Private <br>local results</h3>
             <p>Local results without precise location sharing.</p>
           </article>
         </div>
@@ -1816,7 +1837,7 @@
 
     <section class="band products" aria-label="Products">
       <img class="band__wave" src="assets/wave-teal.svg" width="1440" height="1437" alt="" />
-      <img class="band__wave band__wave--mobile" src="assets/wave-teal-mobile.svg?v=8" width="402" height="1535" alt="" />
+      <img class="band__wave band__wave--mobile" src="assets/wave-teal-mobile.svg?v=9" width="402" height="1154" alt="" />
       <div class="band__inner">
         <div class="product-grid">
           <article class="product-card">
@@ -2121,7 +2142,7 @@
       const pill = document.querySelector('.press__pill');
       if (!press || !wave || !pill) return;
 
-      let tealRatio = 1478 / 1535;
+      let tealRatio = 1097 / 1154;
 
       function readTealRatio() {
         const w = wave.naturalWidth;
