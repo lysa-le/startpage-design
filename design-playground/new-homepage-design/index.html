@@ -52,7 +52,18 @@
       background: var(--color-background-tertiary);
     }
     [data-theme="dark"] .hero__lock {
-      background: var(--color-whisper-400);
+      background: var(--color-background-quaternary);
+    }
+    [data-theme="dark"] .hero__lock .hero__lock-light { display: none; }
+    [data-theme="dark"] .hero__lock .hero__lock-dark {
+      display: block;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      translate: none;
+      scale: none;
+      transform: none;
     }
     [data-theme="dark"] .hero__promo-icon {
       background: var(--color-whisper-100);
@@ -623,7 +634,7 @@
       margin-bottom: var(--spacing-24);
       border-radius: var(--radius-full);
       background: var(--color-button-inactive);
-      animation: hero-in 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation: hero-in 0.7s cubic-bezier(0.4, 0, 0.2, 1);
     }
     /* Drawn at 2× and scaled down so the shake stays on a sharper bitmap. */
     .hero__lock svg {
@@ -638,6 +649,7 @@
       transform-origin: center;
       animation: lock-shake 2.2s ease-in-out 1;
     }
+    .hero__lock .hero__lock-dark { display: none; }
     .hero__lock.is-settled svg { animation: none; }
     .hero__lock.is-settled:hover svg {
       animation: lock-shake 2.2s ease-in-out;
@@ -1928,10 +1940,15 @@
     <section class="hero" aria-labelledby="heroTitle">
       <div class="hero__intro">
         <div class="hero__lock" aria-hidden="true">
-          <svg width="88" height="100" viewBox="0 0 44 50" overflow="visible" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="hero__lock-light" width="88" height="100" viewBox="0 0 44 50" overflow="visible" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 18V10A10 10 0 0 1 32 10V18" stroke="#1B1D21" stroke-width="2" stroke-linecap="round"/>
             <rect x="3" y="19" width="38" height="27" rx="6" fill="#FCBB61" stroke="#1B1D21" stroke-width="2"/>
-            <path d="M22 27.2c1.9 0 3.3 1.5 3.3 3.3 0 1.3-.7 2.4-1.8 2.9l.8 5.8c.15.9-.5 1.6-1.3 1.6h-2c-.8 0-1.45-.7-1.3-1.6l.8-5.8c-1.1-.5-1.8-1.6-1.8-2.9 0-1.8 1.4-3.3 3.3-3.3z" fill="#1B1D21"/>
+            <path d="M22 25.7c1.9 0 3.3 1.5 3.3 3.3 0 1.3-.7 2.4-1.8 2.9l.8 5.8c.15.9-.5 1.6-1.3 1.6h-2c-.8 0-1.45-.7-1.3-1.6l.8-5.8c-1.1-.5-1.8-1.6-1.8-2.9 0-1.8 1.4-3.3 3.3-3.3z" fill="#1B1D21"/>
+          </svg>
+          <svg class="hero__lock-dark" width="160" height="160" viewBox="0 0 80 80" overflow="visible" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20.769" y="33.0769" width="38.4615" height="26.9231" rx="6.15385" fill="#FCBB61"/>
+            <path d="M41.9414 51.1064V46.878C42.4866 46.5529 42.9398 46.0857 43.2556 45.5231C43.5714 44.9605 43.7387 44.3221 43.7409 43.6718C43.7433 43.1032 43.6193 42.5416 43.3785 42.0302C43.1376 41.5188 42.7864 41.0713 42.3519 40.7221C41.9173 40.3729 41.411 40.1313 40.8718 40.016C40.3327 39.9006 39.7751 39.9146 39.242 40.0568C38.6098 40.2172 38.0316 40.5517 37.5689 41.0246C37.1062 41.4976 36.7764 42.0913 36.6145 42.7425C36.4215 43.5281 36.4823 44.3572 36.7877 45.1038C37.093 45.8504 37.6263 46.4734 38.3062 46.878V51.1064C38.3062 51.5994 38.4958 52.0721 38.8333 52.4207C39.1707 52.7693 39.6285 52.9651 40.1058 52.9651C40.3451 52.97 40.583 52.9256 40.8055 52.8344C41.028 52.7432 41.2307 52.6071 41.4016 52.434C41.5725 52.2609 41.7083 52.0544 41.801 51.8264C41.8937 51.5984 41.9414 51.3537 41.9414 51.1064Z" fill="#1B1D21"/>
+            <path d="M30.5117 31.8894V26.6443A9.4903 9.4903 0 0 1 49.4923 26.6443V31.8894A1 1 0 0 0 51.4923 31.8894V26.6443A11.4903 11.4903 0 0 0 28.5117 26.6443V31.8894A1 1 0 0 0 30.5117 31.8894Z" fill="#FBFBFD"/>
           </svg>
         </div>
         <h1 class="hero__title" id="heroTitle">Privacy starts <span>here</span>.</h1>
@@ -2395,10 +2412,9 @@
 
     (function settleLock() {
       const lock = document.querySelector('.hero__lock');
-      const svg = lock?.querySelector('svg');
-      if (!lock || !svg) return;
-      svg.addEventListener('animationend', (e) => {
-        if (e.animationName === 'lock-shake' && e.target === svg) lock.classList.add('is-settled');
+      if (!lock) return;
+      lock.addEventListener('animationend', (e) => {
+        if (e.animationName === 'lock-shake' && lock.contains(e.target)) lock.classList.add('is-settled');
       });
     })();
 
