@@ -435,7 +435,10 @@
       width: var(--spacing-16);
       height: var(--spacing-16);
       flex-shrink: 0;
+      transition: rotate 0.25s ease;
     }
+    .site-nav__link:hover svg,
+    .site-nav__link:focus-visible svg { rotate: -24deg; }
     .site-nav__link:hover { color: var(--color-text-brandblue); }
     body.site-nav-open,
     body.login-open { overflow: hidden; }
