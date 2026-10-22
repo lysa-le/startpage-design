@@ -67,6 +67,8 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Stop sideways overflow from opening a scrollbar and a strip of page background. */
+    html { overflow-x: hidden; }
 
     body {
       font-family: var(--font-family);
@@ -753,10 +755,9 @@
     }
     .band__wave {
       position: absolute;
-      left: 50%;
+      left: 0;
       top: 0;
-      transform: translateX(-50%);
-      width: calc(var(--spacing-24) * 60);
+      width: 100%;
       max-width: none;
       height: auto;
       pointer-events: none;
@@ -779,8 +780,8 @@
     /* Lift the curve beside the install promo, and stretch it to both edges. */
     .features .band__wave {
       left: 0;
-      transform: none;
       width: 100%;
+      max-width: none;
       height: calc(100% + 11vh - var(--spacing-24) + var(--spacing-40));
       object-fit: fill;
       top: calc(var(--spacing-24) - 11vh - var(--spacing-40));
@@ -837,7 +838,8 @@
       top: calc(var(--spacing-96) * 2 - var(--spacing-24) - var(--spacing-48));
     }
     .scribble--right {
-      right: 0;
+      /* Inset by the rotation so the tilted stroke stays inside the viewport. */
+      right: var(--spacing-16);
       bottom: calc(var(--spacing-24) * -1);
       z-index: 0;
       transform: rotate(-12deg);
@@ -923,8 +925,8 @@
     .stats .band__inner { z-index: 3; }
     .stats .band__wave {
       left: 0;
-      transform: none;
       width: 100%;
+      max-width: none;
       height: calc(var(--spacing-96) * 10 + var(--spacing-80));
       object-fit: fill;
       top: calc(var(--spacing-80) * -1);
@@ -933,8 +935,9 @@
       display: flex;
       align-items: flex-end;
       gap: var(--spacing-24);
+      container-type: inline-size;
     }
-    .stats__copy { flex: 0 1 auto; min-width: min-content; }
+    .stats__copy { flex: 0 0 auto; min-width: min-content; }
     .stats__row {
       display: flex;
       justify-content: flex-start;
@@ -984,15 +987,23 @@
     .stats__guy {
       position: relative;
       z-index: 5;
-      flex: 0 0 calc(var(--spacing-96) * 3 + var(--spacing-80) + var(--spacing-4) / 2);
+      flex: 0 1 calc(var(--spacing-96) * 3 + var(--spacing-80) + var(--spacing-4) / 2);
       width: calc(var(--spacing-96) * 3 + var(--spacing-80) + var(--spacing-4) / 2);
+      min-width: calc(var(--spacing-96) * 2);
+      max-width: 100%;
       aspect-ratio: 414.593 / 549.565;
       margin-top: 0;
       margin-bottom: calc(var(--spacing-48) * -1);
-      margin-left: var(--spacing-16);
-      transform-origin: bottom center;
-      transform: translate(var(--spacing-32), calc((var(--spacing-96) + var(--spacing-24)) * -1));
+      margin-left: auto;
+      transform-origin: bottom right;
+      transform: translate(0, calc((var(--spacing-96) + var(--spacing-24)) * -1));
       pointer-events: none;
+    }
+    /* Once he would have to shrink onto the stats, drop him.
+       55rem is spacing-96 * 9 + spacing-16. Container queries here
+       don't resolve var(), so the length is written out. */
+    @container (max-width: 55rem) {
+      .stats__guy { display: none; }
     }
     .stats__guy img {
       position: absolute;
@@ -1016,8 +1027,8 @@
        stays tall so its lower edge doesn't open a gap above the heading. */
     .products .band__wave {
       left: 0;
-      transform: none;
       width: 100%;
+      max-width: none;
       top: calc(var(--spacing-96) + var(--spacing-8));
       height: calc(var(--spacing-96) * 15);
       object-fit: fill;
@@ -1134,6 +1145,7 @@
       bottom: 0;
       transform: scaleX(-1);
       width: 100%;
+      max-width: none;
       height: calc(var(--spacing-96) * 15);
       object-fit: fill;
     }
@@ -1422,6 +1434,17 @@
       border-radius: var(--radius-sm);
     }
 
+    /* The fixed search width plus the outward header shift overflows
+       the window between here and the 1100px layout. Let the field shrink. */
+    @media (max-width: 1440px) {
+      .hp-header { grid-template-columns: auto minmax(0, 1fr) auto; }
+      .search-field {
+        width: 100%;
+        min-width: 0;
+        max-width: calc(var(--spacing-24) * 26 + var(--spacing-16));
+      }
+    }
+
     @media (max-width: 1100px) {
       .hp-header,
       .band__inner,
@@ -1429,10 +1452,9 @@
       .hp-logo,
       .hp-actions { transform: none; }
       .hp-header { grid-template-columns: auto minmax(0, 1fr) auto; }
-      .search-field { width: 100%; min-width: 0; }
+      .search-field { width: 100%; min-width: 0; max-width: none; }
       .feature-grid,
       .product-grid { grid-template-columns: 1fr; }
-      .stats__guy,
       .scribble { display: none; }
       .compare__row { grid-template-columns: minmax(0, 1fr) var(--spacing-80) repeat(2, var(--spacing-48)); padding-inline: var(--spacing-16); }
       .compare__logo img,
@@ -1605,6 +1627,7 @@
         object-fit: contain;
       }
       .stats__head { display: block; }
+      .stats__guy { display: none; }
       .stats__row {
         flex-direction: column;
         align-items: center;
