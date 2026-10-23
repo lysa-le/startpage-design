@@ -10,7 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="tokens.css" />
   <style>
+    /* Pin every semantic token here. tokens.css also flips them inside
+       prefers-color-scheme, which would make a dark phone diverge from
+       the desktop toggle. */
     [data-theme="dark"] {
+      color-scheme: dark;
+      background: var(--color-black-900);
       --color-background-primary:    var(--color-black-900);
       --color-background-secondary:  var(--color-black-550);
       --color-background-tertiary:   var(--color-black-800);
@@ -21,19 +26,67 @@
       --color-text-inverted:         var(--color-black-800);
       --color-text-brandblue:        var(--color-brand-blue-100);
       --color-text-link:             var(--color-brand-blue-100);
+      --color-text-teal:             var(--color-teal-550);
+      --color-text-error:            var(--color-red-500);
       --color-icon-primary:          var(--color-whisper-200);
       --color-icon-secondary:        var(--color-brand-blue-100);
       --color-icon-tertiary:         var(--color-midnight-100);
       --color-stroke-primary:        var(--color-black-400);
       --color-stroke-secondary:      var(--color-black-550);
       --color-stroke-primary-button: var(--color-brand-blue-100);
+      --color-stroke-error:          var(--color-red-500);
+      --color-button-brandblue:      var(--color-brand-blue-400);
+      --color-button-brandbluehover: var(--color-brand-blue-300);
+      --color-button-purple:         var(--color-purple-500);
+      --color-button-purplehover:    var(--color-purple-400);
+      --color-button-teal:           var(--color-teal-400);
+      --color-button-tealhover:      var(--color-teal-200);
       --color-button-inactive:       var(--color-black-600);
       --color-button-productfilled:  var(--color-black-550);
       --color-button-productfilledhover: var(--color-black-400);
+      --color-button-social:         var(--color-brand-blue-400);
+      --color-accent-gold:           var(--color-gold-500);
+      --color-accent-gold-alt:       var(--color-gold-200);
+      --color-accent-teal:           var(--color-teal-400);
+      --color-accent-teal-alt:       var(--color-teal-100);
     }
     /* Secondary text at midnight 300 is 3.6:1 on white. Midnight 400 clears 4.5:1. */
     [data-theme="light"] {
-      --color-text-secondary: var(--color-midnight-400);
+      color-scheme: light;
+      background: var(--color-whisper-50);
+      --color-background-primary:    var(--color-whisper-0);
+      --color-background-secondary:  var(--color-whisper-300);
+      --color-background-tertiary:   var(--color-brand-blue-50);
+      --color-background-quaternary: var(--color-whisper-50);
+      --color-text-primary:          var(--color-black-700);
+      --color-text-secondary:        var(--color-midnight-400);
+      --color-text-tertiary:         var(--color-midnight-400);
+      --color-text-inverted:         var(--color-whisper-0);
+      --color-text-brandblue:        var(--color-brand-blue-400);
+      --color-text-link:             var(--color-brand-blue-600);
+      --color-text-teal:             var(--color-teal-550);
+      --color-text-error:            var(--color-red-500);
+      --color-icon-primary:          var(--color-black-700);
+      --color-icon-secondary:        var(--color-brand-blue-400);
+      --color-icon-tertiary:         var(--color-midnight-300);
+      --color-stroke-primary:        var(--color-whisper-500);
+      --color-stroke-secondary:      var(--color-whisper-200);
+      --color-stroke-primary-button: var(--color-brand-blue-400);
+      --color-stroke-error:          var(--color-red-500);
+      --color-button-brandblue:      var(--color-brand-blue-400);
+      --color-button-brandbluehover: var(--color-brand-blue-300);
+      --color-button-purple:         var(--color-purple-500);
+      --color-button-purplehover:    var(--color-purple-400);
+      --color-button-teal:           var(--color-teal-400);
+      --color-button-tealhover:      var(--color-teal-200);
+      --color-button-productfilled:  var(--color-whisper-300);
+      --color-button-productfilledhover: var(--color-whisper-400);
+      --color-button-inactive:       var(--color-whisper-100);
+      --color-button-social:         var(--color-brand-blue-400);
+      --color-accent-gold:           var(--color-gold-500);
+      --color-accent-gold-alt:       var(--color-gold-200);
+      --color-accent-teal:           var(--color-teal-400);
+      --color-accent-teal-alt:       var(--color-teal-100);
     }
 
     /* Dark surfaces: page is primary, search sits on tertiary. */
@@ -45,6 +98,8 @@
     [data-theme="dark"] .press {
       background: var(--color-background-primary);
     }
+    /* The store badge artwork is black. Invert it so it reads on the dark page. */
+    [data-theme="dark"] .hero__store img { filter: invert(1); }
     [data-theme="dark"] .theme-toggle {
       border-color: var(--color-midnight-200);
     }
@@ -611,8 +666,10 @@
       text-align: center;
       margin-top: var(--spacing-40);
       /* Keep the lock and headline centered, with the purple swoop and
-         the illustration only peeking above the bottom of the viewport. */
-      min-height: calc(
+         the illustration only peeking above the bottom of the viewport.
+         A fixed height (not a minimum) keeps the install banner on the
+         first screen when the window gets short. */
+      height: calc(
         100vh
         - var(--spacing-40)
         - var(--spacing-40) - var(--spacing-48) - var(--spacing-8) - var(--spacing-16)
@@ -626,7 +683,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transform: translateY(calc(var(--spacing-24) * -1));
+      /* The banner is pinned, so this shift keeps the lock and headline
+         in the same place they sat when the banner was still in the flow. */
+      transform: translateY(calc((var(--spacing-96) + var(--spacing-32) + var(--spacing-4)) * -1));
     }
     .hero__lock {
       position: relative;
@@ -665,23 +724,19 @@
       animation: hero-in 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.08s both;
     }
     .hero__title span { color: var(--color-text-primary); }
-    .hero__lede {
-      margin-top: var(--spacing-24);
-      font-size: var(--font-body-md);
-      line-height: var(--font-body-md-lh);
-      animation: hero-in 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.16s both;
-    }
     @property --promo-ring-angle {
       syntax: "<angle>";
       inherits: false;
       initial-value: 0deg;
     }
     .hero__promo {
-      position: relative;
+      position: absolute;
+      left: 50%;
+      bottom: calc(var(--spacing-48) + var(--spacing-24));
       display: flex;
       align-items: center;
       gap: var(--spacing-16);
-      margin-top: calc(var(--spacing-96) + var(--spacing-48));
+      translate: -50% 0;
       padding: var(--spacing-12);
       border-radius: var(--radius-xl);
       background: var(--color-button-inactive);
@@ -724,7 +779,7 @@
     }
     .hero__promo:hover,
     .hero__promo:focus-within {
-      translate: 0 calc(var(--spacing-4) * -1);
+      translate: -50% calc(var(--spacing-4) * -1);
       box-shadow: var(--shadow-dropdown);
     }
     .hero__promo-icon {
@@ -779,6 +834,32 @@
     [data-theme="dark"] .hero__install { color: var(--color-text-inverted); }
     .hero__store { display: none; }
     .mobile-break { display: none; }
+
+    /* Short windows: keep the pinned banner clear of the lock and headline. */
+    @media (max-height: 700px) and (min-width: 721px) {
+      .hero__lock {
+        width: var(--spacing-64);
+        height: var(--spacing-64);
+        margin-bottom: var(--spacing-16);
+      }
+      .hero__lock svg { scale: 0.4; }
+      .hero__title {
+        font-size: var(--font-heading-md);
+        line-height: var(--font-heading-md-lh);
+      }
+    }
+    @media (max-height: 560px) and (min-width: 721px) {
+      .hero__lock {
+        width: var(--spacing-48);
+        height: var(--spacing-48);
+        margin-bottom: var(--spacing-12);
+      }
+      .hero__lock svg { scale: 0.3; }
+      .hero__title {
+        font-size: var(--font-heading-sm);
+        line-height: var(--font-heading-sm-lh);
+      }
+    }
 
     .band {
       position: relative;
@@ -1360,7 +1441,6 @@
       .hero__lock svg,
       .hero__lock.is-settled:hover svg,
       .hero__title,
-      .hero__lede,
       .hero__promo,
       .hero__install,
       .hero__install-arrow,
@@ -1371,7 +1451,7 @@
       }
       .hero__promo:hover,
       .hero__promo:focus-within {
-        translate: none;
+        translate: -50% 0;
         box-shadow: none;
       }
       .hero__promo::after {
@@ -1546,13 +1626,13 @@
       .hp-footer { order: 2; }
 
       .hero {
+        height: auto;
         min-height: 0;
         margin-top: 0;
         padding: var(--spacing-24) var(--spacing-16) 0;
       }
       .hero__intro { transform: none; }
       .hero__lock,
-      .hero__lede,
       .hero__promo { display: none; }
       .hero__title {
         margin-top: var(--spacing-48);
@@ -1798,6 +1878,15 @@
         font-size: var(--font-body-md);
         line-height: var(--font-body-md-lh);
       }
+
+      [data-theme="dark"] .hp-actions,
+      [data-theme="dark"] .hero__store,
+      [data-theme="dark"] .press {
+        background: var(--color-background-primary);
+      }
+      [data-theme="dark"] .search-field {
+        background: var(--color-background-tertiary);
+      }
     }
   </style>
 </head>
@@ -1965,7 +2054,6 @@
           </svg>
         </div>
         <h1 class="hero__title" id="heroTitle">Privacy starts <span>here</span>.</h1>
-        <p class="hero__lede">Startpage delivers the results you want without collecting your data.</p>
       </div>
       <div class="hero__promo">
         <div class="hero__promo-icon" aria-hidden="true">

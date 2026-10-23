@@ -10,7 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="tokens.css" />
   <style>
+    /* Pin every semantic token here. tokens.css also flips them inside
+       prefers-color-scheme, which would make a dark phone diverge from
+       the desktop toggle. */
     [data-theme="dark"] {
+      color-scheme: dark;
+      background: var(--color-black-900);
       --color-background-primary:    var(--color-black-900);
       --color-background-secondary:  var(--color-black-550);
       --color-background-tertiary:   var(--color-black-800);
@@ -21,19 +26,67 @@
       --color-text-inverted:         var(--color-black-800);
       --color-text-brandblue:        var(--color-brand-blue-100);
       --color-text-link:             var(--color-brand-blue-100);
+      --color-text-teal:             var(--color-teal-550);
+      --color-text-error:            var(--color-red-500);
       --color-icon-primary:          var(--color-whisper-200);
       --color-icon-secondary:        var(--color-brand-blue-100);
       --color-icon-tertiary:         var(--color-midnight-100);
       --color-stroke-primary:        var(--color-black-400);
       --color-stroke-secondary:      var(--color-black-550);
       --color-stroke-primary-button: var(--color-brand-blue-100);
+      --color-stroke-error:          var(--color-red-500);
+      --color-button-brandblue:      var(--color-brand-blue-400);
+      --color-button-brandbluehover: var(--color-brand-blue-300);
+      --color-button-purple:         var(--color-purple-500);
+      --color-button-purplehover:    var(--color-purple-400);
+      --color-button-teal:           var(--color-teal-400);
+      --color-button-tealhover:      var(--color-teal-200);
       --color-button-inactive:       var(--color-black-600);
       --color-button-productfilled:  var(--color-black-550);
       --color-button-productfilledhover: var(--color-black-400);
+      --color-button-social:         var(--color-brand-blue-400);
+      --color-accent-gold:           var(--color-gold-500);
+      --color-accent-gold-alt:       var(--color-gold-200);
+      --color-accent-teal:           var(--color-teal-400);
+      --color-accent-teal-alt:       var(--color-teal-100);
     }
     /* Secondary text at midnight 300 is 3.6:1 on white. Midnight 400 clears 4.5:1. */
     [data-theme="light"] {
-      --color-text-secondary: var(--color-midnight-400);
+      color-scheme: light;
+      background: var(--color-whisper-50);
+      --color-background-primary:    var(--color-whisper-0);
+      --color-background-secondary:  var(--color-whisper-300);
+      --color-background-tertiary:   var(--color-brand-blue-50);
+      --color-background-quaternary: var(--color-whisper-50);
+      --color-text-primary:          var(--color-black-700);
+      --color-text-secondary:        var(--color-midnight-400);
+      --color-text-tertiary:         var(--color-midnight-400);
+      --color-text-inverted:         var(--color-whisper-0);
+      --color-text-brandblue:        var(--color-brand-blue-400);
+      --color-text-link:             var(--color-brand-blue-600);
+      --color-text-teal:             var(--color-teal-550);
+      --color-text-error:            var(--color-red-500);
+      --color-icon-primary:          var(--color-black-700);
+      --color-icon-secondary:        var(--color-brand-blue-400);
+      --color-icon-tertiary:         var(--color-midnight-300);
+      --color-stroke-primary:        var(--color-whisper-500);
+      --color-stroke-secondary:      var(--color-whisper-200);
+      --color-stroke-primary-button: var(--color-brand-blue-400);
+      --color-stroke-error:          var(--color-red-500);
+      --color-button-brandblue:      var(--color-brand-blue-400);
+      --color-button-brandbluehover: var(--color-brand-blue-300);
+      --color-button-purple:         var(--color-purple-500);
+      --color-button-purplehover:    var(--color-purple-400);
+      --color-button-teal:           var(--color-teal-400);
+      --color-button-tealhover:      var(--color-teal-200);
+      --color-button-productfilled:  var(--color-whisper-300);
+      --color-button-productfilledhover: var(--color-whisper-400);
+      --color-button-inactive:       var(--color-whisper-100);
+      --color-button-social:         var(--color-brand-blue-400);
+      --color-accent-gold:           var(--color-gold-500);
+      --color-accent-gold-alt:       var(--color-gold-200);
+      --color-accent-teal:           var(--color-teal-400);
+      --color-accent-teal-alt:       var(--color-teal-100);
     }
 
     /* Dark surfaces: page is primary, search sits on tertiary. */
@@ -45,6 +98,8 @@
     [data-theme="dark"] .press {
       background: var(--color-background-primary);
     }
+    /* The store badge artwork is black. Invert it so it reads on the dark page. */
+    [data-theme="dark"] .hero__store img { filter: invert(1); }
     [data-theme="dark"] .theme-toggle {
       border-color: var(--color-midnight-200);
     }
@@ -121,6 +176,7 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      gap: var(--spacing-16);
       max-width: calc(var(--spacing-24) * 60);
       margin: 0 auto;
       padding: var(--spacing-40) calc(var(--spacing-24) * 7 + var(--spacing-12)) var(--spacing-16);
@@ -145,6 +201,23 @@
     }
     .hp-header.is-scrolled::before {
       box-shadow: var(--shadow-search);
+    }
+    /* Compact logo and search stay out of the bar until the hero search scrolls away. */
+    .hp-header__logo,
+    .hp-header .hp-header__search { display: none; }
+    .hp-header.is-docked {
+      display: grid;
+      grid-template-columns: 1fr minmax(0, calc(var(--spacing-24) * 26 + var(--spacing-16))) 1fr;
+      justify-content: initial;
+    }
+    .hp-header.is-docked .hp-header__logo,
+    .hp-header.is-docked .hp-header__search {
+      animation: header-dock 0.2s ease;
+    }
+    .hp-header.is-docked .hp-header__logo { display: block; }
+    .hp-header.is-docked .hp-header__search { display: flex; }
+    @keyframes header-dock {
+      from { opacity: 0; }
     }
     .hp-logo {
       position: relative;
@@ -650,9 +723,8 @@
       animation: lock-shake 2.2s ease-in-out;
     }
     .hero__title {
-      display: none;
-      font-size: var(--font-heading-lg);
-      line-height: var(--font-heading-lg-lh);
+      font-size: var(--font-heading-xs);
+      line-height: var(--font-heading-xs-lh);
       font-weight: var(--font-weight-bold);
       letter-spacing: -0.02em;
       animation: hero-in 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.08s both;
@@ -669,10 +741,18 @@
       inherits: false;
       initial-value: 0deg;
     }
-    .hero__promo {
+    .hero__dock {
       position: absolute;
       left: 50%;
       bottom: calc(var(--spacing-48) + var(--spacing-24));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: calc(var(--spacing-24) + var(--spacing-4));
+      translate: -50% 0;
+    }
+    .hero__promo {
+      position: relative;
       display: flex;
       align-items: center;
       gap: var(--spacing-16);
@@ -680,7 +760,6 @@
       padding: var(--spacing-12);
       border-radius: var(--radius-xl);
       background: var(--color-button-inactive);
-      translate: -50% 0;
       animation: hero-in 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.28s both;
       transition: translate 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
     }
@@ -720,7 +799,7 @@
     }
     .hero__promo:hover,
     .hero__promo:focus-within {
-      translate: -50% calc(var(--spacing-4) * -1);
+      translate: 0 calc(var(--spacing-4) * -1);
       box-shadow: var(--shadow-dropdown);
     }
     .hero__promo-icon {
@@ -1351,6 +1430,8 @@
       .login-modal__caret,
       .hp-header,
       .hp-header::before,
+      .hp-header__logo,
+      .hp-header__search,
       .login-overlay,
       .hero__lock,
       .hero__lock svg,
@@ -1367,7 +1448,7 @@
       }
       .hero__promo:hover,
       .hero__promo:focus-within {
-        translate: -50% 0;
+        translate: none;
         box-shadow: none;
       }
       .hero__promo::after {
@@ -1492,7 +1573,12 @@
 
     @media (max-width: 720px) {
       body { display: flex; flex-direction: column; }
-      .hp-header { display: contents; }
+      .hp-header,
+      .hp-header.is-docked { display: contents; }
+      .hp-header__logo,
+      .hp-header__search,
+      .hp-header.is-docked .hp-header__logo,
+      .hp-header.is-docked .hp-header__search { display: none; }
       .hp-actions,
       .hp-logo,
       .search-field,
@@ -1550,6 +1636,11 @@
         justify-content: flex-start;
         gap: 0;
         transform: none;
+      }
+      .hero__dock {
+        position: static;
+        display: contents;
+        translate: none;
       }
       .hero__promo { display: none; }
       .hero__title {
@@ -1797,6 +1888,15 @@
         font-size: var(--font-body-md);
         line-height: var(--font-body-md-lh);
       }
+
+      [data-theme="dark"] .hp-actions,
+      [data-theme="dark"] .hero__store,
+      [data-theme="dark"] .press {
+        background: var(--color-background-primary);
+      }
+      [data-theme="dark"] .search-field {
+        background: var(--color-background-tertiary);
+      }
     }
   </style>
 </head>
@@ -1810,6 +1910,44 @@
   </div>
 
   <header class="hp-header">
+    <a class="hp-logo hp-header__logo" href="#" aria-label="Startpage">
+    <svg class="hp-logo__word" aria-hidden="true" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 132 29.5625" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g id="logo" clip-path="url(#clip0_header)">
+    <path id="Vector" fill-rule="evenodd" clip-rule="evenodd" d="M0.31905 26.2401C0.639105 25.7807 1.16491 25.4821 1.8736 25.3673C21.8542 22.0825 42.1091 22.0596 62.0897 25.2754C62.6384 25.3673 62.9813 25.528 63.1642 25.7118C63.3242 25.8726 63.3928 26.0793 63.3471 26.3779C63.3014 26.6306 63.1871 26.7914 63.0042 26.8833C62.7756 26.9981 62.4098 27.0441 61.8611 26.9752C42.0634 24.5633 22.1285 25.3443 2.60516 29.3181C2.42227 29.3411 2.23938 29.3641 2.07935 29.3641H1.91933C1.43924 29.3411 1.09633 29.1803 0.890577 29.0425C0.433355 28.7439 0.136161 28.2615 0.0218552 27.7102C-0.0467281 27.1589 0.0447163 26.6306 0.31905 26.2401Z" fill="url(#paint0_header)"/>
+    <path id="Union" d="M76.2422 5.71973C77.4765 5.7198 78.5741 6.01805 79.5342 6.66113C80.4942 7.30428 81.2258 8.17731 81.7744 9.30273C82.323 10.4512 82.5967 11.7834 82.5967 13.2764C82.5967 14.7693 82.323 16.0787 81.7744 17.2041C81.2258 18.3295 80.4941 19.2026 79.5342 19.7998C78.5741 20.4199 77.4765 20.7187 76.2422 20.7188C75.0763 20.7188 74.0474 20.4428 73.1787 19.8916C72.5615 19.5011 72.1037 18.9962 71.7607 18.376V26.875H67.4863V10.2217C67.4863 9.53261 67.4633 8.84337 67.4404 8.1543C67.4176 7.46522 67.3493 6.77599 67.2578 6.08691H71.2812L71.5557 8.54492C71.8757 7.74097 72.4014 7.07468 73.1787 6.56934C74.0474 5.99518 75.0764 5.71973 76.2422 5.71973ZM107.562 5.71973C108.727 5.71975 109.756 6.01771 110.647 6.5918C111.287 7.00521 111.791 7.51077 112.134 8.13086V6.08691H116.386V19.8232C116.386 22.143 115.723 23.8886 114.42 25.083C113.117 26.2775 111.173 26.875 108.636 26.875C106.373 26.875 104.384 26.4386 102.692 25.543L103.332 22.3496C104.201 22.786 105.046 23.1077 105.915 23.3145C106.784 23.5212 107.653 23.6357 108.499 23.6357C109.733 23.6357 110.648 23.3603 111.242 22.7861C111.859 22.2119 112.156 21.3392 112.156 20.168V17.6406C111.951 17.9391 111.722 18.2381 111.448 18.5137C110.968 18.996 110.396 19.3635 109.733 19.6621C109.048 19.9607 108.339 20.0986 107.562 20.0986C106.304 20.0986 105.206 19.8003 104.246 19.2031C103.286 18.6059 102.532 17.7787 101.983 16.6992C101.435 15.6197 101.16 14.3562 101.16 12.9092C101.16 11.4621 101.435 10.2212 101.983 9.1416C102.532 8.08531 103.286 7.23582 104.246 6.63867C105.206 6.01848 106.327 5.71973 107.562 5.71973ZM8.43555 0C9.39571 0 10.3336 0.0915978 11.248 0.275391C12.1624 0.482145 13.008 0.735505 13.7852 1.08008C14.5396 1.40171 15.2027 1.83786 15.7285 2.32031L14.3115 5.51367C13.3971 4.82448 12.4595 4.29578 11.4766 3.95117C10.4935 3.60656 9.51019 3.44629 8.48145 3.44629C7.3384 3.44629 6.42411 3.67626 5.73828 4.13574C5.05251 4.59522 4.70898 5.21547 4.70898 6.01953C4.70904 6.45584 4.82348 6.8235 5.09766 7.12207C5.37196 7.4207 5.80669 7.69606 6.42383 7.92578C7.04108 8.1785 7.88744 8.40842 8.96191 8.66113C10.2191 8.9368 11.3161 9.23597 12.2305 9.60352C13.1677 9.97107 13.9222 10.3843 14.5166 10.8438C15.111 11.3032 15.5454 11.8548 15.7969 12.4521C16.094 13.0724 16.2314 13.7614 16.2314 14.5654C16.2314 15.829 15.911 16.9316 15.248 17.8506C14.5851 18.7695 13.6251 19.4819 12.3906 19.9873C11.1333 20.4927 9.64701 20.7461 7.88672 20.7461C6.88095 20.7461 5.87509 20.6535 4.91504 20.4697C3.95492 20.2859 3.04016 20.0106 2.19434 19.666C1.34859 19.3214 0.617188 18.8847 0 18.4023L1.44043 15.209C2.44626 15.8981 3.4754 16.4269 4.5498 16.7715C5.62406 17.116 6.7441 17.2764 7.93262 17.2764C9.21281 17.2764 10.196 17.0698 10.8818 16.6562C11.5675 16.2428 11.91 15.6686 11.9102 14.9336C11.9102 14.4971 11.7509 14.1287 11.4766 13.8301C11.2023 13.5085 10.7449 13.2561 10.1279 13.0264C9.5107 12.7966 8.66445 12.5666 7.63574 12.3369C6.3327 12.0612 5.21228 11.7631 4.29785 11.3955C3.38341 11.0509 2.62914 10.6368 2.05762 10.1543C1.48612 9.69482 1.07413 9.14325 0.799805 8.5C0.548453 7.85684 0.411135 7.12178 0.411133 6.29492C0.411133 5.10027 0.75402 4.04304 1.41699 3.07812C2.10282 2.13622 3.04075 1.37851 4.22949 0.827148C5.44105 0.275831 6.83541 2.26822e-05 8.43555 0ZM34.0635 5.71973C35.2291 5.71979 36.2346 5.99528 37.126 6.56934C37.7661 6.9828 38.2469 7.48821 38.5898 8.1084H38.6123V6.08691H42.8193V20.5117H38.6123V18.376C38.2694 18.9961 37.7895 19.5246 37.1494 19.915C36.2578 20.4663 35.229 20.7422 34.0859 20.7422C32.8288 20.7422 31.7316 20.4203 30.7715 19.8232C29.8113 19.203 29.0561 18.3531 28.5303 17.2275C28.0045 16.1021 27.7305 14.7927 27.7305 13.2998C27.7305 11.784 27.9818 10.4745 28.5303 9.32617C29.0789 8.17767 29.8113 7.3043 30.7715 6.66113C31.7316 6.04108 32.8291 5.71973 34.0635 5.71973ZM90.3467 5.71973C91.5125 5.71973 92.5186 5.99517 93.4102 6.56934C94.0503 6.9828 94.5311 7.48821 94.874 8.1084V6.08691H99.1025V20.5117H94.8965V18.376C94.5536 18.9961 94.0736 19.5246 93.4336 19.915C92.5421 20.4663 91.5131 20.7422 90.3701 20.7422C89.1128 20.7422 88.0149 20.4205 87.0547 19.8232C86.0946 19.2031 85.3402 18.353 84.8145 17.2275C84.2887 16.1021 84.0147 14.7927 84.0146 13.2998C84.0146 11.784 84.2659 10.4746 84.8145 9.32617C85.3631 8.17777 86.0946 7.30428 87.0547 6.66113C88.0148 6.04101 89.1123 5.71979 90.3467 5.71973ZM61.6338 6.06445H65.291V9.28027H61.6338V14.9072C61.6338 15.4584 61.7475 15.9182 61.9531 16.2627C62.1589 16.6072 62.4335 16.8602 62.7764 16.998C63.1193 17.1359 63.4854 17.2051 63.874 17.2051C64.1026 17.2051 64.3314 17.1812 64.5371 17.1582C64.7656 17.1123 65.0169 17.0664 65.291 17.0205V20.3057C64.9025 20.4664 64.4911 20.581 64.1025 20.627C63.6911 20.6959 63.2795 20.7187 62.8223 20.7188C61.062 20.7188 59.7127 20.2138 58.7754 19.2031C57.8382 18.1925 57.3809 16.7681 57.3809 14.9766V2.71094L61.6338 1.31641V6.06445ZM125.462 5.65039C126.788 5.65041 127.954 5.94968 128.937 6.54688C129.92 7.14409 130.674 7.97071 131.2 9.07324C131.726 10.1758 132 11.4621 132 12.9551L131.954 14.3789H122.604C122.742 15.2288 123.015 15.8956 123.427 16.3779C124.067 17.0899 125.027 17.457 126.33 17.457C127.084 17.457 127.84 17.3425 128.571 17.0898C129.303 16.8372 129.988 16.4925 130.605 16.0332L131.726 18.9277C131.04 19.4789 130.194 19.8923 129.188 20.2139C128.206 20.5124 127.199 20.6728 126.171 20.6729C124.571 20.6729 123.198 20.3511 122.032 19.7539C120.867 19.1337 119.975 18.2836 119.357 17.1582C118.74 16.0557 118.421 14.7233 118.421 13.1846C118.421 11.6916 118.741 10.3823 119.335 9.25684C119.929 8.1085 120.752 7.2359 121.804 6.59277C122.855 5.97258 124.067 5.65039 125.462 5.65039ZM54.5234 5.74219C54.8205 5.74219 55.0722 5.76562 55.3008 5.81152V9.64746C54.8437 9.50971 54.3867 9.44045 53.9297 9.44043C53.1754 9.44043 52.5351 9.60138 52.0322 9.87695C51.5293 10.1756 51.1405 10.5664 50.8662 11.0947C50.5919 11.623 50.4541 12.2431 50.4541 12.9551V20.4893H46.1797V10.1982C46.1797 9.50924 46.1566 8.81986 46.1338 8.13086C46.1109 7.44189 46.0426 6.75245 45.9512 6.06348H49.9746L50.2715 8.56738C50.5686 7.80953 51.0034 7.18982 51.5977 6.73047C52.4434 6.06442 53.4263 5.74226 54.5234 5.74219ZM35.2979 9.02734C34.2692 9.02734 33.4459 9.39449 32.8516 10.1523C32.2572 10.9104 31.96 11.9446 31.96 13.2998C31.96 14.6319 32.2566 15.6659 32.8281 16.3779C33.3997 17.09 34.2234 17.4346 35.2979 17.4346C36.3493 17.4345 37.1492 17.0665 37.7207 16.3545C38.2922 15.6424 38.5898 14.6086 38.5898 13.2764C38.5898 11.8983 38.2922 10.8649 37.7207 10.1299C37.1492 9.39491 36.3265 9.02742 35.2979 9.02734ZM75.0303 8.98145C73.9558 8.98145 73.1331 9.34896 72.5615 10.084C71.99 10.819 71.7149 11.8753 71.7148 13.2305C71.7148 14.5857 71.99 15.6424 72.5615 16.3545C73.133 17.0664 73.9559 17.4346 75.0303 17.4346C76.0816 17.4345 76.8816 17.0897 77.4531 16.3779C78.0246 15.6659 78.2994 14.6319 78.3223 13.2539C78.3223 11.9216 78.0247 10.8645 77.4531 10.1064C76.8816 9.37161 76.0588 8.98149 75.0303 8.98145ZM91.6045 9.02734C90.5758 9.02734 89.7526 9.39441 89.1582 10.1523C88.5638 10.9104 88.2666 11.9675 88.2666 13.2998C88.2666 14.6319 88.5643 15.6659 89.1357 16.3779C89.7073 17.0897 90.5302 17.4346 91.6045 17.4346C92.656 17.4346 93.4558 17.0665 94.0273 16.3545C94.5989 15.6424 94.8736 14.6086 94.8965 13.2764C94.8965 11.8982 94.5988 10.8649 94.0273 10.1299C93.4558 9.39487 92.6332 9.02736 91.6045 9.02734ZM108.818 9.00391C107.767 9.004 106.921 9.34907 106.327 10.0381C105.71 10.7271 105.412 11.6685 105.412 12.8857C105.412 14.1031 105.71 15.0677 106.327 15.7568C106.944 16.4689 107.767 16.8135 108.796 16.8135C109.825 16.8135 110.648 16.4694 111.242 15.7803C111.837 15.0912 112.133 14.1265 112.156 12.9092C112.156 11.7148 111.882 10.7496 111.288 10.0605C110.694 9.34847 109.87 9.00391 108.818 9.00391ZM125.576 8.68262C124.593 8.68262 123.839 9.02723 123.29 9.73926C122.97 10.1986 122.742 10.7499 122.604 11.4619H128.319C128.228 10.681 128.022 10.0609 127.656 9.60156C127.176 8.98142 126.491 8.68264 125.576 8.68262ZM61.6338 1.31641V1.30957H61.6562L61.6338 1.31641Z" fill="currentColor"/>
+    </g>
+    <defs>
+    <linearGradient id="paint0_header" x1="6.50979" y1="23.1823" x2="63.2554" y2="29.3597" gradientUnits="userSpaceOnUse">
+    <stop stop-color="var(--color-brand-blue-400)"/>
+    <stop offset="1" stop-color="var(--color-teal-200)"/>
+    </linearGradient>
+    <clipPath id="clip0_header">
+    <rect width="132" height="29.5625" fill="white"/>
+    </clipPath>
+    </defs>
+    </svg>
+    <svg class="hp-logo__mark" aria-hidden="true" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 7.90993 19.4097" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path id="Vector" d="M4.27502 0L0 1.40117V4.77778V7.99359V13.6672C0 15.4589 0.457221 16.883 1.39453 17.8937C2.33183 18.9044 3.68063 19.4097 5.44094 19.4097C5.89816 19.4097 6.30966 19.3867 6.72116 19.3178C7.1098 19.2719 7.5213 19.157 7.90993 18.9963V15.7115C7.6356 15.7575 7.38413 15.8034 7.15552 15.8494C6.94977 15.8723 6.72116 15.8953 6.49255 15.8953C6.10391 15.8953 5.73813 15.8264 5.39522 15.6886C5.0523 15.5507 4.77797 15.2981 4.57222 14.9535C4.36647 14.609 4.25216 14.1496 4.25216 13.5983V7.97062H7.90993V4.75481H4.25216V0H4.27502Z" fill="currentColor"/>
+    </svg>
+    </a>
+    <form class="search-field hp-header__search" id="headerSearchForm" role="search">
+    <input class="search-field__input" type="search" name="q" placeholder="Search privately" aria-label="Search" autocomplete="off" spellcheck="false" />
+    <span class="search-field__caret" aria-hidden="true"></span>
+    <button type="button" class="search-field__clear" aria-label="Clear search">
+    <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true">
+    <line x1="1" y1="1" x2="9" y2="9"/>
+    <line x1="9" y1="1" x2="1" y2="9"/>
+    </svg>
+    </button>
+    <button type="submit" class="search-field__submit" aria-label="Submit search">
+    <svg class="search-field__circle" viewBox="-1 -1 17.8333 17.8333" fill="none" aria-hidden="true">
+    <circle cx="7.91667" cy="7.91667" r="6.66667" stroke="currentColor" stroke-width="2.5"/>
+    </svg>
+    <svg class="search-field__handle" viewBox="-1 -1 9.91667 9.91667" fill="none" aria-hidden="true">
+    <path d="M1.25 1.25L6.66667 6.66667" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    </button>
+    </form>
     <div class="hp-actions">
       <button type="button" class="hp-login" id="loginToggle" aria-haspopup="dialog" aria-expanded="false" aria-controls="loginModal">Log In</button>
       <button type="button" class="hp-menu" id="siteNavToggle" aria-label="Open menu" aria-haspopup="dialog" aria-expanded="false" aria-controls="siteNav">
@@ -1911,10 +2049,10 @@
   </div>
 
   <main>
-    <section class="hero" aria-label="Startpage">
+    <section class="hero" aria-labelledby="heroTitle">
       <div class="hero__intro">
-            <a class="hp-logo" href="#" aria-label="Startpage">
-              <svg class="hp-logo__word" aria-hidden="true" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 132 29.5625" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <a class="hp-logo" href="#" aria-label="Startpage">
+        <svg class="hp-logo__word" aria-hidden="true" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 132 29.5625" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g id="logo" clip-path="url(#clip0_0_312)">
         <path id="Vector" fill-rule="evenodd" clip-rule="evenodd" d="M0.31905 26.2401C0.639105 25.7807 1.16491 25.4821 1.8736 25.3673C21.8542 22.0825 42.1091 22.0596 62.0897 25.2754C62.6384 25.3673 62.9813 25.528 63.1642 25.7118C63.3242 25.8726 63.3928 26.0793 63.3471 26.3779C63.3014 26.6306 63.1871 26.7914 63.0042 26.8833C62.7756 26.9981 62.4098 27.0441 61.8611 26.9752C42.0634 24.5633 22.1285 25.3443 2.60516 29.3181C2.42227 29.3411 2.23938 29.3641 2.07935 29.3641H1.91933C1.43924 29.3411 1.09633 29.1803 0.890577 29.0425C0.433355 28.7439 0.136161 28.2615 0.0218552 27.7102C-0.0467281 27.1589 0.0447163 26.6306 0.31905 26.2401Z" fill="url(#paint0_linear_0_312)"/>
         <path id="Union" d="M76.2422 5.71973C77.4765 5.7198 78.5741 6.01805 79.5342 6.66113C80.4942 7.30428 81.2258 8.17731 81.7744 9.30273C82.323 10.4512 82.5967 11.7834 82.5967 13.2764C82.5967 14.7693 82.323 16.0787 81.7744 17.2041C81.2258 18.3295 80.4941 19.2026 79.5342 19.7998C78.5741 20.4199 77.4765 20.7187 76.2422 20.7188C75.0763 20.7188 74.0474 20.4428 73.1787 19.8916C72.5615 19.5011 72.1037 18.9962 71.7607 18.376V26.875H67.4863V10.2217C67.4863 9.53261 67.4633 8.84337 67.4404 8.1543C67.4176 7.46522 67.3493 6.77599 67.2578 6.08691H71.2812L71.5557 8.54492C71.8757 7.74097 72.4014 7.07468 73.1787 6.56934C74.0474 5.99518 75.0764 5.71973 76.2422 5.71973ZM107.562 5.71973C108.727 5.71975 109.756 6.01771 110.647 6.5918C111.287 7.00521 111.791 7.51077 112.134 8.13086V6.08691H116.386V19.8232C116.386 22.143 115.723 23.8886 114.42 25.083C113.117 26.2775 111.173 26.875 108.636 26.875C106.373 26.875 104.384 26.4386 102.692 25.543L103.332 22.3496C104.201 22.786 105.046 23.1077 105.915 23.3145C106.784 23.5212 107.653 23.6357 108.499 23.6357C109.733 23.6357 110.648 23.3603 111.242 22.7861C111.859 22.2119 112.156 21.3392 112.156 20.168V17.6406C111.951 17.9391 111.722 18.2381 111.448 18.5137C110.968 18.996 110.396 19.3635 109.733 19.6621C109.048 19.9607 108.339 20.0986 107.562 20.0986C106.304 20.0986 105.206 19.8003 104.246 19.2031C103.286 18.6059 102.532 17.7787 101.983 16.6992C101.435 15.6197 101.16 14.3562 101.16 12.9092C101.16 11.4621 101.435 10.2212 101.983 9.1416C102.532 8.08531 103.286 7.23582 104.246 6.63867C105.206 6.01848 106.327 5.71973 107.562 5.71973ZM8.43555 0C9.39571 0 10.3336 0.0915978 11.248 0.275391C12.1624 0.482145 13.008 0.735505 13.7852 1.08008C14.5396 1.40171 15.2027 1.83786 15.7285 2.32031L14.3115 5.51367C13.3971 4.82448 12.4595 4.29578 11.4766 3.95117C10.4935 3.60656 9.51019 3.44629 8.48145 3.44629C7.3384 3.44629 6.42411 3.67626 5.73828 4.13574C5.05251 4.59522 4.70898 5.21547 4.70898 6.01953C4.70904 6.45584 4.82348 6.8235 5.09766 7.12207C5.37196 7.4207 5.80669 7.69606 6.42383 7.92578C7.04108 8.1785 7.88744 8.40842 8.96191 8.66113C10.2191 8.9368 11.3161 9.23597 12.2305 9.60352C13.1677 9.97107 13.9222 10.3843 14.5166 10.8438C15.111 11.3032 15.5454 11.8548 15.7969 12.4521C16.094 13.0724 16.2314 13.7614 16.2314 14.5654C16.2314 15.829 15.911 16.9316 15.248 17.8506C14.5851 18.7695 13.6251 19.4819 12.3906 19.9873C11.1333 20.4927 9.64701 20.7461 7.88672 20.7461C6.88095 20.7461 5.87509 20.6535 4.91504 20.4697C3.95492 20.2859 3.04016 20.0106 2.19434 19.666C1.34859 19.3214 0.617188 18.8847 0 18.4023L1.44043 15.209C2.44626 15.8981 3.4754 16.4269 4.5498 16.7715C5.62406 17.116 6.7441 17.2764 7.93262 17.2764C9.21281 17.2764 10.196 17.0698 10.8818 16.6562C11.5675 16.2428 11.91 15.6686 11.9102 14.9336C11.9102 14.4971 11.7509 14.1287 11.4766 13.8301C11.2023 13.5085 10.7449 13.2561 10.1279 13.0264C9.5107 12.7966 8.66445 12.5666 7.63574 12.3369C6.3327 12.0612 5.21228 11.7631 4.29785 11.3955C3.38341 11.0509 2.62914 10.6368 2.05762 10.1543C1.48612 9.69482 1.07413 9.14325 0.799805 8.5C0.548453 7.85684 0.411135 7.12178 0.411133 6.29492C0.411133 5.10027 0.75402 4.04304 1.41699 3.07812C2.10282 2.13622 3.04075 1.37851 4.22949 0.827148C5.44105 0.275831 6.83541 2.26822e-05 8.43555 0ZM34.0635 5.71973C35.2291 5.71979 36.2346 5.99528 37.126 6.56934C37.7661 6.9828 38.2469 7.48821 38.5898 8.1084H38.6123V6.08691H42.8193V20.5117H38.6123V18.376C38.2694 18.9961 37.7895 19.5246 37.1494 19.915C36.2578 20.4663 35.229 20.7422 34.0859 20.7422C32.8288 20.7422 31.7316 20.4203 30.7715 19.8232C29.8113 19.203 29.0561 18.3531 28.5303 17.2275C28.0045 16.1021 27.7305 14.7927 27.7305 13.2998C27.7305 11.784 27.9818 10.4745 28.5303 9.32617C29.0789 8.17767 29.8113 7.3043 30.7715 6.66113C31.7316 6.04108 32.8291 5.71973 34.0635 5.71973ZM90.3467 5.71973C91.5125 5.71973 92.5186 5.99517 93.4102 6.56934C94.0503 6.9828 94.5311 7.48821 94.874 8.1084V6.08691H99.1025V20.5117H94.8965V18.376C94.5536 18.9961 94.0736 19.5246 93.4336 19.915C92.5421 20.4663 91.5131 20.7422 90.3701 20.7422C89.1128 20.7422 88.0149 20.4205 87.0547 19.8232C86.0946 19.2031 85.3402 18.353 84.8145 17.2275C84.2887 16.1021 84.0147 14.7927 84.0146 13.2998C84.0146 11.784 84.2659 10.4746 84.8145 9.32617C85.3631 8.17777 86.0946 7.30428 87.0547 6.66113C88.0148 6.04101 89.1123 5.71979 90.3467 5.71973ZM61.6338 6.06445H65.291V9.28027H61.6338V14.9072C61.6338 15.4584 61.7475 15.9182 61.9531 16.2627C62.1589 16.6072 62.4335 16.8602 62.7764 16.998C63.1193 17.1359 63.4854 17.2051 63.874 17.2051C64.1026 17.2051 64.3314 17.1812 64.5371 17.1582C64.7656 17.1123 65.0169 17.0664 65.291 17.0205V20.3057C64.9025 20.4664 64.4911 20.581 64.1025 20.627C63.6911 20.6959 63.2795 20.7187 62.8223 20.7188C61.062 20.7188 59.7127 20.2138 58.7754 19.2031C57.8382 18.1925 57.3809 16.7681 57.3809 14.9766V2.71094L61.6338 1.31641V6.06445ZM125.462 5.65039C126.788 5.65041 127.954 5.94968 128.937 6.54688C129.92 7.14409 130.674 7.97071 131.2 9.07324C131.726 10.1758 132 11.4621 132 12.9551L131.954 14.3789H122.604C122.742 15.2288 123.015 15.8956 123.427 16.3779C124.067 17.0899 125.027 17.457 126.33 17.457C127.084 17.457 127.84 17.3425 128.571 17.0898C129.303 16.8372 129.988 16.4925 130.605 16.0332L131.726 18.9277C131.04 19.4789 130.194 19.8923 129.188 20.2139C128.206 20.5124 127.199 20.6728 126.171 20.6729C124.571 20.6729 123.198 20.3511 122.032 19.7539C120.867 19.1337 119.975 18.2836 119.357 17.1582C118.74 16.0557 118.421 14.7233 118.421 13.1846C118.421 11.6916 118.741 10.3823 119.335 9.25684C119.929 8.1085 120.752 7.2359 121.804 6.59277C122.855 5.97258 124.067 5.65039 125.462 5.65039ZM54.5234 5.74219C54.8205 5.74219 55.0722 5.76562 55.3008 5.81152V9.64746C54.8437 9.50971 54.3867 9.44045 53.9297 9.44043C53.1754 9.44043 52.5351 9.60138 52.0322 9.87695C51.5293 10.1756 51.1405 10.5664 50.8662 11.0947C50.5919 11.623 50.4541 12.2431 50.4541 12.9551V20.4893H46.1797V10.1982C46.1797 9.50924 46.1566 8.81986 46.1338 8.13086C46.1109 7.44189 46.0426 6.75245 45.9512 6.06348H49.9746L50.2715 8.56738C50.5686 7.80953 51.0034 7.18982 51.5977 6.73047C52.4434 6.06442 53.4263 5.74226 54.5234 5.74219ZM35.2979 9.02734C34.2692 9.02734 33.4459 9.39449 32.8516 10.1523C32.2572 10.9104 31.96 11.9446 31.96 13.2998C31.96 14.6319 32.2566 15.6659 32.8281 16.3779C33.3997 17.09 34.2234 17.4346 35.2979 17.4346C36.3493 17.4345 37.1492 17.0665 37.7207 16.3545C38.2922 15.6424 38.5898 14.6086 38.5898 13.2764C38.5898 11.8983 38.2922 10.8649 37.7207 10.1299C37.1492 9.39491 36.3265 9.02742 35.2979 9.02734ZM75.0303 8.98145C73.9558 8.98145 73.1331 9.34896 72.5615 10.084C71.99 10.819 71.7149 11.8753 71.7148 13.2305C71.7148 14.5857 71.99 15.6424 72.5615 16.3545C73.133 17.0664 73.9559 17.4346 75.0303 17.4346C76.0816 17.4345 76.8816 17.0897 77.4531 16.3779C78.0246 15.6659 78.2994 14.6319 78.3223 13.2539C78.3223 11.9216 78.0247 10.8645 77.4531 10.1064C76.8816 9.37161 76.0588 8.98149 75.0303 8.98145ZM91.6045 9.02734C90.5758 9.02734 89.7526 9.39441 89.1582 10.1523C88.5638 10.9104 88.2666 11.9675 88.2666 13.2998C88.2666 14.6319 88.5643 15.6659 89.1357 16.3779C89.7073 17.0897 90.5302 17.4346 91.6045 17.4346C92.656 17.4346 93.4558 17.0665 94.0273 16.3545C94.5989 15.6424 94.8736 14.6086 94.8965 13.2764C94.8965 11.8982 94.5988 10.8649 94.0273 10.1299C93.4558 9.39487 92.6332 9.02736 91.6045 9.02734ZM108.818 9.00391C107.767 9.004 106.921 9.34907 106.327 10.0381C105.71 10.7271 105.412 11.6685 105.412 12.8857C105.412 14.1031 105.71 15.0677 106.327 15.7568C106.944 16.4689 107.767 16.8135 108.796 16.8135C109.825 16.8135 110.648 16.4694 111.242 15.7803C111.837 15.0912 112.133 14.1265 112.156 12.9092C112.156 11.7148 111.882 10.7496 111.288 10.0605C110.694 9.34847 109.87 9.00391 108.818 9.00391ZM125.576 8.68262C124.593 8.68262 123.839 9.02723 123.29 9.73926C122.97 10.1986 122.742 10.7499 122.604 11.4619H128.319C128.228 10.681 128.022 10.0609 127.656 9.60156C127.176 8.98142 126.491 8.68264 125.576 8.68262ZM61.6338 1.31641V1.30957H61.6562L61.6338 1.31641Z" fill="currentColor"/>
@@ -1929,31 +2067,32 @@
         </clipPath>
         </defs>
         </svg>
-              <svg class="hp-logo__mark" aria-hidden="true" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 7.90993 19.4097" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="hp-logo__mark" aria-hidden="true" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 7.90993 19.4097" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path id="Vector" d="M4.27502 0L0 1.40117V4.77778V7.99359V13.6672C0 15.4589 0.457221 16.883 1.39453 17.8937C2.33183 18.9044 3.68063 19.4097 5.44094 19.4097C5.89816 19.4097 6.30966 19.3867 6.72116 19.3178C7.1098 19.2719 7.5213 19.157 7.90993 18.9963V15.7115C7.6356 15.7575 7.38413 15.8034 7.15552 15.8494C6.94977 15.8723 6.72116 15.8953 6.49255 15.8953C6.10391 15.8953 5.73813 15.8264 5.39522 15.6886C5.0523 15.5507 4.77797 15.2981 4.57222 14.9535C4.36647 14.609 4.25216 14.1496 4.25216 13.5983V7.97062H7.90993V4.75481H4.25216V0H4.27502Z" fill="currentColor"/>
         </svg>
-            </a>
-            <form class="search-field" id="homeSearchForm" role="search">
-              <input class="search-field__input" type="search" name="q" placeholder="Privacy starts here" aria-label="Search" autocomplete="off" spellcheck="false" autofocus />
-              <span class="search-field__caret" aria-hidden="true"></span>
-              <button type="button" class="search-field__clear" aria-label="Clear search">
-                <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true">
-                  <line x1="1" y1="1" x2="9" y2="9"/>
-                  <line x1="9" y1="1" x2="1" y2="9"/>
-                </svg>
-              </button>
-              <button type="submit" class="search-field__submit" aria-label="Submit search">
-                <svg class="search-field__circle" viewBox="-1 -1 17.8333 17.8333" fill="none" aria-hidden="true">
-                  <circle cx="7.91667" cy="7.91667" r="6.66667" stroke="currentColor" stroke-width="2.5"/>
-                </svg>
-                <svg class="search-field__handle" viewBox="-1 -1 9.91667 9.91667" fill="none" aria-hidden="true">
-                  <path d="M1.25 1.25L6.66667 6.66667" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-                </svg>
-              </button>
-            </form>
-            <h1 class="hero__title" id="heroTitle">Privacy starts <span>here</span>.</h1>
+        </a>
+        <form class="search-field" id="homeSearchForm" role="search">
+        <input class="search-field__input" type="search" name="q" placeholder="Search privately" aria-label="Search" autocomplete="off" spellcheck="false" autofocus />
+        <span class="search-field__caret" aria-hidden="true"></span>
+        <button type="button" class="search-field__clear" aria-label="Clear search">
+        <svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true">
+        <line x1="1" y1="1" x2="9" y2="9"/>
+        <line x1="9" y1="1" x2="1" y2="9"/>
+        </svg>
+        </button>
+        <button type="submit" class="search-field__submit" aria-label="Submit search">
+        <svg class="search-field__circle" viewBox="-1 -1 17.8333 17.8333" fill="none" aria-hidden="true">
+        <circle cx="7.91667" cy="7.91667" r="6.66667" stroke="currentColor" stroke-width="2.5"/>
+        </svg>
+        <svg class="search-field__handle" viewBox="-1 -1 9.91667 9.91667" fill="none" aria-hidden="true">
+        <path d="M1.25 1.25L6.66667 6.66667" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        </button>
+        </form>
       </div>
-      <div class="hero__promo">
+      <div class="hero__dock">
+        <h1 class="hero__title" id="heroTitle">Privacy starts <span>here</span>.</h1>
+        <div class="hero__promo">
         <div class="hero__promo-icon" aria-hidden="true">
           <img src="assets/icon-chrome.svg" width="27" height="33" alt="" />
         </div>
@@ -1968,6 +2107,7 @@
           </svg>
           <span>Install on Chrome</span>
         </button>
+        </div>
       </div>
     </section>
 
@@ -2321,30 +2461,48 @@
 
   <script>
     const html = document.documentElement;
-    document.querySelector('.search-field__input')?.focus();
+    document.querySelector('.hero .search-field__input')?.focus();
 
-    const searchForm = document.getElementById('homeSearchForm');
-    const searchInput = searchForm?.querySelector('.search-field__input');
-    const clearSearch = searchForm?.querySelector('.search-field__clear');
-    function syncSearchValue() {
-      searchForm?.classList.toggle('has-value', (searchInput?.value.length ?? 0) > 0);
-    }
-    searchInput?.addEventListener('input', syncSearchValue);
-    clearSearch?.addEventListener('click', () => {
-      if (!searchInput) return;
-      searchInput.value = '';
-      syncSearchValue();
-      searchInput.focus();
+    const searchForms = [...document.querySelectorAll('.search-field')];
+    searchForms.forEach((form) => {
+      const input = form.querySelector('.search-field__input');
+      const clear = form.querySelector('.search-field__clear');
+      const sync = () => {
+        searchForms.forEach((other) => {
+          const otherInput = other.querySelector('.search-field__input');
+          if (otherInput && otherInput !== input) otherInput.value = input.value;
+          other.classList.toggle('has-value', (input?.value.length ?? 0) > 0);
+        });
+      };
+      input?.addEventListener('input', sync);
+      clear?.addEventListener('click', () => {
+        if (!input) return;
+        input.value = '';
+        sync();
+        input.focus();
+      });
     });
 
     const header = document.querySelector('.hp-header');
+    const heroSearch = document.querySelector('.hero .search-field');
     const storeBadge = document.querySelector('.hero__store');
+    const desktopHeader = window.matchMedia('(min-width: 721px)');
+    let compactHeaderHeight = 0;
     function updateHeader() {
+      const docked = header?.classList.contains('is-docked');
+      if (header && !docked) compactHeaderHeight = header.getBoundingClientRect().height;
+      let pastSearch = false;
+      if (header && heroSearch && desktopHeader.matches) {
+        const limit = docked ? header.getBoundingClientRect().height : compactHeaderHeight;
+        pastSearch = heroSearch.getBoundingClientRect().bottom <= limit;
+      }
+      header?.classList.toggle('is-docked', pastSearch);
       header?.classList.toggle('is-scrolled', window.scrollY > 8);
       storeBadge?.classList.toggle('is-stuck', storeBadge.getBoundingClientRect().top <= 0);
     }
     updateHeader();
     window.addEventListener('scroll', updateHeader, { passive: true });
+    window.addEventListener('resize', updateHeader);
     const toggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
     const themeLabel = document.getElementById('themeLabel');
@@ -2461,8 +2619,8 @@
       });
     })();
 
-    document.getElementById('homeSearchForm')?.addEventListener('submit', (e) => {
-      e.preventDefault();
+    document.querySelectorAll('.search-field').forEach((form) => {
+      form.addEventListener('submit', (e) => e.preventDefault());
     });
 
     (function revealOnScroll() {
