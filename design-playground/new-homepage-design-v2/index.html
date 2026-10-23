@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <script>document.documentElement.classList.add('js-motion');</script>
+  <script>
+    document.documentElement.classList.add('js-motion');
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = saved || system;
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>New homepage design V2</title>
@@ -1568,10 +1575,28 @@
         gap: var(--spacing-24);
         padding-inline-end: var(--spacing-24);
       }
-      .proto-chrome { display: none; }
+      .proto-back { display: none; }
+      .proto-chrome {
+        bottom: calc(var(--spacing-16) + env(safe-area-inset-bottom, 0px));
+        right: var(--spacing-16);
+      }
     }
 
     @media (max-width: 720px) {
+      .proto-chrome {
+        top: var(--spacing-12);
+        right: auto;
+        bottom: auto;
+        left: 50%;
+        translate: -50% 0;
+      }
+      /* Once the store badge pins, sit the switcher in the open side of that bar. */
+      body:has(.hero__store.is-stuck) .proto-chrome {
+        top: var(--spacing-24);
+        right: var(--spacing-16);
+        left: auto;
+        translate: none;
+      }
       body { display: flex; flex-direction: column; }
       .hp-header,
       .hp-header.is-docked { display: contents; }
@@ -2513,7 +2538,7 @@
       themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
     }
 
-    applyTheme(localStorage.getItem('theme') || 'light');
+    applyTheme(html.dataset.theme || 'light');
     toggle.addEventListener('click', () => {
       const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
       applyTheme(next);
