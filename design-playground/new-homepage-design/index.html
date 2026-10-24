@@ -1002,6 +1002,20 @@
     .hero__install:focus-visible { background: var(--color-button-tealhover); }
     [data-theme="dark"] .hero__install { color: var(--color-text-inverted); }
     .hero__store { display: none; }
+    .hero__promo--end {
+      position: relative;
+      left: auto;
+      bottom: auto;
+      width: max-content;
+      margin: var(--spacing-80) auto 0;
+      translate: none;
+      animation: none;
+    }
+    .hero__promo--end::after { animation: none; opacity: 0; }
+    .hero__promo--end:hover,
+    .hero__promo--end:focus-within {
+      translate: 0 calc(var(--spacing-4) * -1);
+    }
     .mobile-break { display: none; }
 
     /* Short windows: keep the pinned banner clear of the lock and headline. */
@@ -2617,6 +2631,22 @@
             </svg>
           </div>
         </div>
+      </div>
+      <div class="hero__promo hero__promo--end">
+        <div class="hero__promo-icon" aria-hidden="true">
+          <img src="assets/icon-chrome.svg" width="27" height="33" alt="" />
+        </div>
+        <p>Make Startpage your<br />default search engine.</p>
+        <button type="button" class="hero__install">
+          <svg viewBox="0 0 20 20" width="20" height="20" fill="none" aria-hidden="true">
+            <path d="M2 15V17C2 17.5523 2.44772 18 3 18H17C17.5523 18 18 17.5523 18 17V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <g class="hero__install-arrow">
+              <path d="M6 8L10 12L14 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 2V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </g>
+          </svg>
+          <span>Install on Chrome</span>
+        </button>
       </div>
     </section>
   </main>
